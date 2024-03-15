@@ -1,0 +1,131 @@
+{
+  "id": "newera-sol366",
+  "title": "New Era Sol 366 Edition",
+  "description": "New Era: Sol 366 Edition",
+  "version": "0.12.30",
+  "compatibility": {
+    "minimum": "10.287",
+    "verified": "11.315"
+  },
+  "author": "TwiceInEveryMoment",
+  "esmodules": ["module/newera.mjs"],
+  "styles": ["css/boilerplate.css", "css/newera.css", "css/phone-ui.css"],
+  "scripts": [],
+  "packs": [
+    {
+      "name": "spells",
+      "label": "Spells and Enchantments",
+      "system": "newera-sol366",
+      "path": "packs/SpellsEnchantments.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "equipment",
+      "label": "Equipment",
+      "system": "newera-sol366",
+      "path": "packs/Equipment.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "consumables",
+      "label": "Supplies, Food, and Ammunition",
+      "system": "newera-sol366",
+      "path": "packs/Consumables.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "feats",
+      "label": "Feats, Backgrounds, and Flaws",
+      "system": "newera-sol366",
+      "path": "packs/Feats.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "weapons",
+      "label": "Weapons",
+      "system": "newera-sol366",
+      "path": "packs/Weapons.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "wearables",
+      "label": "Clothing and Armor",
+      "system": "newera-sol366",
+      "path": "packs/Wearables.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "potionsArtifacts",
+      "label": "Magical Items",
+      "system": "newera-sol366",
+      "path": "packs/PotionsArtifacts.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "metamagic",
+      "label": "Metamagic",
+      "system": "newera-sol366",
+      "path": "packs/Metamagic.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "actions",
+      "label": "Actions",
+      "system": "newera-sol366",
+      "path": "packs/Actions.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "npcs",
+      "label": "Character Templates",
+      "system": "newera-sol366",
+      "path": "packs/NPCs.db",
+      "type": "Actor",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "name": "monsters",
+      "label": "Monsters",
+      "system": "newera-sol366",
+      "path": "packs/Monsters.db",
+      "type": "Actor",
+      "private": false,
+      "flags": {}
+    }
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English (US)",
+      "path": "lang/en.json"
+    }
+  ],
+  "gridDistance": 2,
+  "gridUnits": "ft",
+  "initiative": "1d20+@initiative.mod",
+  "primaryTokenAttribute": "hitPoints",
+  "secondaryTokenAttribute": "energy",
+  "url": "https://www.newerarpg.com/",
+  "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366.json",
+  "download": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366-0.12.30.zip",
+  "license": "LICENSE.txt"
+}

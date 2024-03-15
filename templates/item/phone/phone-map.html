@@ -1,0 +1,15 @@
+<div class="phoneui-app-header">
+    <a class="phoneui-close-button app-close"><i class="fa-solid fa-circle-left"></i></a>
+    <h3>Map</h3>
+</div>
+<div class="phoneui-app-body-full">
+    {{#if world.signal.internet}}
+        <iframe src="https://www.newerarpg.com/dynmap/" style="width: 320px; height: 468px"></iframe>
+    {{else}}
+        <div style="text-align: center">
+            <h1><i class="fa-solid fa-globe"></i></h1>
+            <h2>Map Unavailable</h2>
+            <h3>Internet Connection Required</h3>
+        </div>
+    {{/if}}
+</div>

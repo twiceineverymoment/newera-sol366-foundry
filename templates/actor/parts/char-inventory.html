@@ -1,0 +1,295 @@
+<h3 class="table-header">Equipped Items</h3>
+
+<div class="resource">
+    <div id="cw-wrapper" class="progress-wrapper cw" style="text-align: center">
+        <img class="resource-icon" src="systems/newera-sol366/resources/weight.png" />
+        <progress id="carry-weight-bar" value="{{system.totalWeight}}" max="{{system.carryWeight.value}}">CW</progress>
+        <h3 id="carry-weight-status" style="display: inline" class="table-header">{{system.totalWeight}} / {{system.carryWeight.value}}</h3>
+    </div>
+</div>
+
+<div class="equipment-display">
+    <img src="systems/newera-sol366/resources/equipment-body.png" class="equipment-body" />
+    <img src="systems/newera-sol366/resources/equipment_waist.png" class="equipment-worn" />
+        <!-- Standard slots -->
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-right-hand" data-drop-zone="rightHand">
+            <input type="hidden" name="system.equipment.rightHand" value="{{system.equipment.rightHand}}" id="newera-equipment-{{actor.id}}-rightHand-input" data-dtype="String" />
+            {{#if inventory.equipped.rightHand}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.rightHand}}" draggable="true" data-tooltip="{{inventory.equipped.rightHand.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.rightHand.img}}" draggable="true" class="enchant-glow" data-enchanted="{{inventory.equipped.rightHand.system.enchanted}}" data-glow-color="{{inventory.equipped.rightHand.system.enchantmentColor}}"/>
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Right Hand (Empty)" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/equipment_right_hand.png"/>
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        {{#unless system.equipment.twoHanded}}
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-left-hand" data-drop-zone="leftHand">
+            <input type="hidden" name="system.equipment.leftHand" value="{{system.equipment.leftHand}}" id="newera-equipment-{{actor.id}}-leftHand-input" data-dtype="String" />
+            {{#if inventory.equipped.leftHand}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.leftHand}}" draggable="true" data-tooltip="{{inventory.equipped.leftHand.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.leftHand.img}}" draggable="true" class="enchant-glow" data-enchanted="{{inventory.equipped.leftHand.system.enchanted}}" data-glow-color="{{inventory.equipped.leftHand.system.enchantmentColor}}"/>
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Left Hand (Empty)" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/equipment_left_hand.png"/>
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        {{/unless}}
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-head" data-drop-zone="head">
+            <input type="hidden" name="system.equipment.head" value="{{system.equipment.head}}" id="newera-equipment-{{actor.id}}-head-input" data-dtype="String" />
+            {{#if inventory.equipped.head}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.head}}" draggable="true" data-tooltip="{{inventory.equipped.head.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.head.img}}" draggable="true" class="enchant-glow" data-enchanted="{{inventory.equipped.head.system.enchanted}}" data-glow-color="{{inventory.equipped.head.system.enchantmentColor}}"/>
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Head (Empty / No Thoughts)" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/equipment_head.png" />
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-feet" data-drop-zone="feet">
+            <input type="hidden" name="system.equipment.feet" value="{{system.equipment.feet}}" id="newera-equipment-{{actor.id}}-feet-input" data-dtype="String" />
+            {{#if inventory.equipped.feet}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.feet}}" draggable="true" data-tooltip="{{inventory.equipped.feet.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.feet.img}}" draggable="true" class="enchant-glow" data-enchanted="{{inventory.equipped.feet.system.enchanted}}" data-glow-color="{{inventory.equipped.feet.system.enchantmentColor}}"/>
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Shoes (Empty)" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/equipment_feet.png" />
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-hands" data-drop-zone="hands">
+            <input type="hidden" name="system.equipment.hands" value="{{system.equipment.hands}}" id="newera-equipment-{{actor.id}}-hands-input" data-dtype="String" />
+            {{#if inventory.equipped.hands}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.hands}}" draggable="true" data-tooltip="{{inventory.equipped.hands.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.hands.img}}" draggable="true" class="enchant-glow" data-enchanted="{{inventory.equipped.hands.system.enchanted}}" data-glow-color="{{inventory.equipped.hands.system.enchantmentColor}}"/>
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Hand Accessory (Empty)" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/equipment_gloves.png" />
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-neck" data-drop-zone="neck">
+            <input type="hidden" name="system.equipment.neck" value="{{system.equipment.neck}}" id="newera-equipment-{{actor.id}}-neck-input" data-dtype="String" />
+            {{#if inventory.equipped.neck}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.neck}}" draggable="true" data-tooltip="{{inventory.equipped.neck.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.neck.img}}" draggable="true" class="enchant-glow" data-enchanted="{{inventory.equipped.neck.system.enchanted}}" data-glow-color="{{inventory.equipped.neck.system.enchantmentColor}}"/>
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon">
+                <a class="empty-item-slot" data-tooltip="Neck Accessory (Empty)" data-tooltip-direction="UP">
+                    <img src="systems/newera-sol366/resources/equipment_neck.png" />
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-body-armor" data-drop-zone="body">
+            <input type="hidden" name="system.equipment.body" value="{{system.equipment.body}}" id="newera-equipment-{{actor.id}}-body-input" data-dtype="String" />
+            {{#if inventory.equipped.body}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.body}}" draggable="true" data-tooltip="{{inventory.equipped.body.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.body.img}}" draggable="true" class="enchant-glow" data-enchanted="{{inventory.equipped.body.system.enchanted}}" data-glow-color="{{inventory.equipped.body.system.enchantmentColor}}"/>
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Armor (Empty)" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/armor-equipped.png" />
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-outfit" data-drop-zone="outfit">
+            <input type="hidden" name="system.equipment.outfit" value="{{system.equipment.outfit}}" id="newera-equipment-{{actor.id}}-outfit-input" data-dtype="String" />
+            {{#if inventory.equipped.outfit}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.outfit}}" draggable="true" data-tooltip="{{inventory.equipped.outfit.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.outfit.img}}" draggable="true" class="enchant-glow" data-enchanted="{{inventory.equipped.outfit.system.enchanted}}" data-glow-color="{{inventory.equipped.outfit.system.enchantmentColor}}"/>
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Outfit (Empty (geez, put some clothes on!))" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/equipment_outfit.png" />
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-waist" data-drop-zone="waist">
+            <input type="hidden" name="system.equipment.waist" value="{{system.equipment.waist}}" id="newera-equipment-{{actor.id}}-waist-input" data-dtype="String" />
+            {{#if inventory.equipped.waist}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.waist}}" draggable="true" data-tooltip="{{inventory.equipped.waist.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.waist.img}}" draggable="true" class="enchant-glow" data-enchanted="{{inventory.equipped.waist.system.enchanted}}" data-glow-color="{{inventory.equipped.waist.system.enchantmentColor}}" />
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Waist Accessory (Empty)" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/equipment_waist.png" />
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-phone" data-drop-zone="phone">
+            <input type="hidden" name="system.equipment.phone" value="{{system.equipment.phone}}" id="newera-equipment-{{actor.id}}-phone-input" data-dtype="String" />
+            {{#if inventory.equipped.phone}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.phone}}" draggable="true" data-tooltip="{{inventory.equipped.phone.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{inventory.equipped.phone.img}}" draggable="true"/>
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Phone (Empty)" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/equipment_phone.png" />
+                </a>
+            </div>
+            {{/if}}
+        </div>
+
+        <!-- Variable Worn Slots -->
+        {{#each inventory.worn as |item slot|}}
+        <div class="equipment-box newera-equipment-dropzone" id="equipment-worn{{slot}}" data-drop-zone="worn{{slot}}">
+            <input type="hidden" name="system.equipment.worn{{slot}}" value="{{item._id}}" id="newera-equipment-{{../actor.id}}-worn{{slot}}-input" data-dtype="String" />
+            {{#if item}}
+            <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{item._id}}" draggable="true" data-tooltip="{{item.system.listDisplayName}}" data-tooltip-direction="UP">
+                <a class="item-control item-edit">
+                    <img src="{{item.img}}" title="{{item.name}}" draggable="true" class="enchant-glow" data-enchanted="{{item.system.enchanted}}" data-glow-color="{{item.system.enchantmentColor}}" />
+                    {{#if item.multiple}}
+                        <div class="item-quantity-overlay">{{item.system.quantity}}</div>
+                    {{/if}}
+                </a>
+            </div>
+            {{else}}
+            <div class="equipment-icon" data-tooltip="Worn Items - Drag items here to keep them in easy reach!" data-tooltip-direction="UP">
+                <a class="empty-item-slot">
+                    <img src="systems/newera-sol366/resources/equipment_worn.png" style="opacity: 0" title="Worn Items" />
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        {{/each}}
+
+        <div class="equipment-box-small item-create" id="equipment-add-1" data-type="Item" data-tooltip="Add Item" data-tooltip-direction="UP">
+            <a title="Add Item">
+            <img src="systems/newera-sol366/resources/item.png" />
+            <i class="fas fa-plus"></i>
+            </a>
+        </div>
+        <div class="equipment-box-small item-create" id="equipment-add-2" data-type="Melee Weapon" data-tooltip="Add Melee Weapon" data-tooltip-direction="UP">
+            <a title="Add Melee Weapon">
+            <img src="systems/newera-sol366/resources/melee-weapon.png" />
+            <i class="fas fa-plus"></i>
+            </a>
+        </div>
+        <div class="equipment-box-small item-create" id="equipment-add-3" data-type="Ranged Weapon" data-tooltip="Add Ranged Weapon" data-tooltip-direction="UP">
+            <a title="Add Ranged Weapon">
+            <img src="systems/newera-sol366/resources/ranged-weapon.png" />
+            <i class="fas fa-plus"></i>
+            </a>
+        </div>
+        <div class="equipment-box-small item-create" id="equipment-add-4" data-type="Armor" data-tooltip="Add Armor" data-tooltip-direction="UP">
+            <a title="Add Armor">
+            <img src="systems/newera-sol366/resources/armor-equipped.png" />
+            <i class="fas fa-plus"></i>
+            </a>
+        </div> 
+        <div class="equipment-box-small item-create" id="equipment-add-5" data-type="Shield" data-tooltip="Add Shield" data-tooltip-direction="UP">
+            <a title="Add Shield">
+            <img src="systems/newera-sol366/resources/shield.png" />
+            <i class="fas fa-plus"></i>
+            </a>
+        </div> 
+        <div class="equipment-box-small item-create" id="equipment-add-6" data-type="Potion" data-tooltip="Add Potion" data-tooltip-direction="UP">
+            <a title="Add Potion">
+            <img src="systems/newera-sol366/resources/potion.png" />
+            <i class="fas fa-plus"></i>
+            </a>
+        </div> 
+</div>
+
+<div class="newera-itemsheet-properties">
+    <div class="newera-itemsheet-property-33">
+        <h4>Money</h4>
+        <input type="text" class="sheet-input" name="system.balance" value="{{system.balance}}" data-dtype="Number" style="display: inline; width: 80%"/> CR
+    </div>
+    <div class="newera-itemsheet-property-33">
+        <h4>Carry Weight Bonus</h4>
+        <input type="text" class="sheet-input" name="system.carryWeight.bonus" value="{{system.carryWeight.bonus}}" data-dtype="Number"/>
+    </div>
+    <div class="newera-itemsheet-property-33">
+        <h4>Worn Item Slots</h4>
+        <select name="system.wornItemSlots" id="wornSlotSelect" class="sheet-input">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+    </div>
+</div>
+
+<h3 class="table-header">Inventory</h3>
+<div class="inventory-table-container">
+    <table class="newera-actorsheet-table newera-equipment-dropzone" data-drop-zone="backpack">
+        <tr style="display: none"></tr> <!-- Invisible first row to make the table not have a heading-styled row -->
+        {{#each inventory.backpack as |item id|}}
+        <tr class="inventory-entry inventory-entry-backpack newera-draggable-equipment" data-item-id="{{item._id}}" draggable="true">
+            <td class="item-edit"><img class="skill-icon enchant-glow{{#if item.system.stored}} stored{{/if}}" src="{{item.img}}" draggable="true" data-enchanted="{{item.system.enchanted}}" data-glow-color="{{item.system.enchantmentColor}}" /></td>
+            <td class="item-edit">
+                {{#if item.system.stored}}
+                    <span class="stored">{{item.system.listDisplayName}}</span>
+                {{else}}
+                    {{item.system.listDisplayName}}
+                {{/if}}
+            </td>
+            <td style="text-align: right">
+                {{#if item.system.stored}}
+                    <a class="item-storage" data-tooltip="Retrieve from Storage" data-tooltip-direction="UP"><i class="fa-solid fa-box"></i></a>
+                {{else}}
+                    <a class="item-storage" data-tooltip="Put in Storage" data-tooltip-direction="UP"><i class="fa-solid fa-box-open"></i></a>
+                {{/if}}
+                <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
+                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+            </td>
+        </tr>
+        {{/each}}
+        {{#if system.backpackEmpty}}
+        <tr class="empty-backpack-cell">
+            <td colspan="3"><i>Drag items from the Compendium, or click on the <b>+</b> icons above to add items to your backpack.</i></td>
+        </tr>
+        {{/if}}
+    </table>
+</div>

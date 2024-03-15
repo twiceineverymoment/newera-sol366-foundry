@@ -1,0 +1,92 @@
+<form class="{{cssClass}} newera-itemsheet-body" autocomplete="off">
+  <input type="hidden" name="system.isUpgrade" value="{{system.isUpgrade}}" data-dtype="Boolean" />
+  <input type="hidden" name="system.isSingleTiered" value="{{system.isSingleTiered}}" data-dtype="Boolean" />
+  <input type="hidden" name="system.totalCost" value="{{system.totalCost}}" data-dtype="String" />
+  <input type="hidden" name="system.displayName" value="{{system.displayName}}" data-dtype="String" />
+  <header class="sheet-header">
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" class="sheet-input" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      <a style="float: right" target="_blank" title="Open in New Era SRD" href="https://www.newerarpg.com/srd/contentview/_feat?module=newera-sol366&id={{system.casperObjectId}}">
+        <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
+      </a>
+      <div class="resource">
+        <select name="system.featType" class="sheet-input" style="margin-left: 8px" id="feat-type-{{item.id}}">
+          <option value="GF">General Feat</option>
+          <option value="SI">Skill Improvement</option>
+          <option value="SF">Skill Feat</option>
+          <option value="CF">Class Feat</option>
+          <option value="AF">Archetype Feat</option>
+          <option value="BG">Background</option>
+          <option value="CB">Career Background</option>
+          <option value="FL">Flaw</option>
+          <option value="CH">Chant</option>
+        </select>
+        {{#if system.hasSubType}}
+        <input type="text" style="display: inline; width: 40%" id="feat-subtype={{item.id}}" name="system.featSubType" class="sheet-input" value="{{system.featSubType}}" />
+        {{/if}}
+        {{#if system.isChant}}
+        <select name="system.chantLevel" class="sheet-input auto-value" data-dtype="Number">
+          <option value="0">Basic</option>
+          <option value="1">Apprentice</option>
+          <option value="2">Intermediate</option>
+          <option value="3">Advanced</option>
+          <option value="4">Expert</option>
+          <option value="5">Master</option>
+        </select>
+        {{/if}}
+      </div>
+    </div>
+  </header>
+
+  <div class="newera-actorsheet-tabs">
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item newera-section-header" data-tab="properties">Description</a>
+      <a class="item newera-section-header" data-tab="actions">Actions</a>
+    </nav>
+  </div>
+
+  <section class="sheet-body">
+  
+  <div class="tab" data-group="primary" data-tab="properties">
+    {{#if system.isSkillImprovement}}
+    
+    {{else}}
+    <div class="newera-itemsheet-properties"> 
+      <div class="resource newera-itemsheet-property-33">
+        <h4>Current Tier</h4>
+          <input type="text" name="system.currentTier" class="sheet-input" value="{{system.currentTier}}" data-dtype="Number" />
+          <!--this is a text field because upgrade feats require the ability to take more than 5x-->
+      </div>
+      <div class="resource newera-itemsheet-property-33">
+        <h4># of Tiers</h4>
+        <select name="system.maximumTier" class="sheet-input" id="feat-max-{{item.id}}" data-dtype="Number">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="-1">Unlimited</option>
+        </select>
+      </div>
+      <div class="resource newera-itemsheet-property-33">
+        <h4>Cost</h4>
+        <input type="text" class="sheet-input" name="system.tiers.base.cost" value="{{system.tiers.base.cost}}" data-dtype="Number" />
+      </div>
+    </div>
+    <span style="display: block">&nbsp;</span>
+
+    <div class="newera-itemsheet-editor-container">
+      {{editor system.tiers.base.description target="system.tiers.base.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+
+    <!--TODO Enter multi-tiered feats in a better way-->
+    {{/if}}
+  </div>
+
+  <div class="tab" data-group="primary" data-tab="actions">
+    {{> systems/newera-sol366/templates/item/parts/item-actions.html}}
+  </div>
+
+  </section>
+
+</form>

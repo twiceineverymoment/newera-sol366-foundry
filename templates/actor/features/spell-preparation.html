@@ -1,0 +1,41 @@
+<form class="{{cssClass}} {{actor.type}} newera-spellprepsheet-body" autocomplete="off">
+    <h2>Prepared Spells</h2>
+    <p>
+        Drag spells from your character sheet to prepare them. Click on a prepared spell to cast it.
+    </p>
+    <button class="sheet-input" id="recoverAll">Recover All</button>
+    <button class="sheet-input" id="resetSpellPrep">Clear Spells</button>
+    {{#each prepLevels as |level i|}}
+        <hr />
+        <table class="newera-actorsheet-table">
+            <tr>
+                <th colspan="3">
+                    Level {{i}}
+                </th>
+            </tr>
+            {{#each level as |slot j|}}
+                <tr class="spell-slot {{#if slot.available}}cast-prepared{{else}}expended{{/if}}" data-slot-level="{{i}}" data-slot-number="{{j}}">
+                    {{#if slot.spell}}
+                    <td style="width: 20%"><img class="skill-icon" src="{{slot.spell.image}}" />
+                        <span id="spell-level" class="{{#if slot.amplified}}ampText-hot{{/if}}">
+                          {{slot.spell.castLevel}}
+                        </span>
+                    </td>
+                    <td style="width: 40%" class="spell-cast">
+                        {{slot.spell.name}} {{romanNumeral slot.ampFactor false}}
+                    </td>
+                    <td style="width: 40%; text-align: right">
+                        {{#if slot.available}}
+                            <div class="spell-action-icons" data-spell="{{slot.spellId}}"></div>
+                        {{else}}
+                            <a class="recover-slot" data-tooltip="Recover Spell Slot" data-tooltip-direction="LEFT"><i class="fa-solid fa-rotate-left"></i></a>
+                        {{/if}}
+                    </td>
+                    {{else}}
+                        <td colspan="3"><i>Empty Slot</i></td>
+                    {{/if}}
+                </tr>
+            {{/each}}
+        </table>
+    {{/each}}
+</form>

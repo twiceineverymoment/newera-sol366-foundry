@@ -1,0 +1,520 @@
+#phoneui {
+    position: relative;
+    width: 320px;
+    height: 570px;
+    top: 0;
+    left: 0;
+}
+/* Top Bar */
+#phoneui-top {
+    margin: 0;
+    padding: 2px;
+    background-color: rgba(0,0,0,0.7);
+    height: 24px;
+    width: 320px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+div#phoneui-screen {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    width: 320px;
+    height: 516px;
+}
+#phoneui-clock-top {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    text-align: left;
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    font-size: 16px;
+}
+img#settings {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+img#service {
+    position: absolute;
+    right: 22px;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    outline: none;
+}
+img#battery {
+    position: absolute;
+    right: 44px;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+img#flashlight {
+    position: absolute;
+    right: 66px;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+img#weather {
+    position: absolute;
+    right: 88px;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    outline: none;
+}
+img#unread {
+    position: absolute;
+    right: 110px;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    outline: none;
+}
+/* Home Screen */
+#phoneui-home {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 516px;
+}
+div#phoneui-clock {
+    position: absolute;
+    top: 32px;
+    left: 10%;
+    width: 80%;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 1.5em;
+    text-align: center;
+}
+#phoneui-clock h1 {
+    color: white;
+    font-size: 3em;
+    border-bottom: none;
+}
+#phoneui-clock h2 {
+    color: white;
+    font-size: 1.3em;
+    border-bottom: none;
+}
+#phoneui-location {
+    position: absolute;
+    top: 150px;
+    left: 15%;
+    width: 60%;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    color: white;
+    text-align: center;
+}
+#phoneui-apps {
+    position: absolute;
+    bottom: 10px;
+    left: 5%;
+    width: 90%;
+    text-align: center;
+    background-color: rgba(50,50,50,0.2);
+    border-radius: 1em;
+}
+div.phoneui-app-icon {
+    display: inline-block;
+    vertical-align: middle;
+    width: 48px;
+    cursor: pointer;
+}
+div.phoneui-app-icon img {
+    width: 48px;
+    height: 48px;
+    border: none;
+    outline: none;
+}
+/* App Displays */
+div.phoneui-app {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 516px;
+    background-color: #444;
+}
+div.phoneui-app-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    width: 320px;
+    height: 48px;
+    background-color: #555;
+}
+.phoneui-close-button {
+    position: absolute;
+    font-size: 24px;
+    top: 8px;
+    left: 12px;
+    color: white;
+    cursor: pointer;
+}
+.phoneui-right-header-button {
+    position: absolute;
+    font-size: 24px;
+    top: 8px;
+    right: 12px;
+    color: white;
+    cursor: pointer;
+}
+.phoneui-app-header h3 {
+    border-bottom: none;
+    margin-top: 12px;
+}
+.phoneui-app-body-full {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    width: 320px;
+    height: 468px;
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.phoneui-app-body {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    width: 320px;
+    height: 420px;
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+div.phoneui-app-footer {
+    position: absolute;
+    top: 468px;
+    left: 0;
+    text-align: center;
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    width: 320px;
+    height: 48px;
+    background-color: #555;
+}
+a.phoneui-footer-action {
+    margin-top: 12px;
+}
+.phoneui-app-body-full h1, .phoneui-app-body-full h2, .phoneui-app-body-full h3, #phoneui-call h3, #phoneui-call h1, #phoneui-call h2 {
+    border-bottom: none;
+}
+/* Calls / Contacts */
+#phoneui-call {
+    text-align: center;
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+#phoneui-call-image {
+    display: block;
+    margin: 0 auto;
+    width: 60%;
+    border: none;
+    outline: none;
+}
+table.phoneui-grid {
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    border-top: none;
+    border-bottom: none;
+}
+input.phoneui-input, select.phoneui-input, button.phoneui-input {
+    background-color: #333;
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    border-radius: 2px;
+    outline: none;
+    border: none;
+    width: 100%;
+}
+input.contact-name {
+    font-size: 1.5em;
+    display: block;
+    width: 100%;
+}
+input.contact-detail {
+    display: block;
+    width: 100%;
+    font-size: 0.8em;
+    margin-top: 2px;
+}
+img.phoneui-img {
+    width: 64px;
+    height: 64px;
+}
+a.call {
+    color: greenyellow;
+    font-size: 24px;
+    cursor: pointer;
+}
+a.hang-up {
+    color: red;
+    font-size: 24px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+}
+/* Weather */
+div#weather-image {
+    display: inline-block;
+    width: 48%;
+    margin: 0;
+}
+div#weather-summary {
+    display: inline-block;
+    width: 48%;
+    margin: 0;
+}
+div#weather-details {
+    display: block;
+    width: 100%;
+}
+img#phoneui-weather-icon {
+    width: 128px;
+    height: 128px;
+    border: none;
+    outline: none;
+}
+#weather-temp {
+    display: inline-block;
+    width: 48%;
+    vertical-align: top;
+    text-align: right;
+}
+#weather-temp h1 {
+    font-size: 4em;
+}
+#weather-degrees {
+    display: inline-block;
+    width: 48%;
+    vertical-align: top;
+    text-align: left;
+}
+#weather-caption {
+    display: block;
+    width: 100%;
+}
+#weather-extreme {
+    font-weight: bold;
+    font-size: 28px;
+    margin-left: 6px;
+}
+.extreme-cold {
+    color: rgb(0, 169, 219);
+}
+.extreme-heat {
+    color: rgb(219, 93, 1);
+}
+/* Dead Battery Screen */
+#phoneui-dead-battery {
+    background-color: black;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 540px;
+    text-align: center;
+}
+img#battery-dead {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 120px;
+    width: 240px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+/* Browser */
+select#addressBar {
+    position: absolute;
+    top: 12px;
+    left: 48px;
+    width: 240px;
+}
+img#skye-logo {
+    margin: 0 auto;
+    border: none;
+    outline: none;
+}
+input#searchTerm {
+    display: inline;
+    width: 80%;
+}
+button#searchButton {
+    display: inline;
+    width: 15%;
+}
+/* Photos */
+div.photo-grid {
+    width: 100%;
+    text-align: center;
+}
+div.photo-thumbnail {
+    display: inline-block;
+    vertical-align: middle;
+    width: 96px;
+    height: 72px;
+    margin: 2px;
+    border: 3px solid white;
+}
+div.photo-thumbnail img {
+    max-width: 90px;
+    max-height: 66px;
+    margin: auto;
+    border: none;
+    outline: none;
+}
+div.photo-details {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 468px;
+    background-color: black;
+}
+img.photo-full {
+    width: 90%;
+    display: block;
+    margin: 0 auto;
+    max-height: 320px;
+    border: none;
+    outline: none;
+}
+a.photo-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+input#photo-input-name {
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    background-color: none;
+    border: none;
+    outline: none;
+    font-size: 36px;
+    text-align: left;
+    position: absolute;
+    bottom: 30px;
+    left: 2px;
+    width: 316px;
+    height: 36px;
+}
+input#photo-input-desc {
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    background-color: none;
+    border: none;
+    outline: none;
+    font-size: 12px;
+    text-align: left;
+    position: absolute;
+    bottom: 16px;
+    left: 2px;
+    width: 316px;
+    height: 12px;
+}
+input#photo-input-timestamp {
+    color: white;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    background-color: none;
+    border: none;
+    outline: none;
+    font-size: 12px;
+    text-align: left;
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    width: 316px;
+    height: 12px;
+}
+a.photo-roll {
+    position: absolute;
+    right: 10px;
+    bottom: 66px;
+    font-size: 36px;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: rgb(240,157,51);
+}
+/* Messages */
+tr.open-convo {
+    cursor: pointer;
+}
+input#messageContent {
+    display: inline-block;
+    vertical-align: middle;
+    width: 80%;
+}
+button.chat-button {
+    display: inline-block;
+    width: 15%;
+    vertical-align: middle;
+}
+div.message-container-incoming {
+    display: flex;
+    justify-content: flex-end;
+}
+div.message-incoming {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-right: 12px;
+    color: #333;
+    background-color: #ddd;
+    max-width: 70%;
+    text-align: right;
+    border-radius: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+div.message-container-outgoing {
+    display: flex;
+    justify-content: flex-start;
+}
+div.message-outgoing {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: 12px;
+    color: white;
+    background-color: #295470;
+    max-width: 70%;
+    text-align: left;
+    border-radius: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+span.timestamp {
+    opacity: 0.6;
+    font-size: 0.75em;
+}
+.unread {
+    color: crimson;
+}

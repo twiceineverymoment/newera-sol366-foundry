@@ -1,0 +1,41 @@
+<form class="{{cssClass}} newera-itemsheet-body" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" title="{{system.customName}}" style="border: none" />
+    <div class="header-fields">
+      <a style="float: right" target="_blank" title="Open in New Era SRD" href="https://www.newerarpg.com/srd/newera-sol366/{{system.classId}}/">
+        <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
+      </a>
+      <div class="resource">
+        Level 
+        <input type="text" class="sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" style="display: inline; width: 20%" />&nbsp;
+        <select name="system.selectedClass" class="sheet-input" id="class-{{item.id}}">
+          <option value="Adventurer">Adventurer (Classless)</option>
+          <option value="Delver">Delver</option>
+          <option value="Mercenary">Mercenary</option>
+          <option value="Ranger">Ranger</option>
+          <option value="Researcher">Researcher</option>
+          <option value="Chanter">Chanter</option>
+          <option value="Magus">Magus</option>
+          <option value="Guardian">Guardian</option>
+          <option value="Investigator">Investigator</option>
+          <option value="Scholar">Scholar</option>
+          <option value="Artificer">Artificer</option>
+          <option value="Sage">Sage</option>
+          <option value="Witch">Witch</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <section class="sheet-body">
+
+    <h2 class="table-header">{{system.selectedClass}}</h2>
+    <p id="class-desc-{{item.id}}"></p>
+
+    <h3 class="table-header">Notes</h3>
+    <div class="newera-itemsheet-editor-container">
+      {{editor system.notes target="system.notes" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+
+  </section>
+</form>

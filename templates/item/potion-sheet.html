@@ -1,0 +1,83 @@
+<form class="{{cssClass}} newera-itemsheet-body" autocomplete="off">
+  <input type="hidden" name="system.equipSlot" value="I" />
+  <input type="hidden" name="system.weight" value="0" />
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{system.customName}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" class="sheet-input" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+      <a style="float: right" target="_blank" title="Open in New Era SRD" href="https://www.newerarpg.com/srd/contentview/_alchemy?module=newera-sol366&id={{system.casperObjectId}}">
+        <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
+      </a>
+      <div class="resource">
+        <select name="system.rarity" class="sheet-input" style="margin-left: 8px" id="rarity-{{item.id}}">
+          <option value="1">Common</option>
+          <option value="2">Uncommon</option>
+          <option value="3">Rare</option>
+          <option value="4">Extremely Rare</option>
+          <option value="0">Rarity Unknown</option>
+        </select>
+        <select name="system.potionType" class="sheet-input" id="potion-type-{{item.id}}">
+          <option value="P">Potion</option>
+          <option value="E">Elixir</option>
+          <option value="S">Salve</option>
+          <option value="B">Alchemical Bomb</option>
+          <option value="R">Alchemical Reagent</option>
+        </select>
+        <select name="system.recipeLevel" class="sheet-input" id="recipe-level-{{item.id}}">
+          <option value="0">Custom</option>
+          <option value="1">Basic</option>
+          <option value="2">Apprentice</option>
+          <option value="3">Intermediate</option>
+          <option value="4">Advanced</option>
+          <option value="5">Expert</option>
+          <option value="6">Master</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="newera-actorsheet-tabs">
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item newera-section-header" data-tab="properties">Properties</a>
+      <a class="item newera-section-header" data-tab="effects">Effects</a>
+    </nav>
+  </div>
+
+  <section class="sheet-body">
+
+    <div class="tab" data-group="primary" data-tab="properties">
+      <div class="newera-itemsheet-properties">
+        <div class="resource newera-itemsheet-property-33">
+          <h4>Multiple Doses Effect</h4>
+          <select name="system.stackingBehavior" class="sheet-input" id="behavior-{{item.id}}">
+            <option value="N">No Effect</option>
+            <option value="S">Increase Potency</option>
+            <option value="D">Increase Duration</option>
+            <option value="B">Increase Potency and Duration</option>
+          </select>
+        </div>
+        <div class="resource newera-itemsheet-property-33">
+          <h4>Quantity</h4>
+          <input type="text" class="sheet-input" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+        </div>
+        <div class="resource newera-itemsheet-property-33">
+          <h4>Value <i>(Estimated)</i></h4>
+          <input type="text" class="sheet-input" name="system.value" value="{{system.value}}" data-dtype="Number" />
+        </div>
+      </div>
+      <span style="display: block">&nbsp;</span>
+  
+      <div class="newera-itemsheet-editor-container amplified-editor">
+        <p id="amplified-description"></p>
+        {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+      </div>
+    </div>
+
+    <div class="tab" data-group="primary" data-tab="effects">
+      {{> systems/newera-sol366/templates/item/parts/item-effects.html}}
+    </div>
+
+  </section>
+
+  <input type="hidden" name="system.stored" value="{{system.stored}}" data-dtype="Boolean" />
+</form>

@@ -1,0 +1,30 @@
+<form class="{{cssClass}} {{actor.type}} newera-spellprepsheet-body" autocomplete="off">
+    <h2>Magical Focus</h2>
+    <p>
+        Drag spells from your character sheet to cast them and store them in your focus. Click on a stored spell to release it.
+    </p>
+    <h3>Focus Energy</h3>
+    <div id="focus-energy-wrapper" class="progress-wrapper">
+        <progress id="focus-energy-bar" value="{{focusEnergy.percentage}}" max="1">FOCUS ENERGY</progress>
+        <h3 id="focus-energy-status" style="display: inline" class="table-header">{{focusEnergy.value}} / {{focusEnergy.max}}</h3>
+    </div>
+    <button class="sheet-input" id="resetSpellPrep">Clear Stored Spells</button>
+    
+    <table class="newera-actorsheet-table">
+        <tr style="display: none"></tr>
+        {{#each spells as |spell index|}}
+            <tr>
+                <td style="width: 20%"><img class="skill-icon" src="{{spell.image}}" />
+                    <span id="spell-level" class="{{#if spell.amplified}}ampText-hot{{/if}}">
+                      {{spell.castLevel}}
+                    </span>
+                </td>
+                <td style="width: 40%" class="spell-cast">
+                    {{spell.name}} {{romanNumeral spell.ampFactor false}}
+                </td>
+                <td style="width: 40%; text-align: right">
+                    <div class="spell-action-icons" data-spell="{{spell.id}}"></div>
+                </td>
+            </tr>
+        {{/each}}
+</form>

@@ -1,0 +1,81 @@
+<table class="newera-actorsheet-table">
+    <tr>
+        <td>Name</td>
+        <td>Timing</td>
+        <td>Description</td>
+        <td>Conditions</td>
+    </tr>
+      {{#each system.actions as |action index|}}
+        <tr>
+            <td style="width: 20%">
+                <input type="text" name="system.actions.{{index}}.name" class="sheet-input" value="{{action.name}}" />
+                <select name="system.actions.{{index}}.icon" class="sheet-input auto-value" style="width: 100%">
+                    <option value="unknown">Choose Icon...</option>
+                    <option value="artillery-shell">Ammunition</option>
+                    <option value="armor">Armor</option>
+                    <option value="bed">Bed</option>
+                    <option value="brain">Brain</option>
+                    <option value="body-balance">Dodge</option>
+                    <option value="arrest">Gunpoint</option>
+                    <option value="biceps">Intimidate</option>
+                    <option value="bandage-roll">Medicine</option>
+                    <option value="binoculars">Search</option>
+                    <option value="acrobatic">Tumble</option>
+                </select>
+            </td>
+            <td style="width: 20%">
+                <select name="system.actions.{{index}}.actionType" class="sheet-input auto-value">
+                    <option value="1">1 Frame</option>
+                    <option value="2">2 Frames</option>
+                    <option value="3">3 Frames</option>
+                    <option value="4">4 Frames</option>
+                    <option value="5">5 Frames</option>
+                    <option value="0">Free Action</option>
+                    <option value="R">Reaction</option>
+                    <option value="E">Exploration</option>
+                    <option value="S">Social</option>
+                    <option value="D">Downtime</option>
+                    <option value="M">Movement</option>
+                </select>
+            </td>
+            <td style="width: 40%">
+                <textarea class="sheet-input" name="system.actions.{{index}}.description" cols="2" style="font-size: 0.8em">{{action.description}}</textarea>
+            </td>
+            <td style="width: 20%">
+                <select name="system.actions.{{index}}.show" class="sheet-input auto-value" style="width: 100%">
+                    <option value="equipped">When Equipped</option>
+                    {{#if system.showHandednessOptions}}
+                        <option value="oneHanded">When Equipped (One Handed)</option>
+                        <option value="twoHanded">When Equipped (Two Handed)</option>
+                    {{/if}}
+                    <option value="worn">When Worn or Equipped</option>
+                    <option value="always">Always Enabled</option>
+                </select>
+                <input type="checkbox" name="system.actions.{{index}}.decrement" {{checked action.decrement}} />
+                <label for="system.actions.{{index}}.decrement" class="smol">Decrease item quantity when used</label>
+            </td>
+        </tr>
+        {{#each action.rolls as |roll index2|}}
+        <tr>
+            <td style="text-align: right">
+                <img class="resource-icon" src="systems/newera-sol366/resources/{{roll.die}}.png" />
+            </td>
+            <td>
+                <input type="text" name="system.actions.{{@../index}}.rolls.{{index2}}.label" class="sheet-input" value="{{roll.label}}" />
+            </td>
+            <td>
+                <input type="text" name="system.actions.{{@../index}}.rolls.{{index2}}.formula" class="sheet-input roll-formula" value="{{roll.formula}}" />
+            </td>
+        </tr>
+        {{/each}}
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3"><h4><a class="addItemActionRoll" data-action-index="{{index}}"><i class="fas fa-plus"></i> Add Roll</a></h4></td>
+        </tr>
+      {{/each}}
+      <tr>
+        <td colspan="4">
+          <h4><a id="addItemAction"><i class="fas fa-plus"></i> Add Action</a></h4>
+        </td>
+      </tr>
+  </table>

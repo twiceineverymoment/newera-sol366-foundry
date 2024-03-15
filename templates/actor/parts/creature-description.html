@@ -1,0 +1,51 @@
+<div id="profile-bio">
+    <h3 class="table-header">Description</h3>
+    <label for="system.alignment.ethical">Alignment</label>
+    <select name="system.alignment.ethical" id="alignment-ethical" class="sheet-input" {{disabled system.alignment.unaligned}}>
+        <option value="2">Lawful</option>
+        <option value="1">Social</option>
+        <option value="0">Neutral</option>
+       <option value="-1">Rebel</option>
+       <option value="-2">Chaotic</option>
+    </select>
+    <select name="system.alignment.moral" id="alignment-moral" class="sheet-input" {{disabled system.alignment.unaligned}}>
+       <option value="2">Good</option>
+       <option value="1">Moral</option>
+       <option value="0">Neutral</option>
+       <option value="-1">Impure</option>
+       <option value="-2">Evil</option>
+    </select>
+    <input type="checkbox" class="sheet-input" name="system.alignment.unaligned" {{checked system.alignment.unaligned}} /> Unaligned
+</div>
+<br />
+<div id="profile-detail" class="newera-actorsheet-editor-container">
+    {{editor system.description.details target="system.description.details" rollData=rollData button=true owner=owner editable=editable}}
+</div>
+
+<div id="profile-info">
+    <h3 class="table-header">Encounter Info</h3>
+    <div class="newera-itemsheet-properties">
+        <div class="newera-itemsheet-property-50">
+            <h4>Initial Hit Points</h4>
+            <input type="text" class="sheet-input" name="system.initialHitPoints.dieCount" style="display: inline; width: 20%" value="{{system.initialHitPoints.dieCount}}" data-dtype="Number" />
+            d 
+            <input type="text" class="sheet-input" name="system.initialHitPoints.dieSize" style="display: inline; width: 20%" value="{{system.initialHitPoints.dieSize}}" data-dtype="Number" />
+            +
+            <input type="text" class="sheet-input" name="system.initialHitPoints.modifier" style="display: inline; width: 20%" value="{{system.initialHitPoints.modifier}}" data-dtype="Number" />
+        </div>
+        <div class="newera-itemsheet-property-50">
+            <div class="resource">
+                <input type="checkbox" class="sheet-input" name="system.hasInventory" {{checked system.hasInventory}} />
+                This creature can carry items
+            </div>
+            <div class="resource">
+                <input type="checkbox" class="sheet-input" name="system.hasStandardActions" {{checked system.hasStandardActions}} />
+                This creature has standard humanoid traits and actions
+            </div>
+            <div class="resource">
+                <input type="checkbox" class="sheet-input" name="system.hasMagic" {{checked system.hasMagic}} />
+                This creature can use magic
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1105 @@
+/*Remove the annoying margin around actor and item sheets*/
+div.actor section.window-content, div.item section.window-content {
+  padding: 0px !important;
+}
+
+/* Sheet layout */
+.newera-actorsheet-body {
+  min-width: 715px;
+  background-color: rgb(41,84,112);
+  color: white;
+  font-family: "Nanum Myeongjo", serif;
+  overflow-y: hidden;
+}
+.newera-itemsheet-body {
+  min-width: 320px;
+  background-color: rgb(41,84,112);
+  color: white;
+  font-family: "Nanum Myeongjo", serif;
+  overflow-y: hidden;
+}
+.newera-itemsheet-body section.sheet-body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 70%;
+}
+.newera-section-header {
+  font-family: "Cinzel", serif;
+  color: rgb(240, 157, 41) !important;
+  font-size: 18px;
+  border-bottom: none;
+}
+div.newera-actorsheet-top {
+  display: block;
+  width: 100%;
+}
+div.newera-actorsheet-tabs {
+  display: block;
+  width: 100%;
+  background-color: rgb(30, 50, 56);
+}
+div.newera-actorsheet-left {
+  display: inline-block;
+  width: 30%;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-align: center;
+  vertical-align: top;
+}
+div.newera-actorsheet-right {
+  display: inline-block;
+  width: 68%;
+  max-height: 77%;
+  padding: 0px;
+  text-align: left;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  vertical-align: top;
+}
+.newera-actorsheet-image {
+  display: inline-block;
+  width: 128px;
+  height: 128px;
+  margin-right: 10px;
+  vertical-align: top;
+}
+div.newera-actorsheet-top-data {
+  display: inline-block;
+  width: calc(100% - 160px);
+  padding-top: 6px;
+}
+div.newera-actorsheet-level h5, div.newera-actorsheet-level h3 {
+  margin: 0 auto;
+  color: white;
+}
+div.newera-itemsheet-properties {
+  display: block;
+  width: 100%;
+}
+div.newera-itemsheet-property-25 {
+  display: inline-block;
+  width: 22%;
+  margin: 8px;
+}
+div.newera-itemsheet-property-33 {
+  display: inline-block;
+  width: 30%;
+  margin: 8px;
+}
+div.newera-itemsheet-property-50 {
+  display: inline-block;
+  width: 45%;
+  margin: 8px;
+}
+div.newera-itemsheet-property-66 {
+  display: inline-block;
+  width: 60%;
+  margin: 8px;
+}
+.newera-itemsheet-property-50 select, .newera-itemsheet-property-66 select {
+  width: 100%;
+}
+.newera-actorsheet-editor-container {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 360px;
+  background-color: #1D4159;
+  border-radius: 2px;
+  margin: 2px;
+}
+.newera-itemsheet-editor-container {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 240px;
+  background-color: #1D4159;
+  border-radius: 2px;
+  margin: 2px;
+}
+.newera-itemsheet-editor-container .editor, .newera-actorsheet-editor-container .editor {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+.newera-itemsheet-editor-container .editor .tox, .newera-actorsheet-editor-container .editor .tox {
+  background-color: white;
+}
+#amplified-description {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.newera-action {
+  display: block;
+  margin: 0 auto;
+  width: 80%;
+  border: 1px solid #1D4159;
+  border-radius: 2px;
+}
+.newera-action-properties {
+  float: right;
+  width: 30%;
+  text-align: right;
+}
+/* Content styling */
+div.tab {
+  width: 100%;
+}
+div.summary-stat-wrapper {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.summary-stat-wrapper h4 {
+  font-family: "Cinzel", serif;
+}
+div.summary-stat-bonus {
+  display: inline-block;
+  vertical-align: middle;
+  width: 48%;
+}
+div.summary-stat-total {
+  display: inline-block;
+  width: 48%;
+}
+div.summary-stat-bonus input {
+  display: inline;
+  width: 44px;
+}
+nav.tabs {
+  border-top: none !important;
+  border-bottom: none !important; /*Overrides Foundry's default style*/
+}
+/* Profile section */
+#profile-appearance {
+  display: block;
+  width: 100%;
+}
+#profile-bio {
+  display: block;
+  width: 100%;
+}
+div.profile-grid {
+  display: inline-block;
+  width: 48%;
+  margin: 2px;
+  text-align: right;
+}
+div.profile-grid label {
+  display: inline-block;
+  width: 48%;
+  word-wrap: break-word;
+}
+div.profile-grid input {
+  display: inline-block;
+  width: 48%;
+}
+/* Value & form control behaviors */
+h1.charname {
+  font-size: 2.5em;
+  border-bottom: none;
+}
+h1.charname input {
+  font-family: "Cinzel", serif !important;
+  font-size: 36px !important;
+  color: rgb(240, 157, 41) !important;
+  height: 40px;
+  margin: 0;
+  border-bottom: none;
+  width: 90%;
+}
+div.phone-shortcut {
+  float: right;
+  width: 28px;
+  font-size: 36px;
+  text-align: right;
+  opacity: 0.8;
+}
+#overall-level {
+  border-bottom: none;
+  display: inline;
+  vertical-align: middle;
+  margin-left: 10px;
+  font-size: 4em;
+}
+input.sheet-input, select.sheet-input, button.sheet-input, textarea.sheet-input {
+  display: inline-block;
+  color: white;
+  background-color: #1D4159;
+  font-family: "Nanum Myeongjo", serif;
+  font-size: 20px;
+  border: none;
+  outline: none;
+}
+input.big-sheet-input {
+  font-size: 36px !important;
+  max-width: 2em;
+  height: 36px !important;
+  text-align: center;
+}
+input.roll-formula {
+  font-family:'Courier New', Courier, monospace !important;
+  font-size: 12px !important;
+  background-color: #333 !important;
+}
+.smol {
+  font-size: 0.75em;
+}
+input.custom-resource-name {
+  font-family: "Cinzel", serif !important;
+  font-size: 14px;
+  height: 16px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+div.npc-level {
+  text-align: center;
+}
+input.sheet-input:hover {
+  outline: 1px solid rgb(240, 157, 41);
+}
+input.sheet-input:disabled {
+  background-color: rgba(29, 65, 89 ,0.7);
+  color: white;
+  outline: none;
+}
+div.newera-itemsheet-property-33 select.sheet-input {
+  width: 100%;
+}
+.sheet-output-minor {
+  color: #408cbf;
+  font-family: "Nanum Myeongjo", serif;
+  border: none;
+  font-size: 20px;
+}
+.sheet-output-major {
+  color: #60acdf;
+  font-family: "Nanum Myeongjo", serif;
+  border: none;
+  font-size: 20px;
+}
+h2.sheet-output-major {
+  display: inline;
+  vertical-align: middle;
+}
+img.bonus {
+  display: inline;
+  width: 20px;
+  height: 20px;
+  margin: 2px;
+  vertical-align: middle;
+  border: none;
+}
+img.die {
+  display: inline;
+  width: 18px;
+  height: 18px;
+  margin: 2px;
+  vertical-align: middle;
+  border: none;
+}
+img.action-die {
+  display: inline;
+  width: 24px;
+  height: 24px;
+  margin: 3px;
+  vertical-align: middle;
+  border: none;
+}
+img.die:hover {
+  filter: drop-shadow(0 0 2px rgba(130, 23, 15, 0.9));
+  -webkit-filter: drop-shadow(0 0 2px rgba(130, 23, 15, 0.9))
+}
+img.skill-icon {
+  display: inline;
+  width: 24px !important;
+  height: 24px !important;
+  border: none;
+  margin: 1px;
+}
+img.class-icon {
+  display: block;
+  width: 48px !important;
+  height: 48px !important;
+  border: none;
+  margin: 1px;
+}
+span.class-name {
+  font-family: "Nanum Myeongjo", serif;
+  font-size: 1.5em;
+}
+.spell-dc {
+  font-size: 0.8em;
+  color: rgb(240, 157, 41);
+  display: none;
+  margin-top: 1px;
+  margin-bottom: 0px;
+  width: 50%;
+}
+.spell-action-icons {
+  margin-left: 4px;
+}
+.sheet-error {
+  color: orangered !important;
+}
+.item-create, .item-edit, .spell-cast {
+  cursor: pointer;
+}
+/* Tables */
+.vertical-separator {
+  border-top: 1px solid #AAA;
+  border-bottom: 1px solid #AAA;
+}
+.bottom-separator {
+  border-bottom: 1px solid #AAA;
+}
+.right-separator {
+  border-right: 1px solid #AAA;
+}
+.table-header {
+  text-align: center;
+  margin: 0 auto;
+  border-bottom: none !important;
+  font-family: "Cinzel", serif
+}
+table.newera-actorsheet-table {
+  border: 1px solid #1D4159;
+}
+.newera-actorsheet-table tr:first-child {
+  background-color: #1D4159 !important;
+  font-family: "Cinzel", serif;
+}
+.newera-actorsheet-table tr:nth-child(odd) {
+  background-color: #446A83;
+}
+.newera-actorsheet-table tr:nth-child(even) {
+  background-color: #345A73;
+}
+div.skill-checkbox {
+  display: block;
+}
+input.skill-checkbox {
+  display: inline;
+  width: 10px;
+  height: 10px;
+  color: #f88d28;
+  border-radius: 1px;
+  border: 1px solid #f88d28;
+}
+/*TinyMCE Editor restyling */
+.newera-editor .editor {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #1D4159;
+  color: white;
+}
+.newera-editor .editor .tox {
+  background-color: white;
+}
+/* Resource controls */
+div.newera-actorsheet-resource {
+  display: block;
+  margin: 0;
+  width: 100%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+div.resource-content {
+  display: inline;
+  width: 126px;
+}
+div#hp-heart-container {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  vertical-align: middle;
+  position: relative;
+}
+img.hp-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  outline: none;
+  border: none;
+}
+img.resource-icon {
+  display: inline;
+  width: 32px;
+  height: 32px;
+  vertical-align: middle;
+  outline: none;
+  border: none;
+}
+input.resource-input {
+  color: gray;
+  font-family: "Nanum Myeongjo", serif;
+  border: none;
+  outline: none;
+  display: inline;
+  width: 60px;
+  font-size: 20px;
+  background-color: #1D4159;
+}
+div.resource-content span {
+  display: inline;
+  width: 6px;
+}
+input.resource-hp, label.resource-hp {
+  color: rgb(194,23,29) !important;
+}
+input.resource-inactive {
+  color: #222 !important;
+}
+input.resource-energy, label.resource-energy {
+  color: rgb(17,111,250) !important;
+}
+label.resource-input {
+  color: gray !important;
+}
+input.resource-energy-no-magic, label.resource-energy-no-magic {
+  color: rgb(94, 94, 94) !important;
+}
+input.resource-custom {
+  color: white !important;
+}
+input.resource-hydrogen {
+  color: #d37304;
+}
+input.resource-battery {
+  color: #b2f106;
+}
+/*Wrapper div needed because progress bars are garbage*/
+.progress-wrapper progress[value] {
+  appearance: none;
+  -webkit-appearance: none;
+}
+.progress-wrapper progress[value]::-webkit-progress-bar {
+  background-color: black;
+  padding: 1px;
+  border: 1px solid white;
+}
+.energy progress[value]::-webkit-progress-value {
+  background: rgb(17,111,250);
+  background-color: rgb(17,111,250);
+}
+.newera-actorsheet-bars {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 4px;
+}
+.resource-bars {
+  display: inline-block;
+  width: 65%;
+  margin-right: 5px;
+  margin-left: 0;
+  vertical-align: middle;
+}
+.damage-button {
+  display: inline-block;
+  width: 20%;
+  margin-left: 0;
+  margin-right: 0;
+  vertical-align: middle;
+}
+
+div#cp-wrapper {
+  float: right;
+}
+.cp progress[value]::-webkit-progress-value {
+  background: #f88d28;
+}
+.res-over progress[value]::-webkit-progress-value {
+  background: rgb(184, 76, 251);
+  background-color: rgb(184, 76, 251);
+}
+.hp-high progress[value]::-webkit-progress-value {
+  background: limegreen;
+  background-color: limegreen;
+}
+.hp-medium progress[value]::-webkit-progress-value {
+  background: yellow;
+}
+.hp-low progress[value]::-webkit-progress-value {
+  background: orange;
+}
+.hp-on-lifepoints progress[value]::-webkit-progress-value {
+  background: rgb(194,23,29);
+}
+.enemy-hp progress[value]::-webkit-progress-value {
+  background: rgb(194,23,29);
+}
+.cw progress[value]::-webkit-progress-value {
+  background: white;
+}
+.cw-full progress[value]::-webkit-progress-value {
+  background: red !important;
+}
+.hydrogen progress[value]::-webkit-progress-value {
+  background: #d37304 !important;
+}
+.battery progress[value]::-webkit-progress-value {
+  background: #b2f106 !important;
+}
+div.cp {
+  display: inline;
+}
+/*Amplified spell text*/
+span.ampText {
+  font-weight: bold;
+  color: orangered;
+}
+span.ampText-hot {
+  font-weight: bold;
+  color: yellow;
+  text-shadow: orangered 0px 0px 2px;
+}
+span.ampText2 {
+  font-weight: bold;
+  color: limegreen;
+}
+span.ampText2-hot {
+  font-weight: bold;
+  color: yellow;
+  text-shadow: limegreen 0px 0px 2px;
+}
+input.amplified {
+  color: yellow !important;
+}
+/* Equipment screen */
+div.equipment-display {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  height: 256px;
+}
+img.equipment-body {
+  border: none;
+  height: 256px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.8;
+}
+img.equipment-worn {
+  border: none;
+  width: 128px;
+  height: 128px;
+  position: absolute;
+  top: 0px;
+  right: 41px;
+  opacity: 0.7;
+}
+.equipment-box {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #1D4159;
+  background-color: rgba(29, 65, 89, 0.3);
+  border-radius: 2px;
+  position: absolute;
+}
+.equipment-icon {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.equipment-box-small {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #1D4159;
+  background-color: rgba(29, 65, 89, 0.3);
+  border-radius: 1px;
+  position: absolute;
+}
+.equipment-box-small a, .equipment-icon a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.equipment-box-small a img, .equipment-icon a img {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.equipment-box-small a .fa-plus {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.item-quantity-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  text-align: right;
+  font-size: 16px;
+  font-family: 'Aboreto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #f88d28;
+}
+.empty-item-slot {
+  cursor: default !important;
+}
+.creature-item-add {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 36px;
+}
+#equipment-add-6 {
+  bottom: 0px;
+  right: 0px;
+}
+#equipment-add-5 {
+  bottom: 0px;
+  right: 34px;
+}
+#equipment-add-4 {
+  bottom: 0px;
+  right: 68px;
+}
+#equipment-add-3 {
+  bottom: 0px;
+  right: 102px;
+}
+#equipment-add-2 {
+  bottom: 0px;
+  right: 136px;
+}
+#equipment-add-1 {
+  bottom: 0px;
+  right: 170px;
+}
+#equipment-right-hand {
+  left: 20px;
+  top: 110px;
+}
+#equipment-left-hand {
+  left: 188px;
+  top: 110px;
+}
+#equipment-hands {
+  left: 20px;
+  top: 164px;
+}
+#equipment-head {
+  left: 104px;
+  top: 0px;
+}
+#equipment-feet {
+  left: 104px;
+  top: 221px;
+}
+#equipment-waist {
+  left: 104px;
+  top: 167px;
+}
+#equipment-neck {
+  left: 104px;
+  top: 54px;
+}
+#equipment-body-armor {
+  left: 77px;
+  top: 108px;
+}
+#equipment-outfit {
+  left: 131px;
+  top: 108px;
+}
+#equipment-phone {
+  left: 188px;
+  top: 164px;
+}
+#equipment-worn0 {
+  top: 0px;
+  right: 0px;
+}
+#equipment-worn1 {
+  top: 0px;
+  right: 54px;
+}
+#equipment-worn2 {
+  top: 0px;
+  right: 108px;
+}
+#equipment-worn3 {
+  top: 0px;
+  right: 162px;
+}
+#equipment-worn4 {
+  top: 0px;
+  right: 216px;
+}
+#equipment-worn5 {
+  top: 54px;
+  right: 0px;
+}
+#equipment-worn6 {
+  top: 54px;
+  right: 54px;
+}
+#equipment-worn7 {
+  top: 54px;
+  right: 108px;
+}
+#equipment-worn8 {
+  top: 54px;
+  right: 162px;
+}
+#equipment-worn9 {
+  top: 54px;
+  right: 216px;
+}
+/* Items table */
+div.inventory-table-container {
+  display: block;
+  height: 248px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Spell buttons */
+#spell-add-1 {
+  top: 2px;
+  left: 2px;
+}
+#spell-add-2 {
+  top: 2px;
+  left: 34px;
+}
+#spell-add-row, #effect-add-row {
+  height: 36px;
+  position: relative;
+}
+
+/*Effect button */
+#effect-add {
+  top: 2px;
+  left: 2px;
+}
+
+/*Action Menu*/
+div.action-detail {
+  display: block;
+  width: 90%;
+  height: 250px;
+  overflow-y: auto;
+  margin: 0 auto;
+  border: 1px solid #1D4159;
+  position: relative;
+}
+div#selectedAction {
+  display: block;
+  width: 100%;
+}
+div#editAction {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+div#noActionSelected {
+  font-style: italic;
+}
+div.action-category {
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+div.action-icon {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #1D4159;
+  cursor: pointer;
+}
+div.action-icon-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+div.action-icon-container a {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 24px;
+}
+div.action-container {
+  float: right;
+  width: 96px;
+  height: 96px;
+  position: relative;
+}
+div.action-data {
+  display: none;
+}
+.disabled-action {
+  opacity: 0.5;
+}
+h1.action-name {
+  font-family: "Nanum Myeongjo", serif;
+  font-size: 2em;
+  color: white;
+  border-bottom: none;
+}
+h2.action-type {
+  font-family: "Nanum Myeongjo", serif;
+  font-size: 1.25em;
+  color: #8DB1C9;
+  border-bottom: none;
+}
+div.not-right-now {
+  font-style: italic;
+  color:rgb(240, 157, 41);
+}
+button.newera-roll-button, button.newera-action-button {
+  max-width: 30%;
+}
+
+/*Chat messages*/
+div.chat-action-container {
+  float: right;
+  width: 48px;
+  height: 48px;
+  position: relative;
+}
+img.action-image-base {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: none;
+  width: 100%;
+  height: 100% !important;
+}
+img.action-image-overlay-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 33%;
+  height: 33%;
+  border: none;
+}
+img.action-image-overlay-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 33%;
+  height: 33%;
+  border: none;
+}
+p.chat-narration {
+  color: #1D4159 !important;
+}
+div.text-message { /* This is the one for the in-game chat, that's why it belongs in newera.css */
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  color: black;
+}
+div.text-message h4 {
+  color: #555;
+  font-size: 0.8em;
+  font-style: italic;
+}
+td.class-feature {
+  display: block;
+  margin: 0 auto;
+  text-align: left;
+}
+td.class-feature h4 {
+  font-size: 1.5em;
+  color: white;
+  font-family: "Cinzel", serif;
+  color: #60ACDF;
+}
+td.class-feature h4 sup {
+  font-size: 0.55em;
+}
+td.feature-level h2 {
+  display: inline-block;
+  color: #60ACDF;
+  font-size: 24px;
+  border-bottom: none;
+  vertical-align: top;
+}
+td.feature-level img {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: none;
+  outline: none;
+  vertical-align: top;
+}
+div.feature-selection {
+  margin-top: 6px;
+  width: 80%;
+  text-align: right;
+}
+div.feature-selection select, div.feature-selection input {
+  width: 50%;
+}
+div.magic-info {
+  text-align: center;
+}
+div.magic-info h4 {
+  font-family: "Nanum Myeongjo", serif;
+  color: white;
+  font-size: 1.25em;
+}
+/* Active Effects */
+tr.effect-row td h3 {
+  font-family: "Cinzel", serif;
+  font-size: 1.25em;
+  color: white;
+  border-bottom: none;
+}
+.effect-duration {
+  font-size: 1.25em;
+}
+.enchantment-drag {
+  float: right;
+  margin-top: 6px;
+  margin-right: 6px;
+}
+.stored {
+  opacity: 0.5;
+}
+
+.spell-dialog-button {
+  width: 30%;
+}
+.spell-dialog {
+  text-align: center;
+}
+#amplify-up, #amplify-down, #amplify-heading {
+  display: inline-block;
+  width: 30%;
+  vertical-align: middle;
+}
+#amplify-up, #amplify-down {
+  cursor: pointer;
+}
+
+.quick-action-img {
+  float: right;
+  border: none;
+  outline: none;
+  width: 8%;
+}
+
+/* Inspiration */
+
+div#inspiration {
+  width: 30%;
+  cursor: pointer;
+}
+div#inspiration img {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin: none;
+  border: none;
+  outline: none;
+}
+div#inspiration-cp {
+  display: inline-block;
+  opacity: 0.8;
+  vertical-align: middle;
+}
+
+/* Spell Prep Sheet */
+.newera-spellprepsheet-body {
+  min-width: 480px;
+  background-color: rgb(41,84,112);
+  color: white;
+  font-family: "Nanum Myeongjo", serif;
+  overflow-y: hidden;
+  text-align: center;
+}
+.newera-spellprepsheet-body hr {
+  border-top: 1px solid #ddd;
+  border-bottom: none;
+  width: 80%;
+}
+.newera-spellprepsheet-body button {
+  width: 40%;
+  margin: 6px;
+}
+.newera-spellprepsheet-body h2 {
+  font-family: "Cinzel", serif;
+  border-bottom: none;
+  color: #60ACDF;
+}
+tr.spell-slot {
+  height: 36px;
+}
+tr.expended td {
+  opacity: 0.5;
+}
+tr.expended td a {
+  opacity: 1.0 !important;
+}
+
+/* Chant Sheet */
+div.chant-level {
+  display: inline-block;
+  width: 25%;
+  vertical-align: middle;
+}
+div.chant-basic {
+  background-color: cornflowerblue;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+div.chant-apprentice {
+  background-color: mediumseagreen;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+div.chant-intermediate {
+  background-color: goldenrod;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+div.chant-advanced {
+  background-color: orangered;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+div.chant-expert {
+  background-color: darkmagenta;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+div.chant-master {
+  background-color: black;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+h3.chant-level {
+  color: white !important;
+}
+h3.inactive {
+  opacity: 0.5;
+}
+h2.chant-count {
+  display: inline;
+  color: white;
+  font-size: 2em;
+}

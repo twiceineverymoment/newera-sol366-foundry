@@ -1,0 +1,31 @@
+<form class="{{cssClass}} {{actor.type}} newera-spellprepsheet-body" autocomplete="off">
+    <h2>Chant Slots</h2>
+    <div>
+        <button class="sheet-input" id="resetChants">Reset</button>
+    </div>
+    {{#each chantLevels as |level i|}}
+        <div class="chant-level">
+            <h3 class="newera-section-header chant-level">{{level.heading}}</h3>
+            <div class="chant-slot-control">
+                <a class="chant-slot-down" data-chant-level="{{level.key}}"><i class="fas fa-minus"></i></a>
+                <h2 class="chant-count" {{#unless level.value}}style="opacity: 0.5"{{/unless}}>{{level.value}}</h2>
+                <a class="chant-slot-up" data-chant-level="{{level.key}}"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    {{/each}}
+
+    <h2>Known Chants</h2>
+    <table class="newera-actorsheet-table">
+        <tr style="display: none"></tr>
+        {{#each chants as |chant i|}}
+            <tr class="chant-macro" draggable="true" data-chant-name="{{chant.name}}" data-chant-level="{{chant.level}}">
+                <td>{{chant.name}}</td>
+                <td>
+                    <div class="{{chant.cssClass}}">
+                        {{chant.label}}
+                    </div>
+                </td>
+            </tr>
+        {{/each}}
+    </table>
+</form>

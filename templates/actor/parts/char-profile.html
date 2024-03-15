@@ -1,0 +1,86 @@
+<div id="profile-appearance">
+    <h3 class="table-header">DESCRIPTION</h3>
+    <div class="profile-grid">
+        <label for="system.description.skinColor">Height</label>
+        <input type="text" name="system.description.height" value="{{system.description.height}}" class="sheet-input"/>
+    </div>
+    <div class="profile-grid">
+        <label for="system.description.birthDate">Birth Date</label>
+        <input type="text" name="system.description.birthDate" value="{{system.description.birthDate}}" class="sheet-input"/>
+    </div>
+    <div class="profile-grid">
+        <label for="system.description.hairColor">Hair Color</label>
+        <input type="text" name="system.description.hairColor" value="{{system.description.hairColor}}" class="sheet-input"/>
+    </div>
+    <div class="profile-grid">
+        <label for="system.description.legalName">Legal Name</label>
+        <input type="text" name="system.description.legalName" value="{{system.description.legalName}}" class="sheet-input"/>
+    </div>
+    <div class="profile-grid">
+        <label for="system.description.eyeColor">Eye Color</label>
+        <input type="text" name="system.description.eyeColor" value="{{system.description.eyeColor}}" class="sheet-input"/>
+    </div>
+    <div class="profile-grid">
+        <label for="system.description.nationality">Nationality</label>
+        <input type="text" name="system.description.nationality" value="{{system.description.nationality}}" class="sheet-input"/>
+    </div>
+</div>
+
+<div id="profile-bio">
+    <h3 class="table-header">Biography</h3>
+    <label for="system.alignment.ethical">Alignment</label>
+    <select name="system.alignment.ethical" id="alignment-ethical" class="sheet-input">
+        <option value="2">Lawful</option>
+        <option value="1">Social</option>
+        <option value="0">Neutral</option>
+       <option value="-1">Rebel</option>
+       <option value="-2">Chaotic</option>
+    </select>
+    <select name="system.alignment.moral" id="alignment-moral" class="sheet-input">
+       <option value="2">Good</option>
+       <option value="1">Moral</option>
+       <option value="0">Neutral</option>
+       <option value="-1">Impure</option>
+       <option value="-2">Evil</option>
+    </select>
+</div>
+<br />
+<div id="profile-detail" class="newera-actorsheet-editor-container">
+    {{editor system.description.details target="system.description.details" rollData=rollData button=true owner=owner editable=editable}}
+</div>
+
+{{!--This section only displays when Custom Pronouns is selected from the top--}}
+<div id="profile-pronouns" style="display: none">
+    <h3 class="table-header vertical-separator">Custom Pronouns</h3>
+    <div class="profile-grid">
+        <label for="system.pronouns.subjective">Subjective</label>
+        <input type="text" class="sheet-input" id="pronoun-subjective" name="system.pronouns.subjective" value="{{system.pronouns.subjective}}" />    
+    </div>
+
+    <div class="profile-grid">
+        <label for="system.pronouns.objective">Objective</label>
+        <input type="text" class="sheet-input" id="pronoun-objective" name="system.pronouns.objective" value="{{system.pronouns.objective}}" />
+    </div>
+    
+    <div class="profile-grid">
+        <label for="system.pronouns.possessiveDependent">Possessive<br />Dependent</label>
+        <input type="text" class="sheet-input" id="pronoun-possessiveDependent" name="system.pronouns.possessiveDependent" value="{{system.pronouns.possessiveDependent}}" />    
+    </div>
+
+    <div class="profile-grid">
+        <label for="system.pronouns.possessiveIndependent">Possessive<br />Independent</label>
+        <input type="text" class="sheet-input" id="pronoun-possessiveIndependent" name="system.pronouns.possessiveIndependent" value="{{system.pronouns.possessiveIndependent}}" />    
+    </div>
+
+    <div class="profile-grid">
+        <label for="system.pronouns.reflexive">Reflexive</label>
+        <input type="text" class="sheet-input" id="pronoun-reflexive" name="system.pronouns.reflexive" value="{{system.pronouns.reflexive}}" />    
+    </div>
+
+    <div class="profile-grid">
+        <label for="system.pronouns.reflexive">Contraction</label>
+        <input type="text" class="sheet-input" id="pronoun-contraction" name="system.pronouns.contraction" value="{{system.pronouns.contraction}}" />    
+    </div>
+
+    <input type="hidden" id="pronoun-pluralize" name="system.pronouns.pluralize" value="{{system.pronouns.pluralize}}" data-dtype="Boolean" />
+</div>

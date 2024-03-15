@@ -1,0 +1,156 @@
+<h3 class="table-header">Ability Scores</h3>
+<div id="ability-points-counter" style="display: none">
+  <span id="ability-points-msg"></span>
+</div>
+<table class="newera-actorsheet-table">
+  <tr>
+    <th>ABILITY</th>
+    <th>SCORE</th>
+    <th>BASE</th>
+    <th>BONUS</th>
+    <th>MODIFIER</th>
+  </tr>
+  {{#each system.abilities as |ability key|}}
+    <tr class="check-macro" draggable="true" data-macro-formula="d20+@abilities.{{key}}.mod" data-macro-name="{{ability.label}} Check" data-macro-label="{{ability.label}} Ability Check" data-macro-img="{{ability.image}}">
+      <td style="width: 35%">
+        <span class="rollable" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}} Ability Check">
+          <img class="skill-icon" src="{{ability.image}}" />
+          {{ability.label}}
+        </span>
+      </td>
+      <td style="width: 20%"><input type="text" class="sheet-input" name="system.abilities.{{key}}.score" value="{{ability.score}}" data-dtype="Number" /></td>
+      <td style="width: 15%"><span class="sheet-output-minor">{{numberFormat ability.baseMod decimals=0 sign=true}}</span></td>
+      <td style="width: 15%"><input type="text" class="sheet-input" name="system.abilities.{{key}}.bonus" value="{{ability.bonus}}" data-dtype="Number" /></td>
+      <td style="width: 15%">
+        <span class="rollable sheet-output-major" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}} Ability Check">
+          {{numberFormat ability.mod decimals=0 sign=true}}
+          <img class="die" src="systems/newera-sol366/resources/d20-orange.png" />
+        </span>
+      </td>
+    </tr>
+  {{/each}}
+</table>
+
+<h3 class="table-header">Skills</h3>
+<table class="newera-actorsheet-table">
+  <tr>
+    <th>SKILL</th>
+    <th colspan="2">LEVEL</th>
+    <th>ABILITY</th>
+    <th>BONUS</th>
+    <th>MODIFIER</th>
+  </tr>
+  {{#each system.skills as |skill key|}}
+    <tr class="check-macro" draggable="true" data-macro-formula="d20+@skills.{{key}}.mod" data-macro-name="{{skill.label}} Check" data-macro-label="{{skill.label}} Skill Check" data-macro-img="{{skill.image}}">
+      <td style="width: 30%">
+        <span class="rollable" data-roll="d20+@skills.{{key}}.mod" data-label="{{skill.label}} {{skill.rollLabel}}">
+          <img class="skill-icon" src="{{skill.image}}" />
+          {{skill.label}}
+        </span>
+      </td>
+      <td style="width: 15%"><input type="text" class="sheet-input" name="system.skills.{{key}}.level" value="{{skill.level}}" data-dtype="Number" /></td>
+      <td style="width: 10%">
+        <div class="skill-checkbox">
+          <input type="checkbox" class="skill-checkbox" name="system.skills.{{key}}.natural" {{checked skill.natural}} />
+          <label for="system.skills.{{key}}.natural" title="Natural Skill">N</label>
+        </div>
+        <div class="skill-checkbox">
+          <input type="checkbox" class="skill-checkbox" name="system.skills.{{key}}.grandMaster" {{checked skill.grandMaster}} />
+          <label for="system.skills.{{key}}.grandMaster" title="Grand Master">GM</label>
+        </div>
+      </td>
+      <td style="width: 15%"><span class="sheet-output-minor">{{numberFormat skill.parentMod decimals=0 sign=true}}</span></td>
+      <td style="width: 15%"><input type="text" class="sheet-input" name="system.skills.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
+      <td style="width: 15%">
+        <span class="rollable sheet-output-major" data-roll="d20+@skills.{{key}}.mod" data-label="{{skill.label}} {{skill.rollLabel}}">
+          {{numberFormat skill.mod decimals=0 sign=true}}
+          <img class="die" src="systems/newera-sol366/resources/d20-orange.png" />
+        </span>
+      </td>
+    </tr>
+  {{/each}}
+  <tr>
+    <td colspan="6">
+      <a class="improveSkillButton"><i class="fas fa-plus"></i> IMPROVE SKILLS</a>
+    </td>
+  </tr>
+</table>
+
+<h3 class="table-header">Knowledges</h3>
+<table class="newera-actorsheet-table">
+  <tr>
+    <th>SUBJECT</th>
+    <th colspan="2">LEVEL</th>
+    <th>BONUS</th>
+    <th>MODIFIER</th>
+  </tr>
+  {{#each system.knowledges as |skill key|}}
+  <tr class="check-macro" draggable="true" data-macro-formula="d20+@knowledges.{{key}}.mod" data-macro-name="Knowledge Check: {{skill.label}}" data-macro-label="Knowledge: {{skill.label}}">
+    <td style="width: 45%"><input type="text" class="sheet-input" name="system.knowledges.{{key}}.subject" value="{{skill.subject}}" /></td>
+    <td style="width: 15%"><input type="text" class="sheet-input" name="system.knowledges.{{key}}.level" value="{{skill.level}}" data-dtype="Number" /></td>
+    <td style="width: 10%">
+       <div class="skill-checkbox">
+         <input type="checkbox" class="skill-checkbox" name="system.knowledges.{{key}}.natural" {{checked skill.natural}} />
+        <label for="system.knowledges.{{key}}.natural" title="Natural Skill">N</label>
+      </div>
+       <div class="skill-checkbox">
+         <input type="checkbox" class="skill-checkbox" name="system.knowledges.{{key}}.grandMaster" {{checked skill.grandMaster}} />
+         <label for="system.knowledges.{{key}}.grandMaster" title="Grand Master">GM</label>
+       </div>
+    </td>
+    <td style="width: 15%"><input type="text" class="sheet-input" name="system.knowledges.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
+    <td style="width: 15%">
+      <span class="rollable sheet-output-major" data-roll="d20+@knowledges.{{key}}.mod" data-label="Knowledge: {{skill.subject}}">
+        {{numberFormat skill.mod decimals=0 sign=true}}
+        <img class="die" src="systems/newera-sol366/resources/d20-orange.png" />
+      </span>
+    </td>
+  </tr>
+  {{/each}}
+  <tr>
+    <td colspan="5">
+      <a title="Create Knowledge" id="addKnowledgeButton"><i class="fas fa-plus"></i> ADD</a>
+    </td>
+  </tr>
+</table>
+
+<h3 class="table-header">Specialties</h3>
+<table class="newera-actorsheet-table">
+  <tr>
+    <th>SUBJECT</th>
+    <th>SKILL</th>
+    <th>LEVEL</th>
+    <th>BONUS</th>
+    <th>MODIFIER</th>
+  </tr>
+  {{#each system.specialties as |skill key|}}
+  <tr class="check-macro" draggable="true" data-macro-formula="d20+@specialties.{{key}}.mod" data-macro-name="{{skill.label}} Check" data-macro-label="{{skill.label}} Skill Check">
+    <td style="width: 30%"><input type="text" class="sheet-input" name="system.specialties.{{key}}.subject" value="{{skill.subject}}" /></td>
+    <td style="width: 25%">
+      <select name="system.specialties.{{key}}.defaultParent" class="sheet-input">
+        {{#each ../system.skills as |parent key2|}}
+          <option value="{{key2}}" {{selected skill.defaultParent key2}}>{{parent.label}}</option>
+        {{/each}}
+        {{#if ../system.isMagicUser}}
+          {{#each ../system.magic as |parent key3|}}
+            <option value="{{key3}}" {{selected skill.defaultParent key3}}>{{parent.label}} Magic</option>
+          {{/each}}
+        {{/if}}
+      </select>
+    </td>
+    <td style="width: 15%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.level" value="{{skill.level}}" data-dtype="Number" min="0" max="3" /></td>
+    <td style="width: 15%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
+    <td style="width: 15%">
+      <span class="rollable sheet-output-major" data-roll="d20+@specialties.{{key}}.mod" data-label="{{skill.label}} Skill Check">
+        {{numberFormat skill.mod decimals=0 sign=true}}
+        <img class="die" src="systems/newera-sol366/resources/d20-orange.png" />
+      </span>
+    </td>
+  </tr>
+  {{/each}}
+  <tr>
+    <td colspan="6">
+      <a title="Create Specialty" id="addSpecialtyButton"><i class="fas fa-plus"></i> ADD</a>
+    </td>
+  </tr>
+</table>

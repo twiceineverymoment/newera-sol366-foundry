@@ -1,0 +1,49 @@
+<table class="newera-actorsheet-table">
+    <tr>
+        <td colspan="5">Active Effects</td>
+    </tr>
+    {{#each effects as |effect index|}}
+    <tr class="effect-row" data-effect-id="{{effect._id}}" data-color="{{effect.tint}}" data-effect-category="{{effect.stdsystem.category}}" data-level-current="{{effect.stdsystem.level}}" data-level-max="{{effect.stdsystem.max}}" style="width: 10%">
+        <td>
+            <img class="resource-icon" src="{{effect.icon}}" />
+        </td>
+        <td style="width: 50%">
+            <h3>{{effect.name}}</h3>
+            {{{effect.description}}}
+        </td>
+        <td style="width: 25%">
+            {{#if effect.isTemporary}}
+                <img class="resource-icon" src="systems/newera-sol366/resources/sands-of-time.png" />
+                <span class="effect-duration">{{effect.durationText}}</span>
+            {{/if}}
+        </td>
+        <td style="width: 5%">
+            {{#if effect.allow.up}}
+            <a class="effect-up" data-effect-id="{{effect._id}}" data-tooltip="Increase Effect Value" data-tooltip-direction="UP"><i class="fa-solid fa-chevron-up"></i></a>
+            {{else}}
+            <a style="opacity: 0.3"><i class="fa-solid fa-chevron-up"></i></a>
+            {{/if}}
+            {{#if effect.allow.down}}
+            <a class="effect-down" data-effect-id="{{effect._id}}" data-tooltip="Decrease Effect Value" data-tooltip-direction="DOWN"><i class="fa-solid fa-chevron-down"></i></a>
+            {{else}}
+            <a style="opacity: 0.3"><i class="fa-solid fa-chevron-down"></i></a>
+            {{/if}}
+        </td>
+        <td style="width: 10%">
+            <a class="effect-toggle" data-effect-id="{{effect._id}}" data-tooltip="Suspend/Resume Effect" data-tooltip-direction="UP"><i class="fa-solid {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+            <a class="effect-edit" data-effect-id="{{effect._id}}" data-tooltip="Edit Effect" data-tooltip-direction="UP"><i class="fas fa-edit"></i></a>
+            <a class="effect-delete" data-effect-id="{{effect._id}}" data-tooltip="Remove Effect" data-tooltip-direction="UP"><i class="fas fa-x"></i></a>
+        </td>
+    </tr>
+    {{/each}}
+    <tr>
+        <td colspan="5" id="effect-add-row">
+            <div class="equipment-box-small" id="effect-add" data-tooltip="Add Active Effect" data-tooltip-direction="UP">
+                <a class="effect-create">
+                <img src="icons/svg/aura.svg" />
+                <i class="fas fa-plus"></i>
+                </a>
+              </div> 
+        </td>
+    </tr>
+</table>

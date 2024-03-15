@@ -1,0 +1,645 @@
+{
+	"Actor": {
+		"types": ["Player Character", "Non-Player Character", "Creature", "Vehicle"],
+		"templates": {
+			"base": {
+				"hitPoints": {
+					"value": 10,
+					"min": 0,
+					"max": 10
+				},
+				"lifePoints": {
+					"value": 10,
+					"min": 0,
+					"max": 10
+				},
+				"energy": {
+					"value": 0,
+					"min": 0,
+					"max": 0
+				},
+				"temporaryHitPoints": {
+					"value": 0,
+					"min": 0,
+					"max": 0
+				},
+				"temporaryEnergy": {
+					"value": 0,
+					"min": 0,
+					"max": 0
+				},
+				"additionalResources": {},
+				"abilities": {
+					"strength": {
+						"score": 10,
+						"bonus": 0,
+						"image": "systems/newera-sol366/resources/muscle-up.png"
+					},
+					"dexterity": {
+						"score": 10,
+						"bonus": 0,
+						"image": "systems/newera-sol366/resources/hand-ok.png"
+					},
+					"constitution": {
+						"score": 10,
+						"bonus": 0,
+						"image": "systems/newera-sol366/resources/heart-organ.png"
+					},
+					"intelligence": {
+						"score": 10,
+						"bonus": 0,
+						"image": "systems/newera-sol366/resources/brain.png"
+					},
+					"wisdom": {
+						"score": 10,
+						"bonus": 0,
+						"image": "systems/newera-sol366/resources/semi-closed-eye.png"
+					},
+					"charisma": {
+						"score": 10,
+						"bonus": 0,
+						"image": "systems/newera-sol366/resources/lips.png"
+					}
+				},
+				"size": {
+					"mod": 0
+				},
+				"armor": {
+					"bonus": 0,
+					"equipped": 0
+				},
+				"turnLength": {
+					"actions": {
+						"base": 3,
+						"bonus": 0
+					},
+					"reactions": {
+						"base": 1,
+						"bonus": 0
+					}
+				},
+				"passiveAgility": {
+					"bonus": 0
+				},
+				"passivePerception": {
+					"bonus": 0
+				},
+				"speed": {
+					"base": 6,
+					"bonus": 0
+				},
+				"carryWeight": {
+					"bonus": 0
+				},
+				"initiative": {
+					"bonus": 0
+				},
+				"equipment": {
+					"leftHand": "",
+					"rightHand": "",
+					"head": "",
+					"feet": "",
+					"hands": "",
+					"body": "",
+					"outfit": "",
+					"neck": "",
+					"waist": "",
+					"phone": "",
+					"worn0": ""
+				},
+				"wornItemSlots": 4,
+				"lastAction": {
+					"category": "general",
+					"index": 0
+				}
+			},
+			"skills": {
+				"advancedSkills": false,
+				"skills": {
+					"agility": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/body-balance.png",
+						"parentAbilities": ["dexterity"]
+					},
+					"athletics": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/weight-lifting-up.png",
+						"parentAbilities": ["strength"]
+					},
+					"deception": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/fingers-crossed.png",
+						"parentAbilities": ["charisma"]
+					},
+					"defense": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/broken-shield.png",
+						"parentAbilities": ["strength"]
+					},
+					"determination": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/meditation.png",
+						"parentAbilities": ["intelligence", "charisma"]
+					},
+					"diplomacy": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/public-speaker.png",
+						"parentAbilities": ["charisma"]
+					},
+					"endurance": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/fist.png",
+						"parentAbilities": ["strength", "constitution"]
+					},
+					"insight": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/telepathy.png",
+						"parentAbilities": ["wisdom"]
+					},
+					"instinct": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/compass.png",
+						"parentAbilities": ["wisdom"]
+					},
+					"intimidation": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/dark-squad.png",
+						"parentAbilities": ["charisma"]
+					},
+					"logic": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/jigsaw-piece.png",
+						"parentAbilities": ["intelligence"]
+					},
+					"marksmanship": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/eye-target.png",
+						"parentAbilities": ["dexterity"]
+					},
+					"medicine": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/bandage-roll.png",
+						"parentAbilities": ["intelligence"]
+					},
+					"one-handed": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/plain-dagger.png",
+						"parentAbilities": ["dexterity"]
+					},
+					"perception": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/magnifying-glass.png",
+						"parentAbilities": ["wisdom"]
+					},
+					"performance": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/duality-mask.png",
+						"parentAbilities": ["charisma"]
+					},
+					"reflex": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/divert.png",
+						"parentAbilities": ["dexterity", "wisdom"]
+					},
+					"sleight-of-hand": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/snatch.png",
+						"parentAbilities": ["dexterity"]
+					},
+					"stealth": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/invisible.png",
+						"parentAbilities": ["dexterity"]
+					},
+					"technology": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/swiss-army-knife.png",
+						"parentAbilities": ["intelligence"]
+					},
+					"two-handed": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/fire-axe.png",
+						"parentAbilities": ["strength"]
+					}
+				},
+				"knowledges": {},
+				"specialties": {}
+			},
+			"magic": {
+				"casterLevel": 0,
+				"spellcraft": 0,
+				"magic": {
+					"elemental": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/elemental.png",
+						"parentAbility": "strength"
+					},
+					"divine": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/divine.png",
+						"parentAbility": "constitution"
+					},
+					"physical": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/physical.png",
+						"parentAbility": "dexterity"
+					},
+					"psionic": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/psionic.png",
+						"parentAbility": "intelligence"
+					},
+					"spectral": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/spectral.png",
+						"parentAbility": "charisma"
+					},
+					"temporal": {
+						"level": 0,
+						"bonus": 0,
+						"natural": false,
+						"grandMaster": false,
+						"image": "systems/newera-sol366/resources/temporal.png",
+						"parentAbility": "wisdom"
+					}
+				}
+			},
+      		"biography": {
+        		"description": {
+        		  "details": "Description",
+        		  "height": "",
+        		  "skinColor": "",
+        		  "eyeColor": "",
+          		  "hairColor": ""
+        		},
+				"alignment": {
+					"moral": "0",
+					"ethical": "0"
+				},
+        		"pronouns": {
+					"index": "2",
+          			"subjective": "They",
+          			"objective": "Them",
+          			"possessiveDependent": "Their",
+          			"possessiveIndependent": "Theirs",
+          			"reflexive": "Themself",
+					"contraction": "They're",
+					"pluralize": true
+        		}
+      		},
+			"money": {
+				"balance": 0,
+				"wallet": {
+					"1coins": 0,
+					"5coins": 0,
+					"10coins": 0,
+					"20coins": 0,
+					"50coins": 0,
+					"100coins": 0,
+					"100bills": 0,
+					"500bills": 0,
+					"1kbills": 0,
+					"2kbills": 0,
+					"5kbills": 0,
+					"10kbills": 0
+				}
+			}
+		},
+		"Player Character": {
+			"templates": ["base", "skills", "biography", "magic", "money"],
+      		"age": 25,
+			"classes": {
+				"classless": 0
+			},
+			"characterPoints": {
+				"cpt": 0
+			},
+			"hitPointIncrement": 8,
+			"hitPointTrueMax": 10,
+			"inspiration": 0
+		},
+		"Non-Player Character": {
+			"templates": ["base", "skills", "biography", "magic", "money"],
+			"age": 0,
+			"level": 0
+		},
+		"Creature": {
+			"templates": ["base", "magic"],
+			"level": 0,
+			"rarity": 1,
+			"characterPoints": 0,
+			"role": "",
+			"alignment": {
+				"moral": "0",
+				"ethical": "0",
+				"unaligned": false
+			},
+			"initialHitPoints": {
+				"dieCount": 0,
+				"dieSize": 0,
+				"modifier": 0
+			},
+			"saves": {
+				"endurance": {
+					"image": "systems/newera-sol366/resources/fist.png",
+					"bonus": 0
+				},
+				"reflex": {
+					"image": "systems/newera-sol366/resources/divert.png",
+					"bonus": 0
+				},
+				"determination": {
+					"image": "systems/newera-sol366/resources/meditation.png",
+					"bonus": 0
+				}
+			},
+			"description": "",
+			"specialModifiers": {},
+			"specialAbilities": {},
+			"hasStandardActions": true,
+			"hasInventory": false,
+			"hasMagic": false
+		},
+		"Vehicle": {
+			"templates": [],
+			"year": 366,
+			"make": "",
+			"model": "",
+			"seatingCapacity": 4,
+			"topSpeed": 0,
+			"vehicleType": "car",
+			"fuelType": "hydrogen",
+			"fuel": {
+				"min": 0,
+				"max": 100,
+				"value": 50
+			}
+		}
+	},
+	"Item": {
+		"types": ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Spell", "Enchantment", "Potion", "Class", "Feat", "Action", "Phone"],
+		"templates": {
+			"base": {
+				"description": "",
+				"rarity": 0,
+				"casperObjectId": "",
+				"actions": {}
+			},
+			"equipment": {
+				"weight": 0,
+				"value": 0,
+				"equipSlot": "I",
+				"customName": "",
+				"useCustomItemName": false,
+				"batteryLevel": -1,
+				"listDisplayName": "",
+				"stored": false
+			},
+			"enchantable": {
+				"enchanted": false,
+				"arcane": false,
+				"enchantmentDescriptor": "",
+				"enchantmentColor": "#000000"
+			},
+			"condition": {
+				"durability": 10,
+				"condition": 3,
+				"quality": 0
+			},
+			"stackable": {
+				"quantity": 1,
+				"rollQuantity": false,
+				"variableQuantity": {
+					"dieCount": 0,
+					"dieSize": 0,
+					"modifier": 0
+				}
+			},
+			"recipe": {
+
+			},
+			"magic": {
+				"level": 1,
+				"energyCost": 0,
+				"school": "??",
+				"form": "",
+				"keywords": "",
+				"static": false,
+				"refinementLevel": 0,
+				"ampFactor": 1
+			}
+		},
+		"Item": {
+			"templates": ["base", "equipment", "stackable", "enchantable"],
+			"units": "",
+			"outfitType": ""
+		},
+		"Melee Weapon": {
+			"templates": ["base", "equipment", "condition", "enchantable"],
+			"material": "Iron",
+			"weaponType": "Shortsword",
+			"handedness": "1H",
+			"customDamage": {
+				"amount": "",
+				"type": "slashing"
+			}
+		},
+		"Ranged Weapon": {
+			"templates": ["base", "equipment", "condition", "enchantable"],
+			"weaponType": "Pistol",
+			"handedness": "1H",
+			"reliability": 0,
+			"effectiveRange": 0,
+			"damage": "",
+			"isShotgun": false,
+			"magReload": false,
+			"firingAction": "M",
+			"firingRate": 1,
+			"ammo": {
+				"loaded": 0,
+				"clipSize": 0,
+				"itemName": "Small Firearm Ammunition"
+			}
+		},
+		"Shield": {
+			"templates": ["base", "equipment", "condition", "enchantable"],
+			"shieldRating": 0,
+			"shieldType": "Kite Shield",
+			"material": ""
+		},
+		"Armor": {
+			"templates": ["base", "equipment", "condition", "enchantable"],
+			"armorRating": 0,
+			"armorType": "Full Body",
+			"material": ""
+		},
+		"Spell": {
+			"templates": ["base", "magic"],
+			"castType": "S",
+			"castTime": "",
+			"damage": {
+				"amount": "",
+				"type": ""
+			},
+			"range": {
+				"value": 0,
+				"description": ""
+			}
+		},
+		"Enchantment": {
+			"templates": ["base", "magic"],
+			"enchantedItemDescriptor": "",
+			"effectColor": "",
+			"aetheriumCost": 0,
+			"materialCosts": "",
+			"validTargets": {
+				"weapon": false,
+				"clothing": false,
+				"accessory": false,
+				"shield": false,
+				"object": false,
+				"other": true,
+				"details": ""
+			},
+			"enchantmentType": "E",
+			"components": {}
+		},
+		"Potion": {
+			"templates": ["base", "equipment", "stackable"],
+			"potionType": "Potion",
+			"recipeLevel": 0,
+			"stackingBehavior": ""
+		},
+		"Class": {
+			"templates": ["base"],
+			"selectedClass": "Adventurer",
+			"level": 1
+		},
+		"Feat": {
+			"templates": ["base"],
+			"displayName": "",
+			"featType": "GF",
+			"featSubType": "",
+			"currentTier": 1,
+			"maximumTier": 1,
+			"isUpgrade": false,
+			"isSingleTiered": false,
+			"totalCost": "",
+			"chantLevel": 0,
+			"bonuses": {},
+			"choices": {},
+			"prerequisites": {},
+			"conflicts": {},
+			"tiers": {
+				"base": {
+					"cost": 0,
+					"description": ""
+				}
+			}
+		},
+		"Action": {
+			"templates": [],
+			"description": "Enter a description...",
+			"actionType": "1",
+			"images": {
+				"left": "",
+				"right": ""
+			},
+			"rolls": {}
+		},
+		"Phone": {
+			"templates": ["base", "equipment"],
+			"model": "New Phone",
+			"openApp": "",
+			"callee": "",
+			"selectedPhoto": "",
+			"militaryTime": false,
+			"background": "default",
+			"theme": "auto",
+			"phoneNumber": "(+29) (123) 456 789",
+			"flashlight": "off",
+			"featureLevel": 1,
+			"contacts": {},
+			"photos": {},
+			"searchHistory": []
+		}
+	}
+}

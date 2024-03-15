@@ -1,0 +1,26 @@
+<div class="phoneui-app-header">
+    <a class="phoneui-close-button app-close"><i class="fa-solid fa-circle-left"></i></a>
+    <select class="phoneui-input" name="system.url" id="addressBar">
+        <option value="Skye">httpx://www.skye.co.ae/</option>
+        <option value="Iris">httpx://watch.iris.co.ae/</option>
+        <option value="ÆBS.news">httpx://www.æbs.news/</option>
+        <option value="Fireside Social">httpx://fireside.social/</option>
+        <option value="the Torchlight Society website">httpx://tlhs.gov.ae/</option>
+        <option value="the Ancient Truth Forums">httpx://forums.theancienttruth.co.ut/</option>
+    </select>
+</div>
+{{#if world.signal.internet}}
+<div class="phoneui-app-body-full" style="background-color: white">
+    <img id="skye-logo" src="systems/newera-sol366/resources/phone-ui/skye.png" />
+    <input type="text" class="phoneui-browser-input" id="searchTerm" placeHolder="Search the Web" />
+    <button class="phoneui-browser-input" id="searchButton">
+        <i class="fa-solid fa-arrow-right"></i>
+    </button>
+</div>
+{{else}}
+<div style="text-align: center">
+    <h1><i class="fa-solid fa-globe"></i></h1>
+    <h2>Web Browser Unavailable</h2>
+    <h3>Internet Connection Required</h3>
+</div>
+{{/if}}

@@ -1,0 +1,32 @@
+<div class="phoneui-app-header">
+    <a class="phoneui-close-button app-close"><i class="fa-solid fa-circle-left"></i></a>
+    <h3>Contacts</h3>
+    <a class="phoneui-right-header-button" id="createContact"><i class="fa-solid fa-user-plus"></i></a>
+</div>
+<div class="phoneui-app-body-full">
+    <table class="phoneui-grid">
+        {{#unless world.signal.comms}}
+            <tr>
+                <td colspan="2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> No Service
+                </td>
+            </tr>
+        {{/unless}}
+        {{#each system.contacts as |contact index|}}
+            <tr>
+                <td style="text-align: left; width: 75%">
+                    <input type="text" name="system.contacts.{{index}}.name" value="{{contact.name}}" class="phoneui-input contact-name" data-dtype="String" />
+                    <input type="text" name="system.contacts.{{index}}.number" value="{{contact.number}}" class="phoneui-input contact-detail" data-dtype="String" />
+                </td>
+                <td style="text-align: center; width: 15%">
+                    {{#if ../world.signal.comms}}
+                    <a class="call" data-name="{{contact.name}}" data-number="{{contact.number}}">
+                        <i class="fa-solid fa-phone"></i>
+                    </a>
+                    {{/if}}
+                </td>
+            </tr>
+            <input type="hidden" name="system.contacts.{{index}}.unread" value="{{contact.unread}}" data-dtype="Boolean" />
+        {{/each}}
+    </table>
+</div>

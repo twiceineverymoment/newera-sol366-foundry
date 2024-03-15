@@ -1,0 +1,44 @@
+<div class="phoneui-app-header">
+    <a class="phoneui-close-button app-close"><i class="fa-solid fa-circle-left"></i></a>
+    <h3>Weather Conditions</h3>
+</div>
+<div class="phoneui-app-body-full">
+    {{#if world.signal.internet}}
+    <div id="weather-image">
+        <img src="systems/newera-sol366/resources/phone-ui/weather/{{world.weather.display.image}}.png" id="phoneui-weather-icon" />
+    </div>
+    <div id="weather-summary">
+        <div id="weather-temp">
+            <h1>{{world.weather.temp}}</h1>
+        </div>
+        <div id="weather-degrees">
+            <h2>°C</h2>
+            {{#if world.weather.extreme}}
+            <div id="weather-extreme" data-tooltip="Extreme {{world.weather.extreme.type}} {{world.weather.extreme.level}} - See Environmental Conditions">
+                <img class="resource-icon" src="systems/newera-sol366/resources/ec_extreme_{{world.weather.extreme.type}}.png" />
+            </div>
+            {{/if}}
+        </div>
+        <div id="weather-caption">
+            <h2>{{world.weather.display.caption}}</h2>
+        </div>
+    </div>
+    <div id="weather-details">
+        <h3><i class="fa-solid fa-location-arrow"></i> {{world.location}}</h3>
+        <p>
+            {{#if world.weather.wind}}
+                <img class="resource-icon" src="systems/newera-sol366/resources/ec_wind.png" data-tooltip="High Winds {{world.weather.wind}} - See Environmental Conditions"/>
+            {{/if}}
+            {{world.weather.windInfo}}
+        </p>
+        <p><b>Chance of {{#if world.weather.belowFreezing}}Snow:{{else}}Rain:{{/if}} {{world.weather.precipChance}}%</b></p>
+        <p>{{world.weather.forecast}}</p>
+    </div>
+    {{else}}
+    <div style="text-align: center">
+        <h1><i class="fa-solid fa-globe"></i></h1>
+        <h2>Weather Unavailable</h2>
+        <h3>Internet Connection Required</h3>
+    </div>
+    {{/if}}
+</div>

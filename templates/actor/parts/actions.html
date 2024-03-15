@@ -1,0 +1,254 @@
+<h3 class="table-header">Turn Length</h3>
+<div class="newera-itemsheet-properties">
+    <div class="newera-itemsheet-property-50">
+        <h4>Actions</h4>
+      <div class="summary-stat-bonus" data-tooltip="Bonus Action Frames" data-tooltip-direction="DOWN">
+        <img class="bonus" src="systems/newera-sol366/resources/bonus.png" />
+        <input type="text" class="sheet-input" name="system.turnLength.actions.bonus" value="{{system.turnLength.actions.bonus}}" data-dtype="Number" />
+      </div>
+      <div class="summary-stat-total" data-tooltip="Action Frames" data-tooltip-direction="RIGHT">
+        <h2 id="system.turnLength.actions.value" style="border-bottom: none"><img src="systems/newera-sol366/resources/ac_encounter.png" class="resource-icon" /> {{system.turnLength.actions.value}}</h2>
+      </div>
+    </div>
+    <div class="newera-itemsheet-property-50">
+        <h4>Reactions</h4>
+      <div class="summary-stat-bonus" data-tooltip="Bonus Reaction Frames" data-tooltip-direction="RIGHT">
+        <img class="bonus" src="systems/newera-sol366/resources/bonus.png" />
+        <input type="text" class="sheet-input" name="system.turnLength.reactions.bonus" value="{{system.turnLength.reactions.bonus}}" data-dtype="Number" />
+      </div>
+      <div class="summary-stat-total" data-tooltip="Total Reaction Frames" data-tooltip-direction="RIGHT">
+        <h2 id="system.turnLength.reactions.value" style="border-bottom: none"><img src="systems/newera-sol366/resources/ac_reaction.png" class="resource-icon" /> {{system.turnLength.reactions.value}}</h2>
+      </div>
+    </div>
+</div>
+
+<input type="hidden" name="system.lastAction.category" id="selectedActionCategory" value="general" />
+<input type="hidden" name="system.lastAction.index" id="selectedActionIndex" value="0" />
+
+<div class="action-detail">
+  {{#if actions.selected}}
+  <div id="selectedAction">
+    {{#if actions.isCustomSelected}}
+    <div id="editAction" class="inventory-entry" data-item-id="{{actions.selected.itemId}}">
+      <a title="Edit Custom Action" class="item-edit" id="editActionButton">
+        <i class="fas fa-edit"></i>
+      </a>
+      <a title="Delete Action" class="item-delete">
+        <i class="fas fa-trash"></i>
+      </a>
+    </div>
+    {{/if}}
+    <div class="action-container">
+      <img class="action-image-base" src="{{actions.selected.images.base}}" />
+      {{#if actions.selected.images.left}}
+        <img class="action-image-overlay-left" src="{{actions.selected.images.left}}" />
+      {{/if}}
+      {{#if actions.selected.images.right}}
+        <img class="action-image-overlay-right" src="{{actions.selected.images.right}}" />
+      {{/if}}
+    </div>
+    <h1 class="action-name">{{actions.selected.name}}</h1>
+    <h2 class="action-type">{{actions.selected.typeDescription}}</h2>
+    <p>{{{actions.selected.description}}}</p>
+    {{#if actions.selected.difficulty}}
+      <p><b>Difficulty: </b>{{actions.selected.difficulty}}</p>
+    {{/if}}
+    <p class="action-alt-instruction">{{actions.selected.altInstructions}}</p>
+    {{#if actions.selected.disallowed}}
+      <div class="not-right-now">You can't take this action during combat.</div>
+    {{else}}
+      {{#if actions.selected.disabled}}
+        <div class="not-right-now">Equip your {{actions.selected.itemName}} to use this action.</div>
+      {{else}}
+        <div class="action-roll-buttons">
+          {{#each actions.selected.rolls as |roll index|}}
+            {{#if roll.isFunctionButton}}
+            <button type="button" class="sheet-input newera-action-button" data-action-button="{{roll.label}}">
+              <img class="action-die" src="systems/newera-sol366/resources/{{roll.die}}.png" />
+              {{roll.label}}
+            </button>
+            {{else}}
+            <button type="button" class="sheet-input newera-roll-button" data-roll="{{roll.formula}}" data-caption="{{roll.caption}}" data-message="{{roll.message}}">
+              <img class="action-die" src="systems/newera-sol366/resources/{{roll.die}}.png" />
+              {{roll.label}}
+            </button>
+            {{/if}}
+          {{/each}}
+        </div>
+      {{/if}}
+      {{/if}}
+    </div>
+  {{else}}
+    <div id="noActionSelected">
+      Select an action...
+    </div>
+  {{/if}}
+</div>
+
+{{#if actions.death}}
+<h3 class="table-header">Death Save</h3>
+<div class="action-category">
+<div class="action-icon">
+  <div class="action-icon-container">
+    <img class="action-image-base" src="{{actions.death.images.base}}" />
+    {{#if actions.death.images.left}}
+      <img class="action-image-overlay-left" src="{{actions.death.images.left}}" />
+    {{/if}}
+    {{#if actions.death.images.right}}
+      <img class="action-image-overlay-right" src="{{actions.death.images.right}}" />
+    {{/if}}
+  </div>
+</div>
+</div>
+{{else}}
+
+{{#if actions.show.equipped}}
+<h3 class="table-header">Equipment</h3>
+<div class="action-category">
+  {{#each actions.equipped as |action index|}}
+  <div class="action-icon action-macro-item" data-action-category="equipped" data-action-id="{{index}}" draggable="true">
+    <div class="action-data">{{json action}}</div>
+    <div {{#if action.disabled}}class="action-icon-container disabled-action"{{else}}class="action-icon-container"{{/if}} data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+      <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
+      {{#if action.images.left}}
+        <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
+      {{/if}}
+      {{#if action.images.right}}
+        <img class="action-image-overlay-right" src="{{action.images.right}}" draggable="true" />
+      {{/if}}
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}
+
+{{#if actions.show.feats}}
+<h3 class="table-header">Feats and Skills</h3>
+<div class="action-category">
+  {{#each actions.feats as |action index|}}
+  <div class="action-icon {{action.macroClass}}" data-action-category="feats" data-action-id="{{index}}" draggable="true">
+    <div class="action-data">{{json action}}</div>
+    <div {{#if action.disabled}}class="action-icon-container disabled-action"{{else}}class="action-icon-container"{{/if}} data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+      <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
+      {{#if action.images.left}}
+        <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
+      {{/if}}
+      {{#if action.images.right}}
+        <img class="action-image-overlay-right" src="{{action.images.right}}" draggable="true" />
+      {{/if}}
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}
+
+{{#if actions.show.general}}
+<h3 class="table-header">Common Actions</h3>
+<div class="action-category">
+  {{#each actions.general as |action index|}}
+  <div class="action-icon action-macro-basic" data-action-category="general" data-action-id="{{index}}" draggable="true">
+    <div class="action-data">{{json action}}</div>
+    <div class="action-icon-container"  data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+      <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
+      {{#if action.images.left}}
+        <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
+      {{/if}}
+      {{#if action.images.right}}
+        <img class="action-image-overlay-right" src="{{action.images.right}}" draggable="true" />
+      {{/if}}
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}
+
+{{#if actions.show.exploration}}
+<h3 class="table-header">Adventuring</h3>
+<div class="action-category">
+  {{#each actions.exploration as |action index|}}
+  <div class="action-icon action-macro-basic" data-action-category="exploration" data-action-id="{{index}}" draggable="true">
+    <div class="action-data">{{json action}}</div>
+    <div class="action-icon-container" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+      <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
+      {{#if action.images.left}}
+        <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
+      {{/if}}
+      {{#if action.images.right}}
+        <img class="action-image-overlay-right" src="{{action.images.right}}" draggable="true" />
+      {{/if}}
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}
+
+{{#if actions.show.social}}
+<h3 class="table-header">Social Interaction</h3>
+<div class="action-category">
+  {{#each actions.social as |action index|}}
+  <div class="action-icon action-macro-basic" data-action-category="social" data-action-id="{{index}}">
+    <div class="action-data">{{json action}}</div>
+    <div class="action-icon-container" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN">
+      <img class="action-image-base" src="{{action.images.base}}" />
+      {{#if action.images.left}}
+        <img class="action-image-overlay-left" src="{{action.images.left}}" />
+      {{/if}}
+      {{#if action.images.right}}
+        <img class="action-image-overlay-right" src="{{action.images.right}}" />
+      {{/if}}
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}
+
+{{#if actions.show.magic}}
+<h3 class="table-header">Magic</h3>
+<div class="action-category">
+  {{#each actions.magic as |action index|}}
+  <div class="action-icon action-macro-basic" data-action-category="magic" data-action-id="{{index}}" draggable="true">
+    <div class="action-data">{{json action}}</div>
+    <div class="action-icon-container" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+      <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
+      {{#if action.images.left}}
+        <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
+      {{/if}}
+      {{#if action.images.right}}
+        <img class="action-image-overlay-right" src="{{action.images.right}}" draggable="true" />
+      {{/if}}
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}
+
+{{#if system.customActionSection}}
+  <h3 class="table-header">Custom Actions</h3>
+{{else}}
+  <h3 class="table-header">Actions</h3>
+{{/if}}
+<div class="action-category">
+  {{#each actions.custom as |action index|}}
+    <div class="action-icon action-macro-custom" data-action-category="custom" data-action-id="{{index}}" draggable="true">
+      <div class="action-data">{{json action}}</div>
+      <div class="action-icon-container" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+        <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
+        {{#if action.images.left}}
+          <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
+        {{/if}}
+        {{#if action.images.right}}
+          <img class="action-image-overlay-right" src="{{action.images.right}}" draggable="true" />
+        {{/if}}
+      </div>
+    </div>
+  {{/each}}
+  <div class="action-icon">
+    <div class="action-icon-container item-create" data-type="Action" data-tooltip="Create Custom Action" data-tooltip-direction="DOWN">
+      <a title="Add Custom Action" id="addActionButton">
+        <i class="fas fa-plus"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+{{/if}}

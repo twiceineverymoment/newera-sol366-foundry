@@ -1,0 +1,60 @@
+<div class="phoneui-app-header">
+    <a class="phoneui-close-button app-close"><i class="fa-solid fa-circle-left"></i></a>
+    <h3>Settings</h3>
+</div>
+<div class="phoneui-app-body-full">
+    <table class="phoneui-grid">
+        <tr>
+            <td>Wallpaper</td>
+            <td>
+                <select name="system.background" class="phoneui-input" id="background-{{item.id}}">
+                    <option value="dreamos6.webp">Dream OS 6.0</option>
+                    <option value="hayakawa.jpg">Antarctica</option>
+                    <option value="lake_phone.png">Red Isle Lake</option>
+                    <option value="anomaly-3.jpg">Anomaly of 366</option>
+                    <option value="torchlight.webp">Torchlight Society</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Theme</td>
+            <td>
+                <select name="system.theme" class="phoneui-input" id="theme-{{item.id}}">
+                    <option value="auto">Auto</option>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </td>
+        </tr>
+        <tr>   
+            <td>24-Hour Clock</td>
+            <td style="text-align: right"><input type="checkbox" name="system.militaryTime" {{checked system.militaryTime}} data-dtype="Boolean" /></td>
+        </tr>
+        <tr>   
+            <td>Inventory Image</td>
+            <td style="text-align: right"><img class="phoneui-img" src="{{item.img}}" data-edit="img" /></td>
+        </tr>
+        <tr>
+            <td>Device Name</td>
+            <td><input type="text" class="phoneui-input" name="name" value="{{item.name}}" data-dtype="String" /></td>
+        </tr>
+        <tr>
+            <td>Make and Model</td>
+            <td><input type="text" class="phoneui-input" name="system.model" value="{{system.model}}" data-dtype="String" /></td>
+        </tr>
+        <tr>
+            <td>Device Features</td>
+            <td>
+                <select name="system.featureLevel" class="phoneui-input" id="features-{{item.id}}" data-dtype="Number">
+                    <option value="0">Basic</option>
+                    <option value="1">Standard</option>
+                    <option value="2">Advanced</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Mobile Number</td>
+            <td><input type="text" class="phoneui-input" name="system.phoneNumber" value="{{system.phoneNumber}}" data-dtype="String" /></td>
+        </tr>
+    </table>
+</div>
