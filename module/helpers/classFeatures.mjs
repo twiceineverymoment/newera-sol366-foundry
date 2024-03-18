@@ -71,7 +71,7 @@ ClassInfo.features = {
                     field: "immenseEnergy",
                     label: "Maximum Energy",
                     sign: false,
-                    values: [null, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70]
+                    values: [null, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70, 72, 92, 95, 98, 128]
                 }
             ]
         },
@@ -93,7 +93,7 @@ ClassInfo.features = {
                     field: "casterLevel.delver",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3]
+                    values: [null, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5]
                 }
             ]
         },
@@ -149,7 +149,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver.fire",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -165,7 +165,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver.water",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -181,7 +181,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver.earth",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -197,7 +197,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -295,7 +295,7 @@ ClassInfo.features = {
                    field: "elementalChannelingDmgDie",
                     label: "Elemental Damage",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, "1d4", "1d4", "1d6", "1d6"] 
+                    values: [null, 0, 0, 0, 0, 0, 0, "1d4", "1d4", "1d6", "1d6", "1d8", "1d8", "1d10", "1d10", "1d12"] 
                 }
             ],
             actions: [
@@ -476,6 +476,298 @@ ClassInfo.features = {
                     ]
                 },
             ]
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 12,
+            archetype: "fire",
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Pyromancy spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Common spells of any form (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            archetype: "water",
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Cryomancy spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Common spells of any form (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            archetype: "earth",
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Lithomancy spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Common spells of any form (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            archetype: "wind",
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Evocation spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Common spells of any form (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            common: "learningExperience"
+        },
+        {
+            level: 13,
+            archetype: "fire",
+            name: "Wild Fury",
+            key: false,
+            description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
+            actions: [
+                {
+                    name: "Wild Fury (Path of Fire)",
+                    images: {
+                        base: `${NEWERA.images}/embraced-energy.png`,
+                        left: `${NEWERA.images}/delver_fire.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "<p>You feel a rush of magical power. Use this action whenever you enter Rage.</p><p>If you have multiple elemental paths, you choose which table to roll on.</p>",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Roll",
+                        die: "d4",
+                        callback: actor => Delver.rollWildFury(actor, "fire")
+                      }
+                    ]
+                },
+            ]
+        },
+        {
+            level: 13,
+            archetype: "water",
+            name: "Wild Fury",
+            key: false,
+            description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
+            actions: [
+                {
+                    name: "Wild Fury (Path of Water)",
+                    images: {
+                        base: `${NEWERA.images}/embraced-energy.png`,
+                        left: `${NEWERA.images}/delver_water.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "<p>You feel a rush of magical power. Use this action whenever you enter Rage.</p><p>If you have multiple elemental paths, you choose which table to roll on.</p>",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Roll",
+                        die: "d4",
+                        callback: actor => Delver.rollWildFury(actor, "water")
+                      }
+                    ]
+                },
+            ]
+        },
+        {
+            level: 13,
+            archetype: "earth",
+            name: "Wild Fury",
+            key: false,
+            description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
+            actions: [
+                {
+                    name: "Wild Fury (Path of Earth)",
+                    images: {
+                        base: `${NEWERA.images}/embraced-energy.png`,
+                        left: `${NEWERA.images}/delver_earth.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "<p>You feel a rush of magical power. Use this action whenever you enter Rage.</p><p>If you have multiple elemental paths, you choose which table to roll on.</p>",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Roll",
+                        die: "d4",
+                        callback: actor => Delver.rollWildFury(actor, "earth")
+                      }
+                    ]
+                },
+            ]
+        },
+        {
+            level: 13,
+            archetype: "wind",
+            name: "Wild Fury",
+            key: false,
+            description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
+            actions: [
+                {
+                    name: "Wild Fury (Path of Wind)",
+                    images: {
+                        base: `${NEWERA.images}/embraced-energy.png`,
+                        left: `${NEWERA.images}/delver_wind.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "<p>You feel a rush of magical power. Use this action whenever you enter Rage.</p><p>If you have multiple elemental paths, you choose which table to roll on.</p>",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Roll",
+                        die: "d4",
+                        callback: actor => Delver.rollWildFury(actor, "wind")
+                      }
+                    ]
+                },
+            ]
+        },
+        {
+            level: 13,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 14,
+            id: "delver.bonus",
+            name: "Delver Bonus",
+            key: false,
+            description: "Choose one of the following stats to gain a +1 class bonus to.",
+            selections: {
+                "3": {
+                    label: "Choose a Stat Increase",
+                    options: {
+                        passivePerception: "Passive Perception",
+                        speed: "Speed",
+                        carryWeight: "Carry Weight"
+                    }
+                }
+            }
+        },
+        {
+            level: 14,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 15,
+            name: "Extreme Affinity",
+            key: false,
+            description: `<p>Your Proficiency Bonus acts as a bonus to your Elemental Magic skill level when casting spells on your Elemental Path.</p>
+            `
+        },
+        {
+            level: 15,
+            archetype: "fire",
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Pyromancy spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common Delver spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 15,
+            archetype: "water",
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Cryomancy spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common Delver spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 15,
+            archetype: "earth",
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Lithomancy spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common Delver spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 15,
+            archetype: "wind",
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Evocation spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common Delver spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            `
         }
     ],
     mercenary: [
