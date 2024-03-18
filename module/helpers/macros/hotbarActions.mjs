@@ -322,8 +322,8 @@ export class HotbarActions {
 
         if (actor.getClassLevel("mercenary") >= 1){
             Mercenary.rage(actor);
-        } else if (actor.getClassLevel("delver") >= 1){
-            //TODO Delver rage
+        } else if (actor.getClassLevel("delver") >= 10){
+            Delver.rage(actor);
         } else {
             ui.notifications.error("The selected token doesn't have that ability.");
         }
@@ -417,6 +417,19 @@ export class HotbarActions {
         }
         if (actor.getClassLevel("chanter") >= 3){
             Chanter.clearTheMind(actor);
+        } else {
+            ui.notifications.error(this.INVALID_FEATURE_ERROR);
+        }
+    }
+
+    static async wildFury(table){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        if (actor.getClassLevel("delver") >= 13){
+            Delver.rollWildFury(actor, table);
         } else {
             ui.notifications.error(this.INVALID_FEATURE_ERROR);
         }

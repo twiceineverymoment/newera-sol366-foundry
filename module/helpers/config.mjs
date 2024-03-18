@@ -3856,3 +3856,19 @@ NEWERA.lightningBoltDamageRolls = [
 NEWERA.chantLevels = [
     "basic", "apprentice", "intermediate", "advanced", "expert", "master"
 ];
+
+NEWERA.wildFuryTable = {
+    "fire": [
+        "A fiery explosion erupts from your body. All creatures within 6 feet of you take 1d10 Burning damage.",
+        "One creature of your choice you can see instantly bursts into flame, gaining the Burning 3 status effect.",
+        "The ground around you spontaneously ignites, creating an circular area of flames 6 feet in diameter centered on your location. For three rounds, any creatures standing in the flames take 2 Burning damage per frame.",
+        "You feel a fiery rush of adrenaline. You gain 2 bonus action frames during your current turn (or your next turn if you entered Rage as a reaction.)"
+    ],
+    "water": [
+        "A blast of icy cold shoots from your chest. One creature you can see within 30 feet takes 1d10 Freezing damage and is staggered for one frame.",
+        "Spikes of ice fall on up to three creatures of your choice you can see. Those creatures each make a difficulty 15  Reflex save or 1d10 Freezing damage.",
+        "The ground within 10 feet around you ices over and becomes Slippery Ground for three rounds.",
+        "A whirlwind of icy cold emanates from your body. Until your Rage ends, enemies have their speed reduced by 2 feet per frame while they're within 20 feet of you."
+    ],
+    
+}
