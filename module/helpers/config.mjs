@@ -3870,5 +3870,16 @@ NEWERA.wildFuryTable = {
         "The ground within 10 feet around you ices over and becomes Slippery Ground for three rounds.",
         "A whirlwind of icy cold emanates from your body. Until your Rage ends, enemies have their speed reduced by 2 feet per frame while they're within 20 feet of you."
     ],
-    
+    "earth": [
+        "Vines shoot out from the ground and ensnare one creature of your choice that you can see. That creature's speed is reduced to zero. During that creature's turn, it may make an Escape (Agility) or Escape (Strength) check to escape the restraints.",
+        "A small earthquake shakes the ground. All creatures within 30 feet of you make a  Reflex save to avoid being knocked prone. Your allies have advantage on the save.",
+        "A 6-foot deep circular hole 2 feet in diameter opens up in the ground at a location of your choice within 10 feet. A creature standing over the hole makes a Reflex save to avoid falling in.",
+        "Earth magic infuses your body. Until your Rage ends, you can't be staggered or knocked prone and you have advantage on Endurance saves."
+    ],
+    "wind": [
+        "A sudden gust of wind blows in the direction you're facing. Creatures within a 20-foot cone in front of you make an Endurance save or are pushed 10 feet away from you. Your allies have advantage on the save.",
+        "A bolt of electricity shoots from your chest shocks one creature of your choice you can see. That creature takes 1d6 Shock damage and makes an Endurance save or drops any weapons they're holding.",
+        "A static discharge courses through metallic objects within 20 feet of you. Any creatures within this range wearing metal armor or touching a metal object makes an Endurance save or become Stunned.",
+        "You feel a rush of wind at your back. Until your Rage ends, your movement speed increases by 4 and enemies can't react to you moving in or out of reach."
+    ]
 }
