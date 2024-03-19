@@ -1464,6 +1464,9 @@ ClassInfo.features = {
             name: "Team Player",
             description: `<p>Whenever you succeed on an Athletics or Agility check during  adventuring, your allies have advantage on the same check to attempt the same action for the next five minutes.</p>
             <p>Whenever you assist an ally on an Athletics or Agility check, you can't roll lower than 10.</p>`
+        },
+        {
+
         }
     ],
     researcher: [
@@ -4512,7 +4515,7 @@ ClassInfo.features = {
         },
         {
             level: 7,
-            common: "naturalSkillImprovement"
+            common: "specialtyImprovement"
         },
         {
             level: 7,
@@ -5335,7 +5338,7 @@ ClassInfo.features = {
                     field: "casterLevel.witch",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 1, 2]
+                    values: [null, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4]
                 }
             ]
         },
