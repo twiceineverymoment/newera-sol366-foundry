@@ -600,7 +600,7 @@ export class NewEraActor extends Actor {
     const newHp = system.hitPoints.value + parseInt(amount);
     const max = system.hitPoints.max * (overheal ? 2 : 1);
     update.system.hitPoints.value = Math.min(newHp, max);
-    const gained = system.hitPoints.value - prevHp;
+    const gained = update.system.hitPoints.value - prevHp;
     if (newHp > max && system.lifePoints.value < system.lifePoints.max){
       const potentialLpGain = newHp - max;
       const newLp = Math.min(system.lifePoints.value + potentialLpGain, system.lifePoints.max);
