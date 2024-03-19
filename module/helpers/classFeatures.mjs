@@ -847,7 +847,7 @@ ClassInfo.features = {
                     field: "rage",
                     label: "Rage Uses Per Day",
                     sign: false,
-                    values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3]
+                    values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4]
                 }
             ]
         },
@@ -889,13 +889,13 @@ ClassInfo.features = {
                     field: "proficiencyBonus.mercenary.raider",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
                 },
                 {
                     field: "proficiencyDamageBonus.raider",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
                 }
             ]
         },
@@ -910,13 +910,13 @@ ClassInfo.features = {
                     field: "proficiencyBonus.mercenary.enforcer",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
                 },
                 {
                     field: "proficiencyDamageBonus.enforcer",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
                 }
             ]
         },
@@ -931,13 +931,13 @@ ClassInfo.features = {
                     field: "proficiencyBonus.mercenary.woodsman",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
                 },
                 {
                     field: "proficiencyDamageBonus.woodsman",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
                 }
             ]
         },
@@ -952,13 +952,13 @@ ClassInfo.features = {
                     field: "proficiencyBonus.mercenary.warrior",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
                 },
                 {
                     field: "proficiencyDamageBonus.warrior",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
                 }
             ]
         },
@@ -1002,7 +1002,7 @@ ClassInfo.features = {
                     field: "casterLevel.mercenary",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3]
                 }
             ]
         },
@@ -1081,6 +1081,96 @@ ClassInfo.features = {
             key: false,
             name: "Defensive Fighter",
             description: "While Raging, you can move up to twice your speed to Protect an Ally. Your Rage doesn't end if you Blocked an attack or Protected an Ally during your turn."
+        },
+        {
+            level: 11,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 11,
+            name: "Spell Studies (2<sup>nd</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Common Mercenary spells (Level 2 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" data-tooltip="Lithomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/abjuration.png" data-tooltip="Anjuration" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 12,
+            name: "Combat Expert",
+            key: false,
+            description: "Your Turn Length increases by 1 frame and 1 reaction frame."
+        },
+        {
+            level: 13,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 14,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 14,
+            id: "mercenary.bonus",
+            name: "Mercenary Bonus",
+            key: false,
+            description: "You gain a +1 class bonus to your Natural Armor. Choose one of the following bonuses.",
+            selections: {
+                "2": {
+                    label: "Choose a Bonus",
+                    options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"}
+                }
+            }
+        },
+        {
+            level: 15,
+            archetype: "raider",
+            name: "Flanking",
+            key: false,
+            description: `<p>You and an ally can flank enemies to gain advantage on your attacks.</p>
+            <p>An enemy is flanked whenever you and an ally are positioned within reach of it on opposite sides. Attacks against flanked enemies have advantage.</p>`
+        },
+        {
+            level: 15,
+            archetype: "enforcer",
+            name: "Juggernaut",
+            key: false,
+            description: `<p>While Raging, you have Resistance 2 against physical damage (Piercing, Bludgeoning, and Slashing.)`
+        },
+        {
+            level: 15,
+            archetype: "woodsman",
+            name: "Shield-Breaker",
+            key: false,
+            description: `<p>Your two-handed attacks with axes or battle-axes always cause armor to take a durability check.</p>
+            <p>If these attacks hit a shield, excess damage is dealt to the target and the shield always takes a durability check.</p>`
+        },
+        {
+            level: 15,
+            archetype: "warrior",
+            name: "Focused Attack",
+            key: false,
+            description: `<p>On a hit, the target makes an Endurance save with difficulty equal to your current Mercenary level. On a failure, all attacks against that target have advantage until your next turn.</p>`
+        },
+        {
+            level: 15,
+            name: "Spell Studies (3<sup>rd</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Uncommon Mercenary spell (Level 3 or lower)</h4>
+                <h4>2 Common Mercenary spells (Level 3 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" data-tooltip="Lithomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/abjuration.png" data-tooltip="Anjuration" data-tooltip-direction="UP" />
+            </div>
+            `
         }
     ],
     ranger: [
