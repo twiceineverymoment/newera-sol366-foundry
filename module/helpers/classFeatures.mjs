@@ -1324,7 +1324,7 @@ ClassInfo.features = {
                     field: "preyBonus",
                     label: "Prey Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
+                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 5]
                 }
             ]
         },
@@ -1359,7 +1359,7 @@ ClassInfo.features = {
                     field: "casterLevel.ranger",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]
+                    values: [null, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3]
                 }
             ]
         },
@@ -1390,7 +1390,7 @@ ClassInfo.features = {
                     field: "deadeyeDamage",
                     label: "Damage per Frame",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 0, 0, 2, 2, 2, 3]
+                    values: [null, 0, 0, 0, 0, 0, 0, 2, 2, 2, 3, 3, 3, 3, 4, 4]
                 }
             ],
             actions: [
@@ -1466,7 +1466,144 @@ ClassInfo.features = {
             <p>Whenever you assist an ally on an Athletics or Agility check, you can't roll lower than 10.</p>`
         },
         {
-
+            level: 11,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 11,
+            name: "Spell Studies (2<sup>nd</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Common Ranger spells (Level 2 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/conjuration.png" data-tooltip="Conjuration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 12,
+            archetype: "mountaineer",
+            name: "Expert Climber",
+            key: false,
+            description: `<p>You climb at your full speed instead of half speed.</p><p>Gain 1 level in the Climbing (Athletics) specialty.</p>`
+        },
+        {
+            level: 12,
+            archetype: "polar",
+            name: "Cold Never Bothered Me",
+            key: false,
+            description: `<p>You have Resistance 1 to Freezing damage, and advantage on saves against Cryomancy spells.</p>`
+        },
+        {
+            level: 12,
+            archetype: "desert",
+            name: "Brave the Elements",
+            key: false,
+            description: `<p>Effects of Exhaustion on you are reduced by 1 level.</p>`
+        },
+        {
+            level: 12,
+            archetype: "rainforest",
+            name: "Wild Traveler",
+            key: false,
+            description: `<p>You aren't slowed down by slippery or hazardous terrain.</p>`
+        },
+        {
+            level: 12,
+            archetype: "hiker",
+            name: "Poison Resistance",
+            key: false,
+            description: `<p>You have Poison Resistance 1.</p>`
+        },
+        {
+            level: 12,
+            archetype: "diver",
+            name: "Swim Speed",
+            key: false,
+            description: `<p>You swim at your full speed instead of half speed.</p><p>Gain 1 level in the Swimming (Athletics) specialty.</p>`
+        },
+        {
+            level: 12,
+            archetype: "spelunker",
+            name: "Tight Fit",
+            key: false,
+            description: `<p>You can trivially enter any space large enough to fit a creature 2 sizes smaller than you.</p>`
+        },
+        {
+            level: 12,
+            archetype: "urban",
+            name: "Stealthy Exploration",
+            key: false,
+            description: `<p>Gain 1 level in the Climbing (Athletics), Stealth Actions (Stealth), and Lockpicking (Sleight of Hand) specialties.</p>`
+        },
+        {
+            level: 12,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 13,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 14,
+            id: "ranger.specialties",
+            name: "Ranger Specialty",
+            key: false,
+            description: "Choose an additional Specialty.",
+            selections: {
+                "5": {
+                    label: "Specialty #5",
+                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"}
+                }
+            }
+        },
+        {
+            level: 14,
+            name: "Primal Magic",
+            key: false,
+            description: `<p>Whenever you attempt a check using any natural skill, knowledge, or specialty, you may spend up to 10 energy on your Primal Magic sense.</p>
+            <p>Every 2 energy spent adds a +1 magic bonus to the outcome.</p>`
+        },
+        {
+            level: 15,
+            name: "Spell Studies (3<sup>rd</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Uncommon Ranger spell (Level 3 or lower)</h4>
+                <h4>3 Common Ranger spells (Level 3 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/conjuration.png" data-tooltip="Conjuration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 15,
+            common: "learningExperience"
+        },
+        {
+            level: 15,
+            id: "ranger.bonus",
+            name: "Ranger Bonus",
+            key: false,
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "2": {
+                    label: "Choose a Bonus",
+                    options: {
+                        "passivePerception": "+1 Passive Perception",
+                        "carryWeight": "+1 Carry Weight",
+                        "increase": "Increase Natural Skill, Knowledge, or Specialty"
+                    }
+                }
+            }
         }
     ],
     researcher: [
