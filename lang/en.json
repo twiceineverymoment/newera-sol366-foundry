@@ -66,6 +66,8 @@
   "newera.skill.spectral.abbr": "SPCM",
   "newera.skill.temporal.name": "Temporal Magic",
   "newera.skill.temporal.abbr": "TMPM",
+  "newera.skill.spellcasting.name": "Spellcasting",
+  "newera.skill.spellcasting.abbr": "SPC",
 
   "newera.rank.condition.0": "Broken",
   "newera.rank.condition.1": "Damaged",

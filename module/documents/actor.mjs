@@ -317,6 +317,8 @@ export class NewEraActor extends Actor {
         spec.parentMod = system.skills[spec.defaultParent].mod;
       } else if (system.magic[spec.defaultParent]) {
         spec.parentMod = system.magic[spec.defaultParent].mod;
+      } else if (spec.defaultParent == "spellcasting") {
+        spec.parentMod = system.casterLevel || 0;
       } else {
         spec.parentMod = 0;
       }
@@ -423,7 +425,7 @@ export class NewEraActor extends Actor {
       subject: "New Specialty",
       level: 0,
       bonus: 0,
-      defaultParent: "athletics"
+      defaultParent: "other"
     };
   }
 
