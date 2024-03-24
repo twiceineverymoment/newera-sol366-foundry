@@ -3149,37 +3149,37 @@ ClassInfo.features = {
                     field: "chantSlots.basic",
                     label: "Basic Chant Slots",
                     sign: false,
-                    values: [null, 2, 3, 3, 4, 5, 5, 6, 6, 6, 6]
+                    values: [null, 2, 3, 3, 4, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6]
                 },
                 {
                     field: "chantSlots.apprentice",
                     label: "Apprentice Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 2, 2, 3, 3, 4, 4]
+                    values: [null, 0, 0, 0, 0, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6]
                 },
                 {
                     field: "chantSlots.intermediate",
                     label: "Intermediate Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 3, 4, 4]
                 },
                 {
                     field: "chantSlots.advanced",
                     label: "Advanced Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
                 },
                 {
                     field: "chantSlots.expert",
                     label: "Expert Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "chantSlots.master",
                     label: "Master Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
             ],
             actions: [
@@ -3239,7 +3239,7 @@ ClassInfo.features = {
                     field: "casterLevel.chanter",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
+                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
                 }
             ]
         },
@@ -3328,7 +3328,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.chanter",
                     name: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2]
+                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -3383,6 +3383,69 @@ ClassInfo.features = {
             name: "Intermediate Chants",
             key: false,
             description: "You gain two Intermediate-level chant slots and the ability to take Intermediate chant feats. You may learn any two Intermediate chants without paying their character point costs."
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 12,
+            id: "chanter.bonus",
+            key: false,
+            name: "Chanter Bonus",
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "2": {
+                    label: "Choose an Upgrade",
+                    options: {
+                        passivePerception: "+1 Passive Perception Bonus",
+                        passiveAgility: "+1 Passive Agility Bonus",
+                        spell: "Learn 1 Common Chanter spell of any level"
+                    }
+                }
+            }
+        },
+        {
+            level: 12,
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Uncommon Chanter Spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/restoration.png" data-tooltip="Restoration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" data-tooltip="Hypnotism" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 13,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 13,
+            common: "learningExperience"
+        },
+        {
+            level: 14,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 14,
+            name: "Chant Blending",
+            key: false,
+            description: `<p>You can perform two chants simultaneously.</p><p>Activating each chant takes a separate action and expends a chant slot. If your concentration is broken, both chants are ended.</p>`
+        },
+        {
+            level: 15,
+            common: "learningExperience"
+        },
+        {
+            level: 15,
+            name: "Advanced Chants",
+            key: false,
+            description: "You gain two Advanced-level chant slots and the ability to take Advanced chant feats. You may learn any two Advanced chants without paying their character point costs."
         }
     ],
     magus: [
