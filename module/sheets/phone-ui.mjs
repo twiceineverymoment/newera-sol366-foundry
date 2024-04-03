@@ -172,7 +172,7 @@ export class PhoneUI extends ItemSheet {
     });
     html.find("#searchButton").click(async () => {
       const searchTerm = html.find("input#searchTerm").val();
-      if (this.item.actor){
+      if (this.item.actor && searchTerm){
         const r = new Roll(`d20+@skills.technology.mod+@spec.research`, this.item.actor.getRollData());
         await r.evaluate();
         this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/skye.png`, null, "{NAME} searches the web for {0}.", searchTerm);
@@ -234,6 +234,16 @@ export class PhoneUI extends ItemSheet {
       }
       this.item.addMessage(false, convoId, content);
     });
+
+    //Prevent the ENTER key from activating the internet search form
+    html.find("#app-browser").keydown(function(ev){
+      if (ev.keyCode == 13 && this.item.system.openApp != "browser"){
+        ev.preventDefault();
+        return false;
+      }
+    });
+
+
   }
 
   _formatInGameDate(settings){
