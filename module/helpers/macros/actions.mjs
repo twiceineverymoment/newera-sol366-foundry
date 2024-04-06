@@ -118,12 +118,14 @@ export class Actions {
           });
           html.find("#cast").click(() => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            actor.cast(spell, amp, false, isPrepared, isPrepared);
+            const noEnergyUse = isPrepared || actor.type == "Creature";
+            actor.cast(spell, amp, false, isPrepared, noEnergyUse);
             Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
           });
           html.find("#attack").click(() => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            actor.cast(spell, amp, true, isPrepared, isPrepared);
+            const noEnergyUse = isPrepared || actor.type == "Creature";
+            actor.cast(spell, amp, true, isPrepared, noEnergyUse);
             Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
           });
           html.find("#damage").click(() => {
