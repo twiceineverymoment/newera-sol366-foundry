@@ -198,10 +198,15 @@ export class PhoneUI extends ItemSheet {
     html.find(".photo-roll-trigger").click(async (ev) => {
       if (this.item.actor){
         const index = $(ev.currentTarget).data("photoId");
+        const photo = this.item.system.photos[index];
+        if (photo.title == "New Photo" || photo.description == "Describe what you took a photo of"){
+          ui.notifications.warn("Enter a name and description of the photo before rolling.");
+          return;
+        }
         const r = new Roll(`d20+@skills.technology.mod+@abilities.dexterity.mod+@spec.photography`, this.item.actor.getRollData());
         await r.evaluate();
         html.find(`#photo-roll-${index}`).val(r.total);
-        this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/app-camera.png`, null, "{NAME} takes a picture of {0}.", this.item.system.photos[index].description);
+        this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/app-camera.png`, null, "{NAME} takes a picture of {0}.", photo.description);
         r.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this.item.actor}),
           flavor: "Photography (Technology) Check"
