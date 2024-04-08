@@ -3796,7 +3796,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.guardian",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4]
+                    values: [null, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5]
                 }
             ]
         },
@@ -4035,13 +4035,13 @@ ClassInfo.features = {
                     field: "secondWind.roll",
                     label: "Second Wind Die",
                     sign: false,
-                    values: [null, "", "", "", "", "", "d6", "d6", "d6", "d8", "d8"]
+                    values: [null, "", "", "", "", "", "d6", "d6", "d6", "d8", "d8", "d8", "d8", "d8", "d8", "d10"]
                 },
                 {
                     field: "secondWind.count",
                     label: "Dice per Day",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 3, 4, 5, 5, 6]
+                    values: [null, 0, 0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 8, 9, 10, 10]
                 }
             ],
             actions: [
@@ -4169,6 +4169,159 @@ ClassInfo.features = {
                     ]
                 }
             ]
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 12,
+            name: "Arcane Fighter",
+            key: false,
+            description: `<p>You learn the Swordsman, Monk, and Ward stances. These new fighting stances make use of your magical powers.</p>`,
+            actions: [
+                {
+                    name: "Swordsman Stance",
+                    images: {
+                      base: `${NEWERA.images}/relic-blade.png`,
+                      left: `${NEWERA.images}/guardian.png`,
+                      right: `${NEWERA.images}/ac_1frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `<p>You conjure an Ethereal Longsword in your dominant hand upon activating this stance.</p>
+                    <ul>
+                        <li style="color: lightblue">Your ethereal sword inflicts magical damage, allowing it to damage ghosts.</li>
+                        <li style="color: lightblue">The sword doesn't suffer damage from Parrying attacks.</li>
+                        <li style="color: salmon">The sword disappears when you exit this stance.</li>
+                        <li style="color: salmon">You exit this stance automatically if the sword leaves your hands for even an instant.</li>
+                    </ul>`,
+                    difficulty: null,
+                    overrideMacroCommand: "game.newera.HotbarActions.enterStance('Swordsman')",
+                    type: "1",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "relic-blade",
+                        callback: actor => Guardian.activateFightingStance(actor, "Swordsman")
+                      }
+                    ]
+                },
+                {
+                    name: "Monk Stance",
+                    images: {
+                      base: `${NEWERA.images}/kindle.png`,
+                      left: `${NEWERA.images}/guardian.png`,
+                      right: `${NEWERA.images}/ac_1frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `<p>Most spells only require the use of one hand. This stance employs a special techique wherein by using both hands to cast spells, you're able to increase their power. You must have both hands free when activating this stance.</p>
+                    <ul>
+					<li style="color: lightblue">Spells you cast are amplified to the next-highest factor. The casting difficulty of the spell remains unchanged, but its energy cost reflects the amplified level.</li>
+					<li style="color: lightblue">You have advantage on saves against your concentration being broken.</li>
+					<li style="color: salmon">You can't hold items and can only attack by casting spells.</li>
+				    </ul>`,
+                    difficulty: null,
+                    overrideMacroCommand: "game.newera.HotbarActions.enterStance('Monk')",
+                    type: "1",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "kindle",
+                        callback: actor => Guardian.activateFightingStance(actor, "Monk")
+                      }
+                    ]
+                },
+                {
+                    name: "Ward Stance",
+                    images: {
+                      base: `${NEWERA.images}/rosa-shield.png`,
+                      left: `${NEWERA.images}/guardian.png`,
+                      right: `${NEWERA.images}/ac_1frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `<p>You channel your Qi into a powerful defensive posture. While in this stance:</p>
+                    <ul>
+					<li style="color: lightblue">Spells you cast are amplified to the next-highest factor. The casting difficulty of the spell remains unchanged, but its energy cost reflects the amplified level.</li>
+					<li style="color: lightblue">You have advantage on saves against your concentration being broken.</li>
+					<li style="color: salmon">You can't hold items and can only attack by casting spells.</li>
+				    </ul>`,
+                    difficulty: null,
+                    overrideMacroCommand: "game.newera.HotbarActions.enterStance('Ward')",
+                    type: "1",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "rosa-shield",
+                        callback: actor => Guardian.activateFightingStance(actor, "Ward")
+                      }
+                    ]
+                }
+            ]
+        },
+        {
+            level: 13,
+            name: "Qi Rush",
+            key: false,
+            description: "You learn the Qi Rush cantrip."
+        },
+        {
+            level: 13,
+            id: "guardian.bonus",
+            name: "Guardian Bonus",
+            key: false,
+            description: "Choose one of the following stats to gain a +1 class bonus to.",
+            selections: {
+                "2": {
+                    label: "Choose a Stat Bonus",
+                    options: {
+                        speed: "Speed",
+                        carryWeight: "Carry Weight",
+                        naturalArmor: "Natural Armor"
+                    }
+                }
+            }
+        },
+        {
+            level: 13,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 14,
+            common: "learningExperience"
+        },
+        {
+            level: 14,
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Uncommon Guardian Spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/conjuration.png" data-tooltip="Conjuration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
+                <h3>1 Uncommon spell from any school (Level 4 or lower)</h4>
+                <h4>2 Common spells from any school (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 15,
+            name: "Guardian's Vigor (d10)",
+            key: false,
+            description: "Your Second Wind die becomes a d10."
+        },
+        {
+            level: 15,
+            name: "Combat Expert",
+            key: false,
+            description: "Your turn length increases by one action frame and one reaction frame."
         }
     ],
     investigator: [
