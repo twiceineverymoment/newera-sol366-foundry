@@ -442,4 +442,12 @@ async function refreshPhones(){
       }
     }
   }
+  for (const item of game.items.values()){
+    if (item.type == "Phone"){
+      console.log(`Found ${item.name} in game.items`);
+      if (item.sheet){
+        item.sheet.render(false);
+      }
+    }
+  }
 }
