@@ -333,7 +333,14 @@ export class Actions {
           },
           cancel: {
             icon: `<i class="fas fa-x"></i>`,
-            label: "Cancel"
+            label: "Cancel",
+            callback: () => {
+              actor.update({
+                system: {
+                  inspiration: actor.system.inspiration - 1
+                }
+              });
+            }
           }
         },
         default: "cancel"
