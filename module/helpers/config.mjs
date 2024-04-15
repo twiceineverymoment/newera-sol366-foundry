@@ -3850,7 +3850,7 @@ NEWERA.actionTypeIcons = {
 }
 
 NEWERA.lightningBoltDamageRolls = [
-    "1d4", "1d8", "1d12", "1d16", "1d20", "1d24", "1d30", "1d50", "1d60", "1d100"
+    "0", "1d4", "1d8", "1d12", "1d16", "1d20", "1d24", "1d30", "1d50", "1d60", "1d100"
 ];
 
 NEWERA.chantLevels = [

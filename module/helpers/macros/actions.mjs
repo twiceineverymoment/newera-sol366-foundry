@@ -77,7 +77,7 @@ export class Actions {
           </div>
           <p>
             <button class="spell-dialog-button" id="cast"><i class="fa-solid fa-hand-sparkles"></i> Cast</button>
-            <button class="spell-dialog-button" id="attack"${spell.system.rangedAttack ? "" : `disabled data-tooltip="This spell can't be used to attack."`}><i class="fa-solid fa-crosshairs"></i> Attack</button>
+            <button class="spell-dialog-button" id="attack"${spell.system.rangedAttack ? "" : `disabled data-tooltip="This spell isn't a projectile attack."`}><i class="fa-solid fa-crosshairs"></i> Attack</button>
             <button class="spell-dialog-button" id="damage"${(spell.system.damage && spell.system.damage.type) ? "" : `disabled data-tooltip="This spell doesn't deal damage."`}><i class="fa-solid fa-heart-crack"></i> Damage</button>
           </p>
         </form>
@@ -128,11 +128,11 @@ export class Actions {
             actor.cast(spell, amp, true, isPrepared, noEnergyUse);
             Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
           });
-          html.find("#damage").click(() => {
+          html.find("#damage").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            const formula = spell.system.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : Formatting.amplifyValue(spell.system.damage.amount, amp);
+            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : Formatting.amplifyValue(spell.system.damage.amount, amp);
             const dmgRoll = new Roll(formula);
-            dmgRoll.evaluate();
+            await dmgRoll.evaluate();
             dmgRoll.toMessage({
               speaker: ChatMessage.getSpeaker({actor: actor}),
               flavor: `Damage - ${spell.name}${amp>1 ? " "+NEWERA.romanNumerals[amp] : ""}`
