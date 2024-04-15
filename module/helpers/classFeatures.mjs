@@ -4687,7 +4687,7 @@ ClassInfo.features = {
                     field: "casterLevel.scholar",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4]
+                    values: [null, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 6]
                 }
             ]
         },
@@ -4774,61 +4774,61 @@ ClassInfo.features = {
                     field: "spellSlots.1",
                     label: "Level 1 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 2, 3, 3, 3, 5, 5, 5, 5]
+                    values: [null, 0, 0, 2, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5]
                 },
                 {
                     field: "spellSlots.2",
                     label: "Level 2 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 1, 2, 2, 3, 3, 5]
+                    values: [null, 0, 0, 0, 0, 1, 2, 2, 3, 3, 5, 5, 5, 5, 5, 5]
                 },
                 {
                     field: "spellSlots.3",
                     label: "Level 3 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 5, 5]
                 },
                 {
                     field: "spellSlots.4",
                     label: "Level 4 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3]
                 },
                 {
                     field: "spellSlots.5",
                     label: "Level 5 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3]
                 },
                 {
                     field: "spellSlots.6",
                     label: "Level 6 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.7",
                     label: "Level 7 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.8",
                     label: "Level 8 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.9",
                     label: "Level 9 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.10",
                     label: "Level 10 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
             ]
         },
@@ -4894,6 +4894,7 @@ ClassInfo.features = {
                 <h4>1 Rare spell (Level 4 or lower)</h4>
                 <h4>2 Uncommon spells (Level 4 or lower)</h4>
                 <h4>3 Common spells (Level 4 or lower)</h4>
+            </div>
             `
         },
         {
@@ -4930,6 +4931,104 @@ ClassInfo.features = {
                     }
                 }
             }
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 11,
+            name: "Restricted Schools",
+            key: false,
+            description: "You can choose Restricted spells to learn as part of your Spell Studies."
+        },
+        {
+            level: 11,
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare spell (Level 5 or lower)</h4>
+                <h4>2 Uncommon spells (Level 5 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            name: "Spellcraft",
+            key: true,
+            description: `<p>You can create your own spells.</p>
+            <p>As a Scholar, you can craft spells and simple enchantments. You can prepare your crafted spells in appropriately-leveled spell slots.</p>
+            <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
+            tableValues: {
+                field: "spellcraft.scholar",
+                label: "Spellcraft Skill Level",
+                sign: false,
+                values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2]
+            }
+        },
+        {
+            level: 13,
+            common: "learningExperience"
+        },
+        {
+            level: 13,
+            id: "scholar.bonus",
+            name: "Scholar Bonus",
+            key: false,
+            description: "Choose two of your magical skills and gain a +1 class bonus to their modifiers.",
+            selections: {
+                "3.1": {
+                    label: "First Choice",
+                    options: {
+                        "elemental-magic": "Elemental",
+                        "divine-magic": "Divine",
+                        "physical-magic": "Physical",
+                        "psionic-magic": "Psionic",
+                        "spectral-magic": "Spectral",
+                        "temporal-magic": "Temporal"
+                    }
+                },
+                "3.2": {
+                    label: "Second Choice",
+                    options: {
+                        "elemental-magic": "Elemental",
+                        "divine-magic": "Divine",
+                        "physical-magic": "Physical",
+                        "psionic-magic": "Psionic",
+                        "spectral-magic": "Spectral",
+                        "temporal-magic": "Temporal"
+                    }
+                }
+            }
+        },
+        {
+            level: 14,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 14,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 15,
+            name: "Spell Studies (6<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Rare spells (Level 6 or lower)</h4>
+                <h4>3 Uncommon spells (Level 6 or lower)</h4>
+                <h4>3 Common spells (Level 6 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 15,
+            name: "Mindfulness Mastery",
+            key: false,
+            description: "<p>You can Meditate to learn and prepare spells as a trivial action <i>(You automatically succeed, unless there are unusual circumstances.)</i></p>"
         }
     ],
     artificer: [
