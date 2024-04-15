@@ -590,7 +590,7 @@ export class NewEraActor extends Actor {
     await this.update(update);
   }
 
-  async heal(amount, overheal){
+  async heal(amount, overheal, recovery = false){
     const system = this.system;
     const update = {
       system: {
@@ -611,6 +611,13 @@ export class NewEraActor extends Actor {
       this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} {0} {1} hit points and {2} life points!", overheal ? "gains" : "recovers", gained, gainedLp);
     } else {
       this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} {0} {1} hit points!", overheal ? "gains" : "recovers", gained);
+    }
+    //Injury recovery
+    const recovered = false;
+    if (recovery && system.hitPoints.max > system.hitPointTrueMax) {
+      const newMax = system.hitPoints.max + parseInt(amount);
+      update.system.hitPoints.max = Math.min(system.hitPointTrueMax, newMax);
+      recovered = true;
     }
     console.log(`HEAL A=${amount} PREV=${prevHp} NEW=${newHp} MAX=${max} G=${gained}`);
     console.log(update);
