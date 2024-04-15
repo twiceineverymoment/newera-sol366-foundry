@@ -131,10 +131,13 @@ export class Actions {
           html.find("#damage").click(() => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
             const formula = spell.system.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : Formatting.amplifyValue(spell.system.damage.amount, amp);
-            new Roll(formula).toMessage({
+            const dmgRoll = new Roll(formula);
+            dmgRoll.evaluate();
+            dmgRoll.toMessage({
               speaker: ChatMessage.getSpeaker({actor: actor}),
               flavor: `Damage - ${spell.name}${amp>1 ? " "+NEWERA.romanNumerals[amp] : ""}`
             });
+            game.lastDamageAmt = dmgRoll.total;
           });
         },
         close: () => {
@@ -205,75 +208,93 @@ export class Actions {
 
     static displayDamageDialog(actor){
       new Dialog({
-        title: `Damage/Healing [${actor.name}]`,
+        title: `Damage [${actor.name}]`,
         content: `
             <form>
               <div>
-                Enter Amount: <input type="number" id="damageAmount" data-dtype="Number" />
+                Amount: <input type="number" id="damageAmount" data-dtype="Number" />
               </div>
               <div>
-                <input type="radio" name="damageMode" id="damageMode0" value="damage"> <label for="damage">Damage</label>
-                <input type="radio" name="damageMode" id="damageMode1" value="injury"> <label for="damage">Damage (-Injury)</label>
-                <input type="radio" name="damageMode" id="damageMode2" value="healing"> <label for="damage">Healing</label>
-                <input type="radio" name="damageMode" id="damageMode3" value="overheal"> <label for="damage">Healing (+Overheal)</label>
+                <input type="checkbox" id="injury" data-dtype="Boolean" /> Injury (reduces max. HP) <br />
+                <input type="checkbox" id="calledShot" data-dtype="Boolean" /> Called Shot
               </div>
-              <div>
-              <select id="damageType">
-              <option value="">Select Damage Type...</option>
-              <option value="slashing">Slashing</option>
-              <option value="piercing">Piercing</option>
-              <option value="bludgeoning">Bludgeoning</option>
-              <option value="burning">Burning</option>
-              <option value="freezing">Freezing</option>
-              <option value="shock">Shock</option>
-              <option value="psychic">Psychic</option>
-              <option value="suffocation">Suffocation</option>
-              <option value="bleeding">Bleeding</option>
-              <option value="poison">Poison</option>
-              <option value="necrotic">Necrotic</option>
-              </select>
-              <!--<select id="calledShot">
-              <option value="">Normal Attack</option>
-              <option value="head">Called Shot - Head / Face</option>
-              <option value="hand">Called Shot - Hand</option>
-              <option value="arm">Called Shot - Arm</option>
-              <option value="leg">Called Shot - Leg</option>
-              <option value="heart">Called Shot - Heart</option>
-              <option value="eye">Called Shot - Eye</option>
-              <option value="neck">Called Shot - Neck</option>
-              </select>-->
+              <div id="calledShotSelect" style="display: none">
+                <select name="calledShot" id="calledShotType">
+                  <option value="head">Head / Face</option>
+                  <option value="back">Back</option>
+                  <option value="arm">Arm</option>
+                  <option value="leg">Leg</option>
+                  <option value="heart">Heart</option>
+                  <option value="eye">Eye</option>
+                  <option value="neck">Neck</option>
+                </select>
               </div>
             </form>`,
+        render: html => {
+          html.find("#damageAmount").val(game.lastDamageAmt || "");
+          html.find("#calledShot").change(ev => {
+            if ($(ev.currentTarget).is(":checked")){
+              html.find("#calledShotSelect").show();
+            } else {
+              html.find("#calledShotSelect").hide();
+            }
+          });
+        },
         buttons: {
-            confirm: {
-                icon: `<i class="fas fa-check"></i>`,
-                label: "Confirm",
-                callback: (html) => {
-                  const amount = html.find("#damageAmount").val();
-                  const dmgType = html.find("#damageType").val();
-                  const mode = html.find('input[name="damageMode"]:checked').val();
-                  //console.log(`DH A=${amount} T=${dmgType} M=${mode}`);
-                  if (!amount){
-                    ui.notifications.error("You must enter an amount.");
-                    return;
-                  }
-                  switch(mode){
-                    case "damage":
-                      actor.takeDamage(amount, dmgType, false, false);
-                      break;
-                    case "injury":
-                      actor.takeDamage(amount, dmgType, false, true);
-                      break;
-                    case "healing":
-                      actor.heal(amount, false);
-                      break;
-                    case "overheal":
-                      actor.heal(amount, true);
-                      break;
-                    default:
-                      ui.notifications.error("You must select a damage or healing option.");
-                  }
-                }
+            generic: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_.png" />`,
+              label: "Damage (Nonspecific)",
+              callback: html => Actions._damage(actor, html, "")
+            },
+            slashing: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_slashing.png" />`,
+              label: "Slashing",
+              callback: html => Actions._damage(actor, html, "slashing")
+            },
+            piercing: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_piercing.png" />`,
+              label: "Piercing",
+              callback: html => Actions._damage(actor, html, "piercing")
+            },
+            bludgeoning: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_bludgeoning.png" />`,
+              label: "Bludgeoning",
+              callback: html => Actions._damage(actor, html, "bludgeoning")
+            },
+            burning: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_burning.png" />`,
+              label: "Burning",
+              callback: html => Actions._damage(actor, html, "burning")
+            },
+            freezing: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_freezing.png" />`,
+              label: "Freezing",
+              callback: html => Actions._damage(actor, html, "freezing")
+            },
+            shock: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_shock.png" />`,
+              label: "Shock",
+              callback: html => Actions._damage(actor, html, "shock")
+            },
+            psychic: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_psychic.png" />`,
+              label: "Mental",
+              callback: html => Actions._damage(actor, html, "psychic")
+            },
+            poison: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_poison.png" />`,
+              label: "Poison",
+              callback: html => Actions._damage(actor, html, "poison")
+            },
+            suffocation: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_suffocation.png" />`,
+              label: "Suffocation",
+              callback: html => Actions._damage(actor, html, "suffocation")
+            },
+            necrotic: {
+              icon: `<img class="skill-icon" src="${NEWERA.images}/dt_necrotic.png" />`,
+              label: "Necrotic",
+              callback: html => Actions._damage(actor, html, "necrotic")
             },
             cancel: {
                 icon: `<i class="fas fa-x"></i>`,
@@ -282,8 +303,67 @@ export class Actions {
         },
         default: "cancel"
     }).render(true, {
-      width: 480
+      width: 520
     });
+    }
+
+    static displayHealDialog(actor){
+      new Dialog({
+        title: `Heal ${actor.name}`,
+        content: `
+            <form>
+              <div>
+                Amount: <input type="number" id="damageAmount" data-dtype="Number" />
+              </div>
+              <div>
+                <input type="checkbox" id="overheal" data-dtype="Boolean" /> Overheal (heals beyond max. HP) <br />
+                <input type="checkbox" id="recovery" data-dtype="Boolean" /> Recover Injuries
+              </div>
+            </form>`,
+        buttons: {
+            confirm: {
+              icon: `<i class="fa-solid fa-heart"></i>`,
+              label: "Heal",
+              callback: html => Actions._heal(actor, html)
+            },
+            cancel: {
+                icon: `<i class="fas fa-x"></i>`,
+                label: "Cancel"
+            }
+        },
+        default: "cancel"
+    }).render(true, {
+      width: 320
+    });
+    }
+
+    /**
+     * Helper method that initializes taking damage via the updated form
+     * @param {} actor 
+     * @param {*} html 
+     * @param {*} dmgType 
+     * @returns 
+     */
+    static async _damage(actor, html, dmgType){
+      const amount = html.find("#damageAmount").val();
+      const isInjury = html.find("#injury").is(":checked");
+      //TODO called shots
+      if (!amount){
+        ui.notifications.error("You must enter an amount.");
+        return;
+      }
+      actor.takeDamage(amount, dmgType, false, isInjury);
+    }
+
+    static async _heal(actor, html){
+      const amount = html.find("#damageAmount").val();
+      const isOverheal = html.find("#overheal").is(":checked");
+      const injuryRecovery = html.find("#recovery").is(":checked");
+      if (!amount){
+        ui.notifications.error("You must enter an amount.");
+        return;
+      }
+      actor.heal(amount, isOverheal, injuryRecovery);
     }
 
     static async useInspiration(actor){

@@ -56,6 +56,19 @@ export class HotbarActions {
         Actions.displayDamageDialog(actor);
     }
 
+    static async displayHealingDialog(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+        if (actor.type == "Vehicle"){
+            ui.notifications.error("Vehicles don't have hit points.");
+            return;
+        }
+        Actions.displayHealDialog(actor);
+    }
+
     static async roll(label, formula){
         const actor = this.getSelectedActor();
         if (!actor){
