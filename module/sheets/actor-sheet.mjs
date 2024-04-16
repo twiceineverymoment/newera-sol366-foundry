@@ -810,28 +810,37 @@ export class NewEraActorSheet extends ActorSheet {
     html.find('.item-delete').click(ev => {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const item = this.actor.items.get(li.data("itemId"));
-      new Dialog({
-        title: "Confirm Delete",
-        content: "<p>Are you sure you want to delete this?</p>",
-        buttons: {
-          confirm: {
-            icon: '<i class="fas fa-trash"></i>',
-            label: "Yes",
-            callback: () => {
-              if (["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"].includes(item.type)){
-                this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
+      const isPhysicalItem = ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"].includes(item.type);
+      if (game.settings.get("newera-sol366", "confirmDelete")){
+        new Dialog({
+          title: "Confirm Delete",
+          content: `<p>Are you sure you want to delete this?</p>${isPhysicalItem ? `<p>If you'll need it later, use the <i class="fa-solid fa-box-open"></i> Store button to mark the item as not currently in your possession without deleting it entirely.</p>` : ""}`,
+          buttons: {
+            confirm: {
+              icon: '<i class="fas fa-trash"></i>',
+              label: "Yes",
+              callback: () => {
+                if (isPhysicalItem){
+                  this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
+                }
+                item.delete();
+                this.render(false);
               }
-              item.delete();
-              this.render(false);
+            },
+            cancel: {
+              icon: `<i class="fas fa-x"></i>`,
+              label: "No",
             }
           },
-          cancel: {
-            icon: `<i class="fas fa-x"></i>`,
-            label: "No",
-          }
-        },
-        default: "cancel"
-      }).render(true);
+          default: "cancel"
+        }).render(true);
+      } else {
+        if (isPhysicalItem){
+          this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
+        }
+        item.delete();
+        this.render(false);
+      }
     });
 
     //Add Skills

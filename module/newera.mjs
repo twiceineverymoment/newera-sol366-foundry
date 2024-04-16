@@ -183,6 +183,15 @@ function setupGameSettings(){
     type: Boolean,
     default: true,
   });
+  game.settings.register("newera-sol366", "confirmDelete", {
+    name: "Confirm Item Deletions",
+    hint: "Display a yes/no confirmation when deleting owned items from an actor",
+    scope: "client",
+    config: true,
+    requiresReload: false,
+    type: Boolean,
+    default: true,
+  });
   game.settings.register("newera-sol366", "progressionMode", {
     name: "Progression Mode",
     hint: "The method you will use to track character points and progression",
