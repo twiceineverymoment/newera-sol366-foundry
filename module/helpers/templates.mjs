@@ -21,6 +21,8 @@
     "systems/newera-sol366/templates/actor/parts/creature-items.html",
     "systems/newera-sol366/templates/actor/parts/creature-magic.html",
     "systems/newera-sol366/templates/actor/parts/effects.html",
+    "systems/newera-sol366/templates/actor/parts/char-spell-table.html",
+    "systems/newera-sol366/templates/actor/parts/char-spell-row.html",
 
     //Item partials
     "systems/newera-sol366/templates/item/parts/item-effects.html",

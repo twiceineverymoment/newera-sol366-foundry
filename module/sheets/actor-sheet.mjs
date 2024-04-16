@@ -17,8 +17,11 @@ export class NewEraActorSheet extends ActorSheet {
       template: "systems/newera-sol366/templates/actor/actor-sheet.html",
       width: 785,
       height: 875,
-      scrollY: [".newera-actorsheet-right", ".action-detail", ".inventory-table-container"],
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "profile" }]
+      scrollY: [".newera-actorsheet-scroll", ".action-detail", ".inventory-table-container"],
+      tabs: [
+        { navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "profile" },
+        { navSelector: ".spell-tabs", contentSelector: ".spell-table", initial: "all"}
+      ]
     });
   }
 
@@ -228,11 +231,21 @@ export class NewEraActorSheet extends ActorSheet {
     const equipped = {}; //k/v of wearable slots to items
     const worn = {}; //k/v of slot numbers to items
     const feats = [];
-    const magic = [];
     const classes = [];
     const actions = [];
 
     const equipment = context.system.equipment;
+    const magic = {
+      all: [],
+      favorites: [],
+      elemental: [],
+      divine: [],
+      physical: [],
+      psionic: [],
+      spectral: [],
+      temporal: [],
+      enchantments: []
+    };
 
     //Disable the left hand slot if a two-handed item is in the right hand
     if (equipment.rightHand){
@@ -280,9 +293,19 @@ export class NewEraActorSheet extends ActorSheet {
               backpack.push(i);
             }
           break;
-        case "Spell":
         case "Enchantment":
-          magic.push(i);
+          magic.enchantments.push(i);
+          //No break here on purpose
+        case "Spell":
+          magic.all.push(i);
+          if (context.system.favoriteSpells.includes(i._id)){
+            i.favorite = true;
+            magic.favorites.push(i);
+          }
+          let form = NEWERA.schoolToFormMapping[i.system.school];
+          if (form && form != "genericCast"){
+            magic[form].push(i);
+          }
           break;
         case "Class":
           classes.push(i);
@@ -703,7 +726,7 @@ export class NewEraActorSheet extends ActorSheet {
         } else {
           html.find(`#spell-dc-${spellId}`).hide();
         }
-        html.find(`#spell-action-icons-${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
+        html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
       });
       html.find(".spell-amplify").change(ev => {
         let ampFactor = $(ev.currentTarget).val();
@@ -802,6 +825,31 @@ export class NewEraActorSheet extends ActorSheet {
 
     /* EDIT CUTOFF - Everything below here is only run if the sheet is editable */
     if (!this.isEditable) return;
+
+    //Favorite Spells management
+    html.find(".spell-favorite-add").click(async ev => {
+      const li = $(ev.currentTarget).parents(".inventory-entry");
+
+      let favorites = structuredClone(this.actor.system.favoriteSpells);
+      favorites.push(li.data("itemId"));
+      await this.actor.update({
+        system: {
+          favoriteSpells: favorites
+        }
+      });
+
+    });
+    html.find(".spell-favorite-remove").click(async ev => {
+      const li = $(ev.currentTarget).parents(".inventory-entry");
+
+      let favorites = structuredClone(this.actor.system.favoriteSpells).filter(s => s != li.data("itemId"));
+      await this.actor.update({
+        system: {
+          favoriteSpells: favorites
+        }
+      });
+
+    });
 
     // Add Inventory Item
     html.find('.item-create').click(this._onItemCreate.bind(this));
