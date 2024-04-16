@@ -8,6 +8,7 @@ import { Guardian } from "../classes/guardian.mjs";
 import { Scholar } from "../classes/scholar.mjs";
 
 import { SpellPreparation } from "../../sheets/spell-preparation.mjs";
+import { SpellFocus } from "../../sheets/spell-focus.mjs";
 import { ChantSheet } from "../../sheets/chants.mjs";
 
 
@@ -378,6 +379,19 @@ export class HotbarActions {
         }
         if (typeof actor.system.spellSlots == "object"){
             new SpellPreparation(actor).render(true);
+        } else {
+            ui.notifications.error(this.INVALID_FEATURE_ERROR);
+        }
+    }
+
+    static async openSpellStorage(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        if (typeof actor.system.focus == "object"){
+            new SpellFocus(actor).render(true);
         } else {
             ui.notifications.error(this.INVALID_FEATURE_ERROR);
         }

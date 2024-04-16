@@ -5,9 +5,11 @@ import { Mercenary } from "./classes/mercenary.mjs";
 import { Ranger } from "./classes/ranger.mjs";
 import { Chanter } from "./classes/chanter.mjs";
 import { Guardian } from "./classes/guardian.mjs";
+import { Artificer } from "./classes/artificer.mjs";
 import { Witch } from "./classes/witch.mjs";
 
 import { SpellPreparation } from "../sheets/spell-preparation.mjs";
+import { SpellFocus } from "../sheets/spell-focus.mjs";
 import { ChantSheet } from "../sheets/chants.mjs";
 
 export const ClassInfo = {};
@@ -5149,7 +5151,30 @@ ClassInfo.features = {
                     field: "focusEnergy",
                     label: "Focus Energy",
                     sign: false,
-                    values: [null, 0, 0, 20, 24, 30, 36, 42, 50, 56, 64]
+                    values: [null, 0, 0, 20, 24, 30, 36, 42, 50, 56, 64, 72, 84, 96, 110, 120]
+                }
+            ],
+            actions: [
+                {
+                    name: "Spell Storage",
+                    images: {
+                        base: `${NEWERA.images}/crystal-shine.png`,
+                        left: `${NEWERA.images}/artificer.png`,
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `You utilize your Magical Focus to store spells ahead of time. You can cast your stored spells by releasing them from your focus.`,
+                    difficulty: null,
+                    actionType: "E",
+                    overrideMacroCommand: `game.newera.HotbarActions.openSpellStorage()`,
+                    rolls: [
+                      {
+                        label: "Focus",
+                        die: "crystal-shine",
+                        callback: actor => new SpellFocus(actor).render(true)
+                      }
+                    ]
                 }
             ]
         },

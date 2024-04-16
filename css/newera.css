@@ -552,6 +552,9 @@ div#cp-wrapper {
 .battery progress[value]::-webkit-progress-value {
   background: #b2f106 !important;
 }
+.focus-energy progress[value]::-webkit-progress-value {
+  background: #4810CF !important;
+}
 div.cp {
   display: inline;
 }
