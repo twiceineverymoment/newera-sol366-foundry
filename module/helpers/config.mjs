@@ -3338,7 +3338,7 @@ NEWERA.statusEffects = {
     },
     blinded: {
         1: {
-            id: "blind",
+            id: "partial-blind",
             name: "Blinded 1",
             description: `<p>You're blind in one eye, or your vision is obscured.</p><p>You take a -2 penalty to Perception checks involving sight, and a -5 penalty to Marksmanship. Your Passive Perception is reduced by 2.`,
             icon: `${NEWERA.images}/se_blinded.png`
