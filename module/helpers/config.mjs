@@ -3882,4 +3882,24 @@ NEWERA.wildFuryTable = {
         "A static discharge courses through metallic objects within 20 feet of you. Any creatures within this range wearing metal armor or touching a metal object makes an Endurance save or become Stunned.",
         "You feel a rush of wind at your back. Until your Rage ends, your movement speed increases by 4 and enemies can't react to you moving in or out of reach."
     ]
-}
+};
+
+NEWERA.alternateDimensionLocations = [
+    "null",
+    "undefined",
+    "ERROR",
+    "37",
+    "Soup",
+    "-2,147,483,647",
+    "');sudo rm -rf /*",
+    "THEFOGISCOMINGTHEFOGISCOMINGTHEFOGISCOMINGTHEFOGISCOMING",
+    "Sɹ∀W פ∩q",
+    "👽",
+    "Exception in thread 'Main' java.lang.NullPointerException: null",
+    "0x80034CFF",
+    "lorem ipsum dolor sit amet",
+    "E",
+    "SUPPLY CLOSET",
+    "Stop.",
+    "Birdo in my opinion is the best character in Mario Kart. She gets +1 to her mini-turbo as a hidden stat in Mario Kart Wii, is the best partner for Yoshi in Double Dash (all Daisy/Birdo or Waluigi /Birdo users can take a hike, I'll never accept these pairings) and has the best/cutest tricks in Wii, Tour and 8 Deluxe. HOWEVER, when it comes to other people using pink Birdo or the other Birdo colors, I take it as a challenge and an insult. The best Birdo user (mostly pink Birdo) is me. If I see other Birdo players online (even Birdo Mi Suit users, my Birdo Mi is the one true accurate Birdo Mii), I must humiliate them. If they dare pull out the Teddy Buggy/Roller Tires in my presence (Azure Roller included) I must destroy them by landing them in a bad position after a race. If they have the audacity to win against me, I'm denying their win and cutting off the communication by quitting the race or closing the software. Show up in my Friends list even though I hate you and refuse to race against you? REMOVED. And I hate the player named Rainbow Das. I hate her Mr. Scooty/Azure Roller Tires combo. Your combo is not better than mine (Birdo/Sports Coupe/GLA Tires)! Also, you're not better than me! You are not welcome in my Friends list. Your VR means nothing to me. And fuck those damn Yoshi players. Hate 'em, not playing again them."
+];

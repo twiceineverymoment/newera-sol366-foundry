@@ -428,6 +428,16 @@ function setupGameSettings(){
     default: 0,
     onChange: () => refreshPhones()
   });
+  game.settings.register("newera-sol366", "world.scrambleTime", {
+    name: "Game World - Alternate Dimension Mode",
+    hint: "Scramble the in-game date, time, and location to random values. Use when the party is in another dimension where time doesn't work.",
+    scope: "world",
+    config: true,
+    requiresReload: false,
+    type: Boolean,
+    default: 0,
+    onChange: () => refreshPhones()
+  });
 }
 
 async function refreshPhones(){
