@@ -117,7 +117,7 @@ export class Artificer {
                 cancel: {
                     icon: `<i class="fas fa-x"></i>`,
                     label: "Cancel",
-                  }
+                }
             }
         }).render(true);
     }

@@ -5096,7 +5096,7 @@ ClassInfo.features = {
                     field: "casterLevel.artificer",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4]
+                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5]
                 }
             ]
         },
@@ -5335,6 +5335,123 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <h4>2 Common spells from any school (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 11,
+            id: "artificer.bonus",
+            key: false,
+            name: "Artificer Bonus",
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "3": {
+                    label: "Choose a Bonus",
+                    options: {
+                        magicSkill: "+1 bonus to a magical skill",
+                        enchantment: "Learn one common spell or enchantment of any level",
+                        alchemy: "Learn one common or uncommon potion recipe",
+                        carryWeight: "+1 Carry Weight bonus",
+                    }
+                }
+            }
+        },
+        {
+            level: 12,
+            name: "Arcane Enchanter",
+            key: false,
+            description: `<p>You can store Enchantments in your focus.</p><p>Stored enchantments can be released onto targets in-range as a two-frame action and have a range of 20 feet. Any material costs for the enchantment are consumed when the enchantment is stored in your focus.</p>`
+        },
+        {
+            level: 12,
+            name: "Enchantment Studies",
+            key: false,
+            description: `<p>You learn new enchantments from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Unommon Enchantments (Level 4 or lower)</h4>
+                <h4>3 Common Enchantments (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/physical.png" data-tooltip="All Physical Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/psionic.png" data-tooltip="All Psionic Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 13, 
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 13,
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Uncommon Artificer Spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physical.png" data-tooltip="All Physical Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+                <h4>3 Common spells from any school (Level 5 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 14,
+            common: "learningExperience"
+        },
+        {
+            level: 14,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 14,
+            id: "artificer.bonus",
+            key: false,
+            name: "Artificer Bonus",
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "4": {
+                    label: "Choose a Bonus",
+                    options: {
+                        magicSkill: "+1 bonus to a magical skill",
+                        enchantment: "Learn one common spell or enchantment of any level",
+                        alchemy: "Learn one common or uncommon potion recipe",
+                        carryWeight: "+1 Carry Weight bonus",
+                    }
+                }
+            }
+        },
+        {
+            level: 15,
+            name: "Ætherium Conservation",
+            key: false,
+            description: `<p>You cast enchantments for half their usual Ætherium costs.`
+        },
+        {
+            level: 15,
+            name: "Enchantment Studies",
+            key: false,
+            description: `<p>You learn new enchantments from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Enchantment (Level 5 or lower)
+                <h4>2 Unommon Enchantments (Level 5 or lower)</h4>
+                <h4>2 Common Enchantments (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/physical.png" data-tooltip="All Physical Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/psionic.png" data-tooltip="All Psionic Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
             </div>
             `
         }
