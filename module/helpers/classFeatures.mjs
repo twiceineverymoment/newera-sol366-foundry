@@ -5996,7 +5996,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -6013,7 +6013,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -6030,7 +6030,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -6047,7 +6047,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -6064,7 +6064,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -6081,7 +6081,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -6098,7 +6098,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -6115,7 +6115,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -6180,14 +6180,14 @@ ClassInfo.features = {
                     field: "darkEnergy",
                     label: "Max. Dark Energy",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 15, 20, 25, 40]
+                    values: [null, 0, 0, 0, 0, 0, 0, 15, 20, 25, 40, 45, 50, 55, 60, 65]
                 }
             ],
             actions: [
                 {
                     name: "Dark Energy",
                     images: {
-                        base: `${NEWERA.images}/.png`,
+                        base: `${NEWERA.images}/dark-energy.png`,
                         left: `${NEWERA.images}/witch.png`,
                         right: `${NEWERA.images}/ac_0frame.png`
                     },
@@ -6301,6 +6301,118 @@ ClassInfo.features = {
         {
             level: 10,
             common: "learningExperience"
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 12,
+            name: "Spiritual Connection",
+            key: false,
+            description: `<p>Your Familiar's turn lengthy increases to 3 action frames.</p>`
+        },
+        {
+            level: 12,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 13,
+            archetype: "raven",
+            name: "Object Searching",
+            key: false,
+            description: "Your Raven familiar gains a +5 bonus to Perception checks involving sight. You can command your familiar to search for a specific object and retrieve it."
+        },
+        {
+            level: 13,
+            archetype: "snake",
+            name: "In Many Sizes",
+            key: false,
+            description: "When you summon your Snake familiar, you can choose any size from -9 to +2 for it to take. When summoned with Summon Familiar IV or higher, your familiar gains a Constricting attack."
+        },
+        {
+            level: 13,
+            archetype: "cat",
+            name: "Double Jump",
+            key: false,
+            description: "When summoned with Summon Familiar IV or higher, its base Jump distance increases to 20 feet laterally and 10 feet vertically. When your familiar Jumps, it can Jump again as a reaction before landing."
+        },
+        {
+            level: 13,
+            archetype: "hawk",
+            name: "Intimidating Screech",
+            key: false,
+            description: "Your Hawk familiar can use a loud screeching call to frighten enemies. It gains the Frighten action and a +2 Intimidation skill."
+        },
+        {
+            level: 13,
+            archetype: "wolf",
+            name: "Mount",
+            key: false,
+            description: "Your Wolf familiar gains the ability to be mounted. It can only be controlled by you and can't carry additional riders."
+        },
+        {
+            level: 13,
+            archetype: "spider",
+            name: "Ensnaring Web",
+            key: false,
+            description: "Your Spider familiar can spin webs to ensnare enemies. Creatures are either restrained or staggered when they move through the web, depending on their size."
+        },
+        {
+            level: 13,
+            archetype: "owl",
+            name: "Diving Talon Attack",
+            key: false,
+            description: "Your Owl familiar gains a Dive action. Its Fly speed is doubled while diving, and its Talon attack deals +1d damage while diving."
+        },
+        {
+            level: 13,
+            archetype: "bear",
+            name: "Protective Companion",
+            key: false,
+            description: "Your familiar gains a reaction frame and the Protect Ally action."
+        },
+        {
+            level: 13,
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>4 Uncommon Witch Spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/evocation.png" data-tooltip="Evocation" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/transmutation.png" data-tooltip="Transmutation" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+                <h4>2 Common spells from any school (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 14,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 14,
+            id: "witch.bonus",
+            name: "Witch Bonus",
+            key: false,
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "2": {
+                    label: "Choose a bonus",
+                    options: {
+                        "extraSpell": "Learn 1 Common spell of any school",
+                        "extraPotion": "Learn 1 Common potion recipe",
+                    }
+                }
+            }
+        },
+        {
+            level: 15,
+            name: "Collective Might",
+            key: false,
+            description: `<p>Whenever a spell is cast using your Dark Energy, another creature in range can assist on the spellcasting check. That creature has disadvantage unless they also know the spell being cast.</p><p>Spells cast with assistance using this ability are automatically amplified to the next-highest factor.</p>`
         }
     ],
     adventurer: [
