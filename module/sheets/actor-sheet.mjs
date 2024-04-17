@@ -1549,7 +1549,7 @@ export class NewEraActorSheet extends ActorSheet {
     context.inspiration = {
       enabled: game.settings.get("newera-sol366", "inspiration"),
       points: {},
-      cp: Math.floor(this.actor.system.inspiration * this.actor.system.levelGap * 0.2)
+      cp: Math.floor(this.actor.system.inspiration * this.actor.system.levelGap * 0.1)
     };
     
     if (context.inspiration.enabled){
