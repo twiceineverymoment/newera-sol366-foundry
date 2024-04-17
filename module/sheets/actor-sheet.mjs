@@ -801,13 +801,17 @@ export class NewEraActorSheet extends ActorSheet {
         this.submit();
       }
     });
-    html.find(".newera-roll-button").click(ev => {
+    html.find(".newera-roll-button").click(async ev => {
       let roll = new Roll($(ev.currentTarget).data("roll"), this.actor.getRollData());
-          roll.toMessage({
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            flavor: $(ev.currentTarget).data("caption"),
-            rollMode: game.settings.get('core', 'rollMode')
-          });
+      await roll.evaluate();
+      roll.toMessage({
+        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+        flavor: $(ev.currentTarget).data("caption"),
+        rollMode: game.settings.get('core', 'rollMode')
+      });
+      if ($(ev.currentTarget).data("label").toLowerCase().includes("damage")){
+        game.newera.setLastDamageAmount(roll.total);
+      }
     });
 
     //Effect rows (have to do this here because VS code doesn't like Handlebars in CSS)
@@ -1174,11 +1178,15 @@ export class NewEraActorSheet extends ActorSheet {
         }
 
         let roll = new Roll(`d20 + ${totalCastMod}`, this.actor.getRollData());
-          roll.toMessage({
+        roll.evaluate();
+        roll.toMessage({
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
             flavor: dataset.rollType = "spell" ? dataset.spellCaption : dataset.label,
             rollMode: game.settings.get('core', 'rollMode')
-          });
+        });
+        if (dataset.label && dataset.label.toLowerCase().includes("damage")){
+          game.newera.setLastDamageAmount(roll.total);
+        }
       }
 
       if (dataset.rollType == "spell-damage"){

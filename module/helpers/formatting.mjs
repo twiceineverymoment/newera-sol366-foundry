@@ -50,7 +50,7 @@ export class Formatting {
       }
 
       static getSpellActionIcons(spell){
-        console.log(spell);
+        //console.log(spell);
           if (spell.type == "Enchantment"){
             return `<img src="${NEWERA.images}/sp_enchantment.png" class="skill-icon" data-tooltip="Enchantment" data-tooltip-direction="UP" /><img src="${NEWERA.images}/ac_adventuring.png" class="skill-icon" data-tooltip="Adventuring Phase (non-combat)" data-tooltip-direction="UP" />`;
           } else {

@@ -137,7 +137,7 @@ export class Actions {
               speaker: ChatMessage.getSpeaker({actor: actor}),
               flavor: `Damage - ${spell.name}${amp>1 ? " "+NEWERA.romanNumerals[amp] : ""}`
             });
-            game.lastDamageAmt = dmgRoll.total;
+            game.newera.setLastDamageAmount(dmgRoll.total);
           });
         },
         close: () => {
@@ -231,7 +231,7 @@ export class Actions {
               </div>
             </form>`,
         render: html => {
-          html.find("#damageAmount").val(game.lastDamageAmt || "");
+          html.find("#damageAmount").val(game.newera.getLastDamageAmount());
           html.find("#calledShot").change(ev => {
             if ($(ev.currentTarget).is(":checked")){
               html.find("#calledShotSelect").show();
@@ -353,6 +353,7 @@ export class Actions {
         return;
       }
       actor.takeDamage(amount, dmgType, false, isInjury);
+      game.newera.clearLastDamage(); //Only does something if incremental damage mode is enabled
     }
 
     static async _heal(actor, html){

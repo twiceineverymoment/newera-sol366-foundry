@@ -168,12 +168,17 @@ export class HotbarActions {
         }
         if (game.settings.get("newera-sol366", "autoRollActions") == true && rolls.length == 1){
             const roll = rolls[0];
-            new Roll(roll.formula, actor.getRollData()).toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: roll.caption});
+            let r = new Roll(roll.formula, actor.getRollData());
+            await r.evaluate();
+            r.toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: roll.caption});
+            if (roll.label.toLowerCase().includes("damage")){
+                game.newera.setLastDamageAmount(r.total);
+            }
             return;
         }
         let rollButtons = "";
         rolls.forEach(r => {
-            rollButtons += `<button class="quick-action-roll" data-caption="${r.caption}" data-formula="${r.formula}">${r.die ? `<i class="fa-solid fa-dice-${r.die}"></i> ` : ""}${r.label}</button>`;
+            rollButtons += `<button class="quick-action-roll" data-caption="${r.caption}" data-label="${r.label}" data-formula="${r.formula}">${r.die ? `<i class="fa-solid fa-dice-${r.die}"></i> ` : ""}${r.label}</button>`;
         });
         new Dialog({
             title: `${name} [${actor.name}]`,
@@ -191,9 +196,14 @@ export class HotbarActions {
                 }
             },
             render: html => {
-                html.find(".quick-action-roll").click(ev => {
+                html.find(".quick-action-roll").click(async ev => {
                     const element = $(ev.currentTarget);
-                    new Roll(element.data("formula"), actor.getRollData()).toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: element.data("caption")});
+                    let r = new Roll(element.data("formula"), actor.getRollData());
+                    await r.evaluate();
+                    r.toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: element.data("caption")});
+                    if (element.data("label").toLowerCase().includes("damage")){
+                        game.newera.setLastDamageAmount(r.total);
+                    }
                 });
             },
             default: "close"
@@ -217,12 +227,17 @@ export class HotbarActions {
         }
         if (game.settings.get("newera-sol366", "autoRollActions") == true && action.system.rolls.length == 1){
             const roll = action.system.rolls[0];
-            new Roll(roll.formula, actor.getRollData()).toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: roll.caption});
+            let r = new Roll(roll.formula, actor.getRollData());
+            await r.evaluate();
+            r.toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: roll.caption});
+            if (roll.label.toLowerCase().includes("damage")){
+                game.newera.setLastDamageAmount(r.total);
+            }
             return;
         }
         let rollButtons = "";
         action.system.rolls.forEach(r => {
-            rollButtons += `<button class="quick-action-roll" data-caption="${r.caption}" data-formula="${r.formula}">${r.die ? `<i class="fa-solid fa-dice-${r.die}"></i> ` : ""}${r.label}</button>`;
+            rollButtons += `<button class="quick-action-roll" data-caption="${r.caption}" data-label="${r.label}" data-formula="${r.formula}">${r.die ? `<i class="fa-solid fa-dice-${r.die}"></i> ` : ""}${r.label}</button>`;
         });
         new Dialog({
             title: `${action.name} [${actor.name}]`,
@@ -247,9 +262,14 @@ export class HotbarActions {
                 }
             },
             render: html => {
-                html.find(".quick-action-roll").click(ev => {
+                html.find(".quick-action-roll").click(async ev => {
                     const element = $(ev.currentTarget);
-                    new Roll(element.data("formula"), actor.getRollData()).toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: element.data("caption")});
+                    let r = new Roll(element.data("formula"), actor.getRollData());
+                    await r.evaluate();
+                    r.toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: element.data("caption")});
+                    if (element.data("label").toLowerCase().includes("damage")){
+                        game.newera.setLastDamageAmount(r.total);
+                    }
                 });
             },
             default: "close"
@@ -286,12 +306,17 @@ export class HotbarActions {
 
         if (game.settings.get("newera-sol366", "autoRollActions") == true && action.rolls.length == 1){
             const roll = action.rolls[0];
-            new Roll(roll.formula, actor.getRollData()).toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: roll.caption});
+            let r = new Roll(roll.formula, actor.getRollData());
+            await r.evaluate();
+            r.toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: roll.caption});
+            if (roll.label.toLowerCase().includes("damage")){
+                game.newera.setLastDamageAmount(r.total);
+            }
             return;
         }
         let rollButtons = "";
         action.rolls.forEach(r => {
-            rollButtons += `<button class="quick-action-roll" data-caption="${r.caption}" data-formula="${r.formula}">${r.die ? `<i class="fa-solid fa-dice-${r.die}"></i> ` : ""}${r.label}</button>`;
+            rollButtons += `<button class="quick-action-roll" data-caption="${r.caption}" data-label="${r.label}" data-formula="${r.formula}">${r.die ? `<i class="fa-solid fa-dice-${r.die}"></i> ` : ""}${r.label}</button>`;
         });
         new Dialog({
             title: `${name} [${actor.name}]`,
@@ -316,9 +341,14 @@ export class HotbarActions {
                 }
             },
             render: html => {
-                html.find(".quick-action-roll").click(ev => {
+                html.find(".quick-action-roll").click(async ev => {
                     const element = $(ev.currentTarget);
-                    new Roll(element.data("formula"), actor.getRollData()).toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: element.data("caption")});
+                    let r = new Roll(element.data("formula"), actor.getRollData());
+                    await r.evaluate();
+                    r.toMessage({speaker: ChatMessage.getSpeaker({actor: actor}), flavor: element.data("caption")});
+                    if (element.data("label").toLowerCase().includes("damage")){
+                        game.newera.setLastDamageAmount(r.total);
+                    }
                 });
             },
             default: "close"
