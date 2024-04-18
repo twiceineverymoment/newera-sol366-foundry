@@ -1,0 +1,60 @@
+<table class="newera-actorsheet-table spell-table">
+    <tr>
+          <td colspan="4" style="width: 100%">
+            <nav class="spell-tabs spell-table-nav" data-group="spells">
+              <a class="item spell-table-tab" data-tab="all" data-tooltip="All Spells and Enchantments" data-tooltip-direction="UP">All</a>
+              <a class="item spell-table-tab" data-tab="favorites" data-tooltip="Favorite Spells and Enchantments" data-tooltip-direction="UP">Favorites</a>
+              <a class="item spell-table-tab" data-tab="elemental" data-tooltip="Elemental Magic" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/elemental.png" /></a>
+              <a class="item spell-table-tab" data-tab="divine" data-tooltip="Divine Magic" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/divine.png" /></a>
+              <a class="item spell-table-tab" data-tab="physical" data-tooltip="Physical Magic" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/physical.png" /></a>
+              <a class="item spell-table-tab" data-tab="psionic" data-tooltip="Psionic Magic" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/psionic.png" /></a>
+              <a class="item spell-table-tab" data-tab="spectral" data-tooltip="Spectral Magic" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/spectral.png" /></a>
+              <a class="item spell-table-tab" data-tab="temporal" data-tooltip="Temporal Magic" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/temporal.png" /></a>
+              <a class="item spell-table-tab" data-tab="enchantments" data-tooltip="Enchantments" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/sp_enchantment.png" /></a>
+            </nav>
+          </td>         
+    </tr>
+      {{#each inventory.magic.all as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.html tabGroup="all"}}
+      {{/each}}
+      {{#each inventory.magic.favorites as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.html tabGroup="favorites"}}
+      {{/each}}
+      {{#each inventory.magic.elemental as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.html tabGroup="elemental"}}
+      {{/each}}
+      {{#each inventory.magic.divine as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.html tabGroup="divine"}}
+      {{/each}}
+      {{#each inventory.magic.physical as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.html tabGroup="physical"}}
+      {{/each}}
+      {{#each inventory.magic.psionic as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.html tabGroup="psionic"}}
+      {{/each}}
+      {{#each inventory.magic.spectral as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.html tabGroup="spectral"}}
+      {{/each}}
+      {{#each inventory.magic.temporal as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.html tabGroup="temporal"}}
+      {{/each}}
+      {{#each inventory.magic.enchantments as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.html tabGroup="enchantments"}}
+      {{/each}}
+    <tr>
+      <td colspan="4" id="spell-add-row">
+        <div class="equipment-box-small item-create" id="spell-add-1" data-type="Spell" data-tooltip="Create New Spell" data-tooltip-direction="UP">
+          <a title="Add Spell">
+          <img src="systems/newera-sol366/resources/fire-spell-cast.png" />
+          <i class="fas fa-plus"></i>
+          </a>
+        </div> 
+        <div class="equipment-box-small item-create" id="spell-add-2" data-type="Enchantment" data-tooltip="Create New Enchantment" data-tooltip-direction="UP">
+          <a title="Add Enchantment">
+          <img src="systems/newera-sol366/resources/spell-book.png" />
+          <i class="fas fa-plus"></i>
+          </a>
+        </div> 
+      </td>
+    </tr>
+  </table>

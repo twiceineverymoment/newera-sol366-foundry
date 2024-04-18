@@ -1,9 +1,9 @@
 import { NEWERA } from "../helpers/config.mjs";
-import { Scholar } from "../helpers/classes/scholar.mjs";
+import { Artificer } from "../helpers/classes/artificer.mjs";
 import { Actions } from "../helpers/macros/actions.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
 
-export class SpellFocusSheet extends ActorSheet {
+export class SpellFocus extends ActorSheet {
 
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
@@ -22,36 +22,23 @@ export class SpellFocusSheet extends ActorSheet {
     getData() {
         const context = super.getData();
 
-        Scholar.initializeSpellSlots(this.actor, false);
+        Artificer.initializeSpellFocus(this.actor, false);
 
-        const actorSpellSlots = structuredClone(context.actor.system.spellSlots);
-        console.log(actorSpellSlots);
+        let totalStoredEnergy = 0;
+        context.spells = structuredClone(this.actor.system.focus);
+        for (const storedObj of context.spells){
+            storedObj.spell = this.actor.items.find(s => s.id == storedObj.id);
+            storedObj.castLevel = storedObj.spell.system.level * storedObj.ampFactor;
+            totalStoredEnergy += (storedObj.spell.system.energyCost * storedObj.ampFactor);
+        };
 
-        for (const [lvl, slots] of Object.entries(actorSpellSlots)){
-            
-            for (const [num, slot] of Object.entries(slots)){
-                slot.amplified = (slot.ampFactor > 1);
-                const spell = this.actor.items.get(slot.spellId) || null;
-                if (spell){
-                    slot.spell = {
-                        name: spell.name,
-                        castLevel: spell.system.level * slot.ampFactor,
-                        image: spell.img
-                    };
-                }
-            }
-        }
+        context.focusEnergy = {
+            value: totalStoredEnergy,
+            max: this.actor.system.focusEnergy.max,
+            percentage: totalStoredEnergy / this.actor.system.focusEnergy.max
+        };
 
-        //Remove the empty tiers from the copied object and set them to false to the sheet doesn't show them
-        for (const lvl of Object.keys(actorSpellSlots)){
-            if (Object.keys(actorSpellSlots[lvl]).length == 0){
-                delete actorSpellSlots[lvl];
-            }
-        }
-
-        context.prepLevels = actorSpellSlots;
-
-        console.log("SPELL PREP SHEET CONTEXT DUMP");
+        console.log("FOCUS SHEET CONTEXT DUMP");
         console.log(context);
         return context;
     }
@@ -63,72 +50,55 @@ export class SpellFocusSheet extends ActorSheet {
             $(element).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
         });
 
-        html.find(".cast-prepared").click(ev => {
-            const element = $(ev.currentTarget);
-            const slotLevel = element.data("slotLevel");
-            const slotNumber = element.data("slotNumber");
-            const slot = this.actor.system.spellSlots[slotLevel][slotNumber];
-            if (!slot.spellId){
-                console.log("Tried to cast an empty slot, crickets");
-                return;
-            }
-            if (!slot.available){
-                ui.notifications.warn("This slot has been expended. Click the button on the right to recover it.");
-                return;
-            }
-            const spell = this.actor.items.get(slot.spellId);
-
-            Actions.castSpell(this.actor, spell, slot.ampFactor, true);
-            Scholar.setSpellSlotAvailability(this.actor, slotLevel, slotNumber, false);
-        });
-
-        html.find(".spell-slot").on("drop", ev => {
-            const dropData = JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain"));
-            const element = $(ev.currentTarget);
-            const level = element.data("slotLevel");
-            const number = element.data("slotNumber");
-            if (dropData.macroType == "spell"){
-                const spell = this.actor.items.get(dropData.id);
-                if (spell){
-                    Scholar.setPreparedSpellSlot(this.actor, spell, level, number);
-                } else {
-                    ui.notifications.error("Drag spells from your character's spell list to prepare them.");
-                }
-            } else {
-                ui.notifications.error("You can't prepare that. It's a gazebo.");
-            }
-        });
-
-        html.find(".recover-slot").click(ev => {
-            const element = $(ev.currentTarget);
-            const tr = element.parents("tr");
-            const level = tr.data("slotLevel");
-            const number = tr.data("slotNumber");
-            Scholar.setSpellSlotAvailability(this.actor, level, number, true);
-        });
-
-        html.find("#recoverAll").click(() => {
-            Scholar.recoverAllSpellSlots(this.actor);
-            Scholar.initializeSpellSlots(this.actor, false);
-        });
-
-        html.find("#resetSpellPrep").click(() => {
+        html.find("#resetFocus").click(() => {
             new Dialog({
-                title: "Clear Spell Slots",
-                content: "Are you sure you want to clear your prepared spells?",
+                title: "Reset Spell Focus",
+                content: "This will clear all the spells in your focus. You cannot undo this action. Are you sure?",
                 buttons: {
                     confirm: {
                         icon: `<i class="fas fa-check"></i>`,
                         label: "Yes",
-                        callback: () => Scholar.initializeSpellSlots(this.actor, true)
+                        callback: () => {
+                            Artificer.initializeSpellFocus(this.actor, true);
+                        }
                     },
                     cancel: {
                         icon: `<i class="fas fa-x"></i>`,
                         label: "No"
                     }
-                },
-                default: "cancel"
+                }
             }).render(true);
+        });
+
+        html.find(".focus-dropzone").on("drop", ev => {
+            console.log("SPELL FOCUS DROP");
+            const dropData = JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain"));
+            console.log(dropData);
+            if (dropData.macroType == "spell"){
+                const spell = this.actor.items.find(s => s.id == dropData.id);
+                if (!spell){
+                    ui.notifications.warn(`Hmm... ${this.actor.name} doesn't know that spell.`);
+                    return;
+                }
+                Artificer.onFocusSpellDrop(this.actor, spell);
+            } else {
+                ui.notifications.error("You can't prepare that. It's a gazebo.");
+            }
+        });
+        
+        html.find(".cast-stored").click(ev => {
+            const index = $(ev.currentTarget).data("storeId");
+            const store = this.actor.system.focus[index];
+            const spell = this.actor.items.find(s => s.id == store.id);
+            Actions.castSpell(this.actor, spell, store.ampFactor, true);
+            //Remove the stored spell
+            const update = structuredClone(this.actor.system.focus);
+            update.splice(index, 1);
+            this.actor.update({
+                system: {
+                    focus: update
+                }
+            });
         });
 
     }

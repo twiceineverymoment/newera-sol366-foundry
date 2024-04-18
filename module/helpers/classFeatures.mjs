@@ -5,9 +5,11 @@ import { Mercenary } from "./classes/mercenary.mjs";
 import { Ranger } from "./classes/ranger.mjs";
 import { Chanter } from "./classes/chanter.mjs";
 import { Guardian } from "./classes/guardian.mjs";
+import { Artificer } from "./classes/artificer.mjs";
 import { Witch } from "./classes/witch.mjs";
 
 import { SpellPreparation } from "../sheets/spell-preparation.mjs";
+import { SpellFocus } from "../sheets/spell-focus.mjs";
 import { ChantSheet } from "../sheets/chants.mjs";
 
 export const ClassInfo = {};
@@ -71,7 +73,7 @@ ClassInfo.features = {
                     field: "immenseEnergy",
                     label: "Maximum Energy",
                     sign: false,
-                    values: [null, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70]
+                    values: [null, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70, 72, 92, 95, 98, 128]
                 }
             ]
         },
@@ -93,7 +95,7 @@ ClassInfo.features = {
                     field: "casterLevel.delver",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3]
+                    values: [null, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5]
                 }
             ]
         },
@@ -149,7 +151,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver.fire",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -165,7 +167,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver.water",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -181,7 +183,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver.earth",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -197,7 +199,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -295,7 +297,7 @@ ClassInfo.features = {
                    field: "elementalChannelingDmgDie",
                     label: "Elemental Damage",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, "1d4", "1d4", "1d6", "1d6"] 
+                    values: [null, 0, 0, 0, 0, 0, 0, "1d4", "1d4", "1d6", "1d6", "1d8", "1d8", "1d10", "1d10", "1d12"] 
                 }
             ],
             actions: [
@@ -476,6 +478,298 @@ ClassInfo.features = {
                     ]
                 },
             ]
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 12,
+            archetype: "fire",
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Pyromancy spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Common spells of any form (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            archetype: "water",
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Cryomancy spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Common spells of any form (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            archetype: "earth",
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Lithomancy spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Common spells of any form (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            archetype: "wind",
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Evocation spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Common spells of any form (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            common: "learningExperience"
+        },
+        {
+            level: 13,
+            archetype: "fire",
+            name: "Wild Fury",
+            key: false,
+            description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
+            actions: [
+                {
+                    name: "Wild Fury (Path of Fire)",
+                    images: {
+                        base: `${NEWERA.images}/embraced-energy.png`,
+                        left: `${NEWERA.images}/delver_fire.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "<p>You feel a rush of magical power. Use this action whenever you enter Rage.</p><p>If you have multiple elemental paths, you choose which table to roll on.</p>",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Roll",
+                        die: "d4",
+                        callback: actor => Delver.rollWildFury(actor, "fire")
+                      }
+                    ]
+                },
+            ]
+        },
+        {
+            level: 13,
+            archetype: "water",
+            name: "Wild Fury",
+            key: false,
+            description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
+            actions: [
+                {
+                    name: "Wild Fury (Path of Water)",
+                    images: {
+                        base: `${NEWERA.images}/embraced-energy.png`,
+                        left: `${NEWERA.images}/delver_water.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "<p>You feel a rush of magical power. Use this action whenever you enter Rage.</p><p>If you have multiple elemental paths, you choose which table to roll on.</p>",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Roll",
+                        die: "d4",
+                        callback: actor => Delver.rollWildFury(actor, "water")
+                      }
+                    ]
+                },
+            ]
+        },
+        {
+            level: 13,
+            archetype: "earth",
+            name: "Wild Fury",
+            key: false,
+            description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
+            actions: [
+                {
+                    name: "Wild Fury (Path of Earth)",
+                    images: {
+                        base: `${NEWERA.images}/embraced-energy.png`,
+                        left: `${NEWERA.images}/delver_earth.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "<p>You feel a rush of magical power. Use this action whenever you enter Rage.</p><p>If you have multiple elemental paths, you choose which table to roll on.</p>",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Roll",
+                        die: "d4",
+                        callback: actor => Delver.rollWildFury(actor, "earth")
+                      }
+                    ]
+                },
+            ]
+        },
+        {
+            level: 13,
+            archetype: "wind",
+            name: "Wild Fury",
+            key: false,
+            description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
+            actions: [
+                {
+                    name: "Wild Fury (Path of Wind)",
+                    images: {
+                        base: `${NEWERA.images}/embraced-energy.png`,
+                        left: `${NEWERA.images}/delver_wind.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "<p>You feel a rush of magical power. Use this action whenever you enter Rage.</p><p>If you have multiple elemental paths, you choose which table to roll on.</p>",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Roll",
+                        die: "d4",
+                        callback: actor => Delver.rollWildFury(actor, "wind")
+                      }
+                    ]
+                },
+            ]
+        },
+        {
+            level: 13,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 14,
+            id: "delver.bonus",
+            name: "Delver Bonus",
+            key: false,
+            description: "Choose one of the following stats to gain a +1 class bonus to.",
+            selections: {
+                "3": {
+                    label: "Choose a Stat Increase",
+                    options: {
+                        passivePerception: "Passive Perception",
+                        speed: "Speed",
+                        carryWeight: "Carry Weight"
+                    }
+                }
+            }
+        },
+        {
+            level: 14,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 15,
+            name: "Extreme Affinity",
+            key: false,
+            description: `<p>Your Proficiency Bonus acts as a bonus to your Elemental Magic skill level when casting spells on your Elemental Path.</p>
+            `
+        },
+        {
+            level: 15,
+            archetype: "fire",
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Pyromancy spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common Delver spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 15,
+            archetype: "water",
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Cryomancy spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common Delver spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 15,
+            archetype: "earth",
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Lithomancy spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common Delver spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 15,
+            archetype: "wind",
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Evocation spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common Delver spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            `
         }
     ],
     mercenary: [
@@ -555,7 +849,7 @@ ClassInfo.features = {
                     field: "rage",
                     label: "Rage Uses Per Day",
                     sign: false,
-                    values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3]
+                    values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4]
                 }
             ]
         },
@@ -597,13 +891,13 @@ ClassInfo.features = {
                     field: "proficiencyBonus.mercenary.raider",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
                 },
                 {
                     field: "proficiencyDamageBonus.raider",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
                 }
             ]
         },
@@ -618,13 +912,13 @@ ClassInfo.features = {
                     field: "proficiencyBonus.mercenary.enforcer",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
                 },
                 {
                     field: "proficiencyDamageBonus.enforcer",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
                 }
             ]
         },
@@ -639,13 +933,13 @@ ClassInfo.features = {
                     field: "proficiencyBonus.mercenary.woodsman",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
                 },
                 {
                     field: "proficiencyDamageBonus.woodsman",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
                 }
             ]
         },
@@ -660,13 +954,13 @@ ClassInfo.features = {
                     field: "proficiencyBonus.mercenary.warrior",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
                 },
                 {
                     field: "proficiencyDamageBonus.warrior",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
                 }
             ]
         },
@@ -710,7 +1004,7 @@ ClassInfo.features = {
                     field: "casterLevel.mercenary",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3]
                 }
             ]
         },
@@ -789,6 +1083,96 @@ ClassInfo.features = {
             key: false,
             name: "Defensive Fighter",
             description: "While Raging, you can move up to twice your speed to Protect an Ally. Your Rage doesn't end if you Blocked an attack or Protected an Ally during your turn."
+        },
+        {
+            level: 11,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 11,
+            name: "Spell Studies (2<sup>nd</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Common Mercenary spells (Level 2 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" data-tooltip="Lithomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/abjuration.png" data-tooltip="Anjuration" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 12,
+            name: "Combat Expert",
+            key: false,
+            description: "Your Turn Length increases by 1 frame and 1 reaction frame."
+        },
+        {
+            level: 13,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 14,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 14,
+            id: "mercenary.bonus",
+            name: "Mercenary Bonus",
+            key: false,
+            description: "You gain a +1 class bonus to your Natural Armor. Choose one of the following bonuses.",
+            selections: {
+                "2": {
+                    label: "Choose a Bonus",
+                    options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"}
+                }
+            }
+        },
+        {
+            level: 15,
+            archetype: "raider",
+            name: "Flanking",
+            key: false,
+            description: `<p>You and an ally can flank enemies to gain advantage on your attacks.</p>
+            <p>An enemy is flanked whenever you and an ally are positioned within reach of it on opposite sides. Attacks against flanked enemies have advantage.</p>`
+        },
+        {
+            level: 15,
+            archetype: "enforcer",
+            name: "Juggernaut",
+            key: false,
+            description: `<p>While Raging, you have Resistance 2 against physical damage (Piercing, Bludgeoning, and Slashing.)`
+        },
+        {
+            level: 15,
+            archetype: "woodsman",
+            name: "Shield-Breaker",
+            key: false,
+            description: `<p>Your two-handed attacks with axes or battle-axes always cause armor to take a durability check.</p>
+            <p>If these attacks hit a shield, excess damage is dealt to the target and the shield always takes a durability check.</p>`
+        },
+        {
+            level: 15,
+            archetype: "warrior",
+            name: "Focused Attack",
+            key: false,
+            description: `<p>On a hit, the target makes an Endurance save with difficulty equal to your current Mercenary level. On a failure, all attacks against that target have advantage until your next turn.</p>`
+        },
+        {
+            level: 15,
+            name: "Spell Studies (3<sup>rd</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Uncommon Mercenary spell (Level 3 or lower)</h4>
+                <h4>2 Common Mercenary spells (Level 3 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" data-tooltip="Lithomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/abjuration.png" data-tooltip="Anjuration" data-tooltip-direction="UP" />
+            </div>
+            `
         }
     ],
     ranger: [
@@ -942,7 +1326,7 @@ ClassInfo.features = {
                     field: "preyBonus",
                     label: "Prey Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
+                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 5]
                 }
             ]
         },
@@ -977,7 +1361,7 @@ ClassInfo.features = {
                     field: "casterLevel.ranger",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]
+                    values: [null, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3]
                 }
             ]
         },
@@ -1008,7 +1392,7 @@ ClassInfo.features = {
                     field: "deadeyeDamage",
                     label: "Damage per Frame",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 0, 0, 2, 2, 2, 3]
+                    values: [null, 0, 0, 0, 0, 0, 0, 2, 2, 2, 3, 3, 3, 3, 4, 4]
                 }
             ],
             actions: [
@@ -1082,6 +1466,146 @@ ClassInfo.features = {
             name: "Team Player",
             description: `<p>Whenever you succeed on an Athletics or Agility check during  adventuring, your allies have advantage on the same check to attempt the same action for the next five minutes.</p>
             <p>Whenever you assist an ally on an Athletics or Agility check, you can't roll lower than 10.</p>`
+        },
+        {
+            level: 11,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 11,
+            name: "Spell Studies (2<sup>nd</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Common Ranger spells (Level 2 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/conjuration.png" data-tooltip="Conjuration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 12,
+            archetype: "mountaineer",
+            name: "Expert Climber",
+            key: false,
+            description: `<p>You climb at your full speed instead of half speed.</p><p>Gain 1 level in the Climbing (Athletics) specialty.</p>`
+        },
+        {
+            level: 12,
+            archetype: "polar",
+            name: "Cold Never Bothered Me",
+            key: false,
+            description: `<p>You have Resistance 1 to Freezing damage, and advantage on saves against Cryomancy spells.</p>`
+        },
+        {
+            level: 12,
+            archetype: "desert",
+            name: "Brave the Elements",
+            key: false,
+            description: `<p>Effects of Exhaustion on you are reduced by 1 level.</p>`
+        },
+        {
+            level: 12,
+            archetype: "rainforest",
+            name: "Wild Traveler",
+            key: false,
+            description: `<p>You aren't slowed down by slippery or hazardous terrain.</p>`
+        },
+        {
+            level: 12,
+            archetype: "hiker",
+            name: "Poison Resistance",
+            key: false,
+            description: `<p>You have Poison Resistance 1.</p>`
+        },
+        {
+            level: 12,
+            archetype: "diver",
+            name: "Swim Speed",
+            key: false,
+            description: `<p>You swim at your full speed instead of half speed.</p><p>Gain 1 level in the Swimming (Athletics) specialty.</p>`
+        },
+        {
+            level: 12,
+            archetype: "spelunker",
+            name: "Tight Fit",
+            key: false,
+            description: `<p>You can trivially enter any space large enough to fit a creature 2 sizes smaller than you.</p>`
+        },
+        {
+            level: 12,
+            archetype: "urban",
+            name: "Stealthy Exploration",
+            key: false,
+            description: `<p>Gain 1 level in the Climbing (Athletics), Stealth Actions (Stealth), and Lockpicking (Sleight of Hand) specialties.</p>`
+        },
+        {
+            level: 12,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 13,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 14,
+            id: "ranger.specialties",
+            name: "Ranger Specialty",
+            key: false,
+            description: "Choose an additional Specialty.",
+            selections: {
+                "5": {
+                    label: "Specialty #5",
+                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"}
+                }
+            }
+        },
+        {
+            level: 14,
+            name: "Primal Magic",
+            key: false,
+            description: `<p>Whenever you attempt a check using any natural skill, knowledge, or specialty, you may spend up to 10 energy on your Primal Magic sense.</p>
+            <p>Every 2 energy spent adds a +1 magic bonus to the outcome.</p>`
+        },
+        {
+            level: 15,
+            name: "Spell Studies (3<sup>rd</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Uncommon Ranger spell (Level 3 or lower)</h4>
+                <h4>3 Common Ranger spells (Level 3 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/conjuration.png" data-tooltip="Conjuration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 15,
+            common: "learningExperience"
+        },
+        {
+            level: 15,
+            id: "ranger.bonus",
+            name: "Ranger Bonus",
+            key: false,
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "2": {
+                    label: "Choose a Bonus",
+                    options: {
+                        "passivePerception": "+1 Passive Perception",
+                        "carryWeight": "+1 Carry Weight",
+                        "increase": "Increase Natural Skill, Knowledge, or Specialty"
+                    }
+                }
+            }
         }
     ],
     researcher: [
@@ -2627,37 +3151,37 @@ ClassInfo.features = {
                     field: "chantSlots.basic",
                     label: "Basic Chant Slots",
                     sign: false,
-                    values: [null, 2, 3, 3, 4, 5, 5, 6, 6, 6, 6]
+                    values: [null, 2, 3, 3, 4, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6]
                 },
                 {
                     field: "chantSlots.apprentice",
                     label: "Apprentice Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 2, 2, 3, 3, 4, 4]
+                    values: [null, 0, 0, 0, 0, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6]
                 },
                 {
                     field: "chantSlots.intermediate",
                     label: "Intermediate Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 3, 4, 4]
                 },
                 {
                     field: "chantSlots.advanced",
                     label: "Advanced Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
                 },
                 {
                     field: "chantSlots.expert",
                     label: "Expert Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "chantSlots.master",
                     label: "Master Chant Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
             ],
             actions: [
@@ -2717,7 +3241,7 @@ ClassInfo.features = {
                     field: "casterLevel.chanter",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
+                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
                 }
             ]
         },
@@ -2806,7 +3330,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.chanter",
                     name: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2]
+                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3]
                 }
             ]
         },
@@ -2861,6 +3385,69 @@ ClassInfo.features = {
             name: "Intermediate Chants",
             key: false,
             description: "You gain two Intermediate-level chant slots and the ability to take Intermediate chant feats. You may learn any two Intermediate chants without paying their character point costs."
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 12,
+            id: "chanter.bonus",
+            key: false,
+            name: "Chanter Bonus",
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "2": {
+                    label: "Choose an Upgrade",
+                    options: {
+                        passivePerception: "+1 Passive Perception Bonus",
+                        passiveAgility: "+1 Passive Agility Bonus",
+                        spell: "Learn 1 Common Chanter spell of any level"
+                    }
+                }
+            }
+        },
+        {
+            level: 12,
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Uncommon Chanter Spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/restoration.png" data-tooltip="Restoration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" data-tooltip="Hypnotism" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 13,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 13,
+            common: "learningExperience"
+        },
+        {
+            level: 14,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 14,
+            name: "Chant Blending",
+            key: false,
+            description: `<p>You can perform two chants simultaneously.</p><p>Activating each chant takes a separate action and expends a chant slot. If your concentration is broken, both chants are ended.</p>`
+        },
+        {
+            level: 15,
+            common: "learningExperience"
+        },
+        {
+            level: 15,
+            name: "Advanced Chants",
+            key: false,
+            description: "You gain two Advanced-level chant slots and the ability to take Advanced chant feats. You may learn any two Advanced chants without paying their character point costs."
         }
     ],
     magus: [
@@ -3211,7 +3798,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.guardian",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4]
+                    values: [null, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5]
                 }
             ]
         },
@@ -3450,13 +4037,13 @@ ClassInfo.features = {
                     field: "secondWind.roll",
                     label: "Second Wind Die",
                     sign: false,
-                    values: [null, "", "", "", "", "", "d6", "d6", "d6", "d8", "d8"]
+                    values: [null, "", "", "", "", "", "d6", "d6", "d6", "d8", "d8", "d8", "d8", "d8", "d8", "d10"]
                 },
                 {
                     field: "secondWind.count",
                     label: "Dice per Day",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 3, 4, 5, 5, 6]
+                    values: [null, 0, 0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 8, 9, 10, 10]
                 }
             ],
             actions: [
@@ -3584,6 +4171,159 @@ ClassInfo.features = {
                     ]
                 }
             ]
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 12,
+            name: "Arcane Fighter",
+            key: false,
+            description: `<p>You learn the Swordsman, Monk, and Ward stances. These new fighting stances make use of your magical powers.</p>`,
+            actions: [
+                {
+                    name: "Swordsman Stance",
+                    images: {
+                      base: `${NEWERA.images}/relic-blade.png`,
+                      left: `${NEWERA.images}/guardian.png`,
+                      right: `${NEWERA.images}/ac_1frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `<p>You conjure an Ethereal Longsword in your dominant hand upon activating this stance.</p>
+                    <ul>
+                        <li style="color: lightblue">Your ethereal sword inflicts magical damage, allowing it to damage ghosts.</li>
+                        <li style="color: lightblue">The sword doesn't suffer damage from Parrying attacks.</li>
+                        <li style="color: salmon">The sword disappears when you exit this stance.</li>
+                        <li style="color: salmon">You exit this stance automatically if the sword leaves your hands for even an instant.</li>
+                    </ul>`,
+                    difficulty: null,
+                    overrideMacroCommand: "game.newera.HotbarActions.enterStance('Swordsman')",
+                    type: "1",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "relic-blade",
+                        callback: actor => Guardian.activateFightingStance(actor, "Swordsman")
+                      }
+                    ]
+                },
+                {
+                    name: "Monk Stance",
+                    images: {
+                      base: `${NEWERA.images}/kindle.png`,
+                      left: `${NEWERA.images}/guardian.png`,
+                      right: `${NEWERA.images}/ac_1frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `<p>Most spells only require the use of one hand. This stance employs a special techique wherein by using both hands to cast spells, you're able to increase their power. You must have both hands free when activating this stance.</p>
+                    <ul>
+					<li style="color: lightblue">Spells you cast are amplified to the next-highest factor. The casting difficulty of the spell remains unchanged, but its energy cost reflects the amplified level.</li>
+					<li style="color: lightblue">You have advantage on saves against your concentration being broken.</li>
+					<li style="color: salmon">You can't hold items and can only attack by casting spells.</li>
+				    </ul>`,
+                    difficulty: null,
+                    overrideMacroCommand: "game.newera.HotbarActions.enterStance('Monk')",
+                    type: "1",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "kindle",
+                        callback: actor => Guardian.activateFightingStance(actor, "Monk")
+                      }
+                    ]
+                },
+                {
+                    name: "Ward Stance",
+                    images: {
+                      base: `${NEWERA.images}/rosa-shield.png`,
+                      left: `${NEWERA.images}/guardian.png`,
+                      right: `${NEWERA.images}/ac_1frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `<p>You channel your Qi into a powerful defensive posture. While in this stance:</p>
+                    <ul>
+					<li style="color: lightblue">Spells you cast are amplified to the next-highest factor. The casting difficulty of the spell remains unchanged, but its energy cost reflects the amplified level.</li>
+					<li style="color: lightblue">You have advantage on saves against your concentration being broken.</li>
+					<li style="color: salmon">You can't hold items and can only attack by casting spells.</li>
+				    </ul>`,
+                    difficulty: null,
+                    overrideMacroCommand: "game.newera.HotbarActions.enterStance('Ward')",
+                    type: "1",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "rosa-shield",
+                        callback: actor => Guardian.activateFightingStance(actor, "Ward")
+                      }
+                    ]
+                }
+            ]
+        },
+        {
+            level: 13,
+            name: "Qi Rush",
+            key: false,
+            description: "You learn the Qi Rush cantrip."
+        },
+        {
+            level: 13,
+            id: "guardian.bonus",
+            name: "Guardian Bonus",
+            key: false,
+            description: "Choose one of the following stats to gain a +1 class bonus to.",
+            selections: {
+                "2": {
+                    label: "Choose a Stat Bonus",
+                    options: {
+                        speed: "Speed",
+                        carryWeight: "Carry Weight",
+                        naturalArmor: "Natural Armor"
+                    }
+                }
+            }
+        },
+        {
+            level: 13,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 14,
+            common: "learningExperience"
+        },
+        {
+            level: 14,
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Uncommon Guardian Spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/conjuration.png" data-tooltip="Conjuration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
+                <h3>1 Uncommon spell from any school (Level 4 or lower)</h4>
+                <h4>2 Common spells from any school (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 15,
+            name: "Guardian's Vigor (d10)",
+            key: false,
+            description: "Your Second Wind die becomes a d10."
+        },
+        {
+            level: 15,
+            name: "Combat Expert",
+            key: false,
+            description: "Your turn length increases by one action frame and one reaction frame."
         }
     ],
     investigator: [
@@ -3949,7 +4689,7 @@ ClassInfo.features = {
                     field: "casterLevel.scholar",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4]
+                    values: [null, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 6]
                 }
             ]
         },
@@ -4036,61 +4776,61 @@ ClassInfo.features = {
                     field: "spellSlots.1",
                     label: "Level 1 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 2, 3, 3, 3, 5, 5, 5, 5]
+                    values: [null, 0, 0, 2, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5]
                 },
                 {
                     field: "spellSlots.2",
                     label: "Level 2 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 1, 2, 2, 3, 3, 5]
+                    values: [null, 0, 0, 0, 0, 1, 2, 2, 3, 3, 5, 5, 5, 5, 5, 5]
                 },
                 {
                     field: "spellSlots.3",
                     label: "Level 3 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 5, 5]
                 },
                 {
                     field: "spellSlots.4",
                     label: "Level 4 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3]
                 },
                 {
                     field: "spellSlots.5",
                     label: "Level 5 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3]
                 },
                 {
                     field: "spellSlots.6",
                     label: "Level 6 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.7",
                     label: "Level 7 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.8",
                     label: "Level 8 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.9",
                     label: "Level 9 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.10",
                     label: "Level 10 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
             ]
         },
@@ -4130,7 +4870,7 @@ ClassInfo.features = {
         },
         {
             level: 7,
-            common: "naturalSkillImprovement"
+            common: "specialtyImprovement"
         },
         {
             level: 7,
@@ -4156,6 +4896,7 @@ ClassInfo.features = {
                 <h4>1 Rare spell (Level 4 or lower)</h4>
                 <h4>2 Uncommon spells (Level 4 or lower)</h4>
                 <h4>3 Common spells (Level 4 or lower)</h4>
+            </div>
             `
         },
         {
@@ -4192,6 +4933,104 @@ ClassInfo.features = {
                     }
                 }
             }
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 11,
+            name: "Restricted Schools",
+            key: false,
+            description: "You can choose Restricted spells to learn as part of your Spell Studies."
+        },
+        {
+            level: 11,
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare spell (Level 5 or lower)</h4>
+                <h4>2 Uncommon spells (Level 5 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 12,
+            name: "Spellcraft",
+            key: true,
+            description: `<p>You can create your own spells.</p>
+            <p>As a Scholar, you can craft spells and simple enchantments. You can prepare your crafted spells in appropriately-leveled spell slots.</p>
+            <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
+            tableValues: {
+                field: "spellcraft.scholar",
+                label: "Spellcraft Skill Level",
+                sign: false,
+                values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2]
+            }
+        },
+        {
+            level: 13,
+            common: "learningExperience"
+        },
+        {
+            level: 13,
+            id: "scholar.bonus",
+            name: "Scholar Bonus",
+            key: false,
+            description: "Choose two of your magical skills and gain a +1 class bonus to their modifiers.",
+            selections: {
+                "3.1": {
+                    label: "First Choice",
+                    options: {
+                        "elemental-magic": "Elemental",
+                        "divine-magic": "Divine",
+                        "physical-magic": "Physical",
+                        "psionic-magic": "Psionic",
+                        "spectral-magic": "Spectral",
+                        "temporal-magic": "Temporal"
+                    }
+                },
+                "3.2": {
+                    label: "Second Choice",
+                    options: {
+                        "elemental-magic": "Elemental",
+                        "divine-magic": "Divine",
+                        "physical-magic": "Physical",
+                        "psionic-magic": "Psionic",
+                        "spectral-magic": "Spectral",
+                        "temporal-magic": "Temporal"
+                    }
+                }
+            }
+        },
+        {
+            level: 14,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 14,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 15,
+            name: "Spell Studies (6<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Rare spells (Level 6 or lower)</h4>
+                <h4>3 Uncommon spells (Level 6 or lower)</h4>
+                <h4>3 Common spells (Level 6 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 15,
+            name: "Mindfulness Mastery",
+            key: false,
+            description: "<p>You can Meditate to learn and prepare spells as a trivial action <i>(You automatically succeed, unless there are unusual circumstances.)</i></p>"
         }
     ],
     artificer: [
@@ -4257,7 +5096,7 @@ ClassInfo.features = {
                     field: "casterLevel.artificer",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4]
+                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5]
                 }
             ]
         },
@@ -4312,7 +5151,30 @@ ClassInfo.features = {
                     field: "focusEnergy",
                     label: "Focus Energy",
                     sign: false,
-                    values: [null, 0, 0, 20, 24, 30, 36, 42, 50, 56, 64]
+                    values: [null, 0, 0, 20, 24, 30, 36, 42, 50, 56, 64, 72, 84, 96, 110, 120]
+                }
+            ],
+            actions: [
+                {
+                    name: "Spell Storage",
+                    images: {
+                        base: `${NEWERA.images}/crystal-shine.png`,
+                        left: `${NEWERA.images}/artificer.png`,
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `You utilize your Magical Focus to store spells ahead of time. You can cast your stored spells by releasing them from your focus.`,
+                    difficulty: null,
+                    actionType: "E",
+                    overrideMacroCommand: `game.newera.HotbarActions.openSpellStorage()`,
+                    rolls: [
+                      {
+                        label: "Focus",
+                        die: "crystal-shine",
+                        callback: actor => new SpellFocus(actor).render(true)
+                      }
+                    ]
                 }
             ]
         },
@@ -4473,6 +5335,123 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <h4>2 Common spells from any school (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 11,
+            id: "artificer.bonus",
+            key: false,
+            name: "Artificer Bonus",
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "3": {
+                    label: "Choose a Bonus",
+                    options: {
+                        magicSkill: "+1 bonus to a magical skill",
+                        enchantment: "Learn one common spell or enchantment of any level",
+                        alchemy: "Learn one common or uncommon potion recipe",
+                        carryWeight: "+1 Carry Weight bonus",
+                    }
+                }
+            }
+        },
+        {
+            level: 12,
+            name: "Arcane Enchanter",
+            key: false,
+            description: `<p>You can store Enchantments in your focus.</p><p>Stored enchantments can be released onto targets in-range as a two-frame action and have a range of 20 feet. Any material costs for the enchantment are consumed when the enchantment is stored in your focus.</p>`
+        },
+        {
+            level: 12,
+            name: "Enchantment Studies",
+            key: false,
+            description: `<p>You learn new enchantments from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Unommon Enchantments (Level 4 or lower)</h4>
+                <h4>3 Common Enchantments (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/physical.png" data-tooltip="All Physical Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/psionic.png" data-tooltip="All Psionic Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
+            </div>
+            `
+        },
+        {
+            level: 13, 
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 13,
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Uncommon Artificer Spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physical.png" data-tooltip="All Physical Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+                <h4>3 Common spells from any school (Level 5 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 14,
+            common: "learningExperience"
+        },
+        {
+            level: 14,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 14,
+            id: "artificer.bonus",
+            key: false,
+            name: "Artificer Bonus",
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "4": {
+                    label: "Choose a Bonus",
+                    options: {
+                        magicSkill: "+1 bonus to a magical skill",
+                        enchantment: "Learn one common spell or enchantment of any level",
+                        alchemy: "Learn one common or uncommon potion recipe",
+                        carryWeight: "+1 Carry Weight bonus",
+                    }
+                }
+            }
+        },
+        {
+            level: 15,
+            name: "Ætherium Conservation",
+            key: false,
+            description: `<p>You cast enchantments for half their usual Ætherium costs.`
+        },
+        {
+            level: 15,
+            name: "Enchantment Studies",
+            key: false,
+            description: `<p>You learn new enchantments from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Enchantment (Level 5 or lower)
+                <h4>2 Unommon Enchantments (Level 5 or lower)</h4>
+                <h4>2 Common Enchantments (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/physical.png" data-tooltip="All Physical Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/psionic.png" data-tooltip="All Psionic Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
             </div>
             `
         }
@@ -4953,7 +5932,7 @@ ClassInfo.features = {
                     field: "casterLevel.witch",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 1, 2]
+                    values: [null, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4]
                 }
             ]
         },
@@ -5017,7 +5996,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -5034,7 +6013,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -5051,7 +6030,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -5068,7 +6047,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -5085,7 +6064,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -5102,7 +6081,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -5119,7 +6098,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -5136,7 +6115,7 @@ ClassInfo.features = {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
                 }
             ]
         },
@@ -5201,14 +6180,14 @@ ClassInfo.features = {
                     field: "darkEnergy",
                     label: "Max. Dark Energy",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 15, 20, 25, 40]
+                    values: [null, 0, 0, 0, 0, 0, 0, 15, 20, 25, 40, 45, 50, 55, 60, 65]
                 }
             ],
             actions: [
                 {
                     name: "Dark Energy",
                     images: {
-                        base: `${NEWERA.images}/.png`,
+                        base: `${NEWERA.images}/dark-energy.png`,
                         left: `${NEWERA.images}/witch.png`,
                         right: `${NEWERA.images}/ac_0frame.png`
                     },
@@ -5295,8 +6274,9 @@ ClassInfo.features = {
             level: 9,
             archetype: "spider",
             key: false,
-            name: "Venom",
-            description: "Your familiar can painlessly Envenomate targets with its bite. Victims of the attack are exposed to the Spider Venom disease."
+            name: "Tarantula",
+            description: `<p>You can summon your Spider familiar in Giant form by casting Summon Familiar one amplification level higher.</p>
+            <p>The Giant spider gains a +5 Size bonus, a +6 Speed bonus, and a basic 1d6 Bite attack.</p>`
         },
         {
             level: 9,
@@ -5322,6 +6302,118 @@ ClassInfo.features = {
         {
             level: 10,
             common: "learningExperience"
+        },
+        {
+            level: 11,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 12,
+            name: "Spiritual Connection",
+            key: false,
+            description: `<p>Your Familiar's turn lengthy increases to 3 action frames.</p>`
+        },
+        {
+            level: 12,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 13,
+            archetype: "raven",
+            name: "Object Searching",
+            key: false,
+            description: "Your Raven familiar gains a +5 bonus to Perception checks involving sight. You can command your familiar to search for a specific object and retrieve it."
+        },
+        {
+            level: 13,
+            archetype: "snake",
+            name: "In Many Sizes",
+            key: false,
+            description: "When you summon your Snake familiar, you can choose any size from -9 to +2 for it to take. When summoned with Summon Familiar IV or higher, your familiar gains a Constricting attack."
+        },
+        {
+            level: 13,
+            archetype: "cat",
+            name: "Double Jump",
+            key: false,
+            description: "When summoned with Summon Familiar IV or higher, its base Jump distance increases to 20 feet laterally and 10 feet vertically. When your familiar Jumps, it can Jump again as a reaction before landing."
+        },
+        {
+            level: 13,
+            archetype: "hawk",
+            name: "Intimidating Screech",
+            key: false,
+            description: "Your Hawk familiar can use a loud screeching call to frighten enemies. It gains the Frighten action and a +2 Intimidation skill."
+        },
+        {
+            level: 13,
+            archetype: "wolf",
+            name: "Mount",
+            key: false,
+            description: "Your Wolf familiar gains the ability to be mounted. It can only be controlled by you and can't carry additional riders."
+        },
+        {
+            level: 13,
+            archetype: "spider",
+            name: "Ensnaring Web",
+            key: false,
+            description: "Your Spider familiar can spin webs to ensnare enemies. Creatures are either restrained or staggered when they move through the web, depending on their size."
+        },
+        {
+            level: 13,
+            archetype: "owl",
+            name: "Diving Talon Attack",
+            key: false,
+            description: "Your Owl familiar gains a Dive action. Its Fly speed is doubled while diving, and its Talon attack deals +1d damage while diving."
+        },
+        {
+            level: 13,
+            archetype: "bear",
+            name: "Protective Companion",
+            key: false,
+            description: "Your familiar gains a reaction frame and the Protect Ally action."
+        },
+        {
+            level: 13,
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>4 Uncommon Witch Spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/evocation.png" data-tooltip="Evocation" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/transmutation.png" data-tooltip="Transmutation" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+                <h4>2 Common spells from any school (Level 4 or lower)</h4>
+            </div>
+            `
+        },
+        {
+            level: 14,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 14,
+            id: "witch.bonus",
+            name: "Witch Bonus",
+            key: false,
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "2": {
+                    label: "Choose a bonus",
+                    options: {
+                        "extraSpell": "Learn 1 Common spell of any school",
+                        "extraPotion": "Learn 1 Common potion recipe",
+                    }
+                }
+            }
+        },
+        {
+            level: 15,
+            name: "Collective Might",
+            key: false,
+            description: `<p>Whenever a spell is cast using your Dark Energy, another creature in range can assist on the spellcasting check. That creature has disadvantage unless they also know the spell being cast.</p><p>Spells cast with assistance using this ability are automatically amplified to the next-highest factor.</p>`
         }
     ],
     adventurer: [

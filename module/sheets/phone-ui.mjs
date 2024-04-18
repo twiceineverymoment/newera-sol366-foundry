@@ -1,4 +1,5 @@
 import { NEWERA } from "../helpers/config.mjs";
+import { Formatting } from "../helpers/formatting.mjs";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -72,7 +73,9 @@ export class PhoneUI extends ItemSheet {
       }
       worldSetting.signal.comms = worldSetting.signal.status != "none";
       context.world = worldSetting;
-
+      if (game.settings.get("newera-sol366", "world.scrambleTime")){
+        worldSetting.location = NEWERA.alternateDimensionLocations[Math.floor(Math.random() * NEWERA.alternateDimensionLocations.length)];
+      }
 
       context.enableReceiveMsg = (game.user.role >= 3);
       context.standardFeatures = (system.featureLevel > 0);
@@ -172,7 +175,7 @@ export class PhoneUI extends ItemSheet {
     });
     html.find("#searchButton").click(async () => {
       const searchTerm = html.find("input#searchTerm").val();
-      if (this.item.actor){
+      if (this.item.actor && searchTerm){
         const r = new Roll(`d20+@skills.technology.mod+@spec.research`, this.item.actor.getRollData());
         await r.evaluate();
         this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/skye.png`, null, "{NAME} searches the web for {0}.", searchTerm);
@@ -198,10 +201,15 @@ export class PhoneUI extends ItemSheet {
     html.find(".photo-roll-trigger").click(async (ev) => {
       if (this.item.actor){
         const index = $(ev.currentTarget).data("photoId");
+        const photo = this.item.system.photos[index];
+        if (photo.title == "New Photo" || photo.description == "Describe what you took a photo of"){
+          ui.notifications.warn("Enter a name and description of the photo before rolling.");
+          return;
+        }
         const r = new Roll(`d20+@skills.technology.mod+@abilities.dexterity.mod+@spec.photography`, this.item.actor.getRollData());
         await r.evaluate();
         html.find(`#photo-roll-${index}`).val(r.total);
-        this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/app-camera.png`, null, "{NAME} takes a picture of {0}.", this.item.system.photos[index].description);
+        this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/app-camera.png`, null, "{NAME} takes a picture of {0}.", photo.description);
         r.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this.item.actor}),
           flavor: "Photography (Technology) Check"
@@ -234,12 +242,23 @@ export class PhoneUI extends ItemSheet {
       }
       this.item.addMessage(false, convoId, content);
     });
+
+    //Prevent the ENTER key from activating the internet search form
+    html.find("#app-browser").keydown(function(ev){
+      if (ev.keyCode == 13 && this.item.system.openApp != "browser"){
+        ev.preventDefault();
+        return false;
+      }
+    });
+
+
   }
 
   _formatInGameDate(settings){
-    const day = settings.get("newera-sol366", "world.date.day");
-    const month = settings.get("newera-sol366", "world.date.month");
-    const year = settings.get("newera-sol366", "world.date.year");
+    const timeDoesntWork = settings.get("newera-sol366", "world.scrambleTime");
+    const day = timeDoesntWork ? Formatting.randomInt(1, 29) : settings.get("newera-sol366", "world.date.day");
+    const month = timeDoesntWork ? Formatting.randomInt(1, 13) : settings.get("newera-sol366", "world.date.month");
+    const year = timeDoesntWork ? Formatting.randomInt(1, 999) : settings.get("newera-sol366", "world.date.year");
 
     console.log(Object.entries(NEWERA.daysOfWeek));
     const weekday = Object.entries(NEWERA.daysOfWeek).find(ent => ent[1].includes(day))[0];
@@ -247,8 +266,9 @@ export class PhoneUI extends ItemSheet {
   }
 
   _formatInGameTime(settings, militaryTime){
-    let hour = settings.get("newera-sol366", "world.time.hour");
-    let minute = settings.get("newera-sol366", "world.time.minute");
+    const timeDoesntWork = settings.get("newera-sol366", "world.scrambleTime");
+    let hour = timeDoesntWork ? Formatting.randomInt(0, 59) : settings.get("newera-sol366", "world.time.hour");
+    let minute = timeDoesntWork ? Formatting.randomInt(0, 99) : settings.get("newera-sol366", "world.time.minute");
     let suffix = "";
     if (!militaryTime){
       if (hour > 12){

@@ -17,8 +17,11 @@ export class NewEraActorSheet extends ActorSheet {
       template: "systems/newera-sol366/templates/actor/actor-sheet.html",
       width: 785,
       height: 875,
-      scrollY: [".newera-actorsheet-right", ".action-detail", ".inventory-table-container"],
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "profile" }]
+      scrollY: [".newera-actorsheet-scroll", ".action-detail", ".inventory-table-container"],
+      tabs: [
+        { navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "profile" },
+        { navSelector: ".spell-tabs", contentSelector: ".spell-table", initial: "all"}
+      ]
     });
   }
 
@@ -228,11 +231,21 @@ export class NewEraActorSheet extends ActorSheet {
     const equipped = {}; //k/v of wearable slots to items
     const worn = {}; //k/v of slot numbers to items
     const feats = [];
-    const magic = [];
     const classes = [];
     const actions = [];
 
     const equipment = context.system.equipment;
+    const magic = {
+      all: [],
+      favorites: [],
+      elemental: [],
+      divine: [],
+      physical: [],
+      psionic: [],
+      spectral: [],
+      temporal: [],
+      enchantments: []
+    };
 
     //Disable the left hand slot if a two-handed item is in the right hand
     if (equipment.rightHand){
@@ -280,9 +293,19 @@ export class NewEraActorSheet extends ActorSheet {
               backpack.push(i);
             }
           break;
-        case "Spell":
         case "Enchantment":
-          magic.push(i);
+          magic.enchantments.push(i);
+          //No break here on purpose
+        case "Spell":
+          magic.all.push(i);
+          if (context.system.favoriteSpells.includes(i._id)){
+            i.favorite = true;
+            magic.favorites.push(i);
+          }
+          let form = NEWERA.schoolToFormMapping[i.system.school];
+          if (form && form != "genericCast"){
+            magic[form].push(i);
+          }
           break;
         case "Class":
           classes.push(i);
@@ -703,7 +726,7 @@ export class NewEraActorSheet extends ActorSheet {
         } else {
           html.find(`#spell-dc-${spellId}`).hide();
         }
-        html.find(`#spell-action-icons-${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
+        html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
       });
       html.find(".spell-amplify").change(ev => {
         let ampFactor = $(ev.currentTarget).val();
@@ -778,13 +801,17 @@ export class NewEraActorSheet extends ActorSheet {
         this.submit();
       }
     });
-    html.find(".newera-roll-button").click(ev => {
+    html.find(".newera-roll-button").click(async ev => {
       let roll = new Roll($(ev.currentTarget).data("roll"), this.actor.getRollData());
-          roll.toMessage({
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            flavor: $(ev.currentTarget).data("caption"),
-            rollMode: game.settings.get('core', 'rollMode')
-          });
+      await roll.evaluate();
+      roll.toMessage({
+        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+        flavor: $(ev.currentTarget).data("caption"),
+        rollMode: game.settings.get('core', 'rollMode')
+      });
+      if ($(ev.currentTarget).data("label").toLowerCase().includes("damage")){
+        game.newera.setLastDamageAmount(roll.total);
+      }
     });
 
     //Effect rows (have to do this here because VS code doesn't like Handlebars in CSS)
@@ -803,6 +830,31 @@ export class NewEraActorSheet extends ActorSheet {
     /* EDIT CUTOFF - Everything below here is only run if the sheet is editable */
     if (!this.isEditable) return;
 
+    //Favorite Spells management
+    html.find(".spell-favorite-add").click(async ev => {
+      const li = $(ev.currentTarget).parents(".inventory-entry");
+
+      let favorites = structuredClone(this.actor.system.favoriteSpells);
+      favorites.push(li.data("itemId"));
+      await this.actor.update({
+        system: {
+          favoriteSpells: favorites
+        }
+      });
+
+    });
+    html.find(".spell-favorite-remove").click(async ev => {
+      const li = $(ev.currentTarget).parents(".inventory-entry");
+
+      let favorites = structuredClone(this.actor.system.favoriteSpells).filter(s => s != li.data("itemId"));
+      await this.actor.update({
+        system: {
+          favoriteSpells: favorites
+        }
+      });
+
+    });
+
     // Add Inventory Item
     html.find('.item-create').click(this._onItemCreate.bind(this));
 
@@ -810,28 +862,37 @@ export class NewEraActorSheet extends ActorSheet {
     html.find('.item-delete').click(ev => {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const item = this.actor.items.get(li.data("itemId"));
-      new Dialog({
-        title: "Confirm Delete",
-        content: "<p>Are you sure you want to delete this?</p>",
-        buttons: {
-          confirm: {
-            icon: '<i class="fas fa-trash"></i>',
-            label: "Yes",
-            callback: () => {
-              if (["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"].includes(item.type)){
-                this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
+      const isPhysicalItem = ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"].includes(item.type);
+      if (game.settings.get("newera-sol366", "confirmDelete")){
+        new Dialog({
+          title: "Confirm Delete",
+          content: `<p>Are you sure you want to delete this?</p>${isPhysicalItem ? `<p>If you'll need it later, use the <i class="fa-solid fa-box-open"></i> Store button to mark the item as not currently in your possession without deleting it entirely.</p>` : ""}`,
+          buttons: {
+            confirm: {
+              icon: '<i class="fas fa-trash"></i>',
+              label: "Yes",
+              callback: () => {
+                if (isPhysicalItem){
+                  this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
+                }
+                item.delete();
+                this.render(false);
               }
-              item.delete();
-              this.render(false);
+            },
+            cancel: {
+              icon: `<i class="fas fa-x"></i>`,
+              label: "No",
             }
           },
-          cancel: {
-            icon: `<i class="fas fa-x"></i>`,
-            label: "No",
-          }
-        },
-        default: "cancel"
-      }).render(true);
+          default: "cancel"
+        }).render(true);
+      } else {
+        if (isPhysicalItem){
+          this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
+        }
+        item.delete();
+        this.render(false);
+      }
     });
 
     //Add Skills
@@ -1117,11 +1178,15 @@ export class NewEraActorSheet extends ActorSheet {
         }
 
         let roll = new Roll(`d20 + ${totalCastMod}`, this.actor.getRollData());
-          roll.toMessage({
+        roll.evaluate();
+        roll.toMessage({
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
             flavor: dataset.rollType = "spell" ? dataset.spellCaption : dataset.label,
             rollMode: game.settings.get('core', 'rollMode')
-          });
+        });
+        if (dataset.label && dataset.label.toLowerCase().includes("damage")){
+          game.newera.setLastDamageAmount(roll.total);
+        }
       }
 
       if (dataset.rollType == "spell-damage"){
@@ -1484,7 +1549,7 @@ export class NewEraActorSheet extends ActorSheet {
     context.inspiration = {
       enabled: game.settings.get("newera-sol366", "inspiration"),
       points: {},
-      cp: Math.floor(this.actor.system.inspiration * this.actor.system.levelGap * 0.2)
+      cp: Math.floor(this.actor.system.inspiration * this.actor.system.levelGap * 0.1)
     };
     
     if (context.inspiration.enabled){

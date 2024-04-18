@@ -34,7 +34,10 @@ export class HotbarManager {
                 name: data.name,
                 type: "chat",
                 img: data.img,
-                command: command
+                command: command,
+                ownership: {
+                    default: 2
+                }
             });
         }
         game.user.assignHotbarMacro(macro, slot);
@@ -48,7 +51,10 @@ export class HotbarManager {
                 name: data.name,
                 type: "script",
                 img: data.img,
-                command: command
+                command: command,
+                ownership: {
+                    default: 2
+                }
             });
         }
         game.user.assignHotbarMacro(macro, slot);
@@ -73,7 +79,10 @@ export class HotbarManager {
                 name: action.name,
                 type: "script",
                 img: action.images.base,
-                command: command
+                command: command,
+                ownership: {
+                    default: 2
+                }
             });
         }
         game.user.assignHotbarMacro(macro, slot);
@@ -90,7 +99,10 @@ export class HotbarManager {
                 name: action.name,
                 type: "script",
                 img: action.images.base,
-                command: command
+                command: command,
+                ownership: {
+                    default: 2
+                }
             });
         }
         game.user.assignHotbarMacro(macro, slot);
@@ -106,7 +118,10 @@ export class HotbarManager {
                 name: `${action.name} (${action.itemName})`,
                 type: "script",
                 img: action.images.base,
-                command: command
+                command: command,
+                ownership: {
+                    default: 2
+                }
             });
         }
         game.user.assignHotbarMacro(macro, slot);

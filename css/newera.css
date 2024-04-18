@@ -29,6 +29,19 @@ div.actor section.window-content, div.item section.window-content {
   font-size: 18px;
   border-bottom: none;
 }
+.spell-table-nav {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.spell-table-tab {
+  font-family: "Cinzel", serif;
+  color: white !important;
+  font-size: 16px;
+  border-bottom: none;
+}
 div.newera-actorsheet-top {
   display: block;
   width: 100%;
@@ -38,23 +51,29 @@ div.newera-actorsheet-tabs {
   width: 100%;
   background-color: rgb(30, 50, 56);
 }
+tr.tab.active { /* Overrides the default display=block for "active" since that makes tables act weird */
+  display: table-row !important;
+}
+div.newera-actorsheet-scroll {
+  display: block;
+  width: 100%;
+  overflow-y: scroll;
+  height: calc(100% - 200px);
+}
 div.newera-actorsheet-left {
   display: inline-block;
   width: 30%;
   padding: 0px;
   overflow-x: hidden;
-  overflow-y: hidden;
   text-align: center;
   vertical-align: top;
 }
 div.newera-actorsheet-right {
   display: inline-block;
   width: 68%;
-  max-height: 77%;
   padding: 0px;
   text-align: left;
   overflow-x: hidden;
-  overflow-y: scroll;
   vertical-align: top;
 }
 .newera-actorsheet-image {
@@ -550,6 +569,9 @@ div#cp-wrapper {
 }
 .battery progress[value]::-webkit-progress-value {
   background: #b2f106 !important;
+}
+.focus-energy progress[value]::-webkit-progress-value {
+  background: #4810CF !important;
 }
 div.cp {
   display: inline;

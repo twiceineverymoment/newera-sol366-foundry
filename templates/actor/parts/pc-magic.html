@@ -67,42 +67,4 @@
 </table>
 
 <h3 class="table-header">SPELLS</h3>
-<table class="newera-actorsheet-table">
-  <tr style="display: none"></tr> <!--Invisible anti-heading table row-->
-  {{#each inventory.magic as |entry id|}}
-  <tr class="inventory-entry inventory-entry-magic spell-macro" data-item-id="{{entry._id}}" draggable="true">
-    <td style="width: 10%" class="spell-cast"><img class="skill-icon" src="{{entry.img}}" />
-      <span id="spell-level-{{entry._id}}">
-        {{entry.system.level}}
-      </span>
-    </td>
-    <td style="width: 40%" class="spell-cast">
-      {{entry.name}}
-    </td>
-    <td style="width: 40%" class="spell-cast">
-      <div class="spell-action-icons" id="spell-action-icons-{{entry._id}}"></div>
-    </td>
-    <td style="width: 10%; text-align: right">
-      <a class="item-control spell-cast" data-tooltip="Cast Spell"><i class="fa-solid fa-hand-sparkles"></i></a>
-      <a class="item-control item-edit" data-tooltip="Edit Spell"><i class="fas fa-edit"></i></a>
-      <a class="item-control item-delete" data-tooltip="Delete Spell"><i class="fas fa-trash"></i></a>
-    </td>
-  </tr>
-  {{/each}}
-  <tr>
-    <td colspan="4" id="spell-add-row">
-      <div class="equipment-box-small item-create" id="spell-add-1" data-type="Spell" data-tooltip="Create New Spell" data-tooltip-direction="UP">
-        <a title="Add Spell">
-        <img src="systems/newera-sol366/resources/fire-spell-cast.png" />
-        <i class="fas fa-plus"></i>
-        </a>
-      </div> 
-      <div class="equipment-box-small item-create" id="spell-add-2" data-type="Enchantment" data-tooltip="Create New Enchantment" data-tooltip-direction="UP">
-        <a title="Add Enchantment">
-        <img src="systems/newera-sol366/resources/spell-book.png" />
-        <i class="fas fa-plus"></i>
-        </a>
-      </div> 
-    </td>
-  </tr>
-</table>
+{{> systems/newera-sol366/templates/actor/parts/char-spell-table.html}}

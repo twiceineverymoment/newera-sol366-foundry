@@ -291,6 +291,7 @@
 			"magic": {
 				"casterLevel": 0,
 				"spellcraft": 0,
+				"favoriteSpells": [],
 				"magic": {
 					"elemental": {
 						"level": 0,

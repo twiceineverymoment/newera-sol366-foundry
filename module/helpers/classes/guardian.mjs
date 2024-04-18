@@ -8,6 +8,19 @@ export class Guardian {
             ui.notifications.error("Macro error: Stance not found");
             return;
         }
+        if (stance.activationCost){
+            if (actor.system.energy.value < stance.activationCost){
+                ui.notifications.warn(`This stance requires ${stance.activationCost} energy to activate. You don't have enough energy.`);
+                return;
+            }
+            await actor.update({
+                system: {
+                    energy: {
+                        value: actor.system.energy.value - stance.activationCost
+                    }
+                }
+            });
+        }
         const oldStance = actor.effects.find(e => e.name && e.name.toLowerCase().includes("stance"));
         if (oldStance){
             actor.actionMessage(actor.img, `${NEWERA.images}/ac_1frame.png`, `{NAME} switches from ${oldStance.label} to ${stance.label}!`);
@@ -71,6 +84,48 @@ export class Guardian {
             label: "Sentinel Stance",
             icon: `${NEWERA.images}/guards.png`,
             description: "Your turn length is reduced by 2 frames, but you gain 2 fraction frames"
+        },
+        "Swordsman": {
+            label: "Swordsman Stance",
+            icon: `PLACEHOLDER`,
+            description: `<p>
+            Upon entering this stance, you conjure pure energy into the shape of a <a>Longsword</a> in your hand. This item functions identically to an Iron Longsword, but its attacks are magical.
+            It can be used either one- or two-handed. Activating this stance requires least one free hand. While in this stance:
+           <ul>
+               <li style="color: lightblue">Your ethereal sword inflicts magical damage, allowing it to damage spirits.</li>
+               <li style="color: lightblue">The sword can Parry (block) attacks without suffering damage.</li>
+               <li style="color: salmon">You automatically exit this stance if the sword leaves your hands for any amount of time. When you exit this stance, the sword disappears.</li>
+           </ul>
+       </p>`,
+            activationCost: 20
+        },
+        "Monk": {
+            label: "Monk Stance",
+            icon: `PLACEHOLDER`,
+            description: `<p>
+            Most spells only require the use of one hand. This stance employs a special techique wherein by using both hands to cast spells, you're able to increase their power.
+            You must have both hands free when activating this stance.
+        </p>
+        <p>
+            <ul>
+                <li style="color: lightblue">Spells you cast are amplified to the next-highest factor. The casting difficulty of the spell remains unchanged, but its energy cost reflects the amplified level.</li>
+                <li style="color: lightblue">You have advantage on saves against your concentration being broken.</li>
+                <li style="color: salmon">You can't hold items and can only attack by casting spells.</li>
+            </ul>
+        </p>`
+        },
+        "Ward": {
+            label: "Ward Stance",
+            icon: `PLACEHOLDER`,
+            activationCost: 6,
+            description: `<p>
+			You channel your Qi into a powerful defensive posture. While in this stance:
+				<ul>
+					<li style="color: lightblue">You cast Abjuration spells two levels higher. <i>(The casting difficulty is determined as though your Divine Magic skill level were increased by 2.)</i></li>
+					<li style="color: lightblue">If using a shield, its Shield Rating receives a +4 bonus.</li>
+					<li style="color: salmon">You can't cast spells from any school of magic other than Abjuration.</li>
+				</ul>
+			</p>`
         }
     }
 }

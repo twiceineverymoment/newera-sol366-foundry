@@ -31,4 +31,41 @@ export class Delver {
             }
         });
     }
+
+    static async rage(actor){
+        if (actor.system.energy.value > 10){
+            actor.actionMessage(actor.img, null, "{NAME} is becoming enraged!");
+            await actor.createEmbeddedDocuments('ActiveEffect', [{
+                label: "Rage",
+                icon: `${NEWERA.images}/fire-dash.png`,
+                description: `<p>Your physical abilities are enhanced at the cost of reduced presence of mind. You may end Rage at any time as a free action.</p>
+                <ul>
+                    <li>Your Speed is increased by 4 feet.</li>
+                    <li>Strength-based attacks deal additional damage according to your Rage Damage Bonus in the Mercenary table.</li>
+                    <li>You're immune to being staggered.</li>
+                    <li>You have disadvantage on all mental ability-based checks.</li>
+                    <li>Your Passive Perception is reduced by 4.</li>
+                </ul>`
+            }]);
+            await actor.update({
+                system: {
+                    energy: {
+                        value: actor.system.energy.value - 10
+                    }
+                }
+            });
+        } else {
+            ui.notifications.error("You don't have enough energy!");
+        }
+    }
+
+    static async rollWildFury(actor, table){
+        let r = new Roll('1d4');
+        await r.evaluate();
+        r.toMessage({
+            speaker: ChatMessage.getSpeaker({actor: actor}),
+            flavor: `Wild Fury (Path of ${table.toUpperCase()}`
+        });
+        actor.actionMessage(`${NEWERA.images}/embraced-energy.png`, null, `<b>Wild Fury: </b>{0}`, NEWERA.wildFuryTable[table][r.total - 1]);
+    }
 }

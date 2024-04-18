@@ -3338,7 +3338,7 @@ NEWERA.statusEffects = {
     },
     blinded: {
         1: {
-            id: "blind",
+            id: "partial-blind",
             name: "Blinded 1",
             description: `<p>You're blind in one eye, or your vision is obscured.</p><p>You take a -2 penalty to Perception checks involving sight, and a -5 penalty to Marksmanship. Your Passive Perception is reduced by 2.`,
             icon: `${NEWERA.images}/se_blinded.png`
@@ -3850,9 +3850,56 @@ NEWERA.actionTypeIcons = {
 }
 
 NEWERA.lightningBoltDamageRolls = [
-    "1d4", "1d8", "1d12", "1d16", "1d20", "1d24", "1d30", "1d50", "1d60", "1d100"
+    "0", "1d4", "1d8", "1d12", "1d16", "1d20", "1d24", "1d30", "1d50", "1d60", "1d100"
 ];
 
 NEWERA.chantLevels = [
     "basic", "apprentice", "intermediate", "advanced", "expert", "master"
+];
+
+NEWERA.wildFuryTable = {
+    "fire": [
+        "A fiery explosion erupts from your body. All creatures within 6 feet of you take 1d10 Burning damage.",
+        "One creature of your choice you can see instantly bursts into flame, gaining the Burning 3 status effect.",
+        "The ground around you spontaneously ignites, creating an circular area of flames 6 feet in diameter centered on your location. For three rounds, any creatures standing in the flames take 2 Burning damage per frame.",
+        "You feel a fiery rush of adrenaline. You gain 2 bonus action frames during your current turn (or your next turn if you entered Rage as a reaction.)"
+    ],
+    "water": [
+        "A blast of icy cold shoots from your chest. One creature you can see within 30 feet takes 1d10 Freezing damage and is staggered for one frame.",
+        "Spikes of ice fall on up to three creatures of your choice you can see. Those creatures each make a difficulty 15  Reflex save or 1d10 Freezing damage.",
+        "The ground within 10 feet around you ices over and becomes Slippery Ground for three rounds.",
+        "A whirlwind of icy cold emanates from your body. Until your Rage ends, enemies have their speed reduced by 2 feet per frame while they're within 20 feet of you."
+    ],
+    "earth": [
+        "Vines shoot out from the ground and ensnare one creature of your choice that you can see. That creature's speed is reduced to zero. During that creature's turn, it may make an Escape (Agility) or Escape (Strength) check to escape the restraints.",
+        "A small earthquake shakes the ground. All creatures within 30 feet of you make a  Reflex save to avoid being knocked prone. Your allies have advantage on the save.",
+        "A 6-foot deep circular hole 2 feet in diameter opens up in the ground at a location of your choice within 10 feet. A creature standing over the hole makes a Reflex save to avoid falling in.",
+        "Earth magic infuses your body. Until your Rage ends, you can't be staggered or knocked prone and you have advantage on Endurance saves."
+    ],
+    "wind": [
+        "A sudden gust of wind blows in the direction you're facing. Creatures within a 20-foot cone in front of you make an Endurance save or are pushed 10 feet away from you. Your allies have advantage on the save.",
+        "A bolt of electricity shoots from your chest shocks one creature of your choice you can see. That creature takes 1d6 Shock damage and makes an Endurance save or drops any weapons they're holding.",
+        "A static discharge courses through metallic objects within 20 feet of you. Any creatures within this range wearing metal armor or touching a metal object makes an Endurance save or become Stunned.",
+        "You feel a rush of wind at your back. Until your Rage ends, your movement speed increases by 4 and enemies can't react to you moving in or out of reach."
+    ]
+};
+
+NEWERA.alternateDimensionLocations = [
+    "null",
+    "undefined",
+    "ERROR",
+    "37",
+    "Soup",
+    "-2,147,483,647",
+    "');sudo rm -rf /*",
+    "THEFOGISCOMINGTHEFOGISCOMINGTHEFOGISCOMINGTHEFOGISCOMING",
+    "Sɹ∀W פ∩q",
+    "👽",
+    "Exception in thread 'Main' java.lang.NullPointerException: null",
+    "0x80034CFF",
+    "lorem ipsum dolor sit amet",
+    "E",
+    "SUPPLY CLOSET",
+    "Stop.",
+    "Birdo in my opinion is the best character in Mario Kart. She gets +1 to her mini-turbo as a hidden stat in Mario Kart Wii, is the best partner for Yoshi in Double Dash (all Daisy/Birdo or Waluigi /Birdo users can take a hike, I'll never accept these pairings) and has the best/cutest tricks in Wii, Tour and 8 Deluxe. HOWEVER, when it comes to other people using pink Birdo or the other Birdo colors, I take it as a challenge and an insult. The best Birdo user (mostly pink Birdo) is me. If I see other Birdo players online (even Birdo Mi Suit users, my Birdo Mi is the one true accurate Birdo Mii), I must humiliate them. If they dare pull out the Teddy Buggy/Roller Tires in my presence (Azure Roller included) I must destroy them by landing them in a bad position after a race. If they have the audacity to win against me, I'm denying their win and cutting off the communication by quitting the race or closing the software. Show up in my Friends list even though I hate you and refuse to race against you? REMOVED. And I hate the player named Rainbow Das. I hate her Mr. Scooty/Azure Roller Tires combo. Your combo is not better than mine (Birdo/Sports Coupe/GLA Tires)! Also, you're not better than me! You are not welcome in my Friends list. Your VR means nothing to me. And fuck those damn Yoshi players. Hate 'em, not playing again them."
 ];
