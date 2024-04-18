@@ -6274,8 +6274,9 @@ ClassInfo.features = {
             level: 9,
             archetype: "spider",
             key: false,
-            name: "Venom",
-            description: "Your familiar can painlessly Envenomate targets with its bite. Victims of the attack are exposed to the Spider Venom disease."
+            name: "Tarantula",
+            description: `<p>You can summon your Spider familiar in Giant form by casting Summon Familiar one amplification level higher.</p>
+            <p>The Giant spider gains a +5 Size bonus, a +6 Speed bonus, and a basic 1d6 Bite attack.</p>`
         },
         {
             level: 9,
