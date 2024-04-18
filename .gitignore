@@ -11,5 +11,9 @@ npm-debug.log
 jsconfig.json
 foundry
 
+# LDB compendium packs
+packs/
+!packs/*.db
+
 # Mac
-*.DS_Store
+.DS_Store
