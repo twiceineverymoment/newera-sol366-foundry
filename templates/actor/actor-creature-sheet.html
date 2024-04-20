@@ -43,103 +43,104 @@
     </nav>
   </div>
 
-  <div class="newera-actorsheet-left">
+  <div class="newera-actorsheet-scroll">
+    <div class="newera-actorsheet-left">
 
-    <div id="actorsheet-resources">
-      <div class="resource newera-actorsheet-resource">
-        <img class="resource-icon" src="systems/newera-sol366/resources/hp-hot.png" title="Hit Points" id="hp-icon" />
-        <div class="resource-content">
-          <input type="text" id="resourceValHp" class="resource-input resource-hp" name="system.hitPoints.value" value="{{system.hitPoints.value}}" data-dtype="Number"/>
-          <span> / </span>
-          <input type="text" id="resourceMaxHp" class="resource-input resource-hp" name="system.hitPoints.max" value="{{system.hitPoints.max}}" data-dtype="Number"/>
-        </div>
-      </div>
-      <div class="newera-actorsheet-bars">
-        <div class="resource-bars">
-          <div id="health-wrapper" class="progress-wrapper enemy-hp">
-            <progress id="health-bar" value="{{system.hitPoints.value}}" max="{{system.hitPoints.max}}">HP</progress>
+      <div id="actorsheet-resources">
+        <div class="resource newera-actorsheet-resource">
+          <img class="resource-icon" src="systems/newera-sol366/resources/hp-hot.png" title="Hit Points" id="hp-icon" />
+          <div class="resource-content">
+            <input type="text" id="resourceValHp" class="resource-input resource-hp" name="system.hitPoints.value" value="{{system.hitPoints.value}}" data-dtype="Number"/>
+            <span> / </span>
+            <input type="text" id="resourceMaxHp" class="resource-input resource-hp" name="system.hitPoints.max" value="{{system.hitPoints.max}}" data-dtype="Number"/>
           </div>
         </div>
-        <div class="damage-button">
-          <button class="sheet-input" id="takeDamageButton" data-tooltip="Damage/Healing" data-tooltip-direction="RIGHT">
-            <img class="action-die" src="systems/newera-sol366/resources/broken-heart.png">
+        <div class="newera-actorsheet-bars">
+          <div class="resource-bars">
+            <div id="health-wrapper" class="progress-wrapper enemy-hp">
+              <progress id="health-bar" value="{{system.hitPoints.value}}" max="{{system.hitPoints.max}}">HP</progress>
+            </div>
+          </div>
+          <div class="damage-button">
+            <button class="sheet-input" id="takeDamageButton" data-tooltip="Damage/Healing" data-tooltip-direction="RIGHT">
+              <img class="action-die" src="systems/newera-sol366/resources/broken-heart.png">
+            </button>
+          </div>
+        </div>
+        {{#if system.rollableHP}}
+        <div class="resource newera-actorsheet-resource">
+          <button id="init-hp-roll" class="sheet-input">
+            <img class="resource-icon" src="systems/newera-sol366/resources/life-bar.png" />
+            Roll Starting HP
           </button>
         </div>
+        {{/if}}
       </div>
-      {{#if system.rollableHP}}
-      <div class="resource newera-actorsheet-resource">
-        <button id="init-hp-roll" class="sheet-input">
-          <img class="resource-icon" src="systems/newera-sol366/resources/life-bar.png" />
-          Roll Starting HP
-        </button>
+      <div class="summary-stat-wrapper">
+        <h4>Armor</h4>
+        <div class="summary-stat-bonus">
+          <img class="bonus" src="systems/newera-sol366/resources/bonus.png" />
+          <input type="text" class="sheet-input" name="system.armor.bonus" value="{{system.armor.bonus}}" data-dtype="Number" />
+          <img class="bonus" src="systems/newera-sol366/resources/armor-equipped.png" />
+          <input type="text" class="sheet-input" name="system.armor.equipped" value="{{system.armor.equipped}}" data-dtype="Number" />
+        </div>
+        <div class="summary-stat-total">
+          <h2 id="system.armor.total" style="border-bottom: none"><img src="systems/newera-sol366/resources/armor-equipped.png" class="resource-icon" />{{system.armor.total}}</h2>
+        </div>
       </div>
-      {{/if}}
+      <div class="summary-stat-wrapper">
+        <h4>Size</h4>
+        <div class="summary-stat-wide">
+          <input type="text" class="sheet-input" name="system.size.mod" value="{{system.size.mod}}" data-dtype="Number" style="width: 30%"/>
+        </div>
+      </div>
+      <div class="summary-stat-wrapper">
+        <h4>Initiative</h4>
+        <div class="summary-stat-wide">
+          <input type="text" class="sheet-input" name="system.initiative.mod" value="{{system.initiative.mod}}" data-dtype="Number" style="width: 30%"/>
+        </div>
+      </div>
+      <div class="summary-stat-wrapper">
+        <h4>Passive Agility</h4>
+        <div class="summary-stat-wide">
+          <input type="text" class="sheet-input" name="system.passiveAgility.value" value="{{system.passiveAgility.value}}" data-dtype="Number" style="width: 30%"/>
+        </div>
+      </div>
+      <div class="summary-stat-wrapper">
+        <h4>Speed</h4>
+        <div class="summary-stat-wide">
+          <input type="text" class="sheet-input" name="system.speed.value" value="{{system.speed.value}}" data-dtype="Number" style="width: 30%"/>
+        </div>
+      </div>
+      <div class="summary-stat-wrapper">
+        <h4>Passive Perception</h4>
+        <div class="summary-stat-wide">
+          <input type="text" class="sheet-input" name="system.passivePerception.value" value="{{system.passivePerception.value}}" data-dtype="Number" style="width: 30%"/>
+        </div>
+      </div>
     </div>
-    <div class="summary-stat-wrapper">
-      <h4>Armor</h4>
-      <div class="summary-stat-bonus">
-        <img class="bonus" src="systems/newera-sol366/resources/bonus.png" />
-        <input type="text" class="sheet-input" name="system.armor.bonus" value="{{system.armor.bonus}}" data-dtype="Number" />
-        <img class="bonus" src="systems/newera-sol366/resources/armor-equipped.png" />
-        <input type="text" class="sheet-input" name="system.armor.equipped" value="{{system.armor.equipped}}" data-dtype="Number" />
-      </div>
-      <div class="summary-stat-total">
-        <h2 id="system.armor.total" style="border-bottom: none"><img src="systems/newera-sol366/resources/armor-equipped.png" class="resource-icon" />{{system.armor.total}}</h2>
-      </div>
-    </div>
-    <div class="summary-stat-wrapper">
-      <h4>Size</h4>
-      <div class="summary-stat-wide">
-        <input type="text" class="sheet-input" name="system.size.mod" value="{{system.size.mod}}" data-dtype="Number" style="width: 30%"/>
-      </div>
-    </div>
-    <div class="summary-stat-wrapper">
-      <h4>Initiative</h4>
-      <div class="summary-stat-wide">
-        <input type="text" class="sheet-input" name="system.initiative.mod" value="{{system.initiative.mod}}" data-dtype="Number" style="width: 30%"/>
-      </div>
-    </div>
-    <div class="summary-stat-wrapper">
-      <h4>Passive Agility</h4>
-      <div class="summary-stat-wide">
-        <input type="text" class="sheet-input" name="system.passiveAgility.value" value="{{system.passiveAgility.value}}" data-dtype="Number" style="width: 30%"/>
-      </div>
-    </div>
-    <div class="summary-stat-wrapper">
-      <h4>Speed</h4>
-      <div class="summary-stat-wide">
-        <input type="text" class="sheet-input" name="system.speed.value" value="{{system.speed.value}}" data-dtype="Number" style="width: 30%"/>
-      </div>
-    </div>
-    <div class="summary-stat-wrapper">
-      <h4>Passive Perception</h4>
-      <div class="summary-stat-wide">
-        <input type="text" class="sheet-input" name="system.passivePerception.value" value="{{system.passivePerception.value}}" data-dtype="Number" style="width: 30%"/>
-      </div>
+  
+    <div class="newera-actorsheet-right">
+      <section class="sheet-body">
+        <div class="tab profile" data-group="primary" data-tab="description">
+          {{> systems/newera-sol366/templates/actor/parts/creature-description.html}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="abilities">
+          {{> systems/newera-sol366/templates/actor/parts/creature-abilities.html}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="actions">
+          {{> systems/newera-sol366/templates/actor/parts/actions.html}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="inventory">
+          {{> systems/newera-sol366/templates/actor/parts/creature-items.html}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="magic">
+          {{> systems/newera-sol366/templates/actor/parts/creature-magic.html}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="effects">
+          {{> systems/newera-sol366/templates/actor/parts/effects.html}}
+        </div>
+      </section>
     </div>
   </div>
-
-  <div class="newera-actorsheet-right">
-    <section class="sheet-body">
-      <div class="tab profile" data-group="primary" data-tab="description">
-        {{> systems/newera-sol366/templates/actor/parts/creature-description.html}}
-      </div>
-      <div class="tab profile" data-group="primary" data-tab="abilities">
-        {{> systems/newera-sol366/templates/actor/parts/creature-abilities.html}}
-      </div>
-      <div class="tab profile" data-group="primary" data-tab="actions">
-        {{> systems/newera-sol366/templates/actor/parts/actions.html}}
-      </div>
-      <div class="tab profile" data-group="primary" data-tab="inventory">
-        {{> systems/newera-sol366/templates/actor/parts/creature-items.html}}
-      </div>
-      <div class="tab profile" data-group="primary" data-tab="magic">
-        {{> systems/newera-sol366/templates/actor/parts/creature-magic.html}}
-      </div>
-      <div class="tab profile" data-group="primary" data-tab="effects">
-        {{> systems/newera-sol366/templates/actor/parts/effects.html}}
-      </div>
-    </section>
-  </div>
-
 </form>
