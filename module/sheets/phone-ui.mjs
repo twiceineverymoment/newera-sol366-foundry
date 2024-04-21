@@ -62,7 +62,7 @@ export class PhoneUI extends ItemSheet {
         },
         emergencyAlert: game.settings.get("newera-sol366", "world.alert"),
       }
-      worldSetting.signalDescription = NEWERA.serviceDesc[worldSetting.signal];
+      worldSetting.signalDescription = NEWERA.serviceDesc[worldSetting.signal.status];
       worldSetting.weather.display = this._getWeatherDisplay(worldSetting);
       worldSetting.weather.belowFreezing = (worldSetting.weather.temp <= 0);
       worldSetting.weather.extreme = this._getExtremeTemps(worldSetting.weather.temp);
