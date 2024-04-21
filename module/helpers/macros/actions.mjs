@@ -231,7 +231,7 @@ export class Actions {
               </div>
             </form>`,
         render: html => {
-          html.find("#damageAmount").val(game.newera.getLastDamageAmount());
+          html.find("#damageAmount").val(game.newera.getLastDamageAmount() || "");
           html.find("#calledShot").change(ev => {
             if ($(ev.currentTarget).is(":checked")){
               html.find("#calledShotSelect").show();
