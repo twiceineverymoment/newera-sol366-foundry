@@ -23,6 +23,9 @@
     "systems/newera-sol366/templates/actor/parts/effects.html",
     "systems/newera-sol366/templates/actor/parts/char-spell-table.html",
     "systems/newera-sol366/templates/actor/parts/char-spell-row.html",
+    "systems/newera-sol366/templates/actor/parts/pc-top-section.html",
+    "systems/newera-sol366/templates/actor/parts/npc-top-section.html",
+    "systems/newera-sol366/templates/actor/parts/char-stats.html",
 
     //Item partials
     "systems/newera-sol366/templates/item/parts/item-effects.html",
