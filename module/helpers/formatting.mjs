@@ -79,4 +79,49 @@ export class Formatting {
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
 
+      /**
+       * Removes a numbered entry from an object with numerical keys in a similar manner to Array.splice()
+       * Used where objects are used in the DataModel in-place of arrays due to easier handling by Handlebars templates
+       * @param {any} obj 
+       * @param {*} index 
+       * @returns 
+       */
+      static spliceIndexedObject(obj, index){
+        const update = {};
+        console.log(`SIO(${index})`);
+        Object.entries(obj).forEach(([id, res], i) => {
+          if (id < index){
+            update[id] = res;
+          } else if (id > index){
+            update[id-1] = res;
+          } else {
+            update[`-=${id}`] = null;
+          }
+        });
+        console.log(update);
+        return update;
+      }
+
+      static async confirm(actor, event, onAccept){
+        if (game.settings.get("newera-sol366", "confirmDelete")){
+          new Dialog({
+            title: "Confirm Delete",
+            content: "Are you sure you want to delete this?",
+            buttons: {
+              yes: {
+                icon: `<i class="fas fa-trash"></i>`,
+                label: "Yes",
+                callback: () => onAccept(actor, event)
+              },
+              no: {
+                icon: `<i class="fas fa-x"></i>`,
+                label: "No"
+              }
+            }
+          }).render(true);
+        } else {
+          onAccept(actor, event);
+        }
+      }
+
 }

@@ -1,4 +1,5 @@
 import { NEWERA } from "../helpers/config.mjs";
+import { Formatting } from "../helpers/formatting.mjs"
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -463,6 +464,14 @@ export class NewEraActor extends Actor {
       value: 0,
       max: 0
     };
+  }
+
+  async deleteResource(index){
+    await this.update({
+      system: {
+        additionalResources: Formatting.spliceIndexedObject(this.system.additionalResources, index)
+      }
+    });
   }
 
   getNarration(template, ...args){

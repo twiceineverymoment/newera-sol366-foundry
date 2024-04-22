@@ -830,6 +830,8 @@ export class NewEraActorSheet extends ActorSheet {
     /* EDIT CUTOFF - Everything below here is only run if the sheet is editable */
     if (!this.isEditable) return;
 
+    
+
     //Favorite Spells management
     html.find(".spell-favorite-add").click(async ev => {
       const li = $(ev.currentTarget).parents(".inventory-entry");
@@ -908,6 +910,9 @@ export class NewEraActorSheet extends ActorSheet {
       this.actor.addResource();
       this.render(false);
     }); 
+    html.find(".deleteResource").click(ev => {
+      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteResource($(event.currentTarget).data("resourceIndex")));
+    });
     html.find('#addSpecialModifierButton').click(ev => {
       this.actor.addSpecialModifier();
       this.render(false);

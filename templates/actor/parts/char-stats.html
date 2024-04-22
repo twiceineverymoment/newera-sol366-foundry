@@ -111,7 +111,7 @@
     {{#each system.additionalResources as |resource id|}}
     <div class="resource newera-actorsheet-resource">
       <input type="text" class="sheet-input custom-resource-name" name="system.additionalResources.{{id}}.name" value="{{resource.name}}" />
-      <a class="deleteResource" data-resource-index="{{id}}"><i class="fas fa-trash"></i></a>
+      <a class="deleteResource" data-resource-index="{{id}}" data-tooltip="Delete Custom Resource" data-tooltip-direction="RIGHT"><i class="fas fa-x"></i></a>
       <div class="resource-content">
         <input type="text" class="resource-input resource-custom" name="system.additionalResources.{{id}}.value" value="{{resource.value}}" data-dtype="Number"/>
         <span> / </span>
