@@ -6,34 +6,44 @@
  export const preloadHandlebarsTemplates = async function() {
   return loadTemplates([
 
-    // Actor partials.
-    "systems/newera-sol366/templates/actor/parts/pc-abilities.html",
-    "systems/newera-sol366/templates/actor/parts/char-profile.html",
-    "systems/newera-sol366/templates/actor/parts/pc-magic.html",
-    "systems/newera-sol366/templates/actor/parts/pc-class.html",
-    "systems/newera-sol366/templates/actor/parts/npc-magic.html",
-    "systems/newera-sol366/templates/actor/parts/pc-feats.html",
-    "systems/newera-sol366/templates/actor/parts/char-inventory.html",
-    "systems/newera-sol366/templates/actor/parts/npc-abilities.html",
+    //Actor sheet templates (all actor types)
     "systems/newera-sol366/templates/actor/parts/actions.html",
+    "systems/newera-sol366/templates/actor/parts/effects.html",
+
+    //Character sheet templates (PC and NPC shared)
+    "systems/newera-sol366/templates/actor/parts/char-profile.html",
+    "systems/newera-sol366/templates/actor/parts/char-inventory.html",
+    "systems/newera-sol366/templates/actor/parts/char-spell-table.html",
+    "systems/newera-sol366/templates/actor/parts/char-spell-row.html", 
+    "systems/newera-sol366/templates/actor/parts/char-stats.html",
+
+    //Player Character sheet templates
+    "systems/newera-sol366/templates/actor/parts/pc-top-section.html",
+    "systems/newera-sol366/templates/actor/parts/pc-abilities.html",
+    "systems/newera-sol366/templates/actor/parts/pc-class.html",
+    "systems/newera-sol366/templates/actor/parts/pc-feats.html",
+    "systems/newera-sol366/templates/actor/parts/pc-magic.html",
+
+    //NPC sheet templates
+    "systems/newera-sol366/templates/actor/parts/npc-top-section.html",
+    "systems/newera-sol366/templates/actor/parts/npc-abilities.html",
+    "systems/newera-sol366/templates/actor/parts/npc-magic.html",
+
+    //Creature templates
+    "systems/newera-sol366/templates/actor/parts/creature-top-section.html",
+    "systems/newera-sol366/templates/actor/parts/creature-stats.html",
     "systems/newera-sol366/templates/actor/parts/creature-abilities.html",
     "systems/newera-sol366/templates/actor/parts/creature-description.html",
     "systems/newera-sol366/templates/actor/parts/creature-items.html",
     "systems/newera-sol366/templates/actor/parts/creature-magic.html",
-    "systems/newera-sol366/templates/actor/parts/effects.html",
-    "systems/newera-sol366/templates/actor/parts/char-spell-table.html",
-    "systems/newera-sol366/templates/actor/parts/char-spell-row.html",
-    "systems/newera-sol366/templates/actor/parts/pc-top-section.html",
-    "systems/newera-sol366/templates/actor/parts/npc-top-section.html",
-    "systems/newera-sol366/templates/actor/parts/char-stats.html",
 
-    //Item partials
+    //Item sheet templates
     "systems/newera-sol366/templates/item/parts/item-effects.html",
     "systems/newera-sol366/templates/item/parts/item-enchantments.html",
     "systems/newera-sol366/templates/item/parts/item-actions.html",
     "systems/newera-sol366/templates/item/parts/melee-weapon-attacks.html",
 
-    //Phone UI partials
+    //Phone UI templates
     "systems/newera-sol366/templates/item/phone/phone-settings.html",
     "systems/newera-sol366/templates/item/phone/phone-contacts.html",
     "systems/newera-sol366/templates/item/phone/phone-weather.html",

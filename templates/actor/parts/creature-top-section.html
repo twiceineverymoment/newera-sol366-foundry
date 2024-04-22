@@ -1,0 +1,20 @@
+<img class="newera-actorsheet-image" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="128" width="128"/>
+      <div class="newera-actorsheet-top-data">
+        <h1 class="charname"><input name="name" type="text" class="sheet-input" value="{{actor.name}}" placeholder="Name"/></h1>
+        <div id="cp-wrapper" class="progress-wrapper cp npc-level">
+          Level <br />
+          <h1 id="overall-level"><input type="text" class="sheet-input big-sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" /></h1>
+        </div>
+        <select name="system.rarity" class="sheet-input" id="creature-rarity" data-dtype="Number">
+          <option value="1">Common</option>
+          <option value="2">Uncommon</option>
+          <option value="3">Rare</option>
+          <option value="4">Extremely Rare</option>
+          <option value="5">Boss</option>
+          <option value="6">Companion</option>
+          <option value="7">Familiar</option>
+        </select>
+        {{#if system.isMonster}}
+          <input type="text" class="sheet-input" style="display: inline; width: 100px" name="system.characterPoints" value="{{system.characterPoints}}" /> CP (Reward)
+        {{/if}}
+      </div>

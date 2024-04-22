@@ -6,26 +6,7 @@
 
   {{!-- Sheet Header --}}
   <div class="newera-actorsheet-top">
-    <img class="newera-actorsheet-image" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="128" width="128"/>
-      <div class="newera-actorsheet-top-data">
-        <h1 class="charname"><input name="name" type="text" class="sheet-input" value="{{actor.name}}" placeholder="Name"/></h1>
-        <div id="cp-wrapper" class="progress-wrapper cp npc-level">
-          Level <br />
-          <h1 id="overall-level"><input type="text" class="sheet-input big-sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" /></h1>
-        </div>
-        <select name="system.rarity" class="sheet-input" id="creature-rarity" data-dtype="Number">
-          <option value="1">Common</option>
-          <option value="2">Uncommon</option>
-          <option value="3">Rare</option>
-          <option value="4">Extremely Rare</option>
-          <option value="5">Boss</option>
-          <option value="6">Companion</option>
-          <option value="7">Familiar</option>
-        </select>
-        {{#if system.isMonster}}
-          <input type="text" class="sheet-input" style="display: inline; width: 100px" name="system.characterPoints" value="{{system.characterPoints}}" /> CP (Reward)
-        {{/if}}
-      </div>
+    {{> systems/newera-sol366/templates/actor/parts/creature-top-section.html}}
   </div>
 
   <div class="newera-actorsheet-tabs">
@@ -45,79 +26,7 @@
 
   <div class="newera-actorsheet-scroll">
     <div class="newera-actorsheet-left">
-
-      <div id="actorsheet-resources">
-        <div class="resource newera-actorsheet-resource">
-          <img class="resource-icon" src="systems/newera-sol366/resources/hp-hot.png" title="Hit Points" id="hp-icon" />
-          <div class="resource-content">
-            <input type="text" id="resourceValHp" class="resource-input resource-hp" name="system.hitPoints.value" value="{{system.hitPoints.value}}" data-dtype="Number"/>
-            <span> / </span>
-            <input type="text" id="resourceMaxHp" class="resource-input resource-hp" name="system.hitPoints.max" value="{{system.hitPoints.max}}" data-dtype="Number"/>
-          </div>
-        </div>
-        <div class="newera-actorsheet-bars">
-          <div class="resource-bars">
-            <div id="health-wrapper" class="progress-wrapper enemy-hp">
-              <progress id="health-bar" value="{{system.hitPoints.value}}" max="{{system.hitPoints.max}}">HP</progress>
-            </div>
-          </div>
-          <div class="damage-button">
-            <button class="sheet-input" id="takeDamageButton" data-tooltip="Damage/Healing" data-tooltip-direction="RIGHT">
-              <img class="action-die" src="systems/newera-sol366/resources/broken-heart.png">
-            </button>
-          </div>
-        </div>
-        {{#if system.rollableHP}}
-        <div class="resource newera-actorsheet-resource">
-          <button id="init-hp-roll" class="sheet-input">
-            <img class="resource-icon" src="systems/newera-sol366/resources/life-bar.png" />
-            Roll Starting HP
-          </button>
-        </div>
-        {{/if}}
-      </div>
-      <div class="summary-stat-wrapper">
-        <h4>Armor</h4>
-        <div class="summary-stat-bonus">
-          <img class="bonus" src="systems/newera-sol366/resources/bonus.png" />
-          <input type="text" class="sheet-input" name="system.armor.bonus" value="{{system.armor.bonus}}" data-dtype="Number" />
-          <img class="bonus" src="systems/newera-sol366/resources/armor-equipped.png" />
-          <input type="text" class="sheet-input" name="system.armor.equipped" value="{{system.armor.equipped}}" data-dtype="Number" />
-        </div>
-        <div class="summary-stat-total">
-          <h2 id="system.armor.total" style="border-bottom: none"><img src="systems/newera-sol366/resources/armor-equipped.png" class="resource-icon" />{{system.armor.total}}</h2>
-        </div>
-      </div>
-      <div class="summary-stat-wrapper">
-        <h4>Size</h4>
-        <div class="summary-stat-wide">
-          <input type="text" class="sheet-input" name="system.size.mod" value="{{system.size.mod}}" data-dtype="Number" style="width: 30%"/>
-        </div>
-      </div>
-      <div class="summary-stat-wrapper">
-        <h4>Initiative</h4>
-        <div class="summary-stat-wide">
-          <input type="text" class="sheet-input" name="system.initiative.mod" value="{{system.initiative.mod}}" data-dtype="Number" style="width: 30%"/>
-        </div>
-      </div>
-      <div class="summary-stat-wrapper">
-        <h4>Passive Agility</h4>
-        <div class="summary-stat-wide">
-          <input type="text" class="sheet-input" name="system.passiveAgility.value" value="{{system.passiveAgility.value}}" data-dtype="Number" style="width: 30%"/>
-        </div>
-      </div>
-      <div class="summary-stat-wrapper">
-        <h4>Speed</h4>
-        <div class="summary-stat-wide">
-          <input type="text" class="sheet-input" name="system.speed.value" value="{{system.speed.value}}" data-dtype="Number" style="width: 30%"/>
-        </div>
-      </div>
-      <div class="summary-stat-wrapper">
-        <h4>Passive Perception</h4>
-        <div class="summary-stat-wide">
-          <input type="text" class="sheet-input" name="system.passivePerception.value" value="{{system.passivePerception.value}}" data-dtype="Number" style="width: 30%"/>
-        </div>
-      </div>
+      {{> systems/newera-sol366/templates/actor/parts/creature-stats.html}}
     </div>
   
     <div class="newera-actorsheet-right">
