@@ -364,8 +364,6 @@ export class NewEraActor extends Actor {
       system.hpPercentage = system.lifePoints.value / system.lifePoints.max;
     }
 
-    system.enableAddResource = (Object.keys(system.additionalResources).length < 3);
-
   }
 
   findResource(name){
