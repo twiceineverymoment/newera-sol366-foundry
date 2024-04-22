@@ -1,0 +1,44 @@
+<img class="newera-actorsheet-image" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="128" width="128"/>
+      <div class="newera-actorsheet-top-data">
+        {{#if inventory.equipped.phone}}
+          <div class="phone-shortcut inventory-entry" data-tooltip="Open Phone" data-tooltip-direction="DOWN" data-item-id="{{system.equipment.phone}}">
+            <i class="fa-solid fa-mobile-screen item-edit"></i>
+          </div>
+        {{/if}}
+        <h1 class="charname"><input name="name" type="text" class="sheet-input" value="{{actor.name}}" placeholder="Name"/></h1>
+        <div id="cp-wrapper" class="progress-wrapper cp">
+          Level <br />
+          <progress id="cp-bar" value="{{system.characterPoints.progressValue}}" max="{{system.characterPoints.progressMax}}">CP</progress>
+          <h1 id="overall-level">{{system.level}}</h1>
+        </div>
+        <input type="text" name="system.age" value="{{system.age}}" class="sheet-input" style="width: 64px" data-dtype="Number" />
+        <span> | </span>
+        <select name="system.pronouns.index" id="pronoun-select-{{actor.id}}" class="sheet-input" style="width: 140px">
+          <option value="0">He/Him</option>
+          <option value="1">He/They</option>
+          <option value="2">They/Them</option>
+          <option value="3">She/They</option>
+          <option value="4">She/Her</option>
+          <option value="5">Custom Pronouns</option>
+        </select>
+        <div class="resource newera-actorsheet-resource">
+          <div class="resource-content">
+            <input type="text" class="sheet-input" style="max-width: 216px" name="system.characterPoints.cpt" value="{{system.characterPoints.cpt}}" data-dtype="Number"/>
+            Character Points
+          </div>
+        </div>
+        {{#if inspiration.enabled}}
+          <div id="inspiration" data-tooltip="Points of Inspiration">
+            {{#each inspiration.points as |point index|}}
+              {{#if point}}
+                <img src="systems/newera-sol366/resources/inspiration.png" />
+              {{else}}
+                <img src="systems/newera-sol366/resources/inspiration-used.png" />
+              {{/if}}
+            {{/each}}
+            <div id="inspiration-cp">
+              <i class="fa-solid fa-circle-star"></i> + {{inspiration.cp}}
+            </div>
+          </div>
+        {{/if}}
+      </div>

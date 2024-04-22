@@ -1,0 +1,29 @@
+<img class="newera-actorsheet-image" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="128" width="128"/>
+      <div class="newera-actorsheet-top-data">
+        {{#if inventory.equipped.phone}}
+          <div class="phone-shortcut inventory-entry" data-tooltip="Open Phone" data-tooltip-direction="DOWN" data-item-id="{{system.equipment.phone}}">
+            <i class="fa-solid fa-mobile-screen item-edit"></i>
+          </div>
+        {{/if}}
+        <h1 class="charname"><input name="name" type="text" class="sheet-input" value="{{actor.name}}" placeholder="Name"/></h1>
+        <div id="cp-wrapper" class="progress-wrapper cp npc-level">
+          Level <br />
+          <h1 id="overall-level"><input type="text" class="sheet-input big-sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" /></h1>
+        </div>
+        <input type="text" name="system.age" value="{{system.age}}" class="sheet-input" style="width: 64px" data-dtype="Number" />
+        <span> | </span>
+        <select name="system.pronouns.index" id="pronoun-select-{{actor.id}}" class="sheet-input" style="width: 140px">
+          <option value="0">He/Him</option>
+          <option value="1">He/They</option>
+          <option value="2">They/Them</option>
+          <option value="3">She/They</option>
+          <option value="4">She/Her</option>
+          <option value="5">Custom Pronouns</option>
+        </select>
+        <div class="resource newera-actorsheet-resource">
+            <div class="resource-content">
+              <input type="text" class="sheet-input" style="max-width: 216px" name="system.hitPointTrueMax" value="{{system.hitPointTrueMax}}" data-dtype="Number" />
+              Hit Points (Uninjured)
+            </div>
+          </div>
+      </div>

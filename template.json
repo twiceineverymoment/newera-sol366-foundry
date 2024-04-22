@@ -437,7 +437,8 @@
 			"specialAbilities": {},
 			"hasStandardActions": true,
 			"hasInventory": false,
-			"hasMagic": false
+			"hasMagic": false,
+			"weakPoints": ["head", "neck", "arm", "leg", "back", "heart", "eye"]
 		},
 		"Vehicle": {
 			"templates": [],

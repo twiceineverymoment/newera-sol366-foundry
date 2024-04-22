@@ -538,6 +538,8 @@ export class NewEraActor extends Actor {
   }
 
   async takeDamage(amount, dmgType, calledShot, injury){
+    let dying = false;
+    let ded = false;
     const system = this.system;
     const update = {
       system: {
@@ -568,6 +570,7 @@ export class NewEraActor extends Actor {
           update.system.hitPoints.value = 0;
           update.system.lifePoints.value = system.lifePoints.value - (dmg - prevHp);
           this.actionMessage(this.img, `${NEWERA.images}/se_unconscious.png`, "{NAME} is down!");
+          dying = true;
         } else {
           update.system.hitPoints.value = system.hitPoints.value - dmg;
         }
@@ -576,10 +579,18 @@ export class NewEraActor extends Actor {
         if (update.system.lifePoints.value <= 0){
           update.system.lifePoints.value = 0;
           this.actionMessage(`${NEWERA.images}/tombstone.png`, this.img, "{NAME} is dead!");
+          ded = true;
         }
       }
     } else {
       update.system.hitPoints.value = system.hitPoints.value - dmg; //Ignore life points for creatures. They just die
+      if (update.system.hitPoints.value <= 0){
+        update.system.hitPoints.value = 0;
+        ui.notifications.info(`${this.name} has been defeated!`);
+        ded = true;
+      } else {
+        ui.notifications.info(`${this.name} has ${system.hitPoints.value - dmg}/${system.hitPoints.max} HP remaining.`);
+      }
     }
     } else if (amount > 0){
       this.actionMessage(null, null, "{NAME} took {0} damage, but it was absorbed by {d} armor!", amount);
@@ -588,6 +599,15 @@ export class NewEraActor extends Actor {
     }
     console.log(update);
     await this.update(update);
+    if (ded){
+      const dying = this.effects.find(e => e.label == "Dying");
+      if (dying) {
+        dying.delete();
+      }
+      await this.createEmbeddedDocuments('ActiveEffect', [NEWERA.statusEffects.dead[1]]);
+    } else if (dying) {
+      await this.createEmbeddedDocuments('ActiveEffect', [NEWERA.statusEffects.dying[1]]);
+    }
   }
 
   async heal(amount, overheal, recovery = false){

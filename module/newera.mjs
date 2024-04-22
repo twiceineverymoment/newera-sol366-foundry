@@ -34,18 +34,25 @@ Hooks.once('init', async function() {
 
   //Last Damage Tracking
   game.newera.getLastDamageAmount = function(){
-    return game.settings.get("newera-sol366", "lastDamageAmt");
+    const damageRolls = game.messages.filter(m => m.flavor && m.flavor.toLowerCase().includes("damage"));
+    if (!damageRolls || damageRolls.length == 0){
+      return null;
+    }
+    const lastDamageMessage = damageRolls[damageRolls.length - 1];
+    if (lastDamageMessage.rolls){
+      let damage = 0;
+      lastDamageMessage.rolls.forEach(r => damage += r.total);
+      return damage;
+    } else {
+      return 0;
+    }
+
   }
   game.newera.setLastDamageAmount = async function(n){
-    const current = game.settings.get("newera-sol366", "incrementalDamage") ? game.settings.get("newera-sol366", "lastDamageAmt") : 0;
-    await game.settings.set("newera-sol366", "lastDamageAmt", n+current);
-    console.log("[DEBUG] Last Damage Amount set to "+(n+current));
+    
   }
   game.newera.clearLastDamage = async function(){
-    if (game.settings.get("newera-sol366", "incrementalDamage")){
-      await game.settings.set("newera-sol366", "lastDamageAmt", 0);
-      console.log("[DEBUG] Cleared the incremental damage ticker");
-    }
+    
   }
 
   /**
@@ -172,14 +179,6 @@ Hooks.once("ready", async function() {
 /* Game Settings */
 
 function setupGameSettings(){
-  game.settings.register("newera-sol366", "lastDamageAmt", {
-    name: "Last Damage Dealt",
-    scope: "world",
-    config: false,
-    requiresReload: false,
-    type: Number,
-    default: 0,
-  });
   game.settings.register("newera-sol366", "autoApplyFeatures", {
     name: "Automatically Apply Unlocked Features",
     hint: "When unlocking new character or class features and making selections, certain changes will be automatically applied to your character sheet",
@@ -215,15 +214,6 @@ function setupGameSettings(){
     requiresReload: false,
     type: Boolean,
     default: true,
-  });
-  game.settings.register("newera-sol366", "incrementalDamage", {
-    name: "Enable Incremental Damage Counter",
-    hint: "When enabled, sequential damage rolls will add to the next amount of damage dealt by the Take Damage button or macro and the counter will be cleared when a creature takes that damage. When disabled, only the most recent roll is taken into account.",
-    scope: "world",
-    config: true,
-    requiresReload: false,
-    type: Boolean,
-    default: false,
   });
   game.settings.register("newera-sol366", "progressionMode", {
     name: "Progression Mode",
