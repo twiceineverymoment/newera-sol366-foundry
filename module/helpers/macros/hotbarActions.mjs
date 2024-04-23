@@ -491,4 +491,12 @@ export class HotbarActions {
             ui.notifications.error(this.INVALID_FEATURE_ERROR);
         }
     }
+
+    // GM/Utility macros
+
+    static async addPlayerContact(){
+        const actor = this.getSelectedActor();
+        //No token selected is allowed for this one. Just means the form will start empty instead of auto-filled with contact info
+        Actions.addPlayerContact(actor);
+    }
 }

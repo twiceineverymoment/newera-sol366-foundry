@@ -430,4 +430,49 @@ export class Actions {
       });
     }
 
+    static async addPlayerContact(actor){
+      let phoneNum = "";
+      let name = "";
+      let count = 0;
+      if (actor){
+        name = actor.name;
+        const phone = actor.items.find(i => i.type == "Phone");
+        if (phone){
+          phoneNum = phone.system.phoneNumber;
+        }
+      }
+      new Dialog({
+        title: "Add Contact to Player Phones",
+        content: `<form id="contactForm">
+          <p>Enter the name and phone number of a contact to add to all player-owned phones.</p>
+          <input type="text" id="contactName" value="${name}" />
+          <input type="text" id="contactNumber" value="${phoneNum}" />
+          </form>`,
+        buttons: {
+          confirm: {
+            icon: `<i class="fas fa-plus"></i>`,
+            label: "Add",
+            callback: (html) => {
+              const name = html.find("#contactName").val();
+              const number = html.find("#contactNumber").val();
+              const playerCharacters = game.actors.filter(a => a.type == "Player Character");
+              for (const actor of playerCharacters){
+                const phones = actor.items.filter(i => i.type == "Phone");
+                phones.forEach(i => {
+                  i.addContact(name, number);
+                  count++;
+                  console.log(`Added contact to ${i.name} in inventory of ${actor.name}`);
+              });
+              }
+              ui.notifications.info(`${name} has been added to all player character phone contacts (${count} total devices.)`);
+            }
+          },
+          cancel: {
+            icon: `<i class="fas fa-x"></i>`,
+            label: "Cancel"
+          }
+        }
+      }).render(true);
+    }
+
 }
