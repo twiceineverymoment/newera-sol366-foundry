@@ -630,6 +630,16 @@ export class NewEraActor extends Actor {
         lifePoints: {}
       }
     };
+
+    //Injury recovery
+    if (recovery && system.hitPoints.max < system.hitPointTrueMax) {
+      const newMax = system.hitPoints.max + parseInt(amount);
+      update.system.hitPoints.max = Math.min(system.hitPointTrueMax, newMax);
+      this.actionMessage(this.img, `${NEWERA.images}/hand-bandage.png`, "{NAME} recovers from {d} injuries.");
+      await this.update(update);
+    }
+
+    //Continue with healing regular HP after updating max HP from injuries
     const prevHp = system.hitPoints.value;
     const newHp = system.hitPoints.value + parseInt(amount);
     const max = system.hitPoints.max * (overheal ? 2 : 1);
@@ -644,14 +654,7 @@ export class NewEraActor extends Actor {
     } else {
       this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} {0} {1} hit points!", overheal ? "gains" : "recovers", gained);
     }
-    //Injury recovery
-    const recovered = false;
-    if (recovery && system.hitPoints.max < system.hitPointTrueMax) {
-      const newMax = system.hitPoints.max + parseInt(amount);
-      update.system.hitPoints.max = Math.min(system.hitPointTrueMax, newMax);
-      recovered = true;
-      this.actionMessage(this.img, `${NEWERA.images}/hand-bandage.png`, "{NAME} recovers from {d} injuries.");
-    }
+    
     console.log(`HEAL A=${amount} PREV=${prevHp} NEW=${newHp} MAX=${max} G=${gained}`);
     console.log(update);
     await this.update(update);
