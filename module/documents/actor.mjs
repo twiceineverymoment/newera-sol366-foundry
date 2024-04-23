@@ -212,6 +212,8 @@ export class NewEraActor extends Actor {
   _prepareNpcData(system) {
     if (this.type !== 'Non-Player Character') return;
 
+    system.injured = (system.hitPointTrueMax > system.hitPoints.max);
+
     system.totalWeight = this._getTotalWeight(this.items);
     this._prepareAbilityScoreModifiers(system);
     this._prepareSkillModifiers(system);
@@ -563,7 +565,7 @@ export class NewEraActor extends Actor {
     console.log(`taking damage dmg=${dmg} amount=${amount} equipped=${system.armor.equipped} natural=${system.armor.natural}`);
     if (dmg > 0){
       this.actionMessage(this.img, `systems/newera-sol366/resources/dt_${damageType.label.toLowerCase()}.png`, "{NAME} takes {0} {1} damage!", dmg, damageType.label);
-      if (injury){
+      if (injury && this.type != "Creature"){
         if (system.hitPoints.max > 1){
           update.system.hitPoints.max = Math.max(1, system.hitPoints.max - dmg);
           if (!system.injured){
