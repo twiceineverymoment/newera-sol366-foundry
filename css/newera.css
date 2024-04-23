@@ -1131,3 +1131,10 @@ h2.chant-count {
   color: white;
   font-size: 2em;
 }
+div#energySelect {
+  width: 100%;
+  text-align: right;
+}
+div#energySelect select {
+  width: 70%;
+}

@@ -75,6 +75,9 @@ export class Actions {
               <i class="fa-solid fa-chevron-right"></i>
             </div>
           </div>
+          <div id="energySelect">
+            Energy Source: <select id="energyPools">${this._renderPoolOptions(actor)}</select>
+          </div>
           <p>
             <button class="spell-dialog-button" id="cast"><i class="fa-solid fa-hand-sparkles"></i> Cast</button>
             <button class="spell-dialog-button" id="attack"${spell.system.rangedAttack ? "" : `disabled data-tooltip="This spell isn't a projectile attack."`}><i class="fa-solid fa-crosshairs"></i> Attack</button>
@@ -149,6 +152,14 @@ export class Actions {
       }).render(true, {
         width: 480
       });
+    }
+
+    static _renderPoolOptions(actor){
+      let options = "";
+      for (const pool of actor.energyPools){
+        options += `<option value="${pool.id}">${pool.name} (${pool.available}/${pool.max})</option>`
+      }
+      return options;
     }
 
     static _renderSpellDetails(html, spell, actor, ampFactor, prepared){
