@@ -74,7 +74,7 @@ export class NewEraActor extends Actor {
     const maxInspiration = (difficulty == 0 ? 5 : (difficulty == 1 ? 3 : (difficulty == 2 ? 1 : 0)));
 
     if (system.inspiration > maxInspiration){
-      ui.notifications.warn(`You can't have more than ${maxInspiration} points of inspiration.`);
+      //ui.notifications.warn(`You can't have more than ${maxInspiration} points of inspiration.`);
       system.inspiration = maxInspiration;
     }
     if (system.inspiration < 0){

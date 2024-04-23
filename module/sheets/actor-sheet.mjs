@@ -1551,14 +1551,14 @@ export class NewEraActorSheet extends ActorSheet {
   }
 
   _prepareInspiration(context){
+    const difficulty = game.settings.get("newera-sol366", "difficulty");
     context.inspiration = {
-      enabled: game.settings.get("newera-sol366", "inspiration"),
+      enabled: game.settings.get("newera-sol366", "inspiration") && difficulty < 3,
       points: {},
       cp: Math.floor(this.actor.system.inspiration * this.actor.system.levelGap * 0.1)
     };
     
     if (context.inspiration.enabled){
-      const difficulty = game.settings.get("newera-sol366", "difficulty");
       let max = 0;
       switch(difficulty){
         case 0:
@@ -1574,7 +1574,7 @@ export class NewEraActorSheet extends ActorSheet {
         case 4:
           return;
       }
-      for (let i=1; i<=5; i++){
+      for (let i=1; i<=max; i++){
         if (this.actor.system.inspiration >= i){
           context.inspiration.points[i] = true;
         } else {

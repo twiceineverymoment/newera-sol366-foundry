@@ -241,7 +241,7 @@ function setupGameSettings(){
       0: "Easy",
       1: "Normal",
       2: "Hard",
-      3: "Brutal",
+      3: "Hardcore",
       4: "Lethal"
     },
     default: 1,
