@@ -1558,6 +1558,22 @@ export class NewEraActorSheet extends ActorSheet {
     };
     
     if (context.inspiration.enabled){
+      const difficulty = game.settings.get("newera-sol366", "difficulty");
+      let max = 0;
+      switch(difficulty){
+        case 0:
+          max = 5;
+          break;
+        case 1:
+          max = 3;
+          break;
+        case 2:
+          max = 1;
+          break;
+        case 3:
+        case 4:
+          return;
+      }
       for (let i=1; i<=5; i++){
         if (this.actor.system.inspiration >= i){
           context.inspiration.points[i] = true;

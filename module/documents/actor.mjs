@@ -70,9 +70,12 @@ export class NewEraActor extends Actor {
 
     system.injured = (system.hitPointTrueMax > system.hitPoints.max);
 
-    if (system.inspiration > 5){
-      ui.notifications.warn("You can't have more than 5 points of inspiration.");
-      system.inspiration = 5;
+    const difficulty = game.settings.get("newera-sol366", "difficulty");
+    const maxInspiration = (difficulty == 0 ? 5 : (difficulty == 1 ? 3 : (difficulty == 2 ? 1 : 0)));
+
+    if (system.inspiration > maxInspiration){
+      ui.notifications.warn(`You can't have more than ${maxInspiration} points of inspiration.`);
+      system.inspiration = maxInspiration;
     }
     if (system.inspiration < 0){
       system.inspiration = 0;
