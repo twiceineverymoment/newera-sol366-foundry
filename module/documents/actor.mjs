@@ -646,10 +646,11 @@ export class NewEraActor extends Actor {
     }
     //Injury recovery
     const recovered = false;
-    if (recovery && system.hitPoints.max > system.hitPointTrueMax) {
+    if (recovery && system.hitPoints.max < system.hitPointTrueMax) {
       const newMax = system.hitPoints.max + parseInt(amount);
       update.system.hitPoints.max = Math.min(system.hitPointTrueMax, newMax);
       recovered = true;
+      this.actionMessage(this.img, `${NEWERA.images}/hand-bandage.png`, "{NAME} recovers from {d} injuries.");
     }
     console.log(`HEAL A=${amount} PREV=${prevHp} NEW=${newHp} MAX=${max} G=${gained}`);
     console.log(update);
