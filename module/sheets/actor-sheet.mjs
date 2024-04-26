@@ -595,10 +595,6 @@ export class NewEraActorSheet extends ActorSheet {
     });
 
     html.find('.spell-cast').click(ev => {
-      if (["Player Character", "Non-Player Character"].includes(this.actor.type) && this.actor.system.energy.value <= 0){
-        ui.notifications.error("Your energy is depleted. Drink a potion or rest to recover energy.");
-        return;
-      }
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const spell = this.actor.items.get(li.data("itemId"));
       Actions.castSpell(this.actor, spell);

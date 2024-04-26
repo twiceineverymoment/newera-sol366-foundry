@@ -1,3 +1,4 @@
+import { DarkEnergyPool } from "../../schemas/dark-energy-pool.mjs";
 import { NEWERA } from "../config.mjs";
 import { HotbarActions } from "../macros/hotbarActions.mjs";
 export class Witch {
@@ -49,30 +50,12 @@ export class Witch {
     static getDarkEnergyPools(actor){
         let pools = [];
         if (actor.system.darkEnergy){
-            pools = pools.concat({
-                id: `${actor.id}::DARK`,
-                name: "Dark Energy",
-                available: actor.system.darkEnergy.value,
-                max: actor.system.darkEnergy.max,
-                canOverdraw: true,
-                use: actor => {
-
-                }
-            });
+            pools.push(new DarkEnergyPool(actor, true));
         }
         for (const link of actor.effects.filter(e => e.name == "Dark Energy Link")){
-            const linkedActor = game.actors.get(e.origin);
+            const linkedActor = game.actors.get(link.origin);
             if (linkedActor && linkedActor.system.darkEnergy){
-                pools = pools.concat({
-                    id: `${linkedActor.id}::DARK`,
-                    name: `${linkedActor.name}'s Dark Energy`,
-                    available: linkedActor.system.darkEnergy.value,
-                    max: linkedActor.system.darkEnergy.max,
-                    canOverdraw: true,
-                    use: actor => {
-
-                    }
-                })
+                pools.push(new DarkEnergyPool(linkedActor, false));
             }
         }
         return pools;

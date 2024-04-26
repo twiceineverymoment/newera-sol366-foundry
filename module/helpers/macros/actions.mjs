@@ -6,6 +6,7 @@ For invoking these functions via global macros, use HotBarActions.mjs for valida
 
 import { Formatting } from "../formatting.mjs";
 import { NEWERA } from "../config.mjs";
+import { CharacterEnergyPool } from "../../schemas/char-energy-pool.mjs";
 
 export class Actions {
 
@@ -44,6 +45,11 @@ export class Actions {
     /* Displays a dialog to cast a spell, inputting the amplification factor */
     static async castSpell(actor, spell, paramAmpFactor = 1, isPrepared = false){
       let stayOpen = false;
+      const energyRequired = (!isPrepared && actor.type != "Creature");
+      if (energyRequired && actor.energyPools.filter(p => !p.depleted).length == 0){
+        ui.notifications.error("Your energy is depleted. You can't cast any spells until you drink a potion or rest to recover.");
+        return;
+      }
       let dialog = new Dialog({
         title: `Cast ${spell.name} [${actor.name}]`,
         content: `<form class="spell-dialog">
@@ -119,16 +125,16 @@ export class Actions {
             html.find("#ampFactor").html(amp - 1);
             Actions._renderSpellDetails(html, spell, actor, amp - 1, false);
           });
-          html.find("#cast").click(() => {
+          html.find("#cast").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            const noEnergyUse = isPrepared || actor.type == "Creature";
-            actor.cast(spell, amp, false, isPrepared, noEnergyUse);
+            const pool = Actions._getPool(actor, html, isPrepared);
+            await actor.cast(spell, amp, false, isPrepared, pool);
             Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
           });
-          html.find("#attack").click(() => {
+          html.find("#attack").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            const noEnergyUse = isPrepared || actor.type == "Creature";
-            actor.cast(spell, amp, true, isPrepared, noEnergyUse);
+            const pool = Actions._getPool(actor, html, isPrepared);
+            await actor.cast(spell, amp, true, isPrepared, pool);
             Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
           });
           html.find("#damage").click(async () => {
@@ -157,9 +163,17 @@ export class Actions {
     static _renderPoolOptions(actor){
       let options = "";
       for (const pool of actor.energyPools){
-        options += `<option value="${pool.id}">${pool.name} (${pool.available}/${pool.max})</option>`
+        options += `<option value="${pool.id}" ${pool.depleted ? "disabled" : ""}>${pool.name} (${pool.available}/${pool.max})</option>`
       }
       return options;
+    }
+
+    static _getPool(actor, html, isPrepared){
+      if (isPrepared || actor.type == "Creature"){
+        return null;
+      }
+      const id = html.find("#energyPools").val();
+      return actor.energyPools.find(p => p.id == id); //The select list is populated by this same array so if this ever fails to find something is very wrong
     }
 
     static _renderSpellDetails(html, spell, actor, ampFactor, prepared){
@@ -175,13 +189,16 @@ export class Actions {
 
       html.find("#level").html(level);
       html.find("#difficulty").html(difficulty);
+      html.find("#energyPools").html(Actions._renderPoolOptions(actor));
       
       if (actor.type == "Creature"){
         html.find("#cast-table").hide();
         html.find("#amplify-info").hide();
+        html.find("#energySelect").hide();
         return;
       } else if (prepared) {
         html.find("#cost").html("Prepared");
+        html.find("#energySelect").hide();
       } else if (energyCost > actor.system.energy.value){
         html.find("#cost").html(`${energyCost} (-${energyCost-actor.system.energy.value})`);
         html.find("#cost").css("color", "red");
