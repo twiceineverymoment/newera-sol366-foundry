@@ -71,9 +71,12 @@ export class NewEraActor extends Actor {
 
     system.injured = (system.hitPointTrueMax > system.hitPoints.max);
 
-    if (system.inspiration > 5){
-      ui.notifications.warn("You can't have more than 5 points of inspiration.");
-      system.inspiration = 5;
+    const difficulty = game.settings.get("newera-sol366", "difficulty");
+    const maxInspiration = (difficulty == 0 ? 5 : (difficulty == 1 ? 3 : (difficulty == 2 ? 1 : 0)));
+
+    if (system.inspiration > maxInspiration){
+      //ui.notifications.warn(`You can't have more than ${maxInspiration} points of inspiration.`);
+      system.inspiration = maxInspiration;
     }
     if (system.inspiration < 0){
       system.inspiration = 0;
@@ -209,6 +212,8 @@ export class NewEraActor extends Actor {
    */
   _prepareNpcData(system) {
     if (this.type !== 'Non-Player Character') return;
+
+    system.injured = (system.hitPointTrueMax > system.hitPoints.max);
 
     system.totalWeight = this._getTotalWeight(this.items);
     this._prepareAbilityScoreModifiers(system);
@@ -561,7 +566,7 @@ export class NewEraActor extends Actor {
     console.log(`taking damage dmg=${dmg} amount=${amount} equipped=${system.armor.equipped} natural=${system.armor.natural}`);
     if (dmg > 0){
       this.actionMessage(this.img, `systems/newera-sol366/resources/dt_${damageType.label.toLowerCase()}.png`, "{NAME} takes {0} {1} damage!", dmg, damageType.label);
-      if (injury){
+      if (injury && this.type != "Creature"){
         if (system.hitPoints.max > 1){
           update.system.hitPoints.max = Math.max(1, system.hitPoints.max - dmg);
           if (!system.injured){
@@ -626,6 +631,16 @@ export class NewEraActor extends Actor {
         lifePoints: {}
       }
     };
+
+    //Injury recovery
+    if (recovery && system.hitPoints.max < system.hitPointTrueMax) {
+      const newMax = system.hitPoints.max + parseInt(amount);
+      update.system.hitPoints.max = Math.min(system.hitPointTrueMax, newMax);
+      this.actionMessage(this.img, `${NEWERA.images}/hand-bandage.png`, "{NAME} recovers from {d} injuries.");
+      await this.update(update);
+    }
+
+    //Continue with healing regular HP after updating max HP from injuries
     const prevHp = system.hitPoints.value;
     const newHp = system.hitPoints.value + parseInt(amount);
     const max = system.hitPoints.max * (overheal ? 2 : 1);
@@ -640,13 +655,7 @@ export class NewEraActor extends Actor {
     } else {
       this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} {0} {1} hit points!", overheal ? "gains" : "recovers", gained);
     }
-    //Injury recovery
-    const recovered = false;
-    if (recovery && system.hitPoints.max > system.hitPointTrueMax) {
-      const newMax = system.hitPoints.max + parseInt(amount);
-      update.system.hitPoints.max = Math.min(system.hitPointTrueMax, newMax);
-      recovered = true;
-    }
+    
     console.log(`HEAL A=${amount} PREV=${prevHp} NEW=${newHp} MAX=${max} G=${gained}`);
     console.log(update);
     await this.update(update);

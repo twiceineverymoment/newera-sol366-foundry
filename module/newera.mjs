@@ -230,6 +230,22 @@ function setupGameSettings(){
     },
     default: 0,
   });
+  game.settings.register("newera-sol366", "difficulty", {
+    name: "Difficulty",
+    hint: "Setting the campaign difficulty affects inspiration and the one-hit KO rule.",
+    scope: "world",
+    config: true,
+    requiresReload: false,
+    type: Number,
+    choices: {
+      0: "Easy",
+      1: "Normal",
+      2: "Hard",
+      3: "Hardcore",
+      4: "Lethal"
+    },
+    default: 1,
+  });
   game.settings.register("newera-sol366", "startingLevel", {
     name: "Starting Level",
     hint: "The level new player characters start at",
@@ -255,7 +271,7 @@ function setupGameSettings(){
   });
   game.settings.register("newera-sol366", "inspiration", {
     name: "Enable Inspiration",
-    hint: "Players can spend points of inspiration to re-roll dice and to gain extra frames during combat",
+    hint: "Players can spend points of inspiration to re-roll dice and to gain extra frames during combat. Inspiration is disabled on Expert and Lethal difficulties.",
     scope: "world",
     config: true,
     requiresReload: true,

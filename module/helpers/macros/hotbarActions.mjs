@@ -492,8 +492,8 @@ export class HotbarActions {
             ui.notifications.error(this.INVALID_FEATURE_ERROR);
         }
     }
-
-    static async displayDarkEnergy(){
+  
+  static async displayDarkEnergy(){
         const actor = this.getSelectedActor();
         if (!actor){
             ui.notifications.error(this.NO_ACTOR_ERROR);
@@ -504,5 +504,10 @@ export class HotbarActions {
         } else {
             ui.notifications.error(this.INVALID_FEATURE_ERROR);
         }
+  }
+
+    static async addPlayerContact(){
+        const actor = this.getSelectedActor();
+        //No token selected is allowed for this one. Just means the form will start empty instead of auto-filled with contact info
     }
 }

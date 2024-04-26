@@ -966,6 +966,22 @@ _preparePotionData(system){
     };
   }
 
+  addContact(name, number){
+    if (this.type !== "Phone") return;
+    const contacts = structuredClone(this.system.contacts);
+    contacts[Object.keys(contacts).length] = {
+      name: name,
+      number: number,
+      unread: false,
+      messages: {}
+    };
+    this.update({
+      system: {
+        contacts: contacts
+      }
+    });
+  }
+
   addPhoto() {
     if (this.type !== "Phone") return false;
     const system = this.system;

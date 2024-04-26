@@ -1034,7 +1034,7 @@ tr.effect-row td h3 {
 /* Inspiration */
 
 div#inspiration {
-  width: 30%;
+  width: 50%;
   cursor: pointer;
 }
 div#inspiration img {
@@ -1044,11 +1044,13 @@ div#inspiration img {
   margin: none;
   border: none;
   outline: none;
+  vertical-align: middle;
 }
 div#inspiration-cp {
   display: inline-block;
   opacity: 0.8;
   vertical-align: middle;
+  font-size: 12px;
 }
 
 /* Spell Prep Sheet */

@@ -400,7 +400,8 @@
 		"Non-Player Character": {
 			"templates": ["base", "skills", "biography", "magic", "money"],
 			"age": 0,
-			"level": 0
+			"level": 0,
+			"hitPointTrueMax": 10
 		},
 		"Creature": {
 			"templates": ["base", "magic"],
