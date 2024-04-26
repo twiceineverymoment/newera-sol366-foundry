@@ -1,5 +1,6 @@
 import { NEWERA } from "../helpers/config.mjs";
-import { Formatting } from "../helpers/formatting.mjs"
+import { Formatting } from "../helpers/formatting.mjs";
+import { Witch } from "../helpers/classes/witch.mjs";
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -1060,6 +1061,30 @@ export class NewEraActor extends Actor {
         
       }
     }
+  }
+
+  /**
+   * Returns an object with information about all the different energy pool options (i.e. Focus Energy, Dark Energy) available to this actor when casting spells.
+   */
+  get energyPools() {
+    if (this.system.casterLevel > 0) {
+      let pools = [
+        {
+          id: `${this.id}::REG`,
+          name: "Energy Pool",
+          available: this.system.energy.value,
+          max: this.system.energy.max,
+          canOverdraw: false,
+          use: (actor, amt) => actor.useEnergy(amt)
+        }
+      ];
+      //pools.push(Researcher.getFocusEnergyPool(this));
+      pools = pools.concat(Witch.getDarkEnergyPools(this));
+      return pools;
+    } else {
+      return [];
+    }
+    
   }
 
 }

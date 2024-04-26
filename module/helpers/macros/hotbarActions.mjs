@@ -10,6 +10,7 @@ import { Scholar } from "../classes/scholar.mjs";
 import { SpellPreparation } from "../../sheets/spell-preparation.mjs";
 import { SpellFocus } from "../../sheets/spell-focus.mjs";
 import { ChantSheet } from "../../sheets/chants.mjs";
+import { DarkEnergySheet } from "../../sheets/dark-energy.mjs";
 
 
 /*
@@ -491,12 +492,22 @@ export class HotbarActions {
             ui.notifications.error(this.INVALID_FEATURE_ERROR);
         }
     }
-
-    // GM/Utility macros
+  
+  static async displayDarkEnergy(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        if (actor.getClassLevel("witch") >= 7){
+            new DarkEnergySheet(actor).render(true);
+        } else {
+            ui.notifications.error(this.INVALID_FEATURE_ERROR);
+        }
+  }
 
     static async addPlayerContact(){
         const actor = this.getSelectedActor();
         //No token selected is allowed for this one. Just means the form will start empty instead of auto-filled with contact info
-        Actions.addPlayerContact(actor);
     }
 }

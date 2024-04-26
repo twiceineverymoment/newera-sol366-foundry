@@ -68,6 +68,10 @@ export class HotbarManager {
     static async createActionMacro(data, slot){
         const action = typeof data.action == "object" ? data.action : JSON.parse(data.action);
         const rolls = action.rolls;
+        if (action.overrideMacroCommand === null){
+            ui.notifications.error("Sorry, macros can't be created for this action.");
+            return;
+        }
         if (!action.overrideMacroCommand && (!rolls || rolls.length == 0)){
             ui.notifications.error(`The action ${action.name} has nothing to roll.`);
             return;

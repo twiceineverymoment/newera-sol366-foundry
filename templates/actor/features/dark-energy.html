@@ -1,17 +1,16 @@
 <form class="{{cssClass}} {{actor.type}} newera-darkenergysheet-body" autocomplete="off">
-    <h2>{{name}}</h2>
-    <h3>Dark Energy</h3>
+    <h3 class="newera-section-header newera-darkenergysheet-header">Dark Energy</h3>
 
     <div class="resource newera-actorsheet-resource">
-        <img class="resource-icon" src="systems/newera-sol366/resources/darkenergy.png" title="Dark Energy" id="de-icon" />
+        <img class="resource-icon" src="systems/newera-sol366/resources/dark-energy.png" title="Dark Energy" id="de-icon" />
         <div class="resource-content">
-          
+          <input type="text" id="resourceValDarkEnergy" class="resource-input resource-dark-energy" name="system.darkEnergy.value" value="{{darkEnergy.value}}" data-dtype="Number" />
           <span> / </span>
-          
+          <input type="text" id="resourceMaxDarkEnergy" class="resource-input resource-dark-energy" name="system.darkEnergy.max" value="{{darkEnergy.max}}" data-dtype="Number" />
         </div>
     </div>
 
-    <div id="dark-energy-wrapper" class="progress-wrapper">
+    <div id="dark-energy-wrapper" class="progress-wrapper dark-energy">
         <progress id="dark-energy-bar" value="{{darkEnergy.percentage}}" max="1">DARK ENERGY</progress>
     </div>
 </form>

@@ -11,6 +11,7 @@ import { Witch } from "./classes/witch.mjs";
 import { SpellPreparation } from "../sheets/spell-preparation.mjs";
 import { SpellFocus } from "../sheets/spell-focus.mjs";
 import { ChantSheet } from "../sheets/chants.mjs";
+import { DarkEnergySheet } from "../sheets/dark-energy.mjs";
 
 export const ClassInfo = {};
 
@@ -6188,25 +6189,48 @@ ClassInfo.features = {
                     name: "Dark Energy",
                     images: {
                         base: `${NEWERA.images}/dark-energy.png`,
+                        left: `${NEWERA.images}/witch.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `<p>
+                        Display the status of your Dark Energy pool. Allies you've given the ability to use your energy can also use this action to view how much is remaining.
+                    </p>`,
+                    difficulty: null,
+                    actionType: "0",
+                    overrideMacroCommand: "game.newera.HotbarActions.displayDarkEnergy()",
+                    rolls: [
+                      {
+                        label: "Open",
+                        die: "dark-energy",
+                        callback: actor => new DarkEnergySheet(actor).render(true) 
+                      }
+                    ]
+                },
+                {
+                    name: "Grant Dark Energy Powers",
+                    images: {
+                        base: `${NEWERA.images}/linked-rings.png`,
                         left: `${NEWERA.images}/witch.png`,
                         right: `${NEWERA.images}/ac_0frame.png`
                     },
                     ability: null,
                     skill: null,
                     specialties: [],
-                    description: `<p>
-                        Display the status of your Dark Energy pool and mark other creatures as allies, allowing them to cast spells from it.
-                    </p>`,
+                    description: `<p>You grant an ally the power to draw from your Dark Energy pool when casting spells.</p>
+                    <p>Select an allied creature's token on the map, then click Grant.</p>`,
                     difficulty: null,
                     actionType: "0",
+                    overrideMacroCommand: null,
                     rolls: [
-                      {
-                        label: "Open",
-                        die: "energy",
-                        callback: null
-                      }
+                        {
+                            label: "Grant",
+                            die: "linked-rings",
+                            callback: actor => Witch.grantDarkEnergyToSelectedToken(actor)
+                        }
                     ]
-                },
+                }
             ]
         },
         {
