@@ -10,6 +10,7 @@ import { Scholar } from "../classes/scholar.mjs";
 import { SpellPreparation } from "../../sheets/spell-preparation.mjs";
 import { SpellFocus } from "../../sheets/spell-focus.mjs";
 import { ChantSheet } from "../../sheets/chants.mjs";
+import { DarkEnergySheet } from "../../sheets/dark-energy.mjs";
 
 
 /*
@@ -487,6 +488,19 @@ export class HotbarActions {
         }
         if (actor.getClassLevel("delver") >= 13){
             Delver.rollWildFury(actor, table);
+        } else {
+            ui.notifications.error(this.INVALID_FEATURE_ERROR);
+        }
+    }
+
+    static async displayDarkEnergy(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        if (actor.getClassLevel("witch") >= 7){
+            new DarkEnergySheet(actor).render(true);
         } else {
             ui.notifications.error(this.INVALID_FEATURE_ERROR);
         }

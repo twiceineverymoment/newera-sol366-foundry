@@ -1138,3 +1138,23 @@ div#energySelect {
 div#energySelect select {
   width: 70%;
 }
+/* Dark Energy Sheet */
+.newera-darkenergysheet-body {
+  min-width: 320px;
+  background-color: black;
+  color: white;
+  font-family: "Nanum Myeongjo", serif;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  text-align: center;
+}
+.newera-darkenergysheet-header {
+  color: rgb(155, 12, 76) !important;
+}
+.dark-energy progress[value]::-webkit-progress-value {
+  background: rgb(155, 12, 76) !important;
+}
+input.resource-dark-energy {
+  color: rgb(155, 12, 76) !important;
+  background-color: #111 !important;
+}

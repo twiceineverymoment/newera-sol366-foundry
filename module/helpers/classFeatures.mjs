@@ -11,6 +11,7 @@ import { Witch } from "./classes/witch.mjs";
 import { SpellPreparation } from "../sheets/spell-preparation.mjs";
 import { SpellFocus } from "../sheets/spell-focus.mjs";
 import { ChantSheet } from "../sheets/chants.mjs";
+import { DarkEnergySheet } from "../sheets/dark-energy.mjs";
 
 export const ClassInfo = {};
 
@@ -6198,11 +6199,12 @@ ClassInfo.features = {
                     </p>`,
                     difficulty: null,
                     actionType: "0",
+                    overrideMacroCommand: "game.newera.HotbarActions.displayDarkEnergy()",
                     rolls: [
                       {
                         label: "Open",
                         die: "dark-energy",
-                        callback: null
+                        callback: actor => new DarkEnergySheet(actor).render(true) 
                       }
                     ]
                 },
@@ -6220,6 +6222,7 @@ ClassInfo.features = {
                     <p>Select an allied creature's token on the map, then click Grant.</p>`,
                     difficulty: null,
                     actionType: "0",
+                    overrideMacroCommand: null,
                     rolls: [
                         {
                             label: "Grant",
