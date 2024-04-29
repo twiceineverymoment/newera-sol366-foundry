@@ -259,7 +259,7 @@ _preparePotionData(system){
     } else if (system.featType == "CH"){
       this.img = `${NEWERA.images}/chant-${NEWERA.chantLevels[system.chantLevel]}.png`;
     } else {
-      this.img = `systems/newera-sol366/resources/${system.featSubType.toLowerCase().replace(" ", "-")}.png`;
+      this.img = `systems/newera-sol366/resources/${system.featSubType.toLowerCase().replaceAll(" ", "-")}.png`;
     }
 
     //Derive total cost and display name for feat list
