@@ -3,6 +3,7 @@ import { NEWERA } from "../helpers/config.mjs";
 import { ClassInfo } from "../helpers/classFeatures.mjs";
 import { Actions } from "../helpers/macros/actions.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
+import { FeatBrowser } from "./feat-browser.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -826,7 +827,8 @@ export class NewEraActorSheet extends ActorSheet {
     /* EDIT CUTOFF - Everything below here is only run if the sheet is editable */
     if (!this.isEditable) return;
 
-    
+    //Browser open buttons
+    html.find(".feat-browser").click(() => new FeatBrowser(this.actor).render(true));
 
     //Favorite Spells management
     html.find(".spell-favorite-add").click(async ev => {

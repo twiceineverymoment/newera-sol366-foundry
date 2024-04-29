@@ -260,6 +260,15 @@ function setupGameSettings(){
     },
     default: 0
   });
+  game.settings.register("newera-sol366", "characterCreation", {
+    name: "Character Creation Mode",
+    hint: "Enable character creation tips and hints on character sheets and show backgrounds and flaws in the feat browser. Disable this once your campaign has started to hide these options.",
+    scope: "world",
+    config: true,
+    requiresReload: true,
+    type: Boolean,
+    default: true
+  });
   game.settings.register("newera-sol366", "advancedSkills", {
     name: "Enable Advanced Skills",
     hint: "Advanced Skills allows players to earn skill improvements through training and practice. The GM must keep track of skill checks on a Session Sheet.",
@@ -272,6 +281,15 @@ function setupGameSettings(){
   game.settings.register("newera-sol366", "inspiration", {
     name: "Enable Inspiration",
     hint: "Players can spend points of inspiration to re-roll dice and to gain extra frames during combat. Inspiration is disabled on Expert and Lethal difficulties.",
+    scope: "world",
+    config: true,
+    requiresReload: true,
+    type: Boolean,
+    default: false
+  });
+  game.settings.register("newera-sol366", "nonLethalNPCs", {
+    name: "NPCs Deal Non-Lethal Damage",
+    hint: "Give your players the satisfaction of delivering the killing blow. When this option is enabled, NPC attacks can't reduce a creature's Hit Points to less than 1.",
     scope: "world",
     config: true,
     requiresReload: true,

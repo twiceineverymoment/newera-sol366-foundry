@@ -1,0 +1,12 @@
+<div class="browser-results-container">
+    {{#each results as |result index|}}
+        <div class="browser-result {{result.styles}}" data-item-id="{{result.id}}" draggable="true">
+            <img src="{{result.img}}" />
+            <h3 class="newera-section-header">{{result.name}}</h3>
+            {{{result.system.tiers.base.description}}}
+            <div class="feat-cost">
+                <i class="fa-solid fa-circle-star"></i> {{result.cost}}
+            </div>
+        </div>
+    {{/each}}
+</div>

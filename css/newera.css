@@ -669,7 +669,7 @@ img.equipment-worn {
   top: 0;
   left: 0;
 }
-.equipment-box-small a .fa-plus {
+.equipment-box-small a .fas, .equipment-box-small a .fa-solid {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -1159,4 +1159,51 @@ div#energySelect select {
 input.resource-dark-energy {
   color: rgb(155, 12, 76) !important;
   background-color: #111 !important;
+}
+/* Feat Browser */
+.feat-browser-contents, div#results, .feat-browser-filters {
+  height: 100%;
+}
+.browser-results-container {
+  height: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  align-items: stretch;
+  align-content: flex-start;
+  gap: 10px;
+}
+#filterResults {
+  height: 100%;
+  overflow-y: auto;
+}
+.browser-result {
+  outline: 1px solid black;
+  width: 45%;
+}
+.browser-result img {
+  float: left;
+  width: 36px;
+  height: 36px;
+  border: none;
+  outline: none;
+}
+.feat-cost {
+  font-size: 24px;
+  font-weight: bold;
+}
+.feat-browser-filters, .feat-filter-option {
+  text-align: left;
+}
+.feat-filter-sub-options {
+  display: none;
+  text-align: left;
+  margin-left: 10px;
+}
+.cantAfford {
+  opacity: 0.5;
+}
+.cantAfford .feat-cost {
+  color: orangered !important;
 }
