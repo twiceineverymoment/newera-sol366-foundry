@@ -7,6 +7,11 @@
             <div class="feat-cost">
                 <i class="fa-solid fa-circle-star"></i> {{result.cost}}
             </div>
+            {{#if result.system.prerequisites}}
+            <p class="feat-prerequisites">
+                Requires {{result.system.prerequisites}}
+            </p>
+            {{/if}}
         </div>
     {{/each}}
 </div>
