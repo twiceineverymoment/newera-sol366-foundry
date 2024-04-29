@@ -10,7 +10,7 @@
 <div class="feat-filter-option">
     <input type="checkbox" class="feat-filter-criteria" data-filter-category="archetype" /> Archetype Feats
     <div class="feat-filter-sub-options" data-filter-category="archetype">
-        {{#each classData.archetypes as |data index|}}
+        {{#each classData.archetypeNames as |data index|}}
             <input type="checkbox" class="feat-filter-criteria" data-filter-category="archetype" data-filter-sub-category="{{data}}" /> {{data}} <br />
         {{/each}}
     </div>

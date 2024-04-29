@@ -1173,6 +1173,8 @@ input.resource-dark-energy {
   align-items: stretch;
   align-content: flex-start;
   gap: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 #filterResults {
   height: 100%;

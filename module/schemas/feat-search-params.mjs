@@ -46,7 +46,7 @@ export class FeatSearchParams {
             } else if (["SF", "SU"].includes(feat.system.featType)){
                 const subCriteria = this.types.find(t => t.type == "skill");
                 if (subCriteria){
-                    if (!subCriteria.subtypes || subCriteria.length == 0){
+                    if (!subCriteria.subtypes || subCriteria.subtypes.length == 0){
                         return true;
                     } else {
                         return subCriteria.subtypes.includes(feat.system.featSubType);
@@ -57,7 +57,7 @@ export class FeatSearchParams {
             } else if (["CF", "CU"].includes(feat.system.featType)){
                 const subCriteria = this.types.find(t => t.type == "class");
                 if (subCriteria){
-                    if (!subCriteria.subtypes || subCriteria.length == 0){
+                    if (!subCriteria.subtypes || subCriteria.subtypes.length == 0){
                         return true;
                     } else {
                         return subCriteria.subtypes.includes(feat.system.featSubType);
@@ -68,7 +68,7 @@ export class FeatSearchParams {
             } else if (["AF", "AU"].includes(feat.system.featType)){
                 const subCriteria = this.types.find(t => t.type == "archetype");
                 if (subCriteria){
-                    if (!subCriteria.subtypes || subCriteria.length == 0){
+                    if (!subCriteria.subtypes || subCriteria.subtypes.length == 0){
                         return true;
                     } else {
                         return subCriteria.subtypes.includes(NEWERA.archetypeFeatSubtypeMapping[feat.system.featSubType]);

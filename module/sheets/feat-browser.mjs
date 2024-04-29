@@ -2,6 +2,7 @@ import { Witch } from "../helpers/classes/witch.mjs";
 import { FeatSearchParams } from "../schemas/feat-search-params.mjs";
 import { NewEraActor } from "../documents/actor.mjs";
 import { NewEraItem } from "../documents/item.mjs";
+import { NEWERA } from "../helpers/config.mjs";
 
 export class FeatBrowser extends ActorSheet {
 
@@ -24,6 +25,9 @@ export class FeatBrowser extends ActorSheet {
         const context = super.getData();
 
         context.classData = this._getClassAndArchetypeData(this.actor);
+        context.classData.archetypeNames = context.classData.archetypes.map(str => 
+            NEWERA.archetypeFeatInclusionMapping.find(arch => arch.selection == str).name
+        );
         context.characterCreationMode = game.settings.get("newera-sol366", "characterCreation");
         context.skillData = Object.keys(this.actor.system.skills).map(s => game.i18n.localize(`newera.skill.${s}.name`));
 
@@ -67,7 +71,13 @@ export class FeatBrowser extends ActorSheet {
         if (["CF", "CU"].includes(feat.system.featType)){
             return feat.system.featSubType && classData.classes.includes(feat.system.featSubType); //If a class or archetype feat has an empty subtype field, it's messed up and should be hidden
         } else if (["AF", "AU"].includes(feat.system.featType)){
-            //TODO More complicated because archetype names may not exactly line up. Mapping required
+            const archMapping = NEWERA.archetypeFeatInclusionMapping.find(arch => arch.name == feat.system.featSubType);
+            if (archMapping){
+                return (classData.classes.includes(archMapping.className) && classData.archetypes.includes(archMapping.selection));
+            } else {
+                console.warn(`_searchFeats encountered an archetype feat with an unknown subtype: ${feat.system.featSubType}`);
+                return false;
+            }
         } else if (["GF", "GU", "SF", "SU"].includes(feat.system.featType)){
             return true;
         } else if (["CB", "BG", "FL"].includes(feat.system.featType)){
@@ -75,11 +85,6 @@ export class FeatBrowser extends ActorSheet {
         } else {
             return false;
         }
-    }
-
-
-    _characterMeetsFeatPrerequisites(actor, feat){
-
     }
 
     /**
@@ -106,9 +111,9 @@ export class FeatBrowser extends ActorSheet {
         const classes = actor.items.filter(i => i.type == "Class");
         for (const clazz of classes){
             data.classes.push(clazz.system.selectedClass);
-            const classSelections = actor.system.classes[clazz.selectedClass];
+            const classSelections = actor.system.classes[clazz.system.selectedClass.toLowerCase()];
             if (classSelections){ //This can be null if the data model hasn't been set yet i.e. if none of the feature selection dropdowns have been modified
-                const archetype = actor.system.classes[clazz.system.selectedClass].archetype;
+                const archetype = classSelections.archetype;
                 if (archetype){ //This can be null if the class doesn't have archetypes or if the archetype hasn't been unlocked or chosen yet
                     if (Array.isArray(archetype)){
                         data.archetypes = data.archetypes.concat(archetype);
@@ -135,10 +140,12 @@ export class FeatBrowser extends ActorSheet {
         html.find(".feat-filter-criteria").change(ev => {
             this._displayLoading(html);
             const element = $(ev.currentTarget);
-            if (element.is(":checked")){
-                html.find(`.feat-filter-sub-options[data-filter-category="${element.data("filterCategory")}"]`).show();
-            } else {
-                html.find(`.feat-filter-sub-options[data-filter-category="${element.data("filterCategory")}"]`).hide();
+            if (!element.data("filterSubCategory")){ //Ignore the show/hide when the subcategory checkboxes are changed
+                if (element.is(":checked")){
+                    html.find(`.feat-filter-sub-options[data-filter-category="${element.data("filterCategory")}"]`).show();
+                } else {
+                    html.find(`.feat-filter-sub-options[data-filter-category="${element.data("filterCategory")}"]`).hide();
+                }
             }
             const newParams = new FeatSearchParams(html);
             this._searchFeats(newParams, this._getClassAndArchetypeData(this.actor))
@@ -163,8 +170,17 @@ export class FeatBrowser extends ActorSheet {
         html.find("#results").show();
 
         html.find(".browser-result").on("dragstart", ev => {
-            //TODO Add drag data to these results that imitates the default compendium viewer so they can be dragged to the actor sheet
+            console.log("FEAT BROWSER DRAG START");
+            const xfr = ev.originalEvent.dataTransfer;
+            const element = $(ev.currentTarget);
+            const dragData = {
+                transferAction: "addFeatFromBrowser",
+                actorId: this.actor.id,
+                featId: element.data("itemId")
+            };
+            xfr.setData("text/plain", JSON.stringify(dragData));
         });
     }
+
 
 }
