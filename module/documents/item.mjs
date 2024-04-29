@@ -255,11 +255,11 @@ _preparePotionData(system){
     } else if (system.featType == "FL"){
       this.img = "systems/newera-sol366/resources/achilles-heel.png";
     } else if (system.featType == "AF"){
-      this.img = "systems/newera-sol366/resources/star-medal.png";
+      this.img = "systems/newera-sol366/resources/star-medal.png"; //TODO More detailed archetype feat images
     } else if (system.featType == "CH"){
       this.img = `${NEWERA.images}/chant-${NEWERA.chantLevels[system.chantLevel]}.png`;
     } else {
-      this.img = `systems/newera-sol366/resources/${system.featSubType.toLowerCase()}.png`;
+      this.img = `systems/newera-sol366/resources/${system.featSubType.toLowerCase().replace(" ", "-")}.png`;
     }
 
     //Derive total cost and display name for feat list
