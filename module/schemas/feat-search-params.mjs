@@ -7,8 +7,13 @@ export class FeatSearchParams {
             this.cost = {
                 min: 0,
                 max: 999
-            }
+            };
+            this.sortFunction = 0;
         if (html){
+            this.cost.min = html.find("#costMin").val();
+            this.cost.max = html.find("#costMax").val();
+            this.searchTerm = html.find("#searchTerm").val();
+            this.sortFunction = html.find("#sort").val();
             html.find("input.feat-filter-criteria:checked").each((index, element) => {
                 if (element.dataset.filterSubCategory){
                     const parentType = this.types.find(t => t.type == element.dataset.filterCategory);
@@ -32,8 +37,13 @@ export class FeatSearchParams {
      * @param {NewEraItem} feat 
      */
     showFeat(feat){
-        if (this.cost.min < feat.system.cost || this.cost.max > feat.system.cost){ //TODO This will need to be looked at when multi-tiered feats are improved
+        if (this.cost.min > feat.system.tiers.base.cost || this.cost.max < feat.system.tiers.base.cost){ //TODO This will need to be looked at when multi-tiered feats are improved
             return false;
+        }
+        if (this.searchTerm){
+            if (!feat.name.toLowerCase().includes(this.searchTerm.toLowerCase()) && !this.searchTerm.toLowerCase().includes(feat.name.toLowerCase())){
+                return false;
+            }
         }
         //If the types array is empty, show all types
         if (this.types.length > 0){

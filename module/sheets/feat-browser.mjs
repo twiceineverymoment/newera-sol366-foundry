@@ -54,11 +54,7 @@ export class FeatBrowser extends ActorSheet {
             }
         }
 
-        return results.sort(function(a, b){
-            if (a.name < b.name) return -1;
-            else if (a.name > b.name) return 1;
-            else return 0;
-        });
+        return results.sort(this._sortFunctions[criteria.sortFunction]);
     }
 
     /**
@@ -181,6 +177,29 @@ export class FeatBrowser extends ActorSheet {
             xfr.setData("text/plain", JSON.stringify(dragData));
         });
     }
+
+    _sortFunctions = [
+        function(a, b){
+            if (a.name < b.name) return -1;
+            else if (a.name > b.name) return 1;
+            else return 0;
+        },
+        function(a, b){
+            if (a.name < b.name) return -1;
+            else if (a.name > b.name) return 1;
+            else return 0;
+        },
+        function(a, b){
+            if (a.system.tiers.base.cost < b.system.tiers.base.cost) return -1;
+            else if (a.system.tiers.base.cost > b.system.tiers.base.cost) return 1;
+            else return 0;
+        },
+        function(a, b){
+            if (a.system.tiers.base.cost > b.system.tiers.base.cost) return -1;
+            else if (a.system.tiers.base.cost < b.system.tiers.base.cost) return 1;
+            else return 0;
+        }
+    ]
 
 
 }

@@ -1,4 +1,19 @@
-<input type="text" id="feat-search" placeholder="Search Feats" class="sheet-input feat-filter-criteria" />
+<input type="text" id="searchTerm" placeholder="Search..." class="sheet-input feat-filter-criteria" />
+<div class="newera-itemsheet-properties">
+    <h4>Cost</h4>
+    <input class="sheet-input half-width feat-filter-criteria" id="costMin" value="0" min="0" max="500" type="number" /> - 
+    <input class="sheet-input half-width feat-filter-criteria" id="costMax" value="500" min="0" max="500" type="number" />
+</div>
+<div class="newera-itemsheet-properties">
+    <h4>Sort By</h4>
+    <select id="sort" class="sheet-input feat-filter-criteria">
+        <option value="0">Rulebook Sort Order</option>
+        <option value="1">A to Z</option>
+        <option value="2">Cost Low to High</option>
+        <option value="3">Cost High to Low</option>
+    </select>  
+</div>
+<h3 class="newera-section-header">Filter Results</h3>
 <div class="feat-filter-option">
     <input type="checkbox" class="feat-filter-criteria" data-filter-category="class" /> Class Feats
     <div class="feat-filter-sub-options" data-filter-category="class">

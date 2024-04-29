@@ -1207,6 +1207,10 @@ input.resource-dark-energy {
   text-align: left;
   margin-left: 10px;
 }
+.half-width {
+  display: inline !important;
+  width: 40% !important;
+}
 .cantAfford, .missingPrerequisites {
   opacity: 0.5;
 }
