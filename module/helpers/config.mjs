@@ -4066,6 +4066,7 @@ NEWERA.prerequisiteActorStatTextMatching = {
     "technology": actor => actor.system.skills.technology.level,
     "two-handed": actor => actor.system.skills["two-handed"].level,
     "overall level": actor => actor.system.level,
+    "age": actor => actor.system.age,
     "caster level": actor => actor.system.casterLevel,
     "delver level": actor => actor.system.classes.delver.level,
     "mercenary level": actor => actor.system.classes.mercenary.level,
