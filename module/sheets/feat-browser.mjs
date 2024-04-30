@@ -61,6 +61,13 @@ export class FeatBrowser extends ActorSheet {
                     feat.styles += " missingPrerequisites";
                     feat.tooltip = "You haven't fulfilled all the requirements for this feat.";
                 }
+                if (feat.system.featType == "FL"){
+                    if (this.actor.items.filter(f => f.type == "Feat" && f.system.featType == "FL").length >= 3){
+                        feat.available = false;
+                        feat.styles += " missingPrerequisites";
+                        feat.tooltip = "You can't have more than three flaws.";
+                    }
+                }
                 results.push(feat);
             }
         }
