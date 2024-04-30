@@ -1332,7 +1332,7 @@ _preparePotionData(system){
         if (!game.settings.get("newera-sol366", "prereqCheck")){
           return true;
         }
-        console.log(`[DEBUG] Evaluating prerequisites : ${this.name}`);
+        //console.log(`[DEBUG] Evaluating prerequisites : ${this.name}`);
         const conditionTokens = this._tokenizePrerequisites();
         console.log(conditionTokens);
         for (const ANDcondition of conditionTokens){
@@ -1340,38 +1340,38 @@ _preparePotionData(system){
           for (const ORcondition of ANDcondition){
             if (ORcondition == {})
             {
-              console.log(`[DEBUG] Empty condition object is always true`);
+              //console.log(`[DEBUG] Empty condition object is always true`);
               subResult = true;
               break;
             }
             else if (ORcondition.check == "value")
             {
-              console.log(`[DEBUG] Evaluate value condition req=${ORcondition.required} func={${ORcondition.value}} eval=${ORcondition.value(actor)}`);
+              //console.log(`[DEBUG] Evaluate value condition req=${ORcondition.required} func={${ORcondition.value}} eval=${ORcondition.value(actor)}`);
               if (parseInt(ORcondition.required) <= parseInt(ORcondition.value(actor))){
-                console.log(`[DEBUG] Value condition true`);
+                //console.log(`[DEBUG] Value condition true`);
                 subResult = true;
                 break;
               }
-              console.log(`[DEBUG] Value condition false`);
+              //console.log(`[DEBUG] Value condition false`);
             }
             else if (ORcondition.check == "ability")
             {
-              console.log(`[DEBUG] Evaluate feature condition name=${ORcondition.value}`);
+              //console.log(`[DEBUG] Evaluate feature condition name=${ORcondition.value}`);
               if (actor.hasFeatOrFeature(ORcondition.value)){
-                console.log(`[DEBUG] Feature condition true`);
+                //console.log(`[DEBUG] Feature condition true`);
                 subResult = true;
                 break;
               }
-              console.log(`[DEBUG] Feature condition false`);
+              //console.log(`[DEBUG] Feature condition false`);
             }
           }
           if (!subResult) {
-            console.log(`[DEBUG] ${this.name} FALSE`);
+            //console.log(`[DEBUG] ${this.name} FALSE`);
             return false; //If any one of the condition groups evaluates to false, stop here because nothing else matters
           }
-          console.log(`[DEBUG] subResult is true for this group, continuing the check`);
+          //console.log(`[DEBUG] subResult is true for this group, continuing the check`);
         }
-        console.log(`[DEBUG] ${this.name} TRUE`);
+        //console.log(`[DEBUG] ${this.name} TRUE`);
         return true; //If we get here and we haven't returned false, then all condition groups evaluated to true
       } else { 
         return false;
