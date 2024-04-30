@@ -191,8 +191,8 @@ export class FeatBrowser extends ActorSheet {
 
     _sortFunctions = [
         function(a, b){
-            if (a.name < b.name) return -1;
-            else if (a.name > b.name) return 1;
+            if (a.system.casperSortOrder < b.system.casperSortOrder) return -1;
+            else if (a.system.casperSortOrder > b.system.casperSortOrder) return 1;
             else return 0;
         },
         function(a, b){
