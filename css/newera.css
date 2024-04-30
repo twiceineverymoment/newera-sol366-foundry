@@ -1212,12 +1212,33 @@ input.resource-dark-energy {
   display: inline !important;
   width: 40% !important;
 }
-.cantAfford, .missingPrerequisites {
+.cantAfford, .missingPrerequisites, .alreadyOwned {
   opacity: 0.5;
 }
 .cantAfford .feat-cost {
   color: orangered !important;
 }
-.missingPrerequisites .feat-prerequisites {
+.feat-prerequisites { /* Because this is inside .feat-cost it will be red on unaffordable feats unless this is here */
+  color: white;
+}
+.missingPrerequisites .feat-cost .feat-prerequisites {
   color: orangered !important;
+}
+.alreadyOwned .feat-cost {
+  color: limegreen !important;
+}
+.browser-loading-wheel {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 200px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

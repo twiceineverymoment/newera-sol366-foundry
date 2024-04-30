@@ -6,17 +6,21 @@
             <span style="display: block">&nbsp; <!--Float weirdness prevention --></span>
             {{{result.system.tiers.base.description}}}
             <div class="feat-cost">
-                <i class="fa-solid fa-circle-star"></i> {{result.cost}}
+                {{#if result.alreadyOwned}}
+                    <i class="fa-solid fa-check-circle"></i>
+                {{else}}
+                    <i class="fa-solid fa-circle-star"></i> {{result.cost}}
+                    {{#if result.system.prerequisites}}
+                        <p class="feat-prerequisites">
+                            Requires {{result.system.prerequisites}}
+                        </p>
+                    {{/if}}
+                {{/if}}
             </div>
-            {{#if result.system.prerequisites}}
-            <p class="feat-prerequisites">
-                Requires {{result.system.prerequisites}}
-            </p>
-            {{/if}}
         </div>
     {{/each}}
     {{#if noResultsFound}}
-        <h2>Nothing to See Here</h2>
+        <h2 class="newera-section-header">Nothing to See Here</h2>
         <p>Hmm... There doesn't seem to be anything that matches your search.</p>
     {{/if}}
 </div>
