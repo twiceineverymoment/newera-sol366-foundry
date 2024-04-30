@@ -1326,4 +1326,16 @@ _preparePotionData(system){
     }
   }
 
+  characterMeetsFeatPrerequisites(actor){
+    if (this.type == "Feat"){
+      if (actor.type == "Player Character"){
+        return true; //TODO Actually evaluate this
+      } else { 
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
 }

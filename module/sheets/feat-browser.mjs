@@ -43,13 +43,24 @@ export class FeatBrowser extends ActorSheet {
      */
     async _searchFeats(criteria, classData){
         let results = [];
-        const allFeats = structuredClone(await game.packs.get("newera-sol366.feats").getDocuments());
+        const allFeats = await game.packs.get("newera-sol366.feats").getDocuments();
         const cpa = this.actor.system.characterPoints.cpa;
         //Filter results
         for (const feat of allFeats){
             if (this._includeFeat(classData, feat) && criteria.showFeat(feat)){
-                feat.styles = feat.system.tiers.base.cost > cpa ? "cantAfford" : "";
                 feat.cost = feat.system.tiers.base.cost.toString().replace("-", "+");
+                feat.available = true;
+                feat.styles = "";
+                if (feat.system.tiers.base.cost > cpa){
+                    feat.available = false;
+                    feat.styles += " cantAfford";
+                    feat.tooltip = "You don't have enough character points available.";
+                }
+                if (!feat.characterMeetsFeatPrerequisites(this.actor)){
+                    feat.available = false;
+                    feat.styles += " missingPrerequisites";
+                    feat.tooltip = "You haven't fulfilled all the requirements for this feat.";
+                }
                 results.push(feat);
             }
         }
@@ -172,7 +183,7 @@ export class FeatBrowser extends ActorSheet {
             const dragData = {
                 transferAction: "addFeatFromBrowser",
                 actorId: this.actor.id,
-                featId: element.data("itemId")
+                casperObjectId: element.data("casperObjectId")
             };
             xfr.setData("text/plain", JSON.stringify(dragData));
         });

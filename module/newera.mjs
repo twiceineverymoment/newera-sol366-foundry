@@ -165,6 +165,22 @@ Handlebars.registerHelper('json', function(obj){
   return JSON.stringify(obj);
 });
 
+Handlebars.registerHelper('draggable', function(val){
+  if (val){
+    return `draggable="true"`;
+  } else {
+    return "";
+  }
+});
+
+Handlebars.registerHelper('htmlTooltip', function(msg, direction){
+  if (msg){
+    return `data-tooltip="${msg}" data-tooltip-direction="${direction.toUpperCase()}"`;
+  } else {
+    return "";
+  }
+});
+
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */

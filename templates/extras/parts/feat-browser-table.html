@@ -1,6 +1,6 @@
 <div class="browser-results-container">
     {{#each results as |result index|}}
-        <div class="browser-result {{result.styles}}" data-item-id="{{result.id}}" draggable="true">
+        <div class="browser-result {{result.styles}}" data-casper-object-id="{{result.system.casperObjectId}}" {{{draggable result.available}}} {{{htmlTooltip result.tooltip "up"}}}>
             <img src="{{result.img}}" />
             <h3 class="newera-section-header">{{result.name}}</h3>
             {{{result.system.tiers.base.description}}}
