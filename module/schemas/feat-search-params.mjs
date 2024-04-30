@@ -37,7 +37,7 @@ export class FeatSearchParams {
      * @param {NewEraItem} feat 
      */
     showFeat(feat){
-        if (this.cost.min > feat.system.tiers.base.cost || this.cost.max < feat.system.tiers.base.cost){ //TODO This will need to be looked at when multi-tiered feats are improved
+        if (this.cost.min > Math.abs(feat.system.tiers.base.cost) || this.cost.max < Math.abs(feat.system.tiers.base.cost)){ //TODO This will need to be looked at when multi-tiered feats are improved
             return false;
         }
         if (this.searchTerm){
@@ -49,8 +49,10 @@ export class FeatSearchParams {
         if (this.types.length > 0){
             if (["GF", "GU"].includes(feat.system.featType)){
                 return this.types.find(t => t.type == "general") ? true : false;
-            } else if (["BG", "CB"].includes(feat.system.featType)){
+            } else if (["BG"].includes(feat.system.featType)){
                 return this.types.find(t => t.type == "background") ? true : false;
+            } else if (["CB"].includes(feat.system.featType)){
+                return this.types.find(t => t.type == "career") ? true : false;
             } else if (["FL"].includes(feat.system.featType)){
                 return this.types.find(t => t.type == "flaw") ? true : false;
             } else if (["SF", "SU"].includes(feat.system.featType)){
