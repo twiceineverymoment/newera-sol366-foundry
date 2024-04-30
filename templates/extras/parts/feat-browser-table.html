@@ -1,0 +1,21 @@
+<div class="browser-results-container">
+    {{#each results as |result index|}}
+        <div class="browser-result {{result.styles}}" data-casper-object-id="{{result.system.casperObjectId}}" {{{draggable result.available}}} {{{htmlTooltip result.tooltip "up"}}}>
+            <img src="{{result.img}}" />
+            <h3 class="newera-section-header">{{result.name}}</h3>
+            {{{result.system.tiers.base.description}}}
+            <div class="feat-cost">
+                <i class="fa-solid fa-circle-star"></i> {{result.cost}}
+            </div>
+            {{#if result.system.prerequisites}}
+            <p class="feat-prerequisites">
+                Requires {{result.system.prerequisites}}
+            </p>
+            {{/if}}
+        </div>
+    {{/each}}
+    {{#if noResultsFound}}
+        <h2>Nothing to See Here</h2>
+        <p>Hmm... There doesn't seem to be anything that matches your search.</p>
+    {{/if}}
+</div>

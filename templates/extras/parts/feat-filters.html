@@ -1,0 +1,54 @@
+<input type="text" id="searchTerm" placeholder="Search..." class="sheet-input feat-filter-criteria" />
+<div class="newera-itemsheet-properties">
+    <h4>Cost</h4>
+    <input class="sheet-input half-width feat-filter-criteria" id="costMin" value="0" min="0" max="500" type="number" /> - 
+    <input class="sheet-input half-width feat-filter-criteria" id="costMax" value="500" min="0" max="500" type="number" />
+</div>
+<div class="newera-itemsheet-properties">
+    <h4>Sort By</h4>
+    <select id="sort" class="sheet-input feat-filter-criteria">
+        <option value="0">Rulebook Sort Order</option>
+        <option value="1">A to Z</option>
+        <option value="2">Cost Low to High</option>
+        <option value="3">Cost High to Low</option>
+    </select>  
+</div>
+<h3 class="newera-section-header">Filter Results</h3>
+<div class="feat-filter-option">
+    <input type="checkbox" class="feat-filter-criteria" data-filter-category="class" /> Class Feats
+    <div class="feat-filter-sub-options" data-filter-category="class">
+        {{#each classData.classes as |data index|}}
+            <input type="checkbox" class="feat-filter-criteria" data-filter-category="class" data-filter-sub-category="{{data}}" /> {{data}} <br />
+        {{/each}}
+    </div>
+</div>
+<div class="feat-filter-option">
+    <input type="checkbox" class="feat-filter-criteria" data-filter-category="archetype" /> Archetype Feats
+    <div class="feat-filter-sub-options" data-filter-category="archetype">
+        {{#each classData.archetypeNames as |data index|}}
+            <input type="checkbox" class="feat-filter-criteria" data-filter-category="archetype" data-filter-sub-category="{{data}}" /> {{data}} <br />
+        {{/each}}
+    </div>
+</div>
+<div class="feat-filter-option">
+    <input type="checkbox" class="feat-filter-criteria" data-filter-category="general" /> General Feats
+</div>
+<div class="feat-filter-option">
+    <input type="checkbox" class="feat-filter-criteria" data-filter-category="skill" /> Skill Feats
+    <div class="feat-filter-sub-options" data-filter-category="skill">
+        {{#each skillData as |data index|}}
+            <input type="checkbox" class="feat-filter-criteria" data-filter-category="skill" data-filter-sub-category="{{data}}" /> {{data}} <br />
+        {{/each}}
+    </div>
+</div>
+{{#if characterCreationMode}}
+<div class="feat-filter-option">
+    <input type="checkbox" class="feat-filter-criteria" data-filter-category="career" /> Career Backgrounds
+</div>
+<div class="feat-filter-option">
+    <input type="checkbox" class="feat-filter-criteria" data-filter-category="background" /> General Backgrounds
+</div>
+<div class="feat-filter-option">
+    <input type="checkbox" class="feat-filter-criteria" data-filter-category="flaw" /> Flaws
+</div>
+{{/if}}

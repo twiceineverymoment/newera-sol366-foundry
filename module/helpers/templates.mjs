@@ -52,6 +52,11 @@
     "systems/newera-sol366/templates/item/phone/phone-messages.html",
     "systems/newera-sol366/templates/item/phone/phone-browser.html",
     "systems/newera-sol366/templates/item/phone/phone-photos.html",
-    "systems/newera-sol366/templates/item/phone/phone-chat.html"
+    "systems/newera-sol366/templates/item/phone/phone-chat.html",
+
+    //Extras templates
+    "systems/newera-sol366/templates/extras/parts/feat-filters.html",
+    "systems/newera-sol366/templates/extras/parts/feat-browser-table.html"
+
   ]);
 };

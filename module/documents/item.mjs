@@ -255,11 +255,11 @@ _preparePotionData(system){
     } else if (system.featType == "FL"){
       this.img = "systems/newera-sol366/resources/achilles-heel.png";
     } else if (system.featType == "AF"){
-      this.img = "systems/newera-sol366/resources/star-medal.png";
+      this.img = "systems/newera-sol366/resources/star-medal.png"; //TODO More detailed archetype feat images
     } else if (system.featType == "CH"){
       this.img = `${NEWERA.images}/chant-${NEWERA.chantLevels[system.chantLevel]}.png`;
     } else {
-      this.img = `systems/newera-sol366/resources/${system.featSubType.toLowerCase()}.png`;
+      this.img = `systems/newera-sol366/resources/${system.featSubType.toLowerCase().replaceAll(" ", "-")}.png`;
     }
 
     //Derive total cost and display name for feat list
@@ -1326,4 +1326,103 @@ _preparePotionData(system){
     }
   }
 
+  characterMeetsFeatPrerequisites(actor){
+    if (this.type == "Feat"){
+      if (actor.type == "Player Character"){
+        if (!game.settings.get("newera-sol366", "prereqCheck")){
+          return true;
+        }
+        console.log(`[DEBUG] Evaluating prerequisites : ${this.name}`);
+        const conditionTokens = this._tokenizePrerequisites();
+        console.log(conditionTokens);
+        for (const ANDcondition of conditionTokens){
+          let subResult = false;
+          for (const ORcondition of ANDcondition){
+            if (ORcondition == {})
+            {
+              console.log(`[DEBUG] Empty condition object is always true`);
+              subResult = true;
+              break;
+            }
+            else if (ORcondition.check == "value")
+            {
+              console.log(`[DEBUG] Evaluate value condition req=${ORcondition.required} func={${ORcondition.value}} eval=${ORcondition.value(actor)}`);
+              if (parseInt(ORcondition.required) <= parseInt(ORcondition.value(actor))){
+                console.log(`[DEBUG] Value condition true`);
+                subResult = true;
+                break;
+              }
+              console.log(`[DEBUG] Value condition false`);
+            }
+            else if (ORcondition.check == "ability")
+            {
+              console.log(`[DEBUG] Evaluate feature condition name=${ORcondition.value}`);
+              if (actor.hasFeatOrFeature(ORcondition.value)){
+                console.log(`[DEBUG] Feature condition true`);
+                subResult = true;
+                break;
+              }
+              console.log(`[DEBUG] Feature condition false`);
+            }
+          }
+          if (!subResult) {
+            console.log(`[DEBUG] ${this.name} FALSE`);
+            return false; //If any one of the condition groups evaluates to false, stop here because nothing else matters
+          }
+          console.log(`[DEBUG] subResult is true for this group, continuing the check`);
+        }
+        console.log(`[DEBUG] ${this.name} TRUE`);
+        return true; //If we get here and we haven't returned false, then all condition groups evaluated to true
+      } else { 
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  _tokenizePrerequisites(){
+    if (this.type == "Feat"){
+      if (this.system.prerequisites){
+        let prerequisites = [];
+        const conditions = this.system.prerequisites.split(",");
+        for (const condition of conditions){ //First, break out the expression by commas/semicolons. This step is an AND (each part must evaluate to true)
+          let currentCondition = [];
+          const subConditions = condition.split(" or "); //Second, break out the individual conditions by the word "or" to determine if this is a multi-part condition
+          for (const subCondition of subConditions){
+            currentCondition.push(this._getPrerequisiteCondition(subCondition));
+          }
+          prerequisites.push(currentCondition);
+        }
+        return prerequisites;
+      } else {
+        return [];
+      }
+    } else {
+      return null;
+    }
+  }
+
+  _getPrerequisiteCondition(text){
+    const words = text.split(" ");
+    const number = words.find(w => !isNaN(w) && !isNaN(parseInt(w))); //isNaN returns false for empty strings. So we do this instead
+    if (number){ //Evaluate the condition as a minimum numeric stat value
+      const expr = NEWERA.prerequisiteActorStatTextMatching[Object.keys(NEWERA.prerequisiteActorStatTextMatching).find(word => text.toLowerCase().includes(word))];
+      if (!expr){
+        return {}; //Unable to identify an expression to evaluate the numeric check with. Return an empty object which indicates the condition should be ignored
+      }
+      return {
+        check: "value",
+        value: expr,
+        required: number
+      };
+    } else { //Evaluate the condition as requiring a specific feat or feature
+      return {
+        check: "ability",
+        value: text
+      };
+    }
+  }
+
 }
+

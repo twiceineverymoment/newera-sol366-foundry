@@ -3,6 +3,7 @@ import { NEWERA } from "../helpers/config.mjs";
 import { ClassInfo } from "../helpers/classFeatures.mjs";
 import { Actions } from "../helpers/macros/actions.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
+import { FeatBrowser } from "./feat-browser.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -595,10 +596,6 @@ export class NewEraActorSheet extends ActorSheet {
     });
 
     html.find('.spell-cast').click(ev => {
-      if (["Player Character", "Non-Player Character"].includes(this.actor.type) && this.actor.system.energy.value <= 0){
-        ui.notifications.error("Your energy is depleted. Drink a potion or rest to recover energy.");
-        return;
-      }
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const spell = this.actor.items.get(li.data("itemId"));
       Actions.castSpell(this.actor, spell);
@@ -830,7 +827,8 @@ export class NewEraActorSheet extends ActorSheet {
     /* EDIT CUTOFF - Everything below here is only run if the sheet is editable */
     if (!this.isEditable) return;
 
-    
+    //Browser open buttons
+    html.find(".feat-browser").click(() => new FeatBrowser(this.actor).render(true));
 
     //Favorite Spells management
     html.find(".spell-favorite-add").click(async ev => {
@@ -1066,6 +1064,9 @@ export class NewEraActorSheet extends ActorSheet {
     html.find("#increaseHpButton").click(() => {
       this.showHpIncreaseDialog();
     });
+
+    //Browser drop listener
+    html.on("drop", ev => this._onActorSheetDrop(ev));
 
     //BOILERPLATE STUFF BELOW
 
@@ -1579,6 +1580,34 @@ export class NewEraActorSheet extends ActorSheet {
           context.inspiration.points[i] = true;
         } else {
           context.inspiration.points[i] = false;
+        }
+      }
+    }
+  }
+
+  /**
+   * Handle dropping objects into the actor sheet from browser windows.
+   * If the dropped data doesn't seem to fit this action, do NOT preventDefault() so that Foundry's built-in drop listeners will work as intended
+   * @param {*} event 
+   */
+  async _onActorSheetDrop(event){
+    const xfr = event.originalEvent.dataTransfer;
+    const json = xfr.getData("text/plain") || null;
+    const dropData = JSON.parse(json);
+    if (dropData && dropData.transferAction){
+      event.preventDefault();
+      if (dropData.transferAction = "addFeatFromBrowser"){
+        const featFromCompendium = game.packs.get("newera-sol366.feats").find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+        if (featFromCompendium){
+          if (featFromCompendium.characterMeetsFeatPrerequisites(this.actor)){
+            const featData = structuredClone(featFromCompendium);
+            await Item.create(featData, { parent: this.actor });
+            ui.notifications.info(`You took ${featFromCompendium.name} for ${featFromCompendium.system.tiers.base.cost} character points.`);
+          } else {
+            ui.notifications.warn(`${this.actor} doesn't meet the prerequisites for ${featFromCompendium.name}.`);
+          }
+        } else {
+          ui.notifications.error("Couldn't find a feat in the CASPER database matching this item. Please report this to the developers.");
         }
       }
     }

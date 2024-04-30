@@ -609,8 +609,8 @@
 			"chantLevel": 0,
 			"bonuses": {},
 			"choices": {},
-			"prerequisites": {},
-			"conflicts": {},
+			"prerequisites": "",
+			"conflicts": "",
 			"tiers": {
 				"base": {
 					"cost": 0,

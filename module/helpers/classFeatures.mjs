@@ -1269,6 +1269,13 @@ ClassInfo.features = {
         },
         {
             level: 1,
+            archetype: "diver",
+            key: true,
+            name: "Diver",
+            description: "The difficulty of your Hold Breath action starts at 5 instead of 10."
+        },
+        {
+            level: 1,
             archetype: "spelunker",
             key: true,
             name: "Spelunker",

@@ -1,6 +1,8 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
 import { Witch } from "../helpers/classes/witch.mjs";
+import { CharacterEnergyPool } from "../schemas/char-energy-pool.mjs";
+import { ClassInfo } from "../helpers/classFeatures.mjs";
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -917,12 +919,19 @@ export class NewEraActor extends Actor {
     });
   }
 
-  async cast(spell, ampFactor = 1, attack = false, noSkillCheck = false, noEnergyUse = false){
+  async cast(spell, ampFactor = 1, attack = false, noSkillCheck = false, energyPool = undefined){
+      if (energyPool === undefined){
+        if (this.type == "Player Character" || this.type == "Non-Player Character"){
+          energyPool = new CharacterEnergyPool(this);
+        } else if (this.type == "Creature"){
+          energyPool = null;
+        }
+      }
       const level = spell.system.level * ampFactor;
       const spellSkill = spell.system.form;
       const spellSkillLevel = this.system.magic[spellSkill].level;
       const difficulty = noSkillCheck ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
-      const energyCost = noEnergyUse ? 0 : spell.system.energyCost * ampFactor;
+      const energyCost = spell.system.energyCost * ampFactor;
       let successful = false;
 
       if (!attack && difficulty == 0){
@@ -938,23 +947,8 @@ export class NewEraActor extends Actor {
         });
       } 
 
-      if (energyCost > this.system.energy.value){
-        await this.takeDamage(energyCost - this.system.energy.value, "exhaustion", false, false);
-        await this.update({
-          system: {
-            energy: {
-              value: 0
-            }
-          }
-        });
-      } else {
-        await this.update({
-          system: {
-            energy: {
-              value: this.system.energy.value - energyCost
-            }
-          }
-        })
+      if (energyPool){
+        await energyPool.use(energyCost, new CharacterEnergyPool(this));
       }
       return successful;
   }
@@ -1067,24 +1061,33 @@ export class NewEraActor extends Actor {
    * Returns an object with information about all the different energy pool options (i.e. Focus Energy, Dark Energy) available to this actor when casting spells.
    */
   get energyPools() {
+    if (!["Player Character", "Non-Player Character"].includes(this.type)){
+      return [];
+    }
     if (this.system.casterLevel > 0) {
-      let pools = [
-        {
-          id: `${this.id}::REG`,
-          name: "Energy Pool",
-          available: this.system.energy.value,
-          max: this.system.energy.max,
-          canOverdraw: false,
-          use: (actor, amt) => actor.useEnergy(amt)
-        }
-      ];
-      //pools.push(Researcher.getFocusEnergyPool(this));
+      let pools = [];
+      pools.push(new CharacterEnergyPool(this));
       pools = pools.concat(Witch.getDarkEnergyPools(this));
       return pools;
     } else {
       return [];
     }
     
+  }
+
+  hasFeatOrFeature(text){
+    if (this.items.find(i => i.type == "Feat" && i.name.toLowerCase() == text.toLowerCase())) {
+      return true;
+    }
+    Object.entries(this.system.classes).forEach((key, obj) => {
+      if (ClassInfo.features[key]){
+        const feature = ClassInfo.features[key].find(f => f.name.toLowerCase() == text.toLowerCase());
+        if (feature.level >= obj.level){
+          return true; 
+        }
+      }
+    });
+    return false;
   }
 
 }

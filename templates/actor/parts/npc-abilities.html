@@ -11,7 +11,7 @@
     <th>MODIFIER</th>
   </tr>
   {{#each system.abilities as |ability key|}}
-    <tr class="check-macro" draggable="true" data-macro-formula="d20+@abilities.{{key}}.mod" data-macro-name="{{ability.label}} Check" data-macro-label="{{ability.label}} Ability Check" data-macro-img="{{ability.image}}">
+    <tr>
       <td style="width: 35%">
         <span class="rollable" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}} Ability Check">
           <img class="skill-icon" src="{{ability.image}}" />
@@ -22,9 +22,9 @@
       <td style="width: 15%"><span class="sheet-output-minor">{{numberFormat ability.baseMod decimals=0 sign=true}}</span></td>
       <td style="width: 15%"><input type="text" class="sheet-input" name="system.abilities.{{key}}.bonus" value="{{ability.bonus}}" data-dtype="Number" /></td>
       <td style="width: 15%">
-        <span class="rollable sheet-output-major" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}} Ability Check">
+        <span class="rollable sheet-output-major check-macro" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}} Ability Check" draggable="true" data-macro-formula="d20+@abilities.{{key}}.mod" data-macro-name="{{ability.label}} Check" data-macro-label="{{ability.label}} Ability Check" data-macro-img="{{ability.image}}" data-tooltip="Click to roll. Drag to the hotbar to create a shortcut." data-tooltip-direction="LEFT">
           {{numberFormat ability.mod decimals=0 sign=true}}
-          <img class="die" src="systems/newera-sol366/resources/d20-orange.png" />
+          <img class="die" src="systems/newera-sol366/resources/d20-orange.png" draggable="true" />
         </span>
       </td>
     </tr>
@@ -40,7 +40,7 @@
     <th>MODIFIER</th>
   </tr>
   {{#each system.skills as |skill key|}}
-    <tr class="check-macro" draggable="true" data-macro-formula="d20+@skills.{{key}}.mod" data-macro-name="{{skill.label}} Check" data-macro-label="{{skill.label}} Skill Check" data-macro-img="{{skill.image}}">
+    <tr>
       <input type="hidden" name="system.skills.{{key}}.level" value="0" data-dtype="Number" /> <!--NPCs don't use the skill level system, just bonuses-->
       <td style="width: 30%">
         <span class="rollable" data-roll="d20+@skills.{{key}}.mod" data-label="{{skill.label}} {{skill.rollLabel}}">
@@ -51,9 +51,9 @@
       <td style="width: 15%"><span class="sheet-output-minor">{{numberFormat skill.parentMod decimals=0 sign=true}}</span></td>
       <td style="width: 15%"><input type="text" class="sheet-input" name="system.skills.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
       <td style="width: 15%">
-        <span class="rollable sheet-output-major" data-roll="d20+@skills.{{key}}.mod" data-label="{{skill.label}} {{skill.rollLabel}}">
+        <span class="rollable sheet-output-major check-macro" data-roll="d20+@skills.{{key}}.mod" data-label="{{skill.label}} {{skill.rollLabel}}" draggable="true" data-macro-formula="d20+@skills.{{key}}.mod" data-macro-name="{{skill.label}} Check" data-macro-label="{{skill.label}} Skill Check" data-macro-img="{{skill.image}}">
           {{numberFormat skill.mod decimals=0 sign=true}}
-          <img class="die" src="systems/newera-sol366/resources/d20-orange.png" />
+          <img class="die" src="systems/newera-sol366/resources/d20-orange.png" draggable="true" />
         </span>
       </td>
     </tr>
@@ -69,7 +69,7 @@
     <th>MODIFIER</th>
   </tr>
   {{#each system.specialties as |skill key|}}
-  <tr class="check-macro" draggable="true" data-macro-formula="d20+@specialties.{{key}}.mod" data-macro-name="{{skill.label}} Check" data-macro-label="{{skill.label}} Skill Check">
+  <tr>
     <td style="width: 30%"><input type="text" class="sheet-input" name="system.specialties.{{key}}.subject" value="{{skill.subject}}" /></td>
     <td style="width: 25%">
       <select name="system.specialties.{{key}}.defaultParent" class="sheet-input">
@@ -85,9 +85,9 @@
     </td>
     <td style="width: 15%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
     <td style="width: 15%">
-      <span class="rollable sheet-output-major" data-roll="d20+@specialties.{{key}}.mod" data-label="{{skill.label}} Skill Check">
+      <span class="rollable sheet-output-major check-macro" data-roll="d20+@specialties.{{key}}.mod" data-label="{{skill.label}} Skill Check" draggable="true" data-macro-formula="d20+@specialties.{{key}}.mod" data-macro-name="{{skill.label}} Check" data-macro-label="{{skill.label}} Skill Check">
         {{numberFormat skill.mod decimals=0 sign=true}}
-        <img class="die" src="systems/newera-sol366/resources/d20-orange.png" />
+        <img class="die" src="systems/newera-sol366/resources/d20-orange.png" draggable="true" />
       </span>
     </td>
   </tr>
