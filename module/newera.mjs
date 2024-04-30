@@ -312,6 +312,15 @@ function setupGameSettings(){
     type: Boolean,
     default: false
   });
+  game.settings.register("newera-sol366", "prereqCheck", {
+    name: "Enable Feat Prerequisite Checking (BETA)",
+    hint: "Check whether PC's meet the prerequisites for feats in the feat browser. This feature is experimental and may not work correctly for all feats. Disable to check character point cost only.",
+    scope: "world",
+    config: true,
+    requiresReload: false,
+    type: Boolean,
+    default: false,
+  });
   game.settings.register("newera-sol366", "world.time.hour", {
     name: "Game Time - Hour",
     hint: "The time of day in the game world, using the 24-hour system. This and below settings control the information displayed on the home screen of phone and computer items.",

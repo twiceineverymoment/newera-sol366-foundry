@@ -2,6 +2,7 @@ import { NEWERA } from "../helpers/config.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
 import { Witch } from "../helpers/classes/witch.mjs";
 import { CharacterEnergyPool } from "../schemas/char-energy-pool.mjs";
+import { ClassInfo } from "../helpers/classFeatures.mjs";
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -1072,6 +1073,21 @@ export class NewEraActor extends Actor {
       return [];
     }
     
+  }
+
+  hasFeatOrFeature(text){
+    if (this.items.find(i => i.type == "Feat" && i.name.toLowerCase() == text.toLowerCase())) {
+      return true;
+    }
+    Object.entries(this.system.classes).forEach((key, obj) => {
+      if (ClassInfo.features[key]){
+        const feature = ClassInfo.features[key].find(f => f.name.toLowerCase() == text.toLowerCase());
+        if (feature.level >= obj.level){
+          return true; 
+        }
+      }
+    });
+    return false;
   }
 
 }
