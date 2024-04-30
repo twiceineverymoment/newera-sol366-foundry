@@ -1346,11 +1346,19 @@ _preparePotionData(system){
             }
             else if (ORcondition.check == "value")
             {
-              //console.log(`[DEBUG] Evaluate value condition req=${ORcondition.required} func={${ORcondition.value}} eval=${ORcondition.value(actor)}`);
-              if (parseInt(ORcondition.required) <= parseInt(ORcondition.value(actor))){
-                //console.log(`[DEBUG] Value condition true`);
-                subResult = true;
-                break;
+              //console.log(`[DEBUG] Evaluate value condition req=${ORcondition.required} func={${ORcondition.value}} eval=${ORcondition.value(actor)} inverse=${ORcondition.inverse}`);
+              if (ORcondition.inverse){
+                if (parseInt(ORcondition.required) >= parseInt(ORcondition.value(actor))){
+                  //console.log(`[DEBUG] Value condition true`);
+                  subResult = true;
+                  break;
+                }
+              } else {
+                if (parseInt(ORcondition.required) <= parseInt(ORcondition.value(actor))){
+                  //console.log(`[DEBUG] Value condition true`);
+                  subResult = true;
+                  break;
+                }
               }
               //console.log(`[DEBUG] Value condition false`);
             }
@@ -1404,6 +1412,7 @@ _preparePotionData(system){
   }
 
   _getPrerequisiteCondition(text){
+    const inverseKeywords = ["below", "smaller", "lower", "less", "fewer"];
     const words = text.split(" ");
     const number = words.find(w => !isNaN(w) && !isNaN(parseInt(w))); //isNaN returns false for empty strings. So we do this instead
     if (number){ //Evaluate the condition as a minimum numeric stat value
@@ -1414,7 +1423,8 @@ _preparePotionData(system){
       return {
         check: "value",
         value: expr,
-        required: number
+        required: number,
+        inverse: words.filter(word => inverseKeywords.includes(word)).length > 0
       };
     } else { //Evaluate the condition as requiring a specific feat or feature
       return {
