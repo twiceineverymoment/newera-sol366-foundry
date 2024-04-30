@@ -1334,7 +1334,7 @@ _preparePotionData(system){
         }
         //console.log(`[DEBUG] Evaluating prerequisites : ${this.name}`);
         const conditionTokens = this._tokenizePrerequisites();
-        console.log(conditionTokens);
+        //console.log(conditionTokens);
         for (const ANDcondition of conditionTokens){
           let subResult = false;
           for (const ORcondition of ANDcondition){
