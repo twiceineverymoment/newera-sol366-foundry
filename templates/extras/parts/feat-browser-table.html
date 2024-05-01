@@ -11,7 +11,7 @@
                 {{else}}
                     <i class="fa-solid fa-circle-star"></i> {{result.cost}}
                     {{#if result.system.prerequisites}}
-                        <p class="feat-prerequisites">
+                        <p class="feat-prerequisites" {{#if result.doubleCheck}} data-tooltip="You may meet the requirements for this feat, but we can't be certain. Please check with your GM." data-tooltip-direction="UP" {{/if}}>
                             Requires {{result.system.prerequisites}}
                         </p>
                     {{/if}}

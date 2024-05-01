@@ -1338,7 +1338,7 @@ _preparePotionData(system){
         for (const ANDcondition of conditionTokens){
           let subResult = false;
           for (const ORcondition of ANDcondition){
-            if (ORcondition == {})
+            if (ORcondition == {} || ORcondition.check == "none")
             {
               //console.log(`[DEBUG] Empty condition object is always true`);
               subResult = true;
@@ -1391,6 +1391,12 @@ _preparePotionData(system){
 
   _tokenizePrerequisites(){
     if (this.type == "Feat"){
+      const customCondition = NEWERA.customFeatPrerequisites[this.system.casperObjectId];
+      if (customCondition){
+        return [
+          [ customCondition ]
+        ];
+      }
       if (this.system.prerequisites){
         let prerequisites = [];
         const conditions = this.system.prerequisites.split(",");

@@ -4067,6 +4067,7 @@ NEWERA.prerequisiteActorStatTextMatching = {
     "two-handed": actor => actor.system.skills["two-handed"].level,
     "overall level": actor => actor.system.level,
     "age": actor => actor.system.age,
+    "size": actor => actor.system.size.mod,
     "caster level": actor => actor.system.casterLevel,
     "delver level": actor => actor.system.classes.delver.level,
     "mercenary level": actor => actor.system.classes.mercenary.level,
@@ -4080,4 +4081,35 @@ NEWERA.prerequisiteActorStatTextMatching = {
     "artificer level": actor => actor.system.classes.artificer.level,
     "sage level": actor => actor.system.classes.sage.level,
     "witch level": actor => actor.system.classes.witch.level
+}
+
+NEWERA.customFeatPrerequisites = {
+    "148": {
+        check: "value",
+        value: actor => {
+            return Object.values(actor.system.skills).filter(skill => skill.level == 10).length + Object.values(actor.system.magic).filter(skill => skill.level == 10).length
+        },
+        required: 1,
+        doubleCheck: "You have a skill that has reached level 10. Confirm with your GM before taking this feat."
+    },
+    "85": {
+        check: "value",
+        value: actor => Object.entries(actor.system.knowledges).length,
+        required: 1,
+        doubleCheck: "Confirm your foreign language knowledge with the GM."
+    },
+    "262": {
+        check: "none",
+        doubleCheck: "Confirm your choice with the GM."
+    },
+    "367": {
+        check: "value",
+        value: actor => actor.items.filter(i => ["Spell", "Enchantment"].includes(i.type) && i.system.rarity == 0).length,
+        required: 3
+    },
+    "458": {
+        check: "value",
+        value: actor => Object.values(actor.system.specialties).filter(spec => spec.subject && spec.subject.toLowerCase() == "Animal Handling").length,
+        required: 1
+    }
 }

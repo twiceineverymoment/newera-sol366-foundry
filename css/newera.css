@@ -1224,6 +1224,9 @@ input.resource-dark-energy {
 .missingPrerequisites .feat-cost .feat-prerequisites {
   color: orangered !important;
 }
+.doubleCheck .feat-cost .feat-prerequisites {
+  color: yellow !important;
+}
 .alreadyOwned .feat-cost {
   color: limegreen !important;
 }

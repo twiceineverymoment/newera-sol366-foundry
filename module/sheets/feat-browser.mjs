@@ -66,6 +66,13 @@ export class FeatBrowser extends ActorSheet {
                         feat.available = false;
                         feat.styles += " missingPrerequisites";
                         feat.tooltip = "You haven't fulfilled all the requirements for this feat. (NOTE: This is experimental - if this looks to be incorrect, ask your GM to override it)";
+                    } else {
+                        const customCondition = NEWERA.customFeatPrerequisites[feat.system.casperObjectId];
+                        if (customCondition && customCondition.doubleCheck){
+                            feat.styles += " doubleCheck";
+                            feat.doubleCheck = true;
+                            feat.tooltip = customCondition.doubleCheck;
+                        }
                     }
                     if (feat.system.featType == "FL"){
                         if (this.actor.items.filter(f => f.type == "Feat" && f.system.featType == "FL").length >= 3){
