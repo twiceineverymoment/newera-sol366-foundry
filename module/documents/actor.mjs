@@ -1081,7 +1081,7 @@ export class NewEraActor extends Actor {
     }
     Object.entries(this.system.classes).forEach(([key, obj]) => {
       if (ClassInfo.features[key]){
-        const feature = ClassInfo.features[key].find(f => f.name.toLowerCase() == text.toLowerCase());
+        const feature = ClassInfo.features[key].find(f => f.name && f.name.toLowerCase() == text.toLowerCase());
         if (feature.level <= obj.level){
           return true; 
         }
