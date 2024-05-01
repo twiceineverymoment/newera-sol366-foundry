@@ -603,6 +603,7 @@
 			"featSubType": "",
 			"currentTier": 1,
 			"maximumTier": 1,
+			"casperSortOrder": 0,
 			"isUpgrade": false,
 			"isSingleTiered": false,
 			"totalCost": "",

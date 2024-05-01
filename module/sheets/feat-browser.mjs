@@ -51,15 +51,36 @@ export class FeatBrowser extends ActorSheet {
                 feat.cost = feat.system.tiers.base.cost.toString().replace("-", "+");
                 feat.available = true;
                 feat.styles = "";
-                if (feat.system.tiers.base.cost > cpa){
+                if (this.actor.items.find(i => i.type == "Feat" && i.system.casperObjectId == feat.system.casperObjectId)){
                     feat.available = false;
-                    feat.styles += " cantAfford";
-                    feat.tooltip = "You don't have enough character points available.";
-                }
-                if (!feat.characterMeetsFeatPrerequisites(this.actor)){
-                    feat.available = false;
-                    feat.styles += " missingPrerequisites";
-                    feat.tooltip = "You haven't fulfilled all the requirements for this feat.";
+                    feat.alreadyOwned = true;
+                    feat.styles = "alreadyOwned";
+                    feat.tooltip = "You already have this feat!";
+                } else {
+                    if (feat.system.tiers.base.cost > cpa){
+                        feat.available = false;
+                        feat.styles += " cantAfford";
+                        feat.tooltip = "You don't have enough character points available.";
+                    }
+                    if (!feat.characterMeetsFeatPrerequisites(this.actor)){
+                        feat.available = false;
+                        feat.styles += " missingPrerequisites";
+                        feat.tooltip = "You haven't fulfilled all the requirements for this feat. (NOTE: This is experimental - if this looks to be incorrect, ask your GM to override it)";
+                    } else {
+                        const customCondition = NEWERA.customFeatPrerequisites[feat.system.casperObjectId];
+                        if (customCondition && customCondition.doubleCheck){
+                            feat.styles += " doubleCheck";
+                            feat.doubleCheck = true;
+                            feat.tooltip = customCondition.doubleCheck;
+                        }
+                    }
+                    if (feat.system.featType == "FL"){
+                        if (this.actor.items.filter(f => f.type == "Feat" && f.system.featType == "FL").length >= 3){
+                            feat.available = false;
+                            feat.styles += " missingPrerequisites";
+                            feat.tooltip = "You can't have more than three flaws.";
+                        }
+                    }
                 }
                 results.push(feat);
             }
@@ -166,14 +187,17 @@ export class FeatBrowser extends ActorSheet {
 
     async _displayLoading(html){
         html.find("#results").hide();
-        html.find("#loading").show();
+        html.find("#browserLoading").show();
     }
 
     async _renderResults(html, feats){
 
-        const render = await renderTemplate("systems/newera-sol366/templates/extras/parts/feat-browser-table.html", { results: feats });
+        const render = await renderTemplate("systems/newera-sol366/templates/extras/parts/feat-browser-table.html", { 
+            results: feats,
+            noResultsFound: feats.length == 0
+        });
         html.find("#results").html(render);
-        html.find("#loading").hide();
+        html.find("#browserLoading").hide();
         html.find("#results").show();
 
         html.find(".browser-result").on("dragstart", ev => {
@@ -191,8 +215,8 @@ export class FeatBrowser extends ActorSheet {
 
     _sortFunctions = [
         function(a, b){
-            if (a.name < b.name) return -1;
-            else if (a.name > b.name) return 1;
+            if (a.system.casperSortOrder < b.system.casperSortOrder) return -1;
+            else if (a.system.casperSortOrder > b.system.casperSortOrder) return 1;
             else return 0;
         },
         function(a, b){

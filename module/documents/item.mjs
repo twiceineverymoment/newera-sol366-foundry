@@ -1332,46 +1332,54 @@ _preparePotionData(system){
         if (!game.settings.get("newera-sol366", "prereqCheck")){
           return true;
         }
-        console.log(`[DEBUG] Evaluating prerequisites : ${this.name}`);
+        //console.log(`[DEBUG] Evaluating prerequisites : ${this.name}`);
         const conditionTokens = this._tokenizePrerequisites();
-        console.log(conditionTokens);
+        //console.log(conditionTokens);
         for (const ANDcondition of conditionTokens){
           let subResult = false;
           for (const ORcondition of ANDcondition){
-            if (ORcondition == {})
+            if (ORcondition == {} || ORcondition.check == "none")
             {
-              console.log(`[DEBUG] Empty condition object is always true`);
+              //console.log(`[DEBUG] Empty condition object is always true`);
               subResult = true;
               break;
             }
             else if (ORcondition.check == "value")
             {
-              console.log(`[DEBUG] Evaluate value condition req=${ORcondition.required} func={${ORcondition.value}} eval=${ORcondition.value(actor)}`);
-              if (parseInt(ORcondition.required) <= parseInt(ORcondition.value(actor))){
-                console.log(`[DEBUG] Value condition true`);
-                subResult = true;
-                break;
+              //console.log(`[DEBUG] Evaluate value condition req=${ORcondition.required} func={${ORcondition.value}} eval=${ORcondition.value(actor)} inverse=${ORcondition.inverse}`);
+              if (ORcondition.inverse){
+                if (parseInt(ORcondition.required) >= parseInt(ORcondition.value(actor))){
+                  //console.log(`[DEBUG] Value condition true`);
+                  subResult = true;
+                  break;
+                }
+              } else {
+                if (parseInt(ORcondition.required) <= parseInt(ORcondition.value(actor))){
+                  //console.log(`[DEBUG] Value condition true`);
+                  subResult = true;
+                  break;
+                }
               }
-              console.log(`[DEBUG] Value condition false`);
+              //console.log(`[DEBUG] Value condition false`);
             }
             else if (ORcondition.check == "ability")
             {
-              console.log(`[DEBUG] Evaluate feature condition name=${ORcondition.value}`);
+              //console.log(`[DEBUG] Evaluate feature condition name=${ORcondition.value}`);
               if (actor.hasFeatOrFeature(ORcondition.value)){
-                console.log(`[DEBUG] Feature condition true`);
+                //console.log(`[DEBUG] Feature condition true`);
                 subResult = true;
                 break;
               }
-              console.log(`[DEBUG] Feature condition false`);
+              //console.log(`[DEBUG] Feature condition false`);
             }
           }
           if (!subResult) {
-            console.log(`[DEBUG] ${this.name} FALSE`);
+            //console.log(`[DEBUG] ${this.name} FALSE`);
             return false; //If any one of the condition groups evaluates to false, stop here because nothing else matters
           }
-          console.log(`[DEBUG] subResult is true for this group, continuing the check`);
+          //console.log(`[DEBUG] subResult is true for this group, continuing the check`);
         }
-        console.log(`[DEBUG] ${this.name} TRUE`);
+        //console.log(`[DEBUG] ${this.name} TRUE`);
         return true; //If we get here and we haven't returned false, then all condition groups evaluated to true
       } else { 
         return false;
@@ -1383,6 +1391,12 @@ _preparePotionData(system){
 
   _tokenizePrerequisites(){
     if (this.type == "Feat"){
+      const customCondition = NEWERA.customFeatPrerequisites[this.system.casperObjectId];
+      if (customCondition){
+        return [
+          [ customCondition ]
+        ];
+      }
       if (this.system.prerequisites){
         let prerequisites = [];
         const conditions = this.system.prerequisites.split(",");
@@ -1404,6 +1418,7 @@ _preparePotionData(system){
   }
 
   _getPrerequisiteCondition(text){
+    const inverseKeywords = ["below", "smaller", "lower", "less", "fewer"];
     const words = text.split(" ");
     const number = words.find(w => !isNaN(w) && !isNaN(parseInt(w))); //isNaN returns false for empty strings. So we do this instead
     if (number){ //Evaluate the condition as a minimum numeric stat value
@@ -1414,7 +1429,8 @@ _preparePotionData(system){
       return {
         check: "value",
         value: expr,
-        required: number
+        required: number,
+        inverse: words.filter(word => inverseKeywords.includes(word)).length > 0
       };
     } else { //Evaluate the condition as requiring a specific feat or feature
       return {

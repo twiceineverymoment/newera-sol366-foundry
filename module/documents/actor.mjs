@@ -1076,18 +1076,24 @@ export class NewEraActor extends Actor {
   }
 
   hasFeatOrFeature(text){
+    //console.log(`[DEBUG] Checking for feature: ${text}`);
     if (this.items.find(i => i.type == "Feat" && i.name.toLowerCase() == text.toLowerCase())) {
+      //console.log(`[DEBUG] Found in feats`);
       return true;
     }
-    Object.entries(this.system.classes).forEach((key, obj) => {
+    let foundFeature = false;
+    Object.entries(this.system.classes).forEach(([key, obj]) => {
       if (ClassInfo.features[key]){
-        const feature = ClassInfo.features[key].find(f => f.name.toLowerCase() == text.toLowerCase());
-        if (feature.level >= obj.level){
-          return true; 
+        const feature = ClassInfo.features[key].find(f => f.name && f.name.toLowerCase() == text.toLowerCase());
+        if (feature){
+          //console.log(`[DEBUG] found feature ${feature.name} in ${key}`);
+          if (parseInt(feature.level) <= parseInt(obj.level)){
+            foundFeature = true;
+          }
         }
       }
     });
-    return false;
+    return foundFeature;
   }
 
 }
