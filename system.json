@@ -125,7 +125,7 @@
   "primaryTokenAttribute": "hitPoints",
   "secondaryTokenAttribute": "energy",
   "url": "https://www.newerarpg.com/",
-  "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366.json",
-  "download": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366-0.14.12.zip",
+  "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366.json",
+  "download": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366-0.14.12.zip",
   "license": "LICENSE.txt"
 }
