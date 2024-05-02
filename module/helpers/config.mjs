@@ -4080,7 +4080,13 @@ NEWERA.prerequisiteActorStatTextMatching = {
     "scholar level": actor => actor.system.classes.scholar.level,
     "artificer level": actor => actor.system.classes.artificer.level,
     "sage level": actor => actor.system.classes.sage.level,
-    "witch level": actor => actor.system.classes.witch.level
+    "witch level": actor => actor.system.classes.witch.level,
+    "elemental": actor => actor.system.magic.elemental.level,
+    "divine": actor => actor.system.magic.divine.level,
+    "physical": actor => actor.system.magic.physical.level,
+    "psionic": actor => actor.system.magic.psionic.level,
+    "spectral": actor => actor.system.magic.spectral.level,
+    "temporal": actor => actor.system.magic.temporal.level,
 }
 
 NEWERA.customFeatPrerequisites = {
