@@ -595,7 +595,8 @@ _preparePotionData(system){
       }
     }
     if (this.type == "Melee Weapon"){
-      for (const attack of system.attacks){
+      const attacks = system.attacks || [];
+      for (const attack of attacks){
         actions.push({
           name: attack.name,
           images: {
