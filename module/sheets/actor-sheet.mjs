@@ -737,39 +737,6 @@ export class NewEraActorSheet extends ActorSheet {
         }
         html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
       });
-      html.find(".spell-amplify").change(ev => {
-        let ampFactor = $(ev.currentTarget).val();
-        if (ampFactor){
-          const li = $(ev.currentTarget).parents(".inventory-entry");
-          const spellId = li.data("itemId");
-          const dc = this._getSpellCastDifficulty(spellId, ampFactor);
-          if (this.actor.items.get(spellId).system.energyCost * ampFactor > this.actor.system.energy.value) {
-            html.find(`#spell-dc-${spellId}`).html(`Not enough energy!`);
-            html.find(`#spell-dc-${spellId}`).addClass("sheet-error");
-            html.find(`#spell-dc-${spellId}`).show();
-          } else if (dc){
-            html.find(`#spell-dc-${spellId}`).html(`Diff. <b>${dc}</b>`);
-            html.find(`#spell-cast-${spellId}`).attr("data-difficulty", dc);
-            html.find(`#spell-attack-${spellId}`).attr("data-difficulty", dc);
-            html.find(`#spell-dc-${spellId}`).removeClass("sheet-error");
-            html.find(`#spell-dc-${spellId}`).show();
-          } else {
-            html.find(`#spell-dc-${spellId}`).hide();
-          }
-          html.find(`#spell-attack-${spellId}`).attr("data-amp-factor", ampFactor);
-          html.find(`#spell-cast-${spellId}`).attr("data-amp-factor", ampFactor);
-          const spell = this.actor.items.get(spellId);
-          const ampLevel = spell.system.level * ampFactor;
-          const baseDamage = (spell.system.damage ? spell.system.damage.amount : "0") || "0";
-          html.find(`#spell-level-${spellId}`).html(ampLevel);
-          html.find(`#spell-damage-${spellId}`).attr("data-roll", Formatting.amplifyValue(baseDamage, ampFactor));
-          if (ampFactor == 1){
-            html.find(`#spell-level-${spellId}`).removeClass("ampText-hot");
-          } else {
-            html.find(`#spell-level-${spellId}`).addClass("ampText-hot");
-          }
-        }
-      });
     //Monster magic stuff
     } else if (this.actor.type == "Creature"){
       html.find(".inventory-entry-magic").each((i, val) => {
