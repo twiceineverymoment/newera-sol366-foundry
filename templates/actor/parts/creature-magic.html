@@ -10,10 +10,10 @@
     <td style="width: 40%" class="spell-cast">
       {{entry.name}} {{romanNumeral entry.system.ampFactor false}}
     </td>
-    <td style="width: 40%" class="spell-cast">
-      <div class="spell-action-icons" id="spell-action-icons-{{entry._id}}"></div>
+    <td style="width: 35%" class="spell-cast">
+      <div class="spell-action-icons {{entry._id}}"></div>
     </td>
-    <td style="width: 10%; text-align: right">
+    <td style="width: 15%; text-align: right">
       <a class="item-control spell-cast" data-tooltip="Cast Spell"><i class="fa-solid fa-hand-sparkles"></i></a>
       <a class="item-control item-edit" data-tooltip="Edit Spell"><i class="fas fa-edit"></i></a>
       <a class="item-control item-delete" data-tooltip="Delete Spell"><i class="fas fa-trash"></i></a>
