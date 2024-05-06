@@ -160,6 +160,14 @@ NEWERA.conditions = [
     }
 ]
 
+NEWERA.conditionChangedDescriptions = [
+    "broken!",
+    "badly damaged.",
+    "damaged.",
+    "becoming worn.",
+    "no longer in flawless condition."
+]
+
 NEWERA.qualityLabels = [
     {  
         "min": 10,

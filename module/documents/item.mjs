@@ -1441,5 +1441,36 @@ _preparePotionData(system){
     }
   }
 
+  /**
+   * Rolls against this item's durability. If the result is greater than the durability rating, reduces the item's condition by 1.
+   * Returns true if the item suffered damage from the event, or false otherwise.
+   */
+  async durabilityCheck(modifier = 0){
+    if (!this.system.durability){
+      console.warn("Tried to perform a durability check on an invalid item!");
+      return false;
+    }
+    const roll = new Roll(`d20+${modifier}`, this.getRollData()); 
+    await roll.evaluate();
+    roll.toMessage({
+      speaker: ChatMessage.getSpeaker({actor: this.parent}),
+      flavor: `Durability Check - ${this.name}`
+    });
+    if (roll.total > this.system.durability){
+      const newCondition = Math.max(0, this.system.condition - 1);
+      await this.update({
+        system: {
+          condition: newCondition
+        }
+      });
+      if (this.parent){
+        this.parent.actionMessage(this.parent.img, this.img, "{NAME}'s {0} is {1}", this.name, NEWERA.conditionChangedDescriptions[newCondition]);
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }
 
