@@ -444,7 +444,7 @@ _preparePotionData(system){
       system.weight = Math.max(shieldStats.weight + materialStats.adjustWeight, 0);
       system.durability = materialStats.durability + shieldStats.adjustDurability;
       system.value = NewEraItem.getEstimatedValue(shieldStats.value, materialStats.valueMultiplier, system.condition, system.quality);
-      system.armorRating = shieldStats.armorRating + materialStats.modifiers.armor;
+      system.shieldRating = shieldStats.shieldRating + materialStats.modifiers.shield;
 
     } else {
       system.standard = false;
