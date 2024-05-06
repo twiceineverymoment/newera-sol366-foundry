@@ -577,7 +577,7 @@ div#cp-wrapper {
   background: #b2f106 !important;
 }
 .focus-energy progress[value]::-webkit-progress-value {
-  background: #4810CF !important;
+  background: #8850FF !important;
 }
 div.cp {
   display: inline;
@@ -1160,6 +1160,9 @@ input.resource-dark-energy {
   color: rgb(155, 12, 76) !important;
   background-color: #111 !important;
 }
+input.resource-focus-energy {
+  color: #8850FF !important;
+}
 /* Feat Browser */
 .feat-browser-contents, div#results, .feat-browser-filters {
   height: 100%;
@@ -1244,4 +1247,9 @@ input.resource-dark-energy {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+p.storage-exceeded-msg {
+  background-color: lightcoral;
+  border: 1px solid darkred;
 }
