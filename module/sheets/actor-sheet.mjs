@@ -743,12 +743,13 @@ export class NewEraActorSheet extends ActorSheet {
         const spellId = $(val).data("itemId");
         const ampFactor = this.actor.items.get(spellId).system.ampFactor;
         const ampLevel = this.actor.items.get(spellId).system.level * ampFactor;
-          html.find(`#spell-level-${spellId}`).html(ampLevel);
-          if (ampFactor == 1){
-            html.find(`#spell-level-${spellId}`).removeClass("ampText-hot");
-          } else {
-            html.find(`#spell-level-${spellId}`).addClass("ampText-hot");
-          }
+        html.find(`#spell-level-${spellId}`).html(ampLevel);
+        html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
+        if (ampFactor == 1){
+          html.find(`#spell-level-${spellId}`).removeClass("ampText-hot");
+        } else {
+          html.find(`#spell-level-${spellId}`).addClass("ampText-hot");
+        }
       });
     }
 
