@@ -806,7 +806,7 @@ export class NewEraActorSheet extends ActorSheet {
       if ($(ev.currentTarget).data("actionCategory")){ //This check prevents the listener from triggering on click of the 'new custom action' button
         html.find("#selectedActionCategory").val($(ev.currentTarget).data("actionCategory"));
         html.find("#selectedActionIndex").val($(ev.currentTarget).data("actionId"));
-        html.find(".newera-actorsheet-right").scrollTop(0);
+        html.find(".newera-actorsheet-scroll").scrollTop(0);
         this.submit();
       }
     });
