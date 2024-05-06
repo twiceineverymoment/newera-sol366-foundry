@@ -459,7 +459,7 @@ export class NewEraActorSheet extends ActorSheet {
     /* Feat Actions from extended data class */
     if (actor.type == "Player Character"){
       for (const feat of this.actor.items.filter(i => i.type == "Feat")){
-        const extendedFeatData = FeatActions.find(f => f.casperObjectId = feat.system.casperObjectId);
+        const extendedFeatData = FeatActions.find(f => f.casperObjectId == feat.system.casperObjectId);
         if (extendedFeatData){
           for (const a of extendedFeatData.actions){
             NewEraActorSheet._prepareActionContextInfo(a, false);

@@ -1,4 +1,5 @@
 import { SpellFocus } from "../../sheets/spell-focus.mjs";
+import { NEWERA } from "../config.mjs";
 
 //Mapping of feat-specific actions to compendium IDs. Consider moving this to the database after setting up compendium-based actions
 //Some of this info may not be possible to represent in the DB due to the need to have callbacks present in action definitions. Might be able to do it using eval()
