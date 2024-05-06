@@ -244,7 +244,8 @@ export class Actions {
               </div>
               <div>
                 <input type="checkbox" id="injury" data-dtype="Boolean" /> Injury (reduces max. HP) <br />
-                <input type="checkbox" id="calledShot" data-dtype="Boolean" /> Called Shot
+                <input type="checkbox" id="calledShot" data-dtype="Boolean" /> Called Shot <br />
+                <input type="checkbox" id="hitShield" data-dtype="Boolean" /> Hit Shield
               </div>
               <div id="calledShotSelect" style="display: none">
                 <select name="calledShot" id="calledShotType">
@@ -375,12 +376,13 @@ export class Actions {
     static async _damage(actor, html, dmgType){
       const amount = html.find("#damageAmount").val();
       const isInjury = html.find("#injury").is(":checked");
+      const hitShield = html.find("#hitShield").is(":checked");
       //TODO called shots
       if (!amount){
         ui.notifications.error("You must enter an amount.");
         return;
       }
-      actor.takeDamage(amount, dmgType, false, isInjury);
+      actor.takeDamage(amount, dmgType, false, isInjury, hitShield);
       game.newera.clearLastDamage(); //Only does something if incremental damage mode is enabled
     }
 

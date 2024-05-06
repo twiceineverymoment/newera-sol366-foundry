@@ -552,7 +552,7 @@ export class NewEraActor extends Actor {
     });
   }
 
-  async takeDamage(amount, dmgType, calledShot, injury){
+  async takeDamage(amount, dmgType, calledShot, injury = false, hitShield = false){
     let dying = false;
     let ded = false;
     const system = this.system;
@@ -564,8 +564,16 @@ export class NewEraActor extends Actor {
     };
     const hasLifePoints = (this.type == "Player Character" || this.type == "Non-Player Character");
     const damageType = dmgType ? NEWERA.damageTypes[dmgType] : NEWERA.damageTypes.default;
-    const dmg = amount - (damageType.ignoreEquipped ? 0 : system.armor.equipped) - (damageType.ignoreNatural ? 0 : (hasLifePoints ? system.armor.natural : system.armor.bonus)); //Creatures don't have armor.natural - only bonus
-    console.log(`taking damage dmg=${dmg} amount=${amount} equipped=${system.armor.equipped} natural=${system.armor.natural}`);
+    const shield = this.findEquippedItem(i => i.type == "Shield");
+    if (hitShield && !shield){
+      ui.notifications.warn("You don't have a shield equipped!");
+    }
+    const dmg = amount
+      - (damageType.ignoreEquipped ? 0 : system.armor.equipped)
+      - (damageType.ignoreNatural ? 0 : (hasLifePoints ? system.armor.natural : system.armor.bonus))
+      - ((!damageType.ignoreEquipped && hitShield && shield) ? shield.system.shieldRating : 0)
+    ; //Creatures don't have armor.natural - only bonus
+    //console.log(`taking damage dmg=${dmg} amount=${amount} equipped=${system.armor.equipped} natural=${system.armor.natural}`);
     if (dmg > 0){
       this.actionMessage(this.img, `systems/newera-sol366/resources/dt_${damageType.label.toLowerCase()}.png`, "{NAME} takes {0} {1} damage!", dmg, damageType.label);
       if (injury && this.type != "Creature"){
@@ -614,6 +622,9 @@ export class NewEraActor extends Actor {
     }
     console.log(update);
     await this.update(update);
+    if (hitShield && shield && amount > shield.system.shieldRating){
+      shield.durabilityCheck();
+    }
     if (ded){
       const dying = this.effects.find(e => e.label == "Dying");
       if (dying) {
@@ -737,8 +748,12 @@ export class NewEraActor extends Actor {
 
     if (hours < 1) return;
 
-    const isLongRest = (hours >= 8 || extraRestful && hours >= 4);
-    const extraRestHours = (extraRestful ? hours - 4 : hours - 8); //The number of additional hours rested beyond the long-rest threshold
+    let hoursToLongRest = 8;
+    if (extraRestful) hoursToLongRest -= 4;
+    if (this.hasFeatOrFeature("Insomnia")) hoursToLongRest += 2;
+
+    const isLongRest = (hours >= hoursToLongRest);
+    const extraRestHours = (hours - hoursToLongRest); //The number of additional hours rested beyond the long-rest threshold
     const gained = {
       hitPoints: 0,
       energy: 0,
@@ -1094,6 +1109,10 @@ export class NewEraActor extends Actor {
       }
     });
     return foundFeature;
+  }
+
+  findEquippedItem(condition){
+
   }
 
 }
