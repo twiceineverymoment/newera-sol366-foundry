@@ -37,10 +37,20 @@ export class Artificer {
         }
     }
 
+    static getTotalStoredEnergy(actor){
+        if (!actor.system.focus) return undefined;
+        let total = 0;
+        structuredClone(actor.system.focus).forEach(obj => {
+            const spell = actor.items.get(obj.id);
+            total += spell.system.energyCost * obj.ampFactor;
+        });
+        return total;
+    }
+
     static async castAndStoreSpell(actor, spell, ampFactor){
-        const availableStorageEnergy = actor.system.focusEnergy.max - actor.system.focusEnergy.value;
-        if (spell.system.energyCost * ampFactor > availableStorageEnergy){
-            ui.notifications.warn("Your focus isn't strong enough to contain a spell that powerful! You'll need to increase your maximum Focus Energy.");
+        const availableEnergy = actor.system.focusEnergy.max - Artificer.getTotalStoredEnergy(actor);
+        if (spell.system.energyCost * ampFactor > availableEnergy){
+            ui.notifications.error(`${spell.name} wasn't stored because your focus doesn't have enough capacity.`);
             return;
         }
         if (await actor.cast(spell, ampFactor)){
@@ -59,10 +69,19 @@ export class Artificer {
     }
 
     static async onFocusSpellDrop(actor, spell){
-        
+        const availableEnergy = actor.system.focusEnergy.max - Artificer.getTotalStoredEnergy(actor);
+        if (availableEnergy <= 0){
+            ui.notifications.warn("Your focus is full! Use some of your stored spells to free up some space.");
+            return;
+        }
+        if (spell.system.energyCost > availableEnergy){
+            ui.notifications.warn(`This spell is too powerful! Your focus can only hold ${availableEnergy} more energy.`);
+            return;
+        }
         let dialog = new Dialog({
             title: `Store ${spell.name}`,
             content: `<form class="spell-dialog">
+              <p class="storage-exceeded-msg" style="display: none"></p>
               <table id="cast-table">
                 <tr>
                   <td style="width: 60%">Level</td>
@@ -95,6 +114,7 @@ export class Artificer {
             `,
             render: html => {
                 Actions._renderSpellDetails(html, spell, actor, 1, false);
+                Artificer._renderFocusStorageError(html, spell, actor, 1);
                 html.find("#amplify-up").click(() => {
                     const amp = (actor.type == "Creature" ? spell.system.ampFactor : parseInt(html.find("#ampFactor").html()));
                     html.find("#ampFactor").html(amp + 1);
@@ -102,12 +122,14 @@ export class Artificer {
                     ui.notifications.info("Nice");
                     }
                     Actions._renderSpellDetails(html, spell, actor, amp + 1, false);
+                    Artificer._renderFocusStorageError(html, spell, actor, amp + 1);
                 });
                 html.find("#amplify-down").click(() => {
                     const amp = parseInt(html.find("#ampFactor").html());
                     if (amp == 1) return;
                     html.find("#ampFactor").html(amp - 1);
                     Actions._renderSpellDetails(html, spell, actor, amp - 1, false);
+                    Artificer._renderFocusStorageError(html, spell, actor, amp - 1);
                 });
             },
             buttons: {
@@ -127,6 +149,19 @@ export class Artificer {
         }).render(true);
     }
 
-    
+    static _renderFocusStorageError(html, spell, actor, ampFactor){
+        const totalStoredEnergy = Artificer.getTotalStoredEnergy(actor);
+        const availableEnergy = actor.system.focusEnergy.max - totalStoredEnergy;
+        if (spell.system.energyCost * ampFactor > availableEnergy){
+            html.find(".storage-exceeded-msg").show();
+            if (spell.system.energyCost > availableEnergy) {
+                html.find(".storage-exceeded-msg").html(`This spell is too powerful for your focus! It can only hold ${actor.system.focusEnergy.max} energy worth of spells.`);
+            } else {
+                html.find(".storage-exceeded-msg").html(`This spell is too powerful! Your focus can only hold ${availableEnergy} more energy. Reduce the amplification level to store it.`);
+            }
+        } else {
+            html.find(".storage-exceeded-msg").hide();
+        }
+    }
 
 }
