@@ -38,12 +38,16 @@ export class SpellFocus extends ActorSheet {
             percentage: totalStoredEnergy / this.actor.system.focusEnergy.max
         };
 
+        context.maxEnergyIsDisabled = !!this.actor.system.tableValues.focusEnergy;
+
         console.log("FOCUS SHEET CONTEXT DUMP");
         console.log(context);
         return context;
     }
 
     activateListeners(html) {
+
+        super.activateListeners(html);
 
         html.find(".spell-action-icons").each((i, element) => {
             const spellId = $(element).data("spell");

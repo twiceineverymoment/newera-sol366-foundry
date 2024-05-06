@@ -1,8 +1,14 @@
 <form class="{{cssClass}} {{actor.type}} newera-spellprepsheet-body" autocomplete="off">
     <h3 class="table-header">Focus Energy</h3>
+    <div class="resource newera-actorsheet-resource">
+        <div class="resource-content">
+          <input type="text" id="resourceValFocusEnergy" class="resource-input resource-focus-energy" value="{{focusEnergy.value}}" data-dtype="Number" disabled />
+          <span> / </span>
+          <input type="text" id="resourceMaxFocusEnergy" class="resource-input resource-focus-energy" name="system.focusEnergy.max" value="{{focusEnergy.max}}" data-dtype="Number" {{disabled maxEnergyIsDisabled}} />
+        </div>
+    </div>
     <div id="focus-energy-wrapper" class="progress-wrapper focus-energy">
         <progress id="focus-energy-bar" value="{{focusEnergy.percentage}}" max="1">FOCUS ENERGY</progress>
-        <h3 id="focus-energy-status" style="display: inline" class="table-header">{{focusEnergy.value}} / {{focusEnergy.max}}</h3>
     </div>
     <button class="sheet-input" id="resetFocus">Clear Stored Spells</button>
     
