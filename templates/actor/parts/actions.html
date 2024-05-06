@@ -187,15 +187,15 @@
 <h3 class="table-header">Social Interaction</h3>
 <div class="action-category">
   {{#each actions.social as |action index|}}
-  <div class="action-icon action-macro-basic" data-action-category="social" data-action-id="{{index}}">
+  <div class="action-icon action-macro-basic" data-action-category="social" data-action-id="{{index}}" draggable="true">
     <div class="action-data">{{json action}}</div>
-    <div class="action-icon-container" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN">
-      <img class="action-image-base" src="{{action.images.base}}" />
+    <div class="action-icon-container" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+      <img class="action-image-base" src="{{action.images.base}}" draggable="true"/>
       {{#if action.images.left}}
-        <img class="action-image-overlay-left" src="{{action.images.left}}" />
+        <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true"/>
       {{/if}}
       {{#if action.images.right}}
-        <img class="action-image-overlay-right" src="{{action.images.right}}" />
+        <img class="action-image-overlay-right" src="{{action.images.right}}" draggable="true"/>
       {{/if}}
     </div>
   </div>
