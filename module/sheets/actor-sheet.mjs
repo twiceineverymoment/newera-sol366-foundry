@@ -4,6 +4,7 @@ import { ClassInfo } from "../helpers/classFeatures.mjs";
 import { Actions } from "../helpers/macros/actions.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
 import { FeatBrowser } from "./feat-browser.mjs";
+import { FeatActions } from "../helpers/macros/featActions.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -455,8 +456,19 @@ export class NewEraActorSheet extends ActorSheet {
       }
     }
 
-    /* Feat & Item Actions */
-
+    /* Feat Actions from extended data class */
+    if (actor.type == "Player Character"){
+      for (const feat of this.actor.items.filter(i => i.type == "Feat")){
+        const extendedFeatData = FeatActions.find(f => f.casperObjectId = feat.system.casperObjectId);
+        if (extendedFeatData){
+          for (const a of extendedFeatData.actions){
+            NewEraActorSheet._prepareActionContextInfo(a, false);
+            a.macroClass = "action-macro-basic";
+            actions.feats.push(a);
+          }
+        }
+      }
+    }
 
     if (actions.feats.length > 0){
       actions.show.feats = true;

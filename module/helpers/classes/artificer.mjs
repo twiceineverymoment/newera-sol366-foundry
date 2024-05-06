@@ -12,6 +12,11 @@ export class Artificer {
 
         console.log("[DEBUG] Initializing focus");
 
+        /* If the focusEnergy property already exists, this value is set to undefined so the .update() does not change the maximum. 
+        If it doesn't exist, set it to 0. This way non-Artificers initializing the sheet for the first time will get 0 max, or retain their previous value.
+        Artificers will still receive the value from their table. */
+        const flexibleMaxEnergy = actor.system.focusEnergy ? undefined : 0;
+
         if (reset || !actor.system.focus){
             await actor.update({
                 system: {
@@ -25,7 +30,7 @@ export class Artificer {
                 system: {
                     focusEnergy: {
                         min: 0,
-                        max: actor.system.tableValues.focusEnergy
+                        max: actor.system.tableValues.focusEnergy || flexibleMaxEnergy
                     }
                 }
             });
