@@ -41,6 +41,47 @@ export class Guardian {
         }
     }
 
+    static async secondWind(actor){
+        const resource = Object.entries(actor.system.additionalResources).find(r => r[1].name.toLowerCase().includes("second wind"));
+        if (resource && resource[1].value > 0){
+            let roll = new Roll(`${actor.system.tableValues.secondWind.roll}`, actor.getRollData());
+            await roll.evaluate();
+            roll.toMessage({
+                speaker: ChatMessage.getSpeaker({actor: actor}),
+                flavor: "Second Wind"
+            });
+            await actor.heal(roll.total, false, false);
+            let update = {
+                system: {
+                    additionalResources: {}
+                }
+            };
+            update.system.additionalResources[resource[0]] = {
+                value: resource[1].value - 1
+            };
+            await actor.update(update);
+            ui.notifications.info(`You recovered ${roll.total} HP with Second Wind. ${actor.name} has ${resource[1].value - 1} Second Wind dice left.`);
+        } else {
+            ui.notifications.error(`${actor.name} has expended all their Second Wind dice. Recover one die per hour of resting, or all your dice on a full rest.`);
+        }
+    }
+
+    static async rage(actor){
+        actor.actionMessage(actor.img, null, "{NAME} is becoming enraged!");
+            await actor.createEmbeddedDocuments('ActiveEffect', [{
+                label: "Rage",
+                icon: `${NEWERA.images}/fire-dash.png`,
+                description: `<p>Your physical abilities are enhanced at the cost of reduced presence of mind. Your Rage ends at the end of combat, or at the end of your turn if you did not attempt an attack during that turn.</p>
+                <ul>
+                    <li>Your Speed is increased by 4 feet.</li>
+                    <li>Strength-based attacks deal additional damage according to your Rage Damage Bonus in the Mercenary table.</li>
+                    <li>You're immune to being staggered.</li>
+                    <li>You have disadvantage on all mental ability-based checks.</li>
+                    <li>Your Passive Perception is reduced by 4.</li>
+                </ul>`
+            }]);
+    }
+
     static stanceEffects = {
         "Gorilla": {
             label: "Gorilla Stance",
@@ -87,7 +128,7 @@ export class Guardian {
         },
         "Swordsman": {
             label: "Swordsman Stance",
-            icon: `PLACEHOLDER`,
+            icon: `${NEWERA.images}/relic-blade.png`,
             description: `<p>
             Upon entering this stance, you conjure pure energy into the shape of a <a>Longsword</a> in your hand. This item functions identically to an Iron Longsword, but its attacks are magical.
             It can be used either one- or two-handed. Activating this stance requires least one free hand. While in this stance:
@@ -101,7 +142,7 @@ export class Guardian {
         },
         "Monk": {
             label: "Monk Stance",
-            icon: `PLACEHOLDER`,
+            icon: `${NEWERA.images}/kindle.png`,
             description: `<p>
             Most spells only require the use of one hand. This stance employs a special techique wherein by using both hands to cast spells, you're able to increase their power.
             You must have both hands free when activating this stance.
@@ -116,7 +157,7 @@ export class Guardian {
         },
         "Ward": {
             label: "Ward Stance",
-            icon: `PLACEHOLDER`,
+            icon: `${NEWERA.images}/rosa-shield.png`,
             activationCost: 6,
             description: `<p>
 			You channel your Qi into a powerful defensive posture. While in this stance:
@@ -126,6 +167,53 @@ export class Guardian {
 					<li style="color: salmon">You can't cast spells from any school of magic other than Abjuration.</li>
 				</ul>
 			</p>`
+        },
+        "Lemur": {
+            label: "Lemur Stance",
+            icon: `${NEWERA.images}/jump1.png`,
+            description: `<p>
+            You leap about with incredible agility. While in this stance:
+            <ul>
+                <li style="color: lightblue">Your Speed increases by 4.</li>
+                <li style="color: lightblue">You gain a +10 bonus to the Long Jump, High Jump, and Tumble actions.</li>
+                <li style="color: salmon">You can't equip items in either hand.</li>
+            </ul>
+        </p>`
+        },
+        "Coursing River": {
+            label: "Coursing River Stance",
+            icon: `${NEWERA.images}/splashy-stream.png`,
+            activationCost: 10,
+            description: `<p>
+            You make flowing movements that emanate your body's natural energy. While in this stance:
+            <ul>
+                <li style="color: lightblue">Your Speed increases by 2.</li>
+                <li style="color: lightblue">All Cryomancy spells cast by you and allies within 30 feet are amplified one level higher.</li>
+            </ul>
+        </p>`
+        },
+        "Great Typhoon": {
+            label: "Great Typhoon Stance",
+            icon: `${NEWERA.images}/tornado.png`,
+            activationCost: 10,
+            description: `<p>
+            You put the full force of your body's strength behind your spells. While in this stance:
+            <ul>
+                <li style="color: lightblue">All Evocation spells cast by you and allies within 30 feet are amplified one level higher.</li>
+            </ul>
+        </p>`
+        },
+        "Raging Fire": {
+            label: "Raging Fire Stance",
+            icon: `${NEWERA.images}/burning-forest.png`,
+            activationCost: 10,
+            description: `<p>
+            You let your emotions run wild for a brief moment. While in this stance:
+            <ul>
+                <li style="color: lightblue">You gain a +1 bonus to Strength ability checks.</li>
+                <li style="color: lightblue">All Pyromancy spells cast by you and allies within 30 feet are amplified one level higher.</li>
+            </ul>
+        </p>`
         }
     }
 }

@@ -369,6 +369,8 @@ export class HotbarActions {
             Mercenary.rage(actor);
         } else if (actor.getClassLevel("delver") >= 10){
             Delver.rage(actor);
+        } else if (actor.getClassLevel("guardian") >= 1 && actor.hasFeatOrFeature("Rage")){
+            Guardian.rage(actor);
         } else {
             ui.notifications.error("The selected token doesn't have that ability.");
         }
@@ -397,6 +399,20 @@ export class HotbarActions {
 
         if (actor.getClassLevel("guardian") >= 3){
             Guardian.endStance(actor);
+        } else {
+            ui.notifications.error("The selected token doesn't have that ability.");
+        }
+    }
+
+    static async secondWind(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+
+        if (actor.getClassLevel("guardian") >= 6){
+            Guardian.secondWind(actor);
         } else {
             ui.notifications.error("The selected token doesn't have that ability.");
         }
