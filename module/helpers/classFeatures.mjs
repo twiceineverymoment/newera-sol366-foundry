@@ -4008,7 +4008,7 @@ ClassInfo.features = {
                     field: "casterLevel.guardian",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 1, 1]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4]
                 }
             ]
         },
@@ -4066,14 +4066,14 @@ ClassInfo.features = {
                     skill: null,
                     specialties: [],
                     description: "You roll one or more of your Second Wind dice and recover hit points equal to the total result.",
+                    overrideMacroCommand: "game.newera.HotbarActions.secondWind()",
                     difficulty: null,
                     type: "E",
                     rolls: [
                       {
                         label: "Recover",
                         die: "mighty-force",
-                        difficulty: null,
-                        id: "secondWind"
+                        callback: actor => Guardian.secondWind(actor)
                       }
                     ]
                 }
@@ -4200,7 +4200,9 @@ ClassInfo.features = {
                     ability: null,
                     skill: null,
                     specialties: [],
-                    description: `<p>You conjure an Ethereal Longsword in your dominant hand upon activating this stance.</p>
+                    description: `
+                    <p><b>Activation Cost: 20 Energy</b></p>
+                    <p>You conjure an Ethereal Longsword in your dominant hand upon activating this stance.</p>
                     <ul>
                         <li style="color: lightblue">Your ethereal sword inflicts magical damage, allowing it to damage ghosts.</li>
                         <li style="color: lightblue">The sword doesn't suffer damage from Parrying attacks.</li>
@@ -4255,7 +4257,9 @@ ClassInfo.features = {
                     ability: null,
                     skill: null,
                     specialties: [],
-                    description: `<p>You channel your Qi into a powerful defensive posture. While in this stance:</p>
+                    description: `
+                    <p><b>Activation Cost: 6 Energy</b></p>
+                    <p>You channel your Qi into a powerful defensive posture. While in this stance:</p>
                     <ul>
 					<li style="color: lightblue">Spells you cast are amplified to the next-highest factor. The casting difficulty of the spell remains unchanged, but its energy cost reflects the amplified level.</li>
 					<li style="color: lightblue">You have advantage on saves against your concentration being broken.</li>
