@@ -1,4 +1,5 @@
 import { NewEraItem } from "../documents/item.mjs";
+import { NEWERA } from "../helpers/config.mjs";
 
 export class FeatSearchParams {
 
