@@ -66,7 +66,7 @@ export const FeatActions = [
             {
                 name: "Lemur Stance",
                 images: {
-                    base: `${NEWERA.images}/jump1.png`,
+                    base: `${NEWERA.images}/koala.png`,
                     left: `${NEWERA.images}/guardian.png`,
                     right: `${NEWERA.images}/ac_1frame.png`
                 },
