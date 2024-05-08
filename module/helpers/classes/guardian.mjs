@@ -42,6 +42,10 @@ export class Guardian {
     }
 
     static async secondWind(actor){
+        if (actor.system.hitPoints.value >= actor.system.hitPoints.max) {
+            ui.notifications.info(`${actor.name} is already at full health!`);
+            return;
+        }
         const resource = Object.entries(actor.system.additionalResources).find(r => r[1].name.toLowerCase().includes("second wind"));
         if (resource && resource[1].value > 0){
             let roll = new Roll(`${actor.system.tableValues.secondWind.roll}`, actor.getRollData());
