@@ -1111,8 +1111,39 @@ export class NewEraActor extends Actor {
     return foundFeature;
   }
 
-  findEquippedItem(condition){
-
+  /**
+   * Checks for and returns the first item found equipped in a primary equipment slot.
+   * Checks the right hand first, then the left hand, for a match to the supplied condition.
+   * If no item is found, returns null.
+   * @param {} condition An anonymous function to check items against, similar to Array.prototype.find()
+   * @param {*} allowWorn If true, checks worn items and accesory slots after the hands.
+   */
+  findEquippedItem(condition, allowWorn = false){
+    if (this.system.equipment){
+        if (this.system.equipment.rightHand){
+          const rightHandItem = this.items.get(this.system.equipment.rightHand);
+          if (rightHandItem && condition(rightHandItem)){
+            return rightHandItem;
+          }
+        }
+        if (this.system.equipment.leftHand){
+          const leftHandItem = this.items.get(this.system.equipment.leftHand);
+          if (leftHandItem && condition(leftHandItem)){
+            return leftHandItem;
+          }
+        }
+        if (allowWorn){
+          for (const [slot, itemId] of Object.entries(this.system.equipment)){
+            const item = this.items.get(itemId);
+            if (item && condition(item)){
+              return item;
+            }
+          }
+        }
+        return null;
+    } else {
+      return null;
+    }
   }
 
 }
