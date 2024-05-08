@@ -1458,14 +1458,14 @@ _preparePotionData(system){
     });
     if (roll.total > this.system.durability){
       const newCondition = Math.max(0, this.system.condition - 1);
+      if (this.parent){
+        this.parent.actionMessage(this.parent.img, this.img, "{NAME}'s {0} is {1}", this.name, NEWERA.conditionChangedDescriptions[newCondition]);
+      }
       await this.update({
         system: {
           condition: newCondition
         }
       });
-      if (this.parent){
-        this.parent.actionMessage(this.parent.img, this.img, "{NAME}'s {0} is {1}", this.name, NEWERA.conditionChangedDescriptions[newCondition]);
-      }
       return true;
     } else {
       return false;
