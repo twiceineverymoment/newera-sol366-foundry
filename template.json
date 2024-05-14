@@ -6,7 +6,8 @@
 				"hitPoints": {
 					"value": 10,
 					"min": 0,
-					"max": 10
+					"max": 10,
+					"temporary": 0
 				},
 				"lifePoints": {
 					"value": 10,
@@ -16,17 +17,8 @@
 				"energy": {
 					"value": 0,
 					"min": 0,
-					"max": 0
-				},
-				"temporaryHitPoints": {
-					"value": 0,
-					"min": 0,
-					"max": 0
-				},
-				"temporaryEnergy": {
-					"value": 0,
-					"min": 0,
-					"max": 0
+					"max": 0,
+					"temporary": 0
 				},
 				"additionalResources": {},
 				"abilities": {

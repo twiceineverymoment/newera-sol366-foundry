@@ -471,9 +471,22 @@ input.resource-input {
   border: none;
   outline: none;
   display: inline;
-  width: 60px;
+  width: 69px; /* Nice */
   font-size: 20px;
   background-color: #1D4159;
+}
+input.resource-input-small {
+  color: gray;
+  font-family: "Nanum Myeongjo", serif;
+  border: none;
+  outline: none;
+  display: inline;
+  width: 40px;
+  font-size: 20px;
+  background-color: #1D4159;
+}
+input.resource-temporary {
+  background-color: rgba(29, 65, 89, 0.5) !important;
 }
 div.resource-content span {
   display: inline;

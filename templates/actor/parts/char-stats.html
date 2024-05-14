@@ -7,9 +7,11 @@
         {{/if}}
       </div>        
       <div class="resource-content">
-        <input type="text" class="resource-input resource-hp" name="system.hitPoints.value" value="{{system.hitPoints.value}}" id="resourceValHp" data-dtype="Number"/>
+        <input type="text" class="resource-input-small resource-hp" name="system.hitPoints.value" value="{{system.hitPoints.value}}" id="resourceValHp" data-dtype="Number"/>
+        <span> + </span>
+        <input type="text" class="resource-input-small resource-hp resource-temporary" name="system.hitPoints.temporary" value="{{system.hitPoints.temporary}}" id="resourceTempHp" data-dtype="Number" data-tooltip="Temporary Hit Points" data-tooltip-direction="UP" />
         <span> / </span>
-        <input type="text" class="resource-input resource-hp" name="system.hitPoints.max" value="{{system.hitPoints.max}}" id="resourceMaxHp" data-dtype="Number"/>
+        <input type="text" class="resource-input-small resource-hp" name="system.hitPoints.max" value="{{system.hitPoints.max}}" id="resourceMaxHp" data-dtype="Number"/>
       </div>
     </div>
     <div class="resource newera-actorsheet-resource">
@@ -38,9 +40,11 @@
     <div class="resource newera-actorsheet-resource" id="energy-resource">
       <img class="resource-icon" src="systems/newera-sol366/resources/energy-hot.png" title="Energy" id="energy-icon" />
       <div class="resource-content">
-        <input type="text" class="resource-input resource-energy" name="system.energy.value" value="{{system.energy.value}}" id="resourceValEnergy" data-dtype="Number"/>
+        <input type="text" class="resource-input-small resource-energy" name="system.energy.value" value="{{system.energy.value}}" id="resourceValEnergy" data-dtype="Number"/>
+        <span> + </span>
+        <input type="text" class="resource-input-small resource-energy resource-temporary" name="system.energy.temporary" value="{{system.energy.temporary}}" id="resourceTempEnergy" data-dtype="Number" data-tooltip="Temporary Energy" data-tooltip-direction="UP" />
         <span> / </span>
-        <input type="text" class="resource-input resource-energy" name="system.energy.max" value="{{system.energy.max}}" data-dtype="Number"/>
+        <input type="text" class="resource-input-small resource-energy" name="system.energy.max" value="{{system.energy.max}}" data-dtype="Number"/>
       </div>
     </div>
   </div>
