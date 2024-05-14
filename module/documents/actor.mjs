@@ -39,9 +39,30 @@ export class NewEraActor extends Actor {
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
+    this._validateResources(system);
     this._prepareCharacterData(system);
     this._prepareNpcData(system);
     this._prepareCreatureData(system);
+  }
+
+  /*
+  * Verify and correct problems with resource bar values, i.e. if a resource's value is negative or higher than the maximum
+  */
+  _validateResources(system){
+    if (system.hitPoints){
+      if (system.hitPoints.value < 0) system.hitPoints.value = 0;
+      if (system.hitPoints.value > system.hitPoints.max) system.hitPoints.value = system.hitPoints.max;
+      if (system.hitPoints.temporary < 0) system.hitPoints.temporary = 0;
+    }
+    if (system.lifePoints){
+      if (system.lifePoints.value < 0) system.lifePoints.value = 0;
+      if (system.lifePoints.value > system.lifePoints.max) system.lifePoints.value = system.lifePoints.max;
+    }
+    if (system.energy){
+      if (system.energy.value < 0) system.energy.value = 0;
+      if (system.energy.value > system.energy.max) system.energy.value = system.energy.max;
+      if (system.energy.temporary < 0) system.energy.temporary = 0;
+    }
   }
 
   /**
@@ -368,10 +389,12 @@ export class NewEraActor extends Actor {
     system.turnLength.reactions.value = system.turnLength.reactions.base + system.turnLength.reactions.bonus;
 
     if (system.hitPoints.value > 0){
-      system.hpPercentage = system.hitPoints.value / system.hitPoints.max;
+      system.hpPercentage = (system.hitPoints.value + system.hitPoints.temporary) / system.hitPointTrueMax;
     } else {
       system.hpPercentage = system.lifePoints.value / system.lifePoints.max;
     }
+
+    system.energyPercentage = (system.energy.value + system.energy.temporary) / system.energy.max;
 
   }
 

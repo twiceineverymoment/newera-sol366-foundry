@@ -639,7 +639,7 @@ export class NewEraActorSheet extends ActorSheet {
         html.find('#energy-icon').attr('src', 'systems/newera-sol366/resources/energy.png');
         html.find('.resource-energy').addClass('resource-energy-no-magic');
         html.find('.resource-energy-no-magic').removeClass('resource-energy');
-      } else if (system.energy.value > system.energy.max) {
+      } else if (system.energyPercentage > 1.0) {
         html.find('#energy-icon').attr('src', 'systems/newera-sol366/resources/energy-over.png');
         html.find('#energy-wrapper').addClass('res-over');
       }
