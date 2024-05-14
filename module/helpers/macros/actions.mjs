@@ -418,7 +418,7 @@ export class Actions {
                 Amount: <input type="number" id="damageAmount" data-dtype="Number" />
               </div>
               <div>
-                <input type="checkbox" id="overheal" data-dtype="Boolean" /> Overheal (heals beyond max. HP) <br />
+                <input type="checkbox" id="overheal" data-dtype="Boolean" /> Overheal (excess becomes Temporary HP) <br />
                 <input type="checkbox" id="recovery" data-dtype="Boolean" /> Recover Injuries
               </div>
             </form>`,

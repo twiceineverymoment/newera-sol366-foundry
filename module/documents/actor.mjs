@@ -659,7 +659,7 @@ export class NewEraActor extends Actor {
     }
   }
 
-  async heal(amount, overheal, recovery = false){
+  async heal(amount, overheal = false, recovery = false){
     const system = this.system;
     const update = {
       system: {
@@ -679,17 +679,22 @@ export class NewEraActor extends Actor {
     //Continue with healing regular HP after updating max HP from injuries
     const prevHp = system.hitPoints.value;
     const newHp = system.hitPoints.value + parseInt(amount);
-    const max = system.hitPoints.max * (overheal ? 2 : 1);
+    const max = system.hitPoints.max;
     update.system.hitPoints.value = Math.min(newHp, max);
     const gained = update.system.hitPoints.value - prevHp;
-    if (newHp > max && system.lifePoints.value < system.lifePoints.max){
-      const potentialLpGain = newHp - max;
-      const newLp = Math.min(system.lifePoints.value + potentialLpGain, system.lifePoints.max);
-      const gainedLp = newLp - system.lifePoints.value;
-      update.system.lifePoints.value = newLp;
-      this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} {0} {1} hit points and {2} life points!", overheal ? "gains" : "recovers", gained, gainedLp);
+    if (newHp > max){
+      const excess = newHp - max;
+      if (overheal){
+        update.system.hitPoints.temporary = system.hitPoints.temporary + excess;
+        this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points and gains {1} temporary hit points.", gained, excess);
+      } else if (system.lifePoints.value < system.lifePoints.max){
+        const newLp = Math.min(system.lifePoints.value + excess, system.lifePoints.max);
+        const gainedLp = newLp - system.lifePoints.value;
+        update.system.lifePoints.value = newLp;
+        this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points and {1} life points.", gained, gainedLp);
+      }
     } else {
-      this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} {0} {1} hit points!", overheal ? "gains" : "recovers", gained);
+      this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points.", gained);
     }
     
     console.log(`HEAL A=${amount} PREV=${prevHp} NEW=${newHp} MAX=${max} G=${gained}`);
