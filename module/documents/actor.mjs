@@ -934,6 +934,25 @@ export class NewEraActor extends Actor {
     });
   }
 
+  async sustain(energyPool = undefined){
+    if (energyPool === undefined){
+      if (this.type == "Player Character" || this.type == "Non-Player Character"){
+        energyPool = new CharacterEnergyPool(this);
+      } else if (this.type == "Creature"){
+        energyPool = null;
+      }
+    }
+
+    const spell = this.items.get(this.system.sustaining.id);
+    if (!spell){
+      return;
+    }
+
+    if (energyPool){
+      await energyPool.use()
+    }
+  }
+
   async cast(spell, ampFactor = 1, attack = false, noSkillCheck = false, energyPool = undefined){
       if (energyPool === undefined){
         if (this.type == "Player Character" || this.type == "Non-Player Character"){
@@ -962,11 +981,51 @@ export class NewEraActor extends Actor {
         });
       } 
 
+
+      if (spell.system.castType == "F" && successful){
+        let existingSustain = this.effects.find(e => e.label.includes("Sustaining"));
+        if (existingSustain){
+          existingSustain.delete();
+        }
+        await this.update({
+          system: {
+            sustaining: {
+              id: spell._id,
+              ampFactor: ampFactor
+            }
+          }
+        });
+        const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
+        await sustainEffect.delete();
+        await this.createEmbeddedDocuments("ActiveEffect", [{
+          label: `Sustaining: ${spell.name}${ampfactor > 1 && NEWERA.romanNumerals[ampFactor]}`,
+          icon: spell.img,
+          description: `<p>You're sustaining a spell.</p>
+          ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}
+          <p>You can use any number of frames on your turn to sustain the spell. You can continue sustaining it as long as you spend at least one frame doing so during your turn.
+          You stop sustaining the spell if your concentration is broken.</p>`,
+          origin: spell._id
+        }]);
+      }
+
       if (energyPool){
         await energyPool.use(energyCost, new CharacterEnergyPool(this));
       }
       return successful;
   }
+
+    async stopSustaining(){
+        const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
+        await sustainEffect.delete();
+        await this.update({
+          system: {
+            sustaining: {
+              id: "",
+              ampFactor: 1
+            }
+          }
+        })
+    }
 
     /* Determines whether an action should be shown based on the action's type and the location within the actor's equipment */
     isItemActionAvailable(action, item){

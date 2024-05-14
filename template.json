@@ -292,6 +292,10 @@
 				"casterLevel": 0,
 				"spellcraft": 0,
 				"favoriteSpells": [],
+				"sustaining": {
+					"id": "",
+					"ampFactor": 1
+				},
 				"magic": {
 					"elemental": {
 						"level": 0,
