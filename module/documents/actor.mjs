@@ -248,6 +248,7 @@ export class NewEraActor extends Actor {
     if (this.type !== 'Creature') return;
     this._prepareAbilityScoreModifiers(system);
     system.rollableHP = (system.hitPoints.max == 0 && system.initialHitPoints.dieCount > 0);
+    system.hitPoints.total = system.hitPoints.value;
 
     system.saves.endurance.mod = system.abilities.strength.mod + system.abilities.constitution.mod + system.saves.endurance.bonus;
     system.saves.reflex.mod = system.abilities.dexterity.mod + system.abilities.wisdom.mod + system.saves.reflex.bonus;
@@ -388,12 +389,14 @@ export class NewEraActor extends Actor {
     system.turnLength.actions.value = system.turnLength.actions.base + system.turnLength.actions.bonus;
     system.turnLength.reactions.value = system.turnLength.reactions.base + system.turnLength.reactions.bonus;
 
+    system.hitPoints.total = system.hitPoints.value + system.hitPoints.temporary;
     if (system.hitPoints.value > 0){
       system.hpPercentage = (system.hitPoints.value + system.hitPoints.temporary) / system.hitPointTrueMax;
     } else {
       system.hpPercentage = system.lifePoints.value / system.lifePoints.max;
     }
 
+    system.energy.total = system.energy.value + system.energy.temporary;
     system.energyPercentage = (system.energy.value + system.energy.temporary) / system.energy.max;
 
   }
@@ -610,22 +613,29 @@ export class NewEraActor extends Actor {
         }
       }
     if (hasLifePoints){
-      if (system.hitPoints.value > 0){ 
-        if (system.hitPoints.value <= dmg){
-          const prevHp = system.hitPoints.value;
-          update.system.hitPoints.value = 0;
-          update.system.lifePoints.value = system.lifePoints.value - (dmg - prevHp);
-          this.actionMessage(this.img, `${NEWERA.images}/se_unconscious.png`, "{NAME} is down!");
-          dying = true;
+      let dmgAfterTemporary = dmg;
+      if (system.hitPoints.temporary > 0){
+        dmgAfterTemporary -= system.hitPoints.temporary;
+        update.system.hitPoints.temporary = Math.max(system.hitPoints.temporary - dmg, 0)
+      }
+      if (dmgAfterTemporary > 0){
+        if (system.hitPoints.value > 0){ 
+          if (system.hitPoints.value <= dmgAfterTemporary){
+            const prevHp = system.hitPoints.value;
+            update.system.hitPoints.value = 0;
+            update.system.lifePoints.value = system.lifePoints.value - (dmgAfterTemporary - prevHp);
+            this.actionMessage(this.img, `${NEWERA.images}/se_unconscious.png`, "{NAME} is down!");
+            dying = true;
+          } else {
+            update.system.hitPoints.value = system.hitPoints.value - dmgAfterTemporary;
+          }
         } else {
-          update.system.hitPoints.value = system.hitPoints.value - dmg;
-        }
-      } else {
-        update.system.lifePoints.value = system.lifePoints.value - dmg;
-        if (update.system.lifePoints.value <= 0){
-          update.system.lifePoints.value = 0;
-          this.actionMessage(`${NEWERA.images}/tombstone.png`, this.img, "{NAME} is dead!");
-          ded = true;
+          update.system.lifePoints.value = system.lifePoints.value - dmgAfterTemporary;
+          if (update.system.lifePoints.value <= 0){
+            update.system.lifePoints.value = 0;
+            this.actionMessage(`${NEWERA.images}/tombstone.png`, this.img, "{NAME} is dead!");
+            ded = true;
+          }
         }
       }
     } else {
@@ -692,6 +702,10 @@ export class NewEraActor extends Actor {
         const gainedLp = newLp - system.lifePoints.value;
         update.system.lifePoints.value = newLp;
         this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points and {1} life points.", gained, gainedLp);
+      } else if (gained > 0) {
+        this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points.", gained);
+      } else {
+        //Character didn't actually gain any HP.
       }
     } else {
       this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points.", gained);

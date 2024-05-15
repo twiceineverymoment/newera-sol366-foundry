@@ -392,7 +392,7 @@ export class NewEraActorSheet extends ActorSheet {
       }
     };
 
-    if (system.hitPoints.value > 0 || actor.type == "Creature"){ //If a PC or NPC's HP is 0, remove all actions and show only the death save
+    if (system.hitPoints.total > 0 || actor.type == "Creature"){ //If a PC or NPC's HP is 0, remove all actions and show only the death save
       /* Actions from inventory */
       for (const item of this.actor.items.contents){
         for (const itemAction of item.getActions()){
@@ -644,7 +644,7 @@ export class NewEraActorSheet extends ActorSheet {
         html.find('#energy-wrapper').addClass('res-over');
       }
   
-      if (system.hitPoints.value == 0) {
+      if (system.hitPoints.total == 0) {
         html.find('#health-wrapper').addClass('hp-on-lifepoints');
         html.find("#hp-icon").attr('src', `${NEWERA.images}/hp.png`);
         html.find("#lp-icon").attr('src', `${NEWERA.images}/lp-hot.png`);
