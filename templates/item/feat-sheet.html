@@ -52,12 +52,12 @@
     
     {{else}}
     <div class="newera-itemsheet-properties"> 
-      <div class="resource newera-itemsheet-property-33">
+      <div class="resource newera-itemsheet-property-50">
         <h4>Current Tier</h4>
           <input type="text" name="system.currentTier" class="sheet-input" value="{{system.currentTier}}" data-dtype="Number" />
           <!--this is a text field because upgrade feats require the ability to take more than 5x-->
       </div>
-      <div class="resource newera-itemsheet-property-33">
+      <div class="resource newera-itemsheet-property-50">
         <h4># of Tiers</h4>
         <select name="system.maximumTier" class="sheet-input" id="feat-max-{{item.id}}" data-dtype="Number">
           <option value="1">1</option>
@@ -68,26 +68,34 @@
           <option value="-1">Unlimited</option>
         </select>
       </div>
+    </div>
+
+    {{#each system.tiers as |tierData key|}}
+    <div class="newera-itemsheet-properties">
+      <div class="newera-itemsheet-property-66">
+        {{tierName key system.isSingleTiered}}
+      </div>
       <div class="resource newera-itemsheet-property-33">
         <h4>Cost</h4>
-        <input type="text" class="sheet-input" name="system.tiers.base.cost" value="{{system.tiers.base.cost}}" data-dtype="Number" />
+        <input type="text" class="sheet-input" name="system.tiers.{{key}}.cost" value="{{tierData.cost}}" data-dtype="Number" />
       </div>
     </div>
     <div class="newera-itemsheet-properties">
       <div class="resource newera-itemsheet-property-50">
         <h4>Prerequisites</h4>
-        <input type="text" class="sheet-input" name="system.prerequisites" value="{{system.prerequisites}}" />
+        <input type="text" class="sheet-input" name="system.tiers.{{key}}.prerequisites" value="{{tierData.prerequisites}}" />
       </div>
       <div class="resource newera-itemsheet-property-50">
         <h4>Conflicts</h4>
-        <input type="text" class="sheet-input" name="system.conflicts" value="{{system.conflicts}}" />
+        <input type="text" class="sheet-input" name="system.tiers.{{key}}.conflicts" value="{{tierData.conflicts}}" />
       </div>
     </div>
     <span style="display: block">&nbsp;</span>
 
     <div class="newera-itemsheet-editor-container">
-      {{editor system.tiers.base.description target="system.tiers.base.description" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor tierData.description target=(descriptionTarget key) rollData=rollData button=true owner=owner editable=editable}}
     </div>
+    {{/each}}
 
     <!--TODO Enter multi-tiered feats in a better way-->
     {{/if}}

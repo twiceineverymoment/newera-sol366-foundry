@@ -606,12 +606,12 @@
 			"chantLevel": 0,
 			"bonuses": {},
 			"choices": {},
-			"prerequisites": "",
-			"conflicts": "",
 			"tiers": {
 				"base": {
 					"cost": 0,
-					"description": ""
+					"description": "",
+					"prerequisites": "",
+					"conflicts": ""
 				}
 			}
 		},
