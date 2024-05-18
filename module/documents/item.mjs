@@ -226,20 +226,22 @@ _preparePotionData(system){
     if (system.currentTier < 1) system.currentTier = 1;
     if (system.currentTier > system.maximumTier && !system.isUpgrade) system.currentTier = system.maximumTier;
 
-    let tierCount = (system.isUpgrade) ? 1 : system.maximumTier;
-    if (system.tiers.length > tierCount){ //Trim the tiers object based on the specified number
-      for([k, v] of Object.entries(system.tiers)){
-        if (parseInt(k) > tierCount && k != "base"){
-          delete system.tiers[k];
-        }
-      }
-    }
-    else if (system.tiers.length < tierCount){ //Add blank entries to the tiers object if count is larger
-      for(let i=2; i<=tierCount; i++){
-        if (typeof system.tiers[i.toString()] == "undefined"){
-          system.tiers[i.toString()] = {
-            "cost": 0,
-            "description": ""
+    this._migrateFeatTiers(system);
+
+    //The "base" object contains tier 1 data. For single-tier feats and upgrades, empty the tiers object entirely
+    if (system.maximumTier < 2){
+      system.tiers = {};
+    } else {
+      //When the maximum tier is increased, add empty tiers up to the new value. When decreased, delete objects with keys higher than the maximum
+      for (let i = 2; i <= 5; i++){
+        if (system.maximumTier < i && system.tiers[i]){
+          delete system.tiers[i];
+        } else if (system.maximumTier >= i && !system.tiers[i]){
+          system.tiers[i] = {
+            cost: 0,
+            description: "",
+            prerequisites: "",
+            conflicts: ""
           }
         }
       }
@@ -282,6 +284,21 @@ _preparePotionData(system){
       }
       system.totalCost = total.toString();
       system.displayName = this.name + " " + NEWERA.romanNumerals[system.currentTier];
+    }
+  }
+
+  //Migration function for old (pre-0.15) feats without proper multi-tiering.
+  _migrateFeatTiers(){
+    if (this.system.tiers.base){
+      const featFromCompendium = game.packs.get("newera-sol366.feats").find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+      if (featFromCompendium){
+        this.system = featFromCompendium.system;
+        console.log(`Upgrading Feat with id ${this.id} (${this.name}) to v0.15 (COID=${system.casperObjectId})`);
+      } else {
+        this.system.base = this.system.tiers.base;
+        delete this.system.tiers.base;
+        console.log(`No compendium match for Feat with id ${this.id} (${this.name}), migrating tiered data model`);
+      }
     }
   }
 

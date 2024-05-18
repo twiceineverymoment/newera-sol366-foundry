@@ -181,14 +181,6 @@ Handlebars.registerHelper('htmlTooltip', function(msg, direction){
   }
 });
 
-Handlebars.registerHelper('tierName', function(key, isSingleTiered){
-  if (isSingleTiered){
-    return `<h1>Feat</h1>`
-  } else {
-    return `<h1>Tier ${key == "base" ? 1 : key}</h1>`;
-  }
-});
-
 Handlebars.registerHelper('descriptionTarget', function(key){
   return `system.tiers.${key}.description`;
 });
