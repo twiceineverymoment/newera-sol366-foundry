@@ -48,7 +48,7 @@ export class FeatBrowser extends ActorSheet {
         //Filter results
         for (const feat of allFeats){
             if (this._includeFeat(classData, feat) && criteria.showFeat(feat)){
-                feat.cost = feat.system.tiers.base.cost.toString().replace("-", "+");
+                feat.cost = feat.system.base.cost.toString().replace("-", "+");
                 feat.available = true;
                 feat.styles = "";
                 if (this.actor.items.find(i => i.type == "Feat" && i.system.casperObjectId == feat.system.casperObjectId)){
@@ -57,7 +57,7 @@ export class FeatBrowser extends ActorSheet {
                     feat.styles = "alreadyOwned";
                     feat.tooltip = "You already have this feat!";
                 } else {
-                    if (feat.system.tiers.base.cost > cpa){
+                    if (feat.system.base.cost > cpa){
                         feat.available = false;
                         feat.styles += " cantAfford";
                         feat.tooltip = "You don't have enough character points available.";
@@ -225,13 +225,13 @@ export class FeatBrowser extends ActorSheet {
             else return 0;
         },
         function(a, b){
-            if (a.system.tiers.base.cost < b.system.tiers.base.cost) return -1;
-            else if (a.system.tiers.base.cost > b.system.tiers.base.cost) return 1;
+            if (a.system.base.cost < b.system.base.cost) return -1;
+            else if (a.system.base.cost > b.system.base.cost) return 1;
             else return 0;
         },
         function(a, b){
-            if (a.system.tiers.base.cost > b.system.tiers.base.cost) return -1;
-            else if (a.system.tiers.base.cost < b.system.tiers.base.cost) return 1;
+            if (a.system.base.cost > b.system.base.cost) return -1;
+            else if (a.system.base.cost < b.system.base.cost) return 1;
             else return 0;
         }
     ]

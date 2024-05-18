@@ -160,16 +160,7 @@ export class NewEraActor extends Actor {
     }
     for (const item of items){
       if (item.type == 'Feat'){
-        if (item.system.maximumTier == 1){
-          cpa -= item.system.tiers.base.cost;
-
-        }
-        else if (item.system.maximumTier == -1){
-          cpa -= (item.system.tiers.base.cost * item.system.currentTier);
-        }
-        else {
-          cpa -= item.system.tiers.base.cost; //TODO Update this once we figure out handling of multiple tiers in data model
-        }
+        cpa -= item.system.totalCost;
       }
     }
     return cpa;

@@ -1582,7 +1582,7 @@ export class NewEraActorSheet extends ActorSheet {
           if (featFromCompendium.characterMeetsFeatPrerequisites(this.actor)){
             const featData = structuredClone(featFromCompendium);
             await Item.create(featData, { parent: this.actor });
-            ui.notifications.info(`You took ${featFromCompendium.name} for ${featFromCompendium.system.tiers.base.cost} character points.`);
+            ui.notifications.info(`You took ${featFromCompendium.name} for ${featFromCompendium.system.base.cost} character points.`);
           } else {
             ui.notifications.warn(`${this.actor} doesn't meet the prerequisites for ${featFromCompendium.name}.`);
           }

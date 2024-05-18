@@ -218,7 +218,7 @@ _preparePotionData(system){
 
     const subTypedCategories = ["SF", "CF", "AF"];
     system.hasSubType = subTypedCategories.includes(system.featType);
-    system.isSingleTiered = (system.maximumTier < 2) ? true : false;
+    system.isSingleTiered = (system.maximumTier < 2) ? true : false; //This is true for feats with 1 tier and unlimited tiers (upgrades)
     system.isUpgrade = (system.maximumTier == -1) ? true : false;
     system.enableTierSelect = (system.isSingleTiered || system.isUpgrade);
     system.isChant = (system.featType == "CH") ? true : false;
@@ -229,7 +229,7 @@ _preparePotionData(system){
     this._migrateFeatTiers(system);
 
     //The "base" object contains tier 1 data. For single-tier feats and upgrades, empty the tiers object entirely
-    if (system.maximumTier < 2){
+    if (system.isSingleTiered){
       system.tiers = {};
     } else {
       //When the maximum tier is increased, add empty tiers up to the new value. When decreased, delete objects with keys higher than the maximum
@@ -266,19 +266,19 @@ _preparePotionData(system){
 
     //Derive total cost and display name for feat list
     if (system.featType == "FL"){
-      system.totalCost = "+"+Math.abs(system.tiers.base.cost);
+      system.totalCost = "+"+Math.abs(system.base.cost);
       system.displayName = this.name;
     } else if (system.isUpgrade) {
-      let total = system.tiers.base.cost * system.currentTier;
+      let total = system.base.cost * system.currentTier;
       system.displayName = this.name + " (x" + system.currentTier + ")";
       system.totalCost = total.toString();
     } else if (system.isSingleTiered){
-      system.totalCost = system.tiers.base.cost.toString();
+      system.totalCost = system.base.cost.toString();
       system.displayName = this.name;
     } else {
-      let total = 0;
+      let total = system.base.cost;
       for (const [k, v] of Object.entries(system.tiers)){
-        if (k == "base" || parseInt(k) <= system.currentTier){
+        if (parseInt(k) <= system.currentTier){
           total += v.cost;
         }
       }

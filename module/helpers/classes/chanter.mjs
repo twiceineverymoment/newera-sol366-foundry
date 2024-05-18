@@ -67,7 +67,7 @@ export class Chanter {
         await actor.createEmbeddedDocuments('ActiveEffect', [{
             label: `Chanting (${chant.name})`,
             icon: `${NEWERA.images}/shouting.png`,
-            description: chant.system.tiers.base.description
+            description: chant.system.base.description
         }]);
         const update = actor.system.chants;
         update[slotLevel] -= 1;
