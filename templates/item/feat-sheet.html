@@ -49,15 +49,15 @@
   
   <div class="tab" data-group="primary" data-tab="properties">
     {{#if system.isSkillImprovement}}
-      
+
     {{else}}
     <div class="newera-itemsheet-properties"> 
-      <div class="resource newera-itemsheet-property-50">
+      <div class="resource newera-itemsheet-property-33">
         <h4>Current Tier</h4>
           <input type="text" name="system.currentTier" class="sheet-input" value="{{system.currentTier}}" data-dtype="Number" />
           <!--this is a text field because upgrade feats require the ability to take more than 5x-->
       </div>
-      <div class="resource newera-itemsheet-property-50">
+      <div class="resource newera-itemsheet-property-33">
         <h4># of Tiers</h4>
         <select name="system.maximumTier" class="sheet-input" id="feat-max-{{item.id}}" data-dtype="Number">
           <option value="1">1</option>
@@ -68,27 +68,31 @@
           <option value="-1">Unlimited</option>
         </select>
       </div>
+      <div class="resource newera-itemsheet-property-33" data-tooltip="The total cost is calculated by the sum of the tiers you've unlocked.">
+        <h4>Total Cost</h4>
+        <input type="text" value="{{system.totalCost}}" class="sheet-input" disabled="true" />
+      </div>
     </div>
 
     <hr class="feat-sheet-separator" />
-
+    {{#unless system.isSingleTiered}}
+      <div class="feat-sheet-status">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h3 class="newera-section-header">Tier 1</h3>
+    {{/unless}}
     <div class="newera-itemsheet-properties">
-      <div class="newera-itemsheet-property-66">
-        Base Stats
+      <div class="resource newera-itemsheet-property-33">
+        <h4>Prerequisites</h4>
+        <input type="text" class="sheet-input" name="system.base.prerequisites" value="{{system.base.prerequisites}}" />
+      </div>
+      <div class="resource newera-itemsheet-property-33">
+        <h4>Conflicts</h4>
+        <input type="text" class="sheet-input" name="system.base.conflicts" value="{{system.base.conflicts}}" />
       </div>
       <div class="resource newera-itemsheet-property-33">
         <h4>Cost</h4>
         <input type="text" class="sheet-input" name="system.base.cost" value="{{system.base.cost}}" data-dtype="Number" />
-      </div>
-    </div>
-    <div class="newera-itemsheet-properties">
-      <div class="resource newera-itemsheet-property-50">
-        <h4>Prerequisites</h4>
-        <input type="text" class="sheet-input" name="system.base.prerequisites" value="{{system.base.prerequisites}}" />
-      </div>
-      <div class="resource newera-itemsheet-property-50">
-        <h4>Conflicts</h4>
-        <input type="text" class="sheet-input" name="system.base.conflicts" value="{{system.base.conflicts}}" />
       </div>
     </div>
     <span style="display: block">&nbsp;</span>
@@ -99,23 +103,26 @@
 
     {{#each system.tiers as |tierData key|}}
     <hr class="feat-sheet-separator" />
+    <div class="feat-sheet-status">
+      {{#if tierData.unlocked}}
+        <i class="fa-solid fa-circle-check"></i>
+      {{else}}
+        <i class="fa-solid fa-lock" style="opacity: 0.5"></i>
+      {{/if}}
+    </div>
+    <h3 class="newera-section-header">Tier {{key}}</h3>
     <div class="newera-itemsheet-properties">
-      <div class="newera-itemsheet-property-66">
-        Tier {{key}}
+      <div class="resource newera-itemsheet-property-33">
+        <h4>Prerequisites</h4>
+        <input type="text" class="sheet-input" name="system.tiers.{{key}}.prerequisites" value="{{tierData.prerequisites}}" />
+      </div>
+      <div class="resource newera-itemsheet-property-33">
+        <h4>Conflicts</h4>
+        <input type="text" class="sheet-input" name="system.tiers.{{key}}.conflicts" value="{{tierData.conflicts}}" />
       </div>
       <div class="resource newera-itemsheet-property-33">
         <h4>Cost</h4>
         <input type="text" class="sheet-input" name="system.tiers.{{key}}.cost" value="{{tierData.cost}}" data-dtype="Number" />
-      </div>
-    </div>
-    <div class="newera-itemsheet-properties">
-      <div class="resource newera-itemsheet-property-50">
-        <h4>Prerequisites</h4>
-        <input type="text" class="sheet-input" name="system.tiers.{{key}}.prerequisites" value="{{tierData.prerequisites}}" />
-      </div>
-      <div class="resource newera-itemsheet-property-50">
-        <h4>Conflicts</h4>
-        <input type="text" class="sheet-input" name="system.tiers.{{key}}.conflicts" value="{{tierData.conflicts}}" />
       </div>
     </div>
     <span style="display: block">&nbsp;</span>

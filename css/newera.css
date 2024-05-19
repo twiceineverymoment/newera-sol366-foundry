@@ -148,6 +148,13 @@ div.newera-itemsheet-property-66 {
 .newera-itemsheet-editor-container .editor .tox, .newera-actorsheet-editor-container .editor .tox {
   background-color: white;
 }
+.feat-sheet-separator {
+  border: 1px solid #222;
+}
+.feat-sheet-status {
+  float: right;
+  font-size: 20px;
+}
 #amplified-description {
   position: absolute;
   top: 0;
