@@ -486,15 +486,9 @@ _preparePotionData(system){
   }
 
   _prepareCustomActionData(actor, system){
-    const modifierList = (actor && actor.type == "Player Character") ? actor.modifierList : false;
     for(const roll of Object.values(system.rolls)){
       roll.caption = `${roll.label} (${this.name})`;
-      if (modifierList && roll.stat){
-        const modData = modifierList.find(obj => obj.name == roll.stat);
-        roll.formula = `${roll.dieCount}d${roll.dieSize}+@${modData.type}.${modData.name}.mod`;
-      } else {
-        roll.formula = `${roll.dieCount}d${roll.dieSize}+${roll.modifier}`;
-      }
+      roll.formula = roll.customFormula || `${roll.dieCount}d${roll.dieSize}+${roll.modifier}`;
       if (["4", "6", "8", "10", "12", "20"].includes(roll.dieSize)){
         roll.die = `d${roll.dieSize}`;
       } else {
