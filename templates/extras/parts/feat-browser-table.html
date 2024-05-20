@@ -1,15 +1,30 @@
 <div class="browser-results-container">
     {{#each results as |result index|}}
         <div class="browser-result {{result.styles}}" data-casper-object-id="{{result.system.casperObjectId}}" {{{draggable result.available}}} {{{htmlTooltip result.tooltip "up"}}}>
-            <img src="{{result.img}}" />
-            <h3 class="newera-section-header">{{result.name}}</h3>
+            {{#if result.isUpgrade}}
+                <div class="feat-browser-symbols" data-tooltip="Upgrade Feat - can be purchased any number of times">
+                    <i class="fa-solid fa-infinity"></i>
+                </div>
+            {{/if}}
+            {{#if result.isTiered}}
+                <div class="feat-browser-symbols" data-tooltip="Multi-Tiered Feat">
+                    <i class="fa-regular fa-layer-group"></i>
+                </div>
+            {{/if}}
+            {{#if result.isTopTier}}
+                <div class="feat-browser-symbols" data-tooltip="Multi-Tiered Feat (Top Tier)">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+            {{/if}}
+            <img src="{{result.img}}" draggable="true" />
+            <h3 class="newera-section-header" style="text-align: center; margin: 0 auto">{{result.display.name}}</h3>
             <span style="display: block">&nbsp; <!--Float weirdness prevention --></span>
-            {{{result.system.base.description}}}
+            {{{result.display.description}}}
             <div class="feat-cost">
                 {{#if result.alreadyOwned}}
                     <i class="fa-solid fa-check-circle"></i>
                 {{else}}
-                    <i class="fa-solid fa-circle-star"></i> {{result.cost}}
+                    <i class="fa-solid fa-circle-star"></i> {{result.display.cost}}
                     {{#if result.system.prerequisites}}
                         <p class="feat-prerequisites" {{#if result.doubleCheck}} data-tooltip="You may meet the requirements for this feat, but we can't be certain. Please check with your GM." data-tooltip-direction="UP" {{/if}}>
                             Requires {{result.system.prerequisites}}

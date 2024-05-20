@@ -1577,14 +1577,44 @@ export class NewEraActorSheet extends ActorSheet {
     if (dropData && dropData.transferAction){
       event.preventDefault();
       if (dropData.transferAction = "addFeatFromBrowser"){
-        const featFromCompendium = game.packs.get("newera-sol366.feats").find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+        const compendium = await game.packs.get("newera-sol366.feats").getDocuments();
+        const featFromCompendium = compendium.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+        const featFromActor = this.actor.items.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
         if (featFromCompendium){
-          if (featFromCompendium.characterMeetsFeatPrerequisites(this.actor)){
-            const featData = structuredClone(featFromCompendium);
-            await Item.create(featData, { parent: this.actor });
-            ui.notifications.info(`You took ${featFromCompendium.name} for ${featFromCompendium.system.base.cost} character points.`);
-          } else {
-            ui.notifications.warn(`${this.actor} doesn't meet the prerequisites for ${featFromCompendium.name}.`);
+          if (featFromActor){ //Increase tier
+            if (featFromActor.system.maximumTier == -1){
+              await featFromActor.update({
+                system: {
+                  currentTier: featFromActor.system.currentTier + 1
+                }
+              });
+              ui.notifications.info(`You took another instance of ${featFromActor.name} for ${featFromCompendium.system.base.cost} character points.`);
+            } else if (featFromActor.system.maximumTier == 1){
+              ui.notifications.error(`${this.actor.name} already has ${featFromCompendium.name}.`);
+            } else {
+              if (featFromActor.system.currentTier == featFromActor.system.maximumTier){
+                ui.notifications.error(`${this.actor.name} already has the highest available tier of ${featFromCompendium.name}.`);
+              } else {
+                if (featFromActor.characterMeetsFeatPrerequisites(this.actor, featFromActor.system.currentTier + 1)){
+                  await featFromActor.update({
+                    system: {
+                      currentTier: featFromActor.system.currentTier + 1
+                    }
+                  });
+                  ui.notifications.info(`You upgraded ${this.actor.name}'s ${featFromCompendium.name} feat to tier ${featFromActor.system.currentTier} for ${featFromActor.system.tiers[featFromActor.system.currentTier].cost} character points.`);
+                } else {
+                  ui.notifications.warn(`${this.actor.name} doesn't meet the prerequisites for tier ${featFromActor.system.currentTier+1} of ${featFromActor.name}.`)
+                }
+              }
+            }
+          } else { //Add new feat
+            if (featFromCompendium.characterMeetsFeatPrerequisites(this.actor, 1)){
+              const featData = structuredClone(featFromCompendium);
+              await Item.create(featData, { parent: this.actor });
+              ui.notifications.info(`You took ${featFromCompendium.name} for ${featFromCompendium.system.base.cost} character points.`);
+            } else {
+              ui.notifications.warn(`${this.actor.name} doesn't meet the prerequisites for ${featFromCompendium.name}.`);
+            }
           }
         } else {
           ui.notifications.error("Couldn't find a feat in the CASPER database matching this item. Please report this to the developers.");

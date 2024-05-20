@@ -247,6 +247,10 @@ _preparePotionData(system){
       }
     }
 
+    Object.entries(system.tiers).forEach(([n, tier]) => {
+      tier.unlocked = (system.currentTier >= n);
+    });
+
     //Derive feat image
     if (system.featType == "GF"){
       this.img = "systems/newera-sol366/resources/achievement.png";
@@ -290,7 +294,8 @@ _preparePotionData(system){
   //Migration function for old (pre-0.15) feats without proper multi-tiering.
   _migrateFeatTiers(){
     if (this.system.tiers.base){
-      const featFromCompendium = game.packs.get("newera-sol366.feats").find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+      const compendium = game.packs.get("newera-sol366.feats").getDocuments();
+      const featFromCompendium = compendium.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
       if (featFromCompendium){
         this.system = featFromCompendium.system;
         console.log(`Upgrading Feat with id ${this.id} (${this.name}) to v0.15 (COID=${system.casperObjectId})`);
@@ -1344,14 +1349,22 @@ _preparePotionData(system){
     }
   }
 
-  characterMeetsFeatPrerequisites(actor){
+  /**
+   * Determines whether the specified actor meets the requirements for this feat.
+   * If the actor doesn't have a feat with the same object ID, this is evaluated against tier 1's prerequisites.
+   * If they do, it's evaluated against the next highest tier's prerequisites.
+   * Returns true if the actor already has the highest tier available.
+   * @param {*} actor 
+   * @returns 
+   */
+  characterMeetsFeatPrerequisites(actor, tier = 1){
     if (this.type == "Feat"){
       if (actor.type == "Player Character"){
         if (!game.settings.get("newera-sol366", "prereqCheck")){
           return true;
         }
         //console.log(`[DEBUG] Evaluating prerequisites : ${this.name}`);
-        const conditionTokens = this._tokenizePrerequisites();
+        const conditionTokens = this._tokenizePrerequisites(tier);
         //console.log(conditionTokens);
         for (const ANDcondition of conditionTokens){
           let subResult = false;
@@ -1407,17 +1420,20 @@ _preparePotionData(system){
     }
   }
 
-  _tokenizePrerequisites(){
+  _tokenizePrerequisites(tier){
     if (this.type == "Feat"){
-      const customCondition = NEWERA.customFeatPrerequisites[this.system.casperObjectId];
-      if (customCondition){
-        return [
-          [ customCondition ]
-        ];
-      }
-      if (this.system.prerequisites){
+      try {
+        const customCondition = NEWERA.customFeatPrerequisites[this.system.casperObjectId][tier];
+        if (customCondition){
+          return [
+            [ customCondition ]
+          ];
+        }
+      } catch (error){}
+      const prerequisiteString = tier == 1 ? this.system.base.prerequisites : this.system.tiers[tier].prerequisites;
+      if (prerequisiteString){
         let prerequisites = [];
-        const conditions = this.system.prerequisites.split(",");
+        const conditions = prerequisiteString.split(",");
         for (const condition of conditions){ //First, break out the expression by commas/semicolons. This step is an AND (each part must evaluate to true)
           let currentCondition = [];
           const subConditions = condition.split(" or "); //Second, break out the individual conditions by the word "or" to determine if this is a multi-part condition

@@ -1223,6 +1223,12 @@ input.resource-focus-energy {
   font-size: 16px;
   font-weight: bold;
 }
+.feat-browser-symbols {
+  float: right;
+  margin: 4px;
+  font-size: 24px;
+  color: rgb(240, 157, 41) !important;
+}
 .feat-browser-filters, .feat-filter-option {
   text-align: left;
 }
