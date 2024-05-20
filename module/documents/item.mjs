@@ -486,7 +486,7 @@ _preparePotionData(system){
   }
 
   _prepareCustomActionData(actor, system){
-    const modifierList = (actor.type == "Player Character") ? actor.modifierList : false;
+    const modifierList = (actor && actor.type == "Player Character") ? actor.modifierList : false;
     for(const roll of Object.values(system.rolls)){
       roll.caption = `${roll.label} (${this.name})`;
       if (modifierList && roll.stat){
