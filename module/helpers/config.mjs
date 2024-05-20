@@ -2675,7 +2675,7 @@ NEWERA.generalMagicActions = [
     {
         name: "Cast a Spell",
         images: {
-            base: `${NEWERA.images}/fire-spell-cast.png`,
+            base: `${NEWERA.images}/glowing-hands.png`,
         },
         ability: null,
         skill: null,
@@ -2684,11 +2684,26 @@ NEWERA.generalMagicActions = [
         difficulty: "The difficulty depends on your skill level in the spell's form of magic. Casting a spell at or below your current level doesn't require a check. For spells above your level, the difficulty is 10 for one level higher, plus 5 for each additional level.",
         altInstructions: "Cast spells and enchantments from the Magic tab.",
         actionType: "?",
+        rolls: []
+    },
+    {
+        name: "Sustain a Spell",
+        images: {
+            base: `${NEWERA.images}/fire-spell-cast.png`,
+            right: `${NEWERA.images}/ac_1frame.png`
+        },
+        ability: null,
+        skill: null,
+        specialties: [],
+        description: "You continue to concentrate on a sustained spell you're already casting. You may spend any number of frames on your turn sustaining a spell. If your turn ends without having used at least one frame to sustain a spell, the spell ends.",
+        difficulty: "0",
+        overrideMacroCommand: "game.newera.HotbarActions.sustainCurrentSpell()",
+        actionType: "1",
         rolls: [
             {
-                label: "Spells",
-                die: "spell-book",
-                id: "viewSpellList"
+                label: "Sustain",
+                die: "fire-spell-cast",
+                callback: actor => Actions.sustainCurrentSpell(actor)
             }
         ]
     },
@@ -2712,11 +2727,6 @@ NEWERA.generalMagicActions = [
                 die: "d20",
                 formula: "1d20+@abilities.wisdom.mod",
                 difficulty: 10
-            },
-            {
-                label: "Spells",
-                die: "scroll-unfurled",
-                id: "viewSpellList"
             }
         ]
     },

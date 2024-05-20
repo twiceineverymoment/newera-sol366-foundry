@@ -133,6 +133,15 @@ export class HotbarActions {
         Actions.castSpell(actor, spell);
     }
 
+    static async sustainCurrentSpell(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+        Actions.sustainCurrentSpell(actor);
+    }
+
     static async openPhone(){
         const actor = this.getSelectedActor();
         if (!actor){
