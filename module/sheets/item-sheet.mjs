@@ -178,15 +178,25 @@ export class NewEraItemSheet extends ItemSheet {
         this.updateLinkedItems();
       });
     } else if (this.item.type == "Action"){
-      html.find("#addRollButton-"+this.item.id).click(ev => {
-        this.item.addRoll();
-        this.render(false);
-      });
       html.find("#action-type-"+this.item.id).val(system.actionType);
       for (const [i, roll] of Object.entries(system.rolls)){
         html.find(`#die-size-${this.item.id}-${i}`).val(roll.dieSize);
         console.log(`#die-size-${this.item.id}-${i} ${roll.dieSize}`);
         html.find(`#mod-stat-${this.item.id}-${i}`).val(roll.stat); //Shouldn't do anything if this dropdown is hidden
+      }
+      if (this.isEditable){
+        html.find("#addRollButton-"+this.item.id).click(ev => {
+          this.item.addRoll();
+          this.render(false);
+        });
+        html.find(".roll-switch").click(ev => {
+          const element = $(ev.currentTarget);
+          this.item.switchRollMode(element.data("rollIndex"), element.data("switch") == "advanced");
+        });
+        html.find(".roll-delete").click(ev => {
+          const element = $(ev.currentTarget);
+          this.item.deleteRoll(element.data("rollIndex"));
+        });
       }
     }
 
