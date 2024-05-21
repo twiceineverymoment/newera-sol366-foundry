@@ -521,6 +521,43 @@ _preparePotionData(system){
     }
   }
 
+  async switchRollMode(index, advanced){
+    if (this.type != "Action") return;
+    if (this.system.rolls){
+      const rolls = this.system.rolls;
+      if (rolls[index]){
+        if (advanced){
+          rolls[index].customFormula = '1d20';
+          await this.update({
+            system: {
+              rolls: rolls
+            }
+          });
+        } else {
+          rolls[index].customFormula = null;
+          await this.update({
+            system: {
+              rolls: rolls
+            }
+          });
+        }
+      }
+    }
+  }
+
+  async deleteRoll(index){
+    if (this.type != "Action") return;
+    if (this.system.rolls){
+      const update = {
+        system: {
+          rolls: {}
+        }
+      }
+      update.system.rolls[`-=${index}`] = null;
+      await this.update(update);
+    }
+  }
+
   /**
    * Prepare a data object which is passed to any Roll formulas which are created related to this Item
    * @private

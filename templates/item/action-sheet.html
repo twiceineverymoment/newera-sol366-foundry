@@ -44,12 +44,25 @@
         <tr>
           <th>Roll</th>
           <th>Dice</th>
-          <th>Modifiers</th>
+          <th colspan="2">Modifiers</th>
         </tr>
         {{#each system.rolls as |roll index|}}
           <tr>
-            <td><input type="text" class="sheet-input" name="system.rolls.{{index}}.label" value="{{roll.label}}" /></td>
-            <td>
+            <td style="width: 25%"><input type="text" class="sheet-input" name="system.rolls.{{index}}.label" value="{{roll.label}}" /></td>
+            {{#if roll.customFormula}}
+            <td colspan="2" style="width: 65%">
+              <input type="text" class="sheet-input roll-formula" name="system.rolls.{{index}}.customFormula" value="{{roll.customFormula}}" />
+            </td>
+            <td style="width: 10%">
+              <a class="roll-switch" data-switch="basic" data-roll-index="{{index}}" data-tooltip="Basic" data-tooltip-direction="LEFT">
+                <i class="fa-regular fa-dice"></i>
+              </a>
+              <a class="roll-delete" data-roll-index="{{index}}" data-tooltip="Remove Roll" data-tooltip-direction="LEFT">
+                <i class="fas fa-trash"></i>
+              </a>
+            </td>
+            {{else}}
+            <td style="width: 45%">
               <input type="text" class="sheet-input" name="system.rolls.{{index}}.dieCount" value="{{roll.dieCount}}" data-dtype="Number" style="width: 40%" />
               d
               <select name="system.rolls.{{index}}.dieSize" id="die-size-{{../item.id}}-{{index}}" class="sheet-input" style="width: 40%">
@@ -67,22 +80,22 @@
                 <option value="100">100*</option>
               </select>
             </td>
-            <td>
-              {{#if system.statModifierList}}
-                <select class="sheet-input" name="system.rolls.{{index}}.stat" id="mod-stat-{{../item.id}}-{{index}}">
-                  <option value="">(no modifier)</option>
-                  {{#each system.statModifierList as |mod index|}}
-                    <option value="{{mod}}">{{capitalize mod}}</option>
-                  {{/each}}
-                </select>
-              {{else}}
-                <input type="text" class="sheet-input" name="system.rolls.{{index}}.modifier" value="{{roll.modifier}}" data-dtype="Number" />
-              {{/if}}
+            <td style="width: 20%">
+              <input type="text" class="sheet-input" name="system.rolls.{{index}}.modifier" value="{{roll.modifier}}" data-dtype="Number" />
             </td>
+            <td style="width: 10%">
+              <a class="roll-switch" data-switch="advanced" data-roll-index="{{index}}" data-tooltip="Advanced (Formula Entry)" data-tooltip-direction="LEFT">
+                <i class="fa-solid fa-code"></i>
+              </a>
+              <a class="roll-delete" data-roll-index="{{index}}" data-tooltip="Remove Roll" data-tooltip-direction="LEFT">
+                <i class="fas fa-trash"></i>
+              </a>
+            </td>
+            {{/if}}
           </tr>
         {{/each}}
         <tr>
-          <td colspan="3">
+          <td colspan="4">
             <a title="Add Roll" id="addRollButton-{{item.id}}">
               <i class="fas fa-plus"></i> ADD ROLL
             </a>
