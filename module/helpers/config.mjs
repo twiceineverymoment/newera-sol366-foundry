@@ -2453,42 +2453,27 @@ NEWERA.pcGeneralActions = [
         rolls: []
     },
     {
-        name: "Long Jump",
+        name: "Jump",
         images: {
             base: `${NEWERA.images}/jump1.png`,
             right: `${NEWERA.images}/ac_1frame.png`
         },
         ability: null,
         skill: "athletics",
-        specialties: ["Long Jump", "Jumping"],
-        description: "You jump across a large gap. You must get a running start of at least 6 feet in the frame prior to the jump.",
+        specialties: ["Long Jump", "High Jump", "Jumping"],
+        description: "You jump across a large gap or a great height. You can jump up to 2 feet in height and up to your speed minus your size modifier in distance. For longer or higher jumps, a check is required.",
         difficulty: "The GM sets the difficulty depending on the jump distance and environmental conditions.",
         actionType: "1",
         rolls: [
             {
-                label: "Jump",
+                label: "Long",
                 caption: "Long Jump (Athletics)",
                 die: "d20",
                 formula: "1d20+@skills.athletics.mod+@spec.jumping+@spec.long_jump",
                 difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "High Jump",
-        images: {
-            base: `${NEWERA.images}/jump2.png`,
-            right: `${NEWERA.images}/ac_1frame.png`
-        },
-        ability: null,
-        skill: "athletics",
-        specialties: ["High Jump", "Jumping"],
-        description: "Increase your jump height to your Strength modifier plus 3 feet.",
-        difficulty: "The GM sets the difficulty depending on the jump height and environmental conditions.",
-        actionType: "1",
-        rolls: [
+            },
             {
-                label: "Jump",
+                label: "High",
                 caption: "High Jump (Athletics)",
                 die: "d20",
                 formula: "1d20+@skills.athletics.mod+@spec.jumping+@spec.high_jump",
@@ -2516,52 +2501,6 @@ NEWERA.pcGeneralActions = [
                 formula: "1d20+@skills.agility.mod+@spec.jumping+@spec.dodging",
                 message: "{NAME} tries to Dodge!",
                 difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Disarm",
-        images: {
-            base: `${NEWERA.images}/drop-weapon.png`,
-            right: `${NEWERA.images}/ac_reaction.png`
-        },
-        ability: null,
-        skill: "defense",
-        specialties: ["Disarming", "Martial Arts"],
-        description: "You knock an enemy's weapon out of their hands.",
-        difficulty: "The result of your roll contests the attacker's roll if you're reacting. Otherwise, the target makes a Strength check.",
-        actionType: "R",
-        rolls: [
-            {
-                label: "Disarm",
-                caption: "Disarm (Defense)",
-                die: "d20",
-                formula: "1d20+@skills.defense.mod+@spec.disarming+@spec.martial_arts",
-                message: "{NAME} tries to Disarm their attacker!",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Stabilize",
-        images: {
-            base: `${NEWERA.images}/bandage-roll.png`,
-            right: `${NEWERA.images}/ac_2frame.png`
-        },
-        ability: null,
-        skill: "medicine",
-        specialties: ["First Aid"],
-        description: "Revive a dying ally. The creature regains hit points equal to your margin of success.",
-        difficulty: "15",
-        actionType: "2",
-        rolls: [
-            {
-                label: "Stabilize",
-                caption: "Stabilize (Medicine)",
-                die: "d20",
-                formula: "1d20+@skills.medicine.mod+@spec.first_aid",
-                message: "{NAME} tries to stabilize a dying ally!",
-                difficulty: 15,
             }
         ]
     },
@@ -2597,28 +2536,6 @@ NEWERA.pcGeneralActions = [
         ]
     },
     {
-        name: "Force Entry",
-        images: {
-            base: `${NEWERA.images}/hammer-break.png`,
-            right: `${NEWERA.images}/ac_3frame.png`
-        },
-        ability: "strength",
-        skill: null,
-        specialties: ["Forced Entry"],
-        description: "You attempt to forcefully open a locked or barred door or object.",
-        difficulty: "The GM determines the difficulty based on the strength of the object or door.",
-        actionType: "3",
-        rolls: [
-            {
-                label: "Strength",
-                caption: "Force Entry (Strength check)",
-                die: "d20",
-                formula: "1d20+@abilities.strength.mod+@spec.forced_entry",
-                difficulty: null,
-            }
-        ]
-    },
-    {
         name: "Escape",
         images: {
             base: `${NEWERA.images}/breaking-chain.png`,
@@ -2646,29 +2563,7 @@ NEWERA.pcGeneralActions = [
                 difficulty: null,
             }
         ]
-    },
-    {
-        name: "Feint",
-        images: {
-            base: `${NEWERA.images}/acrobatic.png`,
-            right: `${NEWERA.images}/ac_reaction.png`
-        },
-        ability: null,
-        skill: "deception",
-        specialties: ["Feinting"],
-        description: "You make a misleading move, leaving a target unprepared for your real attack. If the target falls for it, they may waste their time reacting to your fake attack.",
-        difficulty: "Contested (Insight)",
-        actionType: "R",
-        rolls: [
-            {
-                label: "Feint",
-                caption: "Feint Attack",
-                die: "d20",
-                formula: "1d20+@skills.deception.mod+@spec.feinting",
-                difficulty: null,
-            }
-        ]
-    },
+    }
 ];
 
 NEWERA.generalMagicActions = [
