@@ -139,6 +139,10 @@ div.newera-itemsheet-property-66 {
   border-radius: 2px;
   margin: 2px;
 }
+.enchantment-dropzone {
+  height: 100%;
+  width: 100%;
+}
 .newera-itemsheet-editor-container .editor, .newera-actorsheet-editor-container .editor {
   position: absolute;
   width: 100%;
