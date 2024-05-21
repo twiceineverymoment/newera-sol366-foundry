@@ -3,6 +3,7 @@ import { Formatting } from "../helpers/formatting.mjs";
 import { Witch } from "../helpers/classes/witch.mjs";
 import { CharacterEnergyPool } from "../schemas/char-energy-pool.mjs";
 import { ClassInfo } from "../helpers/classFeatures.mjs";
+import { NewEraItem } from "./item.mjs";
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -549,6 +550,39 @@ export class NewEraActor extends Actor {
         system.equipment.leftHand = "";
       }
     }
+  }
+
+  /**
+   * 
+   * @param {NewEraActor} recipient The actor receiving the item
+   * @param {NewEraItem} item The item being transferred
+   * @param {string} targetSlot The inventory slot to place the transferred item in on the recipient
+   */
+  async transferItem(recipient, item, targetSlot){
+    console.log(`Entering transferItem ${this.id}->${recipient.id} item=${item.id}`);
+    const sourceSlot = this.findItemLocation(item);
+    const newItem = await Item.create(item, {parent: recipient});
+    if (targetSlot != "backpack"){
+      let recUpdate = {
+        system: {
+          equipment: {}
+        }
+      };
+      recUpdate.system.equipment[targetSlot] = newItem._id;
+      await recipient.update(recUpdate);
+    }
+    if (sourceSlot != "backpack"){
+      let srcUpdate = {
+        system: {
+          equipment: {}
+        }
+      };
+      srcUpdate.system.equipment[sourceSlot] = "";
+      await this.update(srcUpdate);
+    }
+    await item.delete();
+    const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
+    this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
   }
 
   actionMessage(baseImage, overlayImage, template, ...args){

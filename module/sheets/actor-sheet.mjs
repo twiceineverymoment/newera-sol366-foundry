@@ -252,11 +252,13 @@ export class NewEraActorSheet extends ActorSheet {
     //Disable the left hand slot if a two-handed item is in the right hand
     if (equipment.rightHand){
       const itemInMainHand = this.actor.items.get(equipment.rightHand);
-      //console.log(itemInMainHand);
-      //console.log(itemInMainHand.system.handedness);
-      if (itemInMainHand.system.handedness == "2H" || (itemInMainHand.system.handedness == "1.5H" && !equipment.leftHand)){
-        equipment.twoHanded = true;
-        equipment.leftHand = "";
+      if (itemInMainHand){
+        if (itemInMainHand.system.handedness == "2H" || (itemInMainHand.system.handedness == "1.5H" && !equipment.leftHand)){
+          equipment.twoHanded = true;
+          equipment.leftHand = "";
+        }
+      } else {
+        console.warn("Encountered a nonexistent item ID in equipment");
       }
     }
 
@@ -909,6 +911,7 @@ export class NewEraActorSheet extends ActorSheet {
       ev.originalEvent.dataTransfer.setData("objectType", "equipment");
       ev.originalEvent.dataTransfer.setData("itemId", itemId);
       ev.originalEvent.dataTransfer.setData("fromZone", fromZone.data("dropZone"));
+      ev.originalEvent.dataTransfer.setData("fromActor", this.actor.id);
       ev.originalEvent.dataTransfer.effectAllowed = "move";
     });
     html.find(".newera-equipment-dropzone").on("dragover", ev => {
@@ -916,24 +919,53 @@ export class NewEraActorSheet extends ActorSheet {
     });
     html.find(".newera-equipment-dropzone").on("drop", ev => {
       const itemId = ev.originalEvent.dataTransfer.getData("itemId");
-      const movedItem = this.actor.items.get(itemId);
       const sourceSlot = ev.originalEvent.dataTransfer.getData("fromZone");
       const targetSlot = $(ev.currentTarget).data("dropZone");
-      console.log(`INV DROP ${itemId} ${sourceSlot}->${targetSlot}`);
-      if (sourceSlot == targetSlot || !sourceSlot){
-        console.log("But, it failed!");
+      const sourceActor = ev.originalEvent.dataTransfer.getData("fromActor");
+      const targetActor = this.actor.id;
+      //Prevent listener from running on drops from unrelated stuff
+      if (!itemId){
         return;
-      } else if (!this._isItemDroppable(itemId, targetSlot)){
-        ui.notifications.error("That item can't be placed in that slot. Try a different location.");
-      } else if (sourceSlot == "backpack" && movedItem.system.stored == true){
-        ui.notifications.error("That item is in storage. You must retrieve it before you can equip it.");
-      } else {
-        const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
-        this.actor.actionMessage(movedItem.img, frameImg, "{NAME} {0} {d} {1}!", this._getItemActionVerb(sourceSlot, targetSlot), (movedItem.type == "Phone" ? "phone" : movedItem.name));
-        this.actor.moveItem(itemId, sourceSlot, targetSlot);
-        html.find(`#newera-equipment-${this.actor.id}-${targetSlot}-input`).val(itemId);
-        html.find(`#newera-equipment-${this.actor.id}-${sourceSlot}-input`).val("");
-        this.submit();
+      }
+      console.log(`INV DROP ${itemId} ${sourceActor}.${sourceSlot}->${targetActor}.${targetSlot}`);
+      //Moving items between slots on the same actor (existing behavior)
+      if (sourceActor == targetActor){
+        const movedItem = this.actor.items.get(itemId);
+        if (sourceSlot == targetSlot || !sourceSlot){
+          console.log("But, it failed!");
+          return;
+        } else if (!this._isItemDroppable(movedItem, targetSlot)){
+          ui.notifications.error("That item can't be placed in that slot. Try a different location.");
+        } else if (sourceSlot == "backpack" && movedItem.system.stored == true){
+          ui.notifications.error("That item is in storage. You must retrieve it before you can equip it.");
+        } else {
+          const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
+          this.actor.actionMessage(movedItem.img, frameImg, "{NAME} {0} {d} {1}!", this._getItemActionVerb(sourceSlot, targetSlot), (movedItem.type == "Phone" ? "phone" : movedItem.name));
+          this.actor.moveItem(itemId, sourceSlot, targetSlot);
+          html.find(`#newera-equipment-${this.actor.id}-${targetSlot}-input`).val(itemId);
+          html.find(`#newera-equipment-${this.actor.id}-${sourceSlot}-input`).val("");
+          this.submit();
+        }
+      }
+      //Moving an item to a different actor (new behavior)
+      else {
+        const origin = game.actors.get(sourceActor);
+        if (!origin){
+          ui.notifications.error("Failed to move item: Unable to locate source actor");
+          return;
+        }
+        const movedItem = origin.items.get(itemId);
+        if (!movedItem){
+          ui.notifications.error("Failed to move item: The source actor doesn't seem to have that item.");
+          return;
+        }
+        if (!this._isItemDroppable(movedItem, targetSlot)){
+          ui.notifications.error("That item can't be placed in that slot. Try a different location.");
+        } else if (sourceSlot == "backpack" && movedItem.system.stored == true){
+          ui.notifications.error("That item is in storage. You must retrieve it before you can give it to someone else.");
+        } else {
+          origin.transferItem(this.actor, movedItem, targetSlot);
+        }
       }
     });
 
@@ -1235,7 +1267,7 @@ export class NewEraActorSheet extends ActorSheet {
 
   _isItemDroppable(item, destination){
     //console.log(`IID ${item} ${destination}`);
-    const slotsAllowed = NewEraActorSheet._getAllowedItemSlots(this.actor.items.get(item));
+    const slotsAllowed = NewEraActorSheet._getAllowedItemSlots(item);
     const droppable = (slotsAllowed.includes(destination) || destination == "backpack" || (destination.includes("worn") && slotsAllowed.includes("worn"))); //The "worn" case is necessary because the slotsAllowed method doesn't explicitly list all 10 worn item slots
     return droppable;
   }
