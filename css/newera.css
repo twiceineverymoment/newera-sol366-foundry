@@ -1203,10 +1203,6 @@ input.resource-focus-energy {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-#filterResults {
-  height: 100%;
-  overflow-y: auto;
-}
 .browser-result {
   outline: 1px solid black;
   width: 45%;
