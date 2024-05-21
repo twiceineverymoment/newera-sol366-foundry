@@ -231,4 +231,32 @@ export const FeatActions = [
             }
         ]
     },
+    {
+        casperObjectId: 428,
+        featureId: "secondWind",
+        actions: [
+            {
+                name: "Second Wind (Quick)",
+                images: {
+                  base: `${NEWERA.images}/mighty-force.png`,
+                  left: `${NEWERA.images}/guardian.png`,
+                  right: `${NEWERA.images}/ac_1frame.png`
+                },
+                ability: null,
+                skill: null,
+                specialties: [],
+                description: "You roll one of your Second Wind dice and recover hit points equal to the total result.",
+                overrideMacroCommand: "game.newera.HotbarActions.secondWind()",
+                difficulty: null,
+                type: "1",
+                rolls: [
+                  {
+                    label: "Recover",
+                    die: "mighty-force",
+                    callback: actor => Guardian.secondWind(actor)
+                  }
+                ]
+            }
+        ]
+    }
 ];
