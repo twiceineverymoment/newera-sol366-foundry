@@ -6,6 +6,31 @@ import { Formatting } from "../helpers/formatting.mjs";
  * @extends {Item}
  */
 export class NewEraItem extends Item {
+
+  static Types = {
+    BASIC_ITEM: ["Item"],
+    MELEE_WEAPON: ["Melee Weapon"],
+    RANGED_WEAPON: ["Ranged Weapon"],
+    ARMOR: ["Armor"],
+    SHIELD: ["Shield"],
+    SPELL: ["Spell"],
+    ENCHANTMENT: ["Enchantment"],
+    POTION: ["Potion"],
+    CLASS: ["Class"],
+    FEAT: ["Feat"],
+    ACTION: ["Action"],
+    PHONE: ["Phone"],
+    EQUIPMENT: ["Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
+    MAGIC: ["Spell", "Enchantment"],
+    ENCHANTABLE: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
+    INVENTORY: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Potion", "Phone"],
+    NON_INVENTORY: ["Spell", "Enchantment", "Class", "Feat", "Action"]
+  }
+
+  typeIs(types){
+    return types.includes(this.type);
+  }
+
   /**
    * Augment the basic Item data model with additional dynamic system.
    */

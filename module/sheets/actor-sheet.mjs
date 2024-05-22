@@ -5,6 +5,8 @@ import { Actions } from "../helpers/macros/actions.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
 import { FeatBrowser } from "./feat-browser.mjs";
 import { FeatActions } from "../helpers/macros/featActions.mjs";
+import { NewEraActor } from "../documents/actor.mjs";
+import { NewEraItem } from "../documents/item.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -36,6 +38,8 @@ export class NewEraActorSheet extends ActorSheet {
         return `systems/newera-sol366/templates/actor/actor-npc-sheet.html`;
       case "Creature":
         return `systems/newera-sol366/templates/actor/actor-creature-sheet.html`;
+      case "Container":
+        return `systems/newera-sol366/templates/actor/actor-container-sheet.html`;
       case "Vehicle":
         return `systems/newera-sol366/templates/actor/actor-vehicle-sheet.html`;
     }
@@ -56,29 +60,26 @@ export class NewEraActorSheet extends ActorSheet {
     context.flags = this.actor.flags;
 
     // Prepare character data and items.
-    if (this.actor.type == 'Player Character') {
-      this._prepareItems(context);
+    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       this._prepareCharacterData(context);
-      this._prepareActions(context, this.actor);
+      this._prepareItems(context);
+    }
+    if (this.actor.typeIs(NewEraActor.Types.PC)) {
       this._prepareClassFeatures(context, context.inventory.classes);
       this._prepareInspiration(context);
     }
-
-    // Prepare NPC data and items.
-    if (this.actor.type == 'Non-Player Character') {
-      this._prepareItems(context);
-      this._prepareCharacterData(context);
-      this._prepareActions(context, this.actor);
-    }
-
-    if (this.actor.type == 'Creature'){
+    if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
       this._prepareCreatureData(context);
       this._prepareCreatureItems(context);
+    }
+    if (this.actor.typeIs(NewEraActor.Types.CONTAINER)){
+      this._prepareContainerData(context);
+    }
+    if (this.actor.typeIs(NewEraActor.Types.ANIMATE)){
       this._prepareActions(context, this.actor);
     }
-
-    if (this.actor.type == 'Vehicle'){
-      this._prepareCreatureItems(context); //It's called creature items but it works for vehicles too
+    if (this.actor.typeIs(NewEraActor.Types.INANIMATE)){
+      this._prepareInanimateActorItems(context);
     }
 
     // Add roll data for TinyMCE editors.
@@ -216,6 +217,11 @@ export class NewEraActorSheet extends ActorSheet {
       //console.log(e);
     }
     return effects;
+  }
+
+  _prepareContainerData(context){
+    context.gm = (game.user.role >= 2);
+    
   }
 
   /**
@@ -358,15 +364,29 @@ export class NewEraActorSheet extends ActorSheet {
     };
     context.magic = [];
     for (const i of context.items){
-      if (["Item", "Potion", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Phone"].includes(i.type)){
+      if (i.typeIs(NewEraItem.Types.INVENTORY)){
         context.inventory.items.push(i);
-      } else if (["Spell", "Enchantment"].includes(i.type)){
+      } else if (i.typeIs(NewEraItem.Types.MAGIC)){
         context.magic.push(i);
-      } else if (i.type == "Action"){
+      } else if (i.typeIs(NewEraItem.Types.ACTION)){
         context.inventory.actions.push(i);
       } else {
         /* Crickets */ 
         // (Any other item types outside of these i.e. classes and feats should be ignored if someone adds one to a non-character actor)
+      }
+    }
+  }
+
+  _prepareInanimateActorItems(context){
+    context.inventory = {
+      items: []
+    };
+    for (const i of context.items){
+      if (NEWERA.typeIs(i, NewEraItem.Types.INVENTORY)){
+        context.inventory.items.push(i);
+      } else {
+        console.log(`Removed an item with type ${i.type} from inanimate actor`);
+        i.delete();
       }
     }
   }
@@ -616,7 +636,7 @@ export class NewEraActorSheet extends ActorSheet {
     });
 
     //Ability Score Point Buy
-    if (system.level == 0 && this.actor.type == "Player Character"){
+    if (system.level <= game.settings.get("newera-sol366", "startingLevel") && game.settings.get("newera-sol366", "characterCreation") && this.actor.typeIs(NewEraActor.Types.PC)){
       html.find('#ability-points-counter').show();
       if (system.abilityScorePointBuy){
         if (system.abilityScorePointBuy.outOfRange){
@@ -636,7 +656,7 @@ export class NewEraActorSheet extends ActorSheet {
     }
 
     //Progress bar dynamic styling
-    if (this.actor.type != "Vehicle"){
+    if (this.actor.typeIs(NewEraActor.Types.ANIMATE)){
       if (system.energy.max == 0){
         html.find('#energy-icon').attr('src', 'systems/newera-sol366/resources/energy.png');
         html.find('.resource-energy').addClass('resource-energy-no-magic');
@@ -698,22 +718,22 @@ export class NewEraActorSheet extends ActorSheet {
     }
 
     //Bio field update
-    if (this.actor.type != "Vehicle"){
+    if (this.actor.typeIs(NewEraActor.Types.ANIMATE)){
       html.find('#alignment-moral').val(system.alignment.moral);
       html.find('#alignment-ethical').val(system.alignment.ethical);
     }
 
     //Other dropdown updates
-    if (this.actor.type == "Player Character" || this.actor.type == "Non-Player Character"){
+    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       html.find('#skillmode-select').val(system.advancedSkills.toString());
       html.find('#wornSlotSelect').val(system.wornItemSlots);
     }
-    if (this.actor.type == "Creature"){
+    if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
       html.find('#creature-rarity').val(system.rarity);
     }
 
     //Vehicle dropdowns
-    if (this.actor.type == "Vehicle"){
+    if (this.actor.typeIs(NewEraActor.Types.VEHICLE)){
 
     }
 
@@ -721,7 +741,7 @@ export class NewEraActorSheet extends ActorSheet {
     html.find(".feature-select").change(ev => this._onFeatureSelectionChange(ev));
  
     //Spellbook cast DC's
-    if (this.actor.type == "Player Character" || this.actor.type == "Non-Player Character"){
+    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       html.find(".inventory-entry-magic").each((i, val) => {
         const spellId = $(val).data("itemId");
         const dc = this._getSpellCastDifficulty(spellId, 1);
@@ -740,7 +760,7 @@ export class NewEraActorSheet extends ActorSheet {
         html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
       });
     //Monster magic stuff
-    } else if (this.actor.type == "Creature"){
+    } else if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
       html.find(".inventory-entry-magic").each((i, val) => {
         const spellId = $(val).data("itemId");
         const ampFactor = this.actor.items.get(spellId).system.ampFactor;
@@ -756,7 +776,7 @@ export class NewEraActorSheet extends ActorSheet {
     }
 
     //Feat CPA coloration
-    if (this.actor.type == "Player Character"){
+    if (this.actor.typeIs(NewEraActor.Types.PC)){
       if (this.actor.system.characterPoints.cpa < 0){
         html.find("#character-points").css("color", "red");
       } else {
@@ -765,7 +785,7 @@ export class NewEraActorSheet extends ActorSheet {
     }
 
     //Carry weight color
-    if (this.actor.type == "Player Character" || this.actor.type == "Non-Player Character"){
+    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       if (system.totalWeight > system.carryWeight.value){
         html.find("#cw-wrapper").addClass("cw-full");
       }

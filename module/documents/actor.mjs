@@ -10,6 +10,21 @@ import { NewEraItem } from "./item.mjs";
  */
 export class NewEraActor extends Actor {
 
+  static Types = {
+    PC: ["Player Character"],
+    NPC: ["Non-Player Character"],
+    CREATURE: ["Creature"],
+    CONTAINER: ["Container"],
+    VEHICLE: ["Vehicle"],
+    CHARACTER: ["Player Character", "Non-Player Character"],
+    ANIMATE: ["Player Character", "Non-Player Character", "Creature"],
+    INANIMATE: ["Container", "Vehicle"]
+  }
+
+  typeIs(types){
+    return types.includes(this.type);
+  }
+
   /** @override */
   prepareData() {
     // Prepare data for the actor. Calling the super version of this executes
@@ -581,8 +596,14 @@ export class NewEraActor extends Actor {
       await this.update(srcUpdate);
     }
     await item.delete();
-    const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
-    this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
+    if (recipient.typeIs(NewEraActor.Types.ANIMATE)){
+      const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
+      if (this.typeIs(NewEraActor.Types.CHARACTER) && !this.system.defeated){
+        this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
+      } else {
+        recipient.actionMessage(item.img, this.img, "{NAME} takes the {0}.", item.name);
+      }
+    }
   }
 
   actionMessage(baseImage, overlayImage, template, ...args){
@@ -1129,6 +1150,9 @@ export class NewEraActor extends Actor {
 
     /* Returns the current equipment slot location of the specified item. Returns "backpack" if the item is not equipped anywhere, and null if not owned by the actor at all. */
     findItemLocation(item){
+      if (!this.typeIs(NewEraActor.Types.CHARACTER)){
+        return "backpack";
+      }
       const equipment = this.system.equipment;
       for (const [k, v] of Object.entries(equipment)){
         if (v == item._id){

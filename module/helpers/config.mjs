@@ -7,6 +7,18 @@ import { Actions } from "./macros/actions.mjs";
  * @type {Object}
  */
 
+/**
+ * Static generic implementation of the typeIs function from the Actor and Item classes.
+ * DocumentSheets send items through structuredClone() which strips out the prototype chain, so we must use this function instead of the instance function.
+ * @param {NewEraActor | NewEraItem} document 
+ * @param {string[]} type 
+ * @returns 
+ */
+NEWERA.typeIs = function(document, type){
+    if (!document || !document.type) return false;
+    return type.includes(document.type);
+}
+
 NEWERA.images = "systems/newera-sol366/resources";
 NEWERA.objects = "https://www.newerarpg.com/resources/objects";
 

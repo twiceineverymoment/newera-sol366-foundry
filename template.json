@@ -1,6 +1,6 @@
 {
 	"Actor": {
-		"types": ["Player Character", "Non-Player Character", "Creature", "Vehicle"],
+		"types": ["Player Character", "Non-Player Character", "Creature", "Container", "Vehicle"],
 		"templates": {
 			"base": {
 				"hitPoints": {
@@ -436,6 +436,14 @@
 			"hasInventory": false,
 			"hasMagic": false,
 			"weakPoints": ["head", "neck", "arm", "leg", "back", "heart", "eye"]
+		},
+		"Container": {
+			"templates": [],
+			"weightCapacity": 0,
+			"locked": false,
+			"pinCount": 0,
+			"pinSetDifficulty": 0,
+			"notes": ""
 		},
 		"Vehicle": {
 			"templates": [],
