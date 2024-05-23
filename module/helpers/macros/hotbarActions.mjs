@@ -11,6 +11,7 @@ import { SpellPreparation } from "../../sheets/spell-preparation.mjs";
 import { SpellFocus } from "../../sheets/spell-focus.mjs";
 import { ChantSheet } from "../../sheets/chants.mjs";
 import { DarkEnergySheet } from "../../sheets/dark-energy.mjs";
+import { NewEraActor } from "../../documents/actor.mjs";
 
 
 /*
@@ -51,8 +52,8 @@ export class HotbarActions {
             ui.notifications.error("No token is selected.");
             return;
         }
-        if (actor.type == "Vehicle"){
-            ui.notifications.error("Vehicles don't have hit points.");
+        if (actor.typeIs(NewEraActor.Types.INANIMATE)){
+            ui.notifications.error("You can't deal damage to this actor. Select a PC/NPC or Creature token.");
             return;
         }
         Actions.displayDamageDialog(actor);
@@ -64,8 +65,8 @@ export class HotbarActions {
             ui.notifications.error("No token is selected.");
             return;
         }
-        if (actor.type == "Vehicle"){
-            ui.notifications.error("Vehicles don't have hit points.");
+        if (actor.typeIs(NewEraActor.Types.INANIMATE)){
+            ui.notifications.error("You can't heal this actor. Select a PC/NPC or Creature token.");
             return;
         }
         Actions.displayHealDialog(actor);
@@ -365,6 +366,43 @@ export class HotbarActions {
         }).render(true);
     }
 
+    static async markActorAsDefeated(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+        if (actor.typeIs(NewEraActor.Types.INANIMATE)){
+            ui.notifications.error("That which was never alive cannot die.");
+            return;
+        } else if (actor.typeIs(NewEraActor.Types.CREATURE)){
+            await actor.setDefeated(!actor.system.defeated);
+        } else {
+            if (actor.system.defeated){
+                await actor.setDefeated(false);
+            } else {
+                new Dialog({
+                    title: "Mark Actor As Defeated",
+                    content: `Are you sure you want to mark ${actor.name} as defeated? This will enable players to access the token's inventory and take items from it.`,
+                    buttons: {
+                        confirm: {
+                            icon: `<i class="fas fa-check"></i>`,
+                            label: "Yes",
+                            callback: () => {
+                                 actor.setDefeated(true);
+                            }
+                        },
+                        cancel: {
+                            icon: `<i class="fas fa-x"></i>`,
+                            label: "No"
+                        }
+                    },
+                    default: "cancel"
+                }).render(true);
+            }
+        }
+    }
+
     //Feature-specific actions
 
     static async rage(){
@@ -531,8 +569,26 @@ export class HotbarActions {
         }
   }
 
+  /* GM Shortcuts */
+
     static async addPlayerContact(){
         const actor = this.getSelectedActor();
         //No token selected is allowed for this one. Just means the form will start empty instead of auto-filled with contact info
+        Actions.addPlayerContact(actor);
+    }
+
+    //Decrease the battery level of the selected actor's phone by one segment
+    //If no token is selected, affects all player characters' phones.
+    static async decreasePhoneBattery(){
+
+    }
+
+    static async use(slot){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        
     }
 }

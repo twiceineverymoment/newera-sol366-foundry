@@ -103,7 +103,8 @@
 				"lastAction": {
 					"category": "general",
 					"index": 0
-				}
+				},
+				"defeated": false
 			},
 			"skills": {
 				"advancedSkills": false,

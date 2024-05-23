@@ -31,6 +31,9 @@ export class NewEraActorSheet extends ActorSheet {
 
   /** @override */
   get template() {
+    if (this.actor.system.defeated){
+      return `systems/newera-sol366/templates/actor/defeated-actor-sheet.html`;
+    }
     switch(this.actor.type){
       case "Player Character":
         return `systems/newera-sol366/templates/actor/actor-character-sheet.html`;
@@ -62,7 +65,11 @@ export class NewEraActorSheet extends ActorSheet {
     // Prepare character data and items.
     if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       this._prepareCharacterData(context);
-      this._prepareItems(context);
+      if (this.actor.system.defeated){
+        this._prepareCreatureItems(context); //If a character is defeated, using this item method puts all their stuff in the standard inventory list without changing the equipment slot data in case the character is revived
+      } else {
+        this._prepareItems(context);
+      }
     }
     if (this.actor.typeIs(NewEraActor.Types.PC)) {
       this._prepareClassFeatures(context, context.inventory.classes);
@@ -221,7 +228,7 @@ export class NewEraActorSheet extends ActorSheet {
 
   _prepareContainerData(context){
     context.gm = (game.user.role >= 2);
-    
+
   }
 
   /**
@@ -364,11 +371,11 @@ export class NewEraActorSheet extends ActorSheet {
     };
     context.magic = [];
     for (const i of context.items){
-      if (i.typeIs(NewEraItem.Types.INVENTORY)){
+      if (NEWERA.typeIs(i, NewEraItem.Types.INVENTORY)){
         context.inventory.items.push(i);
-      } else if (i.typeIs(NewEraItem.Types.MAGIC)){
+      } else if (NEWERA.typeIs(i, NewEraItem.Types.MAGIC)){
         context.magic.push(i);
-      } else if (i.typeIs(NewEraItem.Types.ACTION)){
+      } else if (NEWERA.typeIs(i, NewEraItem.Types.ACTION)){
         context.inventory.actions.push(i);
       } else {
         /* Crickets */ 

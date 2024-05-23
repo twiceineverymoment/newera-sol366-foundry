@@ -1296,4 +1296,16 @@ export class NewEraActor extends Actor {
     }
   }
 
+  async setDefeated(defeated){
+    if (this.typeIs(NewEraActor.Types.INANIMATE)) return;
+    await this.update({
+      system: {
+        defeated: defeated
+      },
+      ownership: {
+        default: defeated ? 3 : 0
+      }
+    });
+  }
+
 }

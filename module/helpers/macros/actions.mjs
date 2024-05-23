@@ -7,6 +7,7 @@ For invoking these functions via global macros, use HotBarActions.mjs for valida
 import { Formatting } from "../formatting.mjs";
 import { NEWERA } from "../config.mjs";
 import { CharacterEnergyPool } from "../../schemas/char-energy-pool.mjs";
+import { NewEraActor } from "../../documents/actor.mjs";
 
 export class Actions {
 
