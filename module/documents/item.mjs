@@ -295,10 +295,7 @@ _preparePotionData(system){
     }
 
     //Derive total cost and display name for feat list
-    if (system.featType == "FL"){
-      system.totalCost = "+"+Math.abs(system.base.cost);
-      system.displayName = this.name;
-    } else if (system.isUpgrade) {
+    if (system.isUpgrade) {
       let total = system.base.cost * system.currentTier;
       system.displayName = this.name + " (x" + system.currentTier + ")";
       system.totalCost = total.toString();
@@ -315,6 +312,7 @@ _preparePotionData(system){
       system.totalCost = total.toString();
       system.displayName = this.name + " " + NEWERA.romanNumerals[system.currentTier];
     }
+    system.displayCost = (system.featType == 'FL') ? "+"+Math.abs(system.totalCost) : system.totalCost;
   }
 
   //Migration function for old (pre-0.15) feats without proper multi-tiering.
