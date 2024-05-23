@@ -251,6 +251,7 @@ _preparePotionData(system){
     if (system.currentTier < 1) system.currentTier = 1;
     if (system.currentTier > system.maximumTier && !system.isUpgrade) system.currentTier = system.maximumTier;
 
+    //This function is asynchronous. For existing feats it'll be run during the initial data preparation the first time a pre-0.15 world is loaded. The remaining derived data might be weird the first time.
     this._migrateFeatTiers(system);
 
     //The "base" object contains tier 1 data. For single-tier feats and upgrades, empty the tiers object entirely
@@ -317,19 +318,31 @@ _preparePotionData(system){
   }
 
   //Migration function for old (pre-0.15) feats without proper multi-tiering.
-  _migrateFeatTiers(){
+  //Returns true if the data was changed.
+  async _migrateFeatTiers(){
     if (this.system.tiers.base){
-      const compendium = game.packs.get("newera-sol366.feats").getDocuments();
-      const featFromCompendium = compendium.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+      const compendium = await game.packs.get("newera-sol366.feats").getDocuments();
+      const featFromCompendium = compendium.find(f => f.system.casperObjectId == this.system.casperObjectId);
       if (featFromCompendium){
-        this.system = featFromCompendium.system;
-        console.log(`Upgrading Feat with id ${this.id} (${this.name}) to v0.15 (COID=${system.casperObjectId})`);
+        console.log(`Migrating Feat with id ${this.id} (${this.name}) to v0.15 (COID=${this.system.casperObjectId})`);
+        await this.update({
+          system: featFromCompendium.system
+        });
+        return true;
       } else {
-        this.system.base = this.system.tiers.base;
-        delete this.system.tiers.base;
-        console.log(`No compendium match for Feat with id ${this.id} (${this.name}), migrating tiered data model`);
+        console.log(`Migrating Feat with id ${this.id} (${this.name}) to v0.15 (No COID match in compendium - performing direct migration)`);
+        await this.update({
+          system: {
+            base: this.system.tiers.base,
+            tiers: {
+              "-=base": null
+            }
+          }
+        });
+        return true;
       }
     }
+    return false;
   }
 
   _prepareMeleeWeaponData(system){
