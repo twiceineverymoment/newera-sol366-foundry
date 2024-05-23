@@ -723,6 +723,9 @@ img.equipment-worn {
 .empty-item-slot {
   cursor: default !important;
 }
+.empty-item-slot img {
+  opacity: 0.6;
+}
 .creature-item-add {
   display: block;
   position: relative;
