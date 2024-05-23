@@ -235,6 +235,20 @@ function setupGameSettings(){
     type: Boolean,
     default: true,
   });
+  game.settings.register("newera-sol366", "sendEquipMsgs", {
+    name: "Send Equipment Action Messages in Chat",
+    hint: "Choose whether to send messages in chat when a character equips, unequips, hands off, or drops an item",
+    scope: "world",
+    config: true,
+    requiresReload: false,
+    type: String,
+    choices: {
+      "2": "Always",
+      "1": "While In Combat",
+      "0": "Never"
+    },
+    default: "2"
+  });
   game.settings.register("newera-sol366", "progressionMode", {
     name: "Progression Mode",
     hint: "The method you will use to track character points and progression",

@@ -967,7 +967,9 @@ export class NewEraActorSheet extends ActorSheet {
           ui.notifications.error("That item is in storage. You must retrieve it before you can equip it.");
         } else {
           const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
-          this.actor.actionMessage(movedItem.img, frameImg, "{NAME} {0} {d} {1}!", this._getItemActionVerb(sourceSlot, targetSlot), (movedItem.type == "Phone" ? "phone" : movedItem.name));
+          if (Formatting.sendEquipmentChangeMessages()){
+            this.actor.actionMessage(movedItem.img, frameImg, "{NAME} {0} {d} {1}!", this._getItemActionVerb(sourceSlot, targetSlot), (movedItem.type == "Phone" ? "phone" : movedItem.name));
+          }
           this.actor.moveItem(itemId, sourceSlot, targetSlot);
           html.find(`#newera-equipment-${this.actor.id}-${targetSlot}-input`).val(itemId);
           html.find(`#newera-equipment-${this.actor.id}-${sourceSlot}-input`).val("");

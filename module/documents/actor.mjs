@@ -598,10 +598,12 @@ export class NewEraActor extends Actor {
     await item.delete();
     if (recipient.typeIs(NewEraActor.Types.ANIMATE)){
       const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
-      if (this.typeIs(NewEraActor.Types.CHARACTER) && !this.system.defeated){
-        this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
-      } else {
-        recipient.actionMessage(item.img, this.img, "{NAME} takes the {0}.", item.name);
+      if (Formatting.sendEquipmentChangeMessages()){
+        if (this.typeIs(NewEraActor.Types.CHARACTER) && !this.system.defeated){
+          this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
+        } else {
+          recipient.actionMessage(item.img, this.img, "{NAME} takes the {0}.", item.name);
+        }
       }
     }
   }

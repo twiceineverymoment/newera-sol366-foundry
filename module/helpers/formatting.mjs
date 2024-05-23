@@ -124,4 +124,12 @@ export class Formatting {
         }
       }
 
+      static sendEquipmentChangeMessages(){
+        switch(game.settings.get("newera-sol366", "sendEquipMsgs")){
+          case "0": return false;
+          case "2": return true;
+          case "1": return game.combat && game.combat.active && game.combat.round > 0;
+        }
+      }
+
 }

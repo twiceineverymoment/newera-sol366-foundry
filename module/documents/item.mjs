@@ -1397,7 +1397,7 @@ _preparePotionData(system){
           stored: !prevState
         }
       });
-      if (this.actor){
+      if (this.actor && Formatting.sendEquipmentChangeMessages()){
         if (prevState){
           this.actor.actionMessage(this.img, `${NEWERA.images}/ac_adventuring.png`, "{NAME} retrieves {d} {0} from storage.", this.name);
         } else {
