@@ -15,6 +15,10 @@ export class SpellPreparation extends ActorSheet {
         });
     }
 
+    get title(){
+        return `Spell Preparation [${this.actor.name}]`;
+    }
+
     get template() {
         return "systems/newera-sol366/templates/actor/features/spell-preparation.html";
     }

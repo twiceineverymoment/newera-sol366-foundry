@@ -8,6 +8,7 @@ export class FeatBrowser extends ActorSheet {
 
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
+          title: "Feat Browser",
           classes: ["newera", "sheet", "actor"],
           template: "systems/newera-sol366/templates/extras/feat-browser.html",
           width: 840,
@@ -15,6 +16,10 @@ export class FeatBrowser extends ActorSheet {
           resizable: true,
           scrollY: [".feat-browser-contents"]
         });
+    }
+
+    get title(){
+        return "Feat Browser";
     }
 
     get template() {
@@ -54,7 +59,6 @@ export class FeatBrowser extends ActorSheet {
                 feat.showNextTier = "";
                 feat.isUpgrade = feat.system.maximumTier == -1;
                 const existingFeat = this.actor.items.find(i => i.type == "Feat" && i.system.casperObjectId == feat.system.casperObjectId);
-                const evalPrereqs = feat.characterMeetsFeatPrerequisites(this.actor);
                 if (existingFeat){
                     if (feat.system.maximumTier == -1){
                         feat.nextTier = -1;

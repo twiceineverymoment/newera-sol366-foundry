@@ -12,6 +12,10 @@ export class DarkEnergySheet extends ActorSheet {
         });
     }
 
+    get title(){
+        return `Dark Energy [${this.actor.name}]`;
+    }
+
     get template() {
         return "systems/newera-sol366/templates/actor/features/dark-energy.html";
     }
