@@ -122,8 +122,10 @@ Handlebars.registerHelper('localizeCaps', function(str) {
 
 Handlebars.registerHelper('selected', function(check, value) {
   if (check == value){
+    //console.log(`[DEBUG] sel ${value} true`);
     return 'selected';
   } else {
+    //console.log(`[DEBUG] sel ${value} false`);
     return '';
   }
 });
@@ -183,6 +185,26 @@ Handlebars.registerHelper('htmlTooltip', function(msg, direction){
 
 Handlebars.registerHelper('descriptionTarget', function(key){
   return `system.tiers.${key}.description`;
+});
+
+Handlebars.registerHelper('includes', function(haystack, value){
+  if (typeof haystack == 'array'){
+    return haystack.includes(value);
+  } else if (typeof haystack == "object"){
+    return Object.keys(haystack).includes(value);
+  } else {
+    return false;
+  }
+});
+
+Handlebars.registerHelper('populated', function(haystack){
+  if (typeof haystack == 'array'){
+    return haystack.length > 0;
+  } else if (typeof haystack == "object"){
+    return Object.keys(haystack).length > 0;
+  } else {
+    return false;
+  }
 });
 
 /* -------------------------------------------- */

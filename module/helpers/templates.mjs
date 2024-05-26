@@ -56,7 +56,9 @@
 
     //Extras templates
     "systems/newera-sol366/templates/extras/parts/feat-filters.html",
-    "systems/newera-sol366/templates/extras/parts/feat-browser-table.html"
+    "systems/newera-sol366/templates/extras/parts/feat-browser-table.html",
+    "systems/newera-sol366/templates/extras/parts/spell-filters.html",
+    "systems/newera-sol366/templates/extras/parts/spell-browser-table.html"
 
   ]);
 };

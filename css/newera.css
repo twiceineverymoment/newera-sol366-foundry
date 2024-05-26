@@ -853,6 +853,10 @@ div.inventory-table-container {
   top: 2px;
   left: 34px;
 }
+#spell-add-3 {
+  top: 2px;
+  left: 66px;
+}
 #spell-add-row, #effect-add-row {
   height: 36px;
   position: relative;
@@ -989,6 +993,7 @@ td.class-feature {
   display: block;
   margin: 0 auto;
   text-align: left;
+  position: relative;
 }
 td.class-feature h4 {
   font-size: 1.5em;
@@ -1021,6 +1026,10 @@ div.feature-selection {
 }
 div.feature-selection select, div.feature-selection input {
   width: 50%;
+}
+div.spell-studies-container {
+  bottom: 4px;
+  left: 4px;
 }
 div.magic-info {
   text-align: center;
@@ -1294,4 +1303,34 @@ input.resource-focus-energy {
 p.storage-exceeded-msg {
   background-color: lightcoral;
   border: 1px solid darkred;
+}
+
+/* Spell Browser */
+.browser-result img.spell-preview-actions {
+  float: none !important;
+  display: inline;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+}
+.browser-result img.rarity {
+  float: right !important;
+  width: 16px;
+  height: 16px;
+  margin: 3px;
+}
+.truncate-text {
+  height: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.truncate-paragraphs {
+  max-height: calc(100% - 88px);
+  text-overflow: ellipsis;
+}
+.truncate-paragraphs p {
+  text-overflow: ellipsis;
+}
+.spell-preview {
+  cursor: pointer;
 }

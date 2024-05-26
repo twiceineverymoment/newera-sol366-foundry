@@ -7,6 +7,8 @@ import { FeatBrowser } from "./feat-browser.mjs";
 import { FeatActions } from "../helpers/macros/featActions.mjs";
 import { NewEraActor } from "../documents/actor.mjs";
 import { NewEraItem } from "../documents/item.mjs";
+import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
+import { SpellBrowser } from "./spell-browser.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -838,6 +840,17 @@ export class NewEraActorSheet extends ActorSheet {
 
     //Browser open buttons
     html.find(".feat-browser").click(() => new FeatBrowser(this.actor).render(true));
+    html.find(".spell-browser").click(() => new SpellBrowser(this.actor).render(true));
+    html.find(".spell-studies").click(ev => {
+      const element = $(ev.currentTarget);
+      const className = element.data("class");
+      const level = element.data("level");
+      const spellStudiesCriteria = ClassInfo.features[className][level];
+      if (spellStudiesCriteria){
+        const criteria = new SpellSearchParams(spellStudiesCriteria);
+        new SpellBrowser(this.actor, criteria, {className: className, level: level}).render(true);
+      }
+    });
 
     //Favorite Spells management
     html.find(".spell-favorite-add").click(async ev => {

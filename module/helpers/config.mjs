@@ -4054,3 +4054,75 @@ NEWERA.customFeatPrerequisites = {
         }  
     }
 }
+
+NEWERA.spellStudiesLists = {
+    delver: {
+        label: "Delver Spells",
+        forms: ["elemental"],
+        schools: ["banishment"],
+    },
+    mercenary: {
+        label: "Mercenary Spells",
+        forms: [],
+        schools: ["lithomancy", "physiomancy", "abjuration"],
+    },
+    ranger: {
+        label: "Ranger Spells",
+        forms: [],
+        schools: ["physiomancy", "conjuration", "divination", "pyromancy"],
+    },
+    chanter: {
+        label: "Chanter Spells",
+        forms: [],
+        schools: ["restoration", "illusion", "hypnotism"],
+    },
+    magusSpells: {
+        label: "Magus Spells",
+        forms: ["elemental"],
+        schools: ["banishment", "sangromancy"],
+    },
+    magusEnchantments: {
+        label: "Magus Enchantments",
+        forms: ["elemental"],
+        schools: ["banishment", "sangromancy", "physiomancy", "illusion"],
+    },
+    guardian: {
+        label: "Guardian Spells",
+        forms: ["divine"],
+        schools: ["conjuration", "illusion"],
+    },
+    investigator: {
+        label: "Investigator Spells",
+        forms: ["psionic"],
+        schools: ["physiomancy", "apparition"],
+    },
+    scholar: {
+        label: "Scholar Spells",
+        forms: ["elemental", "divine", "physical", "psionic", "spectral", "temporal"],
+        schools: [],
+    },
+    artificerSpells: {
+        label: "Artificer Spells",
+        forms: ["physical"],
+        schools: ["pyromancy", "cryomancy", "illusion"]
+    },
+    artificerEnchantments: {
+        label: "Artificer Enchantments",
+        forms: ["elemental", "divine", "physical", "psionic", "spectral", "temporal"],
+        schools: ["metamagic"]
+    },
+    sage: {
+        label: "Sage Spells",
+        forms: [],
+        schools: ["restoration", "banishment", "illusion", "divination", "sangromancy"]
+    },
+    witch: {
+        label: "Witch Spells",
+        forms: ["spectral"],
+        schools: ["evocation", "transmutation", "illusion"]
+    }
+}
+
+NEWERA.spellRarity = [
+    "Inscribed", "Common", "Uncommon", "Rare", "Legendary", "Restricted", "Classified", "Mystery", "Innate"
+]

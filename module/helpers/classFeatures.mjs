@@ -12,6 +12,8 @@ import { SpellPreparation } from "../sheets/spell-preparation.mjs";
 import { SpellFocus } from "../sheets/spell-focus.mjs";
 import { ChantSheet } from "../sheets/chants.mjs";
 import { DarkEnergySheet } from "../sheets/dark-energy.mjs";
+import { SpellBrowser } from "../sheets/spell-browser.mjs";
+import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
 
 export const ClassInfo = {};
 
@@ -111,7 +113,15 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: "C",
+                    filters: ["delver"],
+                    spellType: "*"
+                }
+            ]
         },
         {
             level: 2,

@@ -49,26 +49,26 @@ export class Formatting {
         }
       }
 
-      static getSpellActionIcons(spell){
+      static getSpellActionIcons(spell, cssClass = "skill-icon"){
         //console.log(spell);
           if (spell.type == "Enchantment"){
-            return `<img src="${NEWERA.images}/sp_enchantment.png" class="skill-icon" data-tooltip="Enchantment" data-tooltip-direction="UP" /><img src="${NEWERA.images}/ac_adventuring.png" class="skill-icon" data-tooltip="Adventuring Phase (non-combat)" data-tooltip-direction="UP" />`;
+            return `<img src="${NEWERA.images}/sp_enchantment.png" class="${cssClass}" data-tooltip="Enchantment" data-tooltip-direction="UP" /><img src="${NEWERA.images}/ac_adventuring.png" class="${cssClass}" data-tooltip="Adventuring Phase (non-combat)" data-tooltip-direction="UP" />`;
           } else {
             switch(spell.system.castType){
               case "Q":
-                return `<img src="${NEWERA.images}/ac_1frame.png" class="skill-icon" data-tooltip="1 Frame" data-tooltip-direction="UP" /><img src="${NEWERA.images}/ac_reaction.png" class="skill-icon" data-tooltip="Reaction" data-tooltip-direction="UP"/>`;
+                return `<img src="${NEWERA.images}/ac_1frame.png" class="${cssClass}" data-tooltip="1 Frame" data-tooltip-direction="UP" /><img src="${NEWERA.images}/ac_reaction.png" class="${cssClass}" data-tooltip="Reaction" data-tooltip-direction="UP"/>`;
               case "S":
-                return `<img src="${NEWERA.images}/ac_2frame.png" class="skill-icon" data-tooltip="2 Frames" data-tooltip-direction="UP"/>`;
+                return `<img src="${NEWERA.images}/ac_2frame.png" class="${cssClass}" data-tooltip="2 Frames" data-tooltip-direction="UP"/>`;
               case "G":
-                return `<img src="${NEWERA.images}/ac_3frame.png" class="skill-icon" data-tooltip="3 Frames" data-tooltip-direction="UP"/><img src="${NEWERA.images}/ac_delayed.png" class="skill-icon" data-tooltip="Delayed - Finishes Next Turn" data-tooltip-direction="UP"/>`;
+                return `<img src="${NEWERA.images}/ac_3frame.png" class="${cssClass}" data-tooltip="3 Frames" data-tooltip-direction="UP"/><img src="${NEWERA.images}/ac_delayed.png" class="${cssClass}" data-tooltip="Delayed - Finishes Next Turn" data-tooltip-direction="UP"/>`;
               case "F":
-                return `<img src="${NEWERA.images}/ac_1frame.png" class="skill-icon" data-tooltip="1 Frame" data-tooltip-direction="UP" /><img src="${NEWERA.images}/ac_ongoing.png" class="skill-icon" data-tooltip="Sustained" data-tooltip-direction="UP" />`;
+                return `<img src="${NEWERA.images}/ac_1frame.png" class="${cssClass}" data-tooltip="1 Frame" data-tooltip-direction="UP" /><img src="${NEWERA.images}/ac_ongoing.png" class="${cssClass}" data-tooltip="Sustained" data-tooltip-direction="UP" />`;
               case "C":
-                return `<img src="${NEWERA.images}/sp_cantrip.png" class="skill-icon" data-tooltip="Cantrip" data-tooltip-direction="UP" />`;
+                return `<img src="${NEWERA.images}/sp_cantrip.png" class="${cssClass}" data-tooltip="Cantrip" data-tooltip-direction="UP" />`;
               case "L":
-                return `<img src="${NEWERA.images}/ac_adventuring.png" class="skill-icon" data-tooltip="Adventuring Phase (Non-Combat)" data-tooltip-direction="UP" />`;
+                return `<img src="${NEWERA.images}/ac_adventuring.png" class="${cssClass}" data-tooltip="Adventuring Phase (Non-Combat)" data-tooltip-direction="UP" />`;
               case "R":
-                return `<img src="${NEWERA.images}/sp_ritual.png" class="skill-icon" data-tooltip="Ritual" data-tooltip-direction="UP" /><img src="${NEWERA.images}/ac_adventuring.png" class="skill-icon" data-tooltip="Adventuring Phase (non-combat)" />`;
+                return `<img src="${NEWERA.images}/sp_ritual.png" class="${cssClass}" data-tooltip="Ritual" data-tooltip-direction="UP" /><img src="${NEWERA.images}/ac_adventuring.png" class="${cssClass}" data-tooltip="Adventuring Phase (non-combat)" />`;
           }
         }
       }
@@ -129,6 +129,15 @@ export class Formatting {
           case "0": return false;
           case "2": return true;
           case "1": return game.combat && game.combat.active && game.combat.round > 0;
+        }
+      }
+
+      static truncate(text, length){
+        if (!text) return "";
+        if (text.length <= length - 3){
+          return text;
+        } else {
+          return text.substring(0, length-3)+"...";
         }
       }
 
