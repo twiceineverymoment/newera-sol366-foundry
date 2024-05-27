@@ -452,7 +452,7 @@
 			"make": "",
 			"model": "",
 			"seatingCapacity": 4,
-			"topSpeed": 0,
+			"carryWeight": 100,
 			"vehicleType": "car",
 			"fuelType": "hydrogen",
 			"fuel": {

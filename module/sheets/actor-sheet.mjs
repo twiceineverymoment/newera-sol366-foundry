@@ -772,7 +772,9 @@ export class NewEraActorSheet extends ActorSheet {
 
     //Vehicle dropdowns
     if (this.actor.typeIs(NewEraActor.Types.VEHICLE)){
-
+      html.find('#fuel-type').val(system.fuelType);
+      html.find('#vehicle-type').val(system.vehicleType);
+      html.find('#color').val(system.color);
     }
 
     this._setClassFeatureDropdowns(html);
@@ -825,6 +827,11 @@ export class NewEraActorSheet extends ActorSheet {
     //Carry weight color
     if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       if (system.totalWeight > system.carryWeight.value){
+        html.find("#cw-wrapper").addClass("cw-full");
+      }
+    }
+    if (this.actor.typeIs(NewEraActor.Types.VEHICLE)){
+      if (system.totalWeight > system.carryWeight){
         html.find("#cw-wrapper").addClass("cw-full");
       }
     }

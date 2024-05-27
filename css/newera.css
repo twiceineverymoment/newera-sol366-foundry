@@ -285,6 +285,9 @@ input.roll-formula {
   font-size: 12px !important;
   background-color: #333 !important;
 }
+.property-select {
+  width: 100%;
+}
 .smol {
   font-size: 0.75em;
 }

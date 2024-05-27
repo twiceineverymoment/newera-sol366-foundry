@@ -59,6 +59,7 @@ export class NewEraActor extends Actor {
     this._prepareCharacterData(system);
     this._prepareNpcData(system);
     this._prepareCreatureData(system);
+    this._prepareVehicleData(system);
   }
 
   /*
@@ -287,6 +288,12 @@ export class NewEraActor extends Actor {
 
     system.armor.total = system.armor.equipped + system.armor.bonus;
 
+  }
+
+  _prepareVehicleData(system){
+    if (this.type != "Vehicle") return;
+    system.totalWeight = this._getTotalWeight(this.items);
+    system.isElectric = (this.system.fuelType == "electric");
   }
 
   //Calculate the base and total modifiers for each ability score
