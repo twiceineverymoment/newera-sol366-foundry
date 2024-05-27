@@ -156,15 +156,44 @@ export class NewEraActorSheet extends ActorSheet {
         if (feature.level <= clazz.system.level){
           feature.className = feature.archetype ? NEWERA.classes[clazz.system.selectedClass].archetypes[feature.archetype] : clazz.system.selectedClass;
           feature.classImg = feature.archetype ? `${NEWERA.images}/${className == "researcher" ? "" : className+"_"}${feature.archetype}.png` : clazz.img;
+          feature.clazz = clazz.system.selectedClass;
           if (feature.common){
             const commonFeature = ClassInfo.features.common[feature.common];
             feature.name = commonFeature.name;
             feature.description = commonFeature.description;
+            feature.selections = commonFeature.selections;
             feature.key = commonFeature.key; //Common features are never going to be key=true, but whatever, this'll probably confuse the hell out of me in 2 years if I hard code it to false
+            if (typeof commonFeature.dynamicSelections == "function"){
+              feature.selections = commonFeature.dynamicSelections(this.actor);
+            }
+            if (feature.selections){
+              feature.id = `${feature.name}.${feature.level}`;
+            }
           }
           if (feature.tableValues){
             for (const tv of feature.tableValues){
               tv.current = tv.values[clazz.system.level];
+            }
+          }
+          if (feature.spellStudies){
+            for (let i=0; i<feature.spellStudies.length; i++){
+              //Mark the spell studies features as complete if the remaining selection counter is EXPLICITLY zero (undefined means none chosen yet)
+              feature.spellStudies[i].status = feature.spellStudies.length > 1 ? `(${i+1}/${feature.spellStudies.length})` : "";
+              feature.spellStudies[i].index = i;
+              try {
+                const remainingSelections = this.actor.system.classes[clazz.system.selectedClass.toLowerCase()].spellStudies[feature.level][i.toString()];
+                feature.spellStudies[i].remaining = (remainingSelections !== undefined) ? remainingSelections : feature.spellStudies[i].choose;
+                feature.spellStudies[i].complete = (remainingSelections === 0);
+                if (feature.spellStudies[i].complete){
+                  feature.spellStudies[i].status += " (Complete)";
+                } else if (remainingSelections) {
+                  feature.spellStudies[i].status += ` (${remainingSelections} Remaining)`;
+                }
+              } catch (err) {
+                //Several levels of the .classes object containing remainingSelections may not exist depending on how many spells the character has learned. Catching a ReferenceError here prevents needing to null check at every level
+                feature.spellStudies[i].complete = false;
+                feature.spellStudies[i].remaining = feature.spellStudies[i].choose;
+              }
             }
           }
           if (feature.key){
@@ -844,11 +873,21 @@ export class NewEraActorSheet extends ActorSheet {
     html.find(".spell-studies").click(ev => {
       const element = $(ev.currentTarget);
       const className = element.data("class");
+      const archetype = element.data("archetype") || undefined; //This comes back as an empty string for non-archetype features which isn't equivalent to undefined in the feature data
       const level = element.data("level");
-      const spellStudiesCriteria = ClassInfo.features[className][level];
-      if (spellStudiesCriteria){
-        const criteria = new SpellSearchParams(spellStudiesCriteria);
-        new SpellBrowser(this.actor, criteria, {className: className, level: level}).render(true);
+      const index = element.data("index");
+      console.log(`[DEBUG] loading spell study guide class=${className} arch=${archetype} level=${level} index=${index}`);
+      const spellStudiesCriteria = ClassInfo.features[className.toLowerCase()].find(
+        feature => 
+        feature.archetype == archetype &&
+        feature.level == level &&
+        !!feature.spellStudies
+      ).spellStudies;
+      if (spellStudiesCriteria && spellStudiesCriteria[index]){
+        const criteria = new SpellSearchParams(spellStudiesCriteria[index]);
+        new SpellBrowser(this.actor, criteria, {className: className.toLowerCase(), level: level, index: index}).render(true);
+      } else {
+        ui.notifications.error("Couldn't load spell studies for this level. Please report this to the developers.");
       }
     });
 
@@ -1650,7 +1689,7 @@ export class NewEraActorSheet extends ActorSheet {
     const dropData = JSON.parse(json);
     if (dropData && dropData.transferAction){
       event.preventDefault();
-      if (dropData.transferAction = "addFeatFromBrowser"){
+      if (dropData.transferAction == "addFeatFromBrowser"){
         const compendium = await game.packs.get("newera-sol366.feats").getDocuments();
         const featFromCompendium = compendium.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
         const featFromActor = this.actor.items.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
@@ -1692,6 +1731,45 @@ export class NewEraActorSheet extends ActorSheet {
           }
         } else {
           ui.notifications.error("Couldn't find a feat in the CASPER database matching this item. Please report this to the developers.");
+        }
+      } else if (dropData.transferAction == "addSpellFromBrowser") {
+        if (dropData.studies){
+          if (this.actor.id != dropData.actorId){
+            ui.notifications.error(`This spell study guide is for a different actor.`);
+            return;
+          }
+          if (dropData.remaining > 0){
+            const update = {
+              system: {
+                  classes: {}
+              }
+            };
+            update.system.classes[dropData.studies.className] = {
+              spellStudies: {}
+            };
+            update.system.classes[dropData.studies.className].spellStudies[dropData.studies.level] = {};
+            update.system.classes[dropData.studies.className].spellStudies[dropData.studies.level][dropData.studies.index] = dropData.remaining - 1;
+            await this.actor.update(update);
+          } else {
+            ui.notifications.warn("You've completed your spell studies for this list. Please close the study guide and choose another one.");
+            return;
+          }
+        }
+        const compendium = await game.packs.get("newera-sol366.spells").getDocuments();
+        const spellFromCompendium = compendium.find(spell => 
+          spell.type == dropData.itemType &&
+          spell.system.casperObjectId == dropData.casperObjectId
+        );
+        if (spellFromCompendium){
+            await Item.create(spellFromCompendium, { parent: this.actor });
+            this.actor.actionMessage(this.actor.img, spellFromCompendium.img, "{NAME} learned {0}!", spellFromCompendium.name);
+            if (dropData.remaining > 1){
+              ui.notifications.info(`You learned ${spellFromCompendium.name}! You can choose ${dropData.remaining-1} more spell${dropData.remaining>2?'s':''} from the current study guide.`);
+            } else {
+              ui.notifications.info(`You learned ${spellFromCompendium.name}! You've completed this study guide.`);
+            }
+        } else {
+          ui.notifications.error(`Error: Couldn't load spell data`);
         }
       }
     }

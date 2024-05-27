@@ -95,6 +95,17 @@
     {{#each features.basic as |feature index|}}
     <tr>
         <td class="class-feature">
+            {{#if feature.spellStudies}}
+                <div class="spell-study-guide-links">
+                    {{#each feature.spellStudies as |studies index|}}
+                        {{#if studies.complete}}
+                            <button class="sheet-input" data-tooltip="Spell Study Guide {{studies.status}}"><i class="fas fa-check" style="opacity: 0.5"></i></button>
+                        {{else}}
+                            <button class="sheet-input spell-studies" data-class="{{../clazz}}" data-archetype="{{../archetype}}" data-level="{{../level}}" data-index="{{studies.index}}" data-tooltip="Spell Study Guide {{studies.status}}"><i class="fa-solid fa-books"></i></button>
+                        {{/if}}
+                    {{/each}}
+                </div>
+            {{/if}}
             <h4>{{{feature.name}}}</h4>
             {{{feature.description}}}
             {{#if feature.selections}}

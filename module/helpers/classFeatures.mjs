@@ -117,9 +117,12 @@ ClassInfo.features = {
             spellStudies: [
                 {
                     choose: 3,
-                    rarity: "C",
-                    filters: ["delver"],
-                    spellType: "*"
+                    rarity: 1,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
                 }
             ]
         },
@@ -3275,7 +3278,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" data-tooltip="Hypnotism" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    lists: ["chanter"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 3,
@@ -3331,7 +3345,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" data-tooltip="Hypnotism" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["chanter"],
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 6,
@@ -3369,7 +3394,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" data-tooltip="Hypnotism" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    lists: ["chanter"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["chanter"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 9,
@@ -3437,7 +3482,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" data-tooltip="Hypnotism" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 2,
+                    lists: ["chanter"],
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 13,
@@ -6488,7 +6544,31 @@ ClassInfo.features = {
         abilityScoreImprovement: {
             name: "Ability Score Improvement",
             key: false,
-            description: "Increase one of your Ability Scores by 2 or two different scores by 1 each.",
+            description: "Choose two +1 increases to your ability scores. You can choose the same score for both choices to increase it by 2, or two different scores to increase each of them by 1.",
+            selections: {
+                first: {
+                    label: "First Choice",
+                    options: {
+                        strength: "Strength",
+                        dexterity: "Dexterity",
+                        constitution: "Constitution",
+                        intelligence: "Intelligence",
+                        wisdom: "Wisdom",
+                        charisma: "Charisma"
+                    }
+                },
+                second: {
+                    label: "Second Choice",
+                    options: {
+                        strength: "Strength",
+                        dexterity: "Dexterity",
+                        constitution: "Constitution",
+                        intelligence: "Intelligence",
+                        wisdom: "Wisdom",
+                        charisma: "Charisma"
+                    }
+                }
+            }
         },
         naturalSkillImprovement: {
             name: "Natural Skill Improvement",
@@ -6498,12 +6578,16 @@ ClassInfo.features = {
         learningExperience: {
             name: "Learning Experience",
             key: false,
-            description: "Gain 1 level in one of your Knowledge skills, or a new one of your choice.",
+            description: `Gain 1 level in one of your Knowledge skills, or a new one of your choice.
+            <br /><i>(To gain a new knowledge, add it to your character sheet and then choose it here.)</i>`,
+            dynamicSelections: actor => actor.getLearningExperienceOptions()
         },
         specialtyImprovement: {
             name: "Specialty Improvement",
             key: false,
-            description: "Choose one of your specialties and increase its level by 1. If you don't have any specialties that can be increased, you may gain a new specialty of your choice at the GM's discretion.",
+            description: `Choose one of your specialties and increase its level by 1. If you don't have any specialties that can be increased, you may gain a new specialty of your choice at the GM's discretion.
+            <br /><i>(To gain a new specialty, add it to your character sheet and then choose it here.)</i>`,
+            dynamicSelections: actor => actor.getSpecialtyImprovementOptions()
         }
     },
 }

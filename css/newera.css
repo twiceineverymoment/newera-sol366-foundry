@@ -1027,6 +1027,15 @@ div.feature-selection {
 div.feature-selection select, div.feature-selection input {
   width: 50%;
 }
+div.spell-study-guide-links {
+  float: right;
+  text-align: right;
+}
+div.spell-study-guide-links button {
+  width: 40px;
+  text-align: center;
+  margin-left: 3px;
+}
 div.spell-studies-container {
   bottom: 4px;
   left: 4px;
@@ -1333,4 +1342,7 @@ p.storage-exceeded-msg {
 }
 .spell-preview {
   cursor: pointer;
+}
+span#spellsRemaining {
+  color: yellow !important;
 }

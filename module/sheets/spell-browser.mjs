@@ -10,8 +10,8 @@ export class SpellBrowser extends ActorSheet {
         super(actor);
         this.criteria = criteria || new SpellSearchParams({});
         this.compendium = [];
-        this.remainingSelections = this.criteria.studies ? this.criteria.choose : null;
         this.studies = studies || {};
+        this.remainingSelections = null;
     }
 
     static get defaultOptions() {
@@ -34,9 +34,22 @@ export class SpellBrowser extends ActorSheet {
     getData() {
         const context = super.getData();
 
+        if (this.studies){
+            try {
+                this.remainingSelections = this.actor.system.classes[this.studies.className].spellStudies[this.studies.level][this.studies.index];
+                if (this.remainingSelections === undefined){
+                    this.remainingSelections = this.criteria.choose;
+                }
+            } catch (err) {
+                this.remainingSelections = this.criteria.choose;
+            }
+        }
+
         context.initialCriteria = this.criteria;
         context.initialFilterData = this._getHandlebarsInputCriteria();
         context.spellLists = this._getSpellListOptions();
+        context.remainingSelections = this.remainingSelections;
+        context.complete = !!this.studies && this.remainingSelections == 0;
 
         console.log("SPELL STUDY GUIDE CONTEXT DUMP");
         console.log(context);
@@ -48,6 +61,9 @@ export class SpellBrowser extends ActorSheet {
         for (const [key, list] of Object.entries(NEWERA.spellStudiesLists)){
             for (const clazz of this.actor.items.filter(i => i.typeIs(NewEraItem.Types.CLASS))){
                 if (key.includes(clazz.system.selectedClass.toLowerCase())){
+                    if (this.criteria.lists.includes(key)){
+                        list.checked = true;
+                    }
                     output[key] = list;
                 }
             }
@@ -56,15 +72,23 @@ export class SpellBrowser extends ActorSheet {
     }
 
     //Mapping object derived from the initial search criteria that determines which check boxes on the browser should be initially checked.
-    //Since we're not currently going to show the filters section if the study guide mode is used, this may not be necessary
     _getHandlebarsInputCriteria(){
         const filterData = {};
-
+        for (const form of this.criteria.forms){
+            filterData[form] = true;
+        }
+        for (const school of this.criteria.schools){
+            filterData[NEWERA.schoolOfMagicNames[school]] = true;
+        }
         return filterData;
     }
 
     activateListeners(html) {
         super.activateListeners(html);
+
+        if (this.remainingSelections === 0){
+            this.close();
+        }
 
         //Pull the initial results with no filters
         this._searchSpells(this.criteria)
@@ -88,10 +112,6 @@ export class SpellBrowser extends ActorSheet {
                     this._renderResults(html, feats);
             });
         });
-
-        if (this.criteria.studies){
-            html.find("#spellsRemaining").html(this.criteria.choose);
-        }
         
     }
 
@@ -143,29 +163,10 @@ export class SpellBrowser extends ActorSheet {
             const dragData = {
                 transferAction: "addSpellFromBrowser",
                 actorId: this.actor.id,
+                studies: this.studies,
+                remaining: this.remainingSelections,
                 casperObjectId: element.data("casperObjectId"),
                 itemType: element.data("casperType"),
-                callback: () => {
-                    if (this.criteria.studies){
-                        if (this.remainingSelections > 1){
-                            this.remainingSelections--;
-                            html.find("#spellsRemaining").html(this.remainingSelections);
-                        } else {
-                            this.close();
-                        }
-                        //Apply the updated remaining-selections counter to the actor
-                        const update = {
-                            system: {
-                                classes: {}
-                            }
-                        };
-                        update.system.classes[this.studies.class] = {
-                            spellStudies: {}
-                        };
-                        update.system.classes[this.studies.class].spellStudies[this.studies.level] = this.remainingSelections;
-                        this.actor.update(update);
-                    }
-                }
             };
             xfr.setData("text/plain", JSON.stringify(dragData));
         });
@@ -207,7 +208,37 @@ export class SpellBrowser extends ActorSheet {
             if (a.name < b.name) return -1;
             else if (a.name > b.name) return 1;
             else return 0;
+        },
+        function(a, b){ //SSG Sort Order (Level high-low then rarity high-low)
+            if (a.system.level > b.system.level) return -1;
+            else if (a.system.level < b.system.level) return 1;
+            else if (a.system.rarity > b.system.rarity) return -1;
+            else if (a.system.rarity < b.system.rarity) return 1;
+            else return 0;
         }
     ]
+
+    static generateSpellStudiesFeature(className, feature){
+        let isEnchantmentStudies = false;
+        let listHtml = "";
+        for (const study of feature.studies){
+            if (study.spellType == "E") isEnchantmentStudies = true;
+            const listDesc = "";
+            if (study.lists && study.lists.length == 1){
+                const spellListParams = NEWERA.spellLists[study.lists[0]]
+                listDesc = spellListParams.label;
+            } else if (study.schools && study.schools.length == 1){
+                listDesc = `${NEWERA.schoolOfMagicNames[study.schools[0]]} ${study.spellType == 'E' ? "Enchantments" : "Spells"}`;
+            } else if (study.forms && study.forms.length == 1){
+
+            } else {
+                listDesc = (study.spellType == 'E' ? "Enchantments" : "Spells");
+            }
+            const listHeader = `<h4>${study.choose} ${NEWERA.spellRarity[study.rarity]} ${listDesc} (Level ${study.level.max}${study.level.max > 1 ? " or lower":""})</h4>`;
+            const button = `<button class="sheet-input spell-studies" data->`
+        }
+
+        const output = `<p>You learn new spells from the Spell Study Guide.</p>`
+    }
 
 }

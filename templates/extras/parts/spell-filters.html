@@ -1,12 +1,12 @@
-<input type="text" id="searchTerm" placeholder="Search..." class="sheet-input spell-filter-criteria" />
+<input type="text" id="searchTerm" placeholder="Search..." class="sheet-input spell-filter-criteria" {{disabled initialCriteria.studies}} />
 <div class="newera-itemsheet-properties">
     <h4>Base Level</h4>
-    <input class="sheet-input half-width spell-filter-criteria" id="levelMin" value="{{initialCriteria.level.min}}" min="1" max="10" type="number" /> - 
-    <input class="sheet-input half-width spell-filter-criteria" id="levelMax" value="{{initialCriteria.level.max}}" min="1" max="10" type="number" />
+    <input class="sheet-input half-width spell-filter-criteria" id="levelMin" value="{{initialCriteria.level.min}}" min="1" max="10" type="number" {{disabled initialCriteria.studies}} /> - 
+    <input class="sheet-input half-width spell-filter-criteria" id="levelMax" value="{{initialCriteria.level.max}}" min="1" max="10" type="number" {{disabled initialCriteria.studies}} />
 </div>
 <div class="newera-itemsheet-properties">
     <h4>Rarity</h4>
-    <select id="rarity" class="sheet-input spell-filter-criteria">
+    <select id="rarity" class="sheet-input spell-filter-criteria" {{disabled initialCriteria.studies}}>
         <option value="1" {{selected initialCriteria.rarity "1"}}>Common</option>
         <option value="2" {{selected initialCriteria.rarity "2"}}>Uncommon</option>
         <option value="3" {{selected initialCriteria.rarity "3"}}>Rare</option>
@@ -20,7 +20,7 @@
 </div>
 <div class="newera-itemsheet-properties">
     <h4>Spell Type</h4>
-    <select id="spellType" class="sheet-input spell-filter-criteria">
+    <select id="spellType" class="sheet-input spell-filter-criteria" {{disabled initialCriteria.studies}}>
         <option value="C" {{selected initialCriteria.spellType "C"}}>Cantrip</option>
         <option value="Q" {{selected initialCriteria.spellType "Q"}}>Quick (1 Frame)</option>
         <option value="S" {{selected initialCriteria.spellType "S"}}>Spell (2 Frames)</option>
@@ -38,68 +38,69 @@
 </div>
 <div class="newera-itemsheet-properties">
     <h4>Sort By</h4>
-    <select id="sort" class="sheet-input spell-filter-criteria">
+    <select id="sort" class="sheet-input spell-filter-criteria" {{disabled initialCriteria.studies}}>
         <option value="0" {{selected initialCriteria.sortFunction "0"}}>Rarity Low to High</option>
         <option value="1" {{selected initialCriteria.sortFunction "1"}}>Rarity High to Low</option>
         <option value="2" {{selected initialCriteria.sortFunction "2"}}>Level Low to High</option>
         <option value="3" {{selected initialCriteria.sortFunction "3"}}>Level High to Low</option>
         <option value="4" {{selected initialCriteria.sortFunction "4"}}>A to Z</option>
+        <option value="5" {{selected initialCriteria.sortFunction "5"}}>Spell Study Guide</option>
     </select>
 </div>
 <h3 class="newera-section-header">Filter Results</h3>
 <div class="feat-filter-option">
     {{#each spellLists as |list index|}}
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spellList" data-filter-sub-category="{{index}}" /> {{list.label}}
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spellList" data-filter-sub-category="{{index}}" {{checked list.checked}} {{disabled ../initialCriteria.studies}} /> {{list.label}}
     {{/each}}
 </div>
 <div class="feat-filter-option">
-    <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" {{checked initialFilterData.elemental}} /> Elemental
+    <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" {{checked initialFilterData.elemental}} {{disabled initialCriteria.studies}} /> Elemental
     <div class="feat-filter-sub-options" data-filter-category="elemental">
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" data-filter-sub-category="PY" {{checked initialFilterData.pyromancy}} /> Pyromancy <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" data-filter-sub-category="HM" {{checked initialFilterData.cryomancy}} /> Cryomancy <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" data-filter-sub-category="GE" {{checked initialFilterData.lithomancy}} /> Lithomancy <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" data-filter-sub-category="EV" {{checked initialFilterData.evocation}} /> Evocation <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" data-filter-sub-category="PY" {{checked initialFilterData.pyromancy}} {{disabled initialCriteria.studies}} /> Pyromancy <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" data-filter-sub-category="HM" {{checked initialFilterData.cryomancy}} {{disabled initialCriteria.studies}} /> Cryomancy <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" data-filter-sub-category="GE" {{checked initialFilterData.lithomancy}} {{disabled initialCriteria.studies}} /> Lithomancy <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="elemental" data-filter-sub-category="EV" {{checked initialFilterData.evocation}} {{disabled initialCriteria.studies}} /> Evocation <br />
     </div>
 </div>
 <div class="feat-filter-option">
-    <input type="checkbox" class="spell-filter-criteria" data-filter-category="divine" {{checked initialFilterData.divine}} /> Divine
+    <input type="checkbox" class="spell-filter-criteria" data-filter-category="divine" {{checked initialFilterData.divine}} {{disabled initialCriteria.studies}} /> Divine
     <div class="feat-filter-sub-options" data-filter-category="divine">
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="divine" data-filter-sub-category="RE" {{checked initialFilterData.restoration}} /> Restoration <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="divine" data-filter-sub-category="AB" {{checked initialFilterData.abjuration}} /> Abjuration <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="divine" data-filter-sub-category="BA" {{checked initialFilterData.banishment}} /> Banishment <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="divine" data-filter-sub-category="RE" {{checked initialFilterData.restoration}} {{disabled initialCriteria.studies}} /> Restoration <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="divine" data-filter-sub-category="AB" {{checked initialFilterData.abjuration}} {{disabled initialCriteria.studies}} /> Abjuration <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="divine" data-filter-sub-category="BA" {{checked initialFilterData.banishment}} {{disabled initialCriteria.studies}} /> Banishment <br />
     </div>
 </div>
 <div class="feat-filter-option">
-    <input type="checkbox" class="spell-filter-criteria" data-filter-category="physical" {{checked initialFilterData.physical}} /> Physical
+    <input type="checkbox" class="spell-filter-criteria" data-filter-category="physical" {{checked initialFilterData.physical}} {{disabled initialCriteria.studies}} /> Physical
     <div class="feat-filter-sub-options" data-filter-category="physical">
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="physical" data-filter-sub-category="MA" {{checked initialFilterData.physiomancy}} /> Physiomancy <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="physical" data-filter-sub-category="TR" {{checked initialFilterData.transmutation}} /> Transmutation <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="physical" data-filter-sub-category="CO" {{checked initialFilterData.conjuration}} /> Conjuration <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="physical" data-filter-sub-category="MA" {{checked initialFilterData.physiomancy}} {{disabled initialCriteria.studies}} /> Physiomancy <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="physical" data-filter-sub-category="TR" {{checked initialFilterData.transmutation}} {{disabled initialCriteria.studies}} /> Transmutation <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="physical" data-filter-sub-category="CO" {{checked initialFilterData.conjuration}} {{disabled initialCriteria.studies}} /> Conjuration <br />
     </div>
 </div>
 <div class="feat-filter-option">
-    <input type="checkbox" class="spell-filter-criteria" data-filter-category="psionic" {{checked initialFilterData.psionic}} /> Psionic
+    <input type="checkbox" class="spell-filter-criteria" data-filter-category="psionic" {{checked initialFilterData.psionic}} {{disabled initialCriteria.studies}} /> Psionic
     <div class="feat-filter-sub-options" data-filter-category="psionic">
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="psionic" data-filter-sub-category="IL" {{checked initialFilterData.illusion}} /> Illusion <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="psionic" data-filter-sub-category="HY" {{checked initialFilterData.hypnotism}} /> Transmutation <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="psionic" data-filter-sub-category="DI" {{checked initialFilterData.divination}} /> Conjuration <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="psionic" data-filter-sub-category="IL" {{checked initialFilterData.illusion}} {{disabled initialCriteria.studies}} /> Illusion <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="psionic" data-filter-sub-category="HY" {{checked initialFilterData.hypnotism}} {{disabled initialCriteria.studies}} /> Transmutation <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="psionic" data-filter-sub-category="DI" {{checked initialFilterData.divination}} {{disabled initialCriteria.studies}} /> Conjuration <br />
     </div>
 </div>
 <div class="feat-filter-option">
-    <input type="checkbox" class="spell-filter-criteria" data-filter-category="spectral" {{checked initialFilterData.spectral}} /> Spectral
+    <input type="checkbox" class="spell-filter-criteria" data-filter-category="spectral" {{checked initialFilterData.spectral}} {{disabled initialCriteria.studies}} /> Spectral
     <div class="feat-filter-sub-options" data-filter-category="spectral">
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spectral" data-filter-sub-category="CN" {{checked initialFilterData.sangromancy}} /> Sangromancy <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spectral" data-filter-sub-category="SU" {{checked initialFilterData.summoning}} /> Summoning <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spectral" data-filter-sub-category="NE" {{checked initialFilterData.necromancy}} /> Necromancy <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spectral" data-filter-sub-category="CN" {{checked initialFilterData.sangromancy}} {{disabled initialCriteria.studies}} /> Sangromancy <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spectral" data-filter-sub-category="SU" {{checked initialFilterData.summoning}} {{disabled initialCriteria.studies}} /> Summoning <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spectral" data-filter-sub-category="NE" {{checked initialFilterData.necromancy}} {{disabled initialCriteria.studies}} /> Necromancy <br />
     </div>
 </div>
 <div class="feat-filter-option">
-    <input type="checkbox" class="spell-filter-criteria" data-filter-category="temporal" {{checked initialFilterData.temporal}} /> Temporal
+    <input type="checkbox" class="spell-filter-criteria" data-filter-category="temporal" {{checked initialFilterData.temporal}} {{disabled initialCriteria.studies}} /> Temporal
     <div class="feat-filter-sub-options" data-filter-category="temporal">
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="temporal" data-filter-sub-category="AP" {{checked initialFilterData.apparition}} /> Apparition <br />
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="temporal" data-filter-sub-category="CH" {{checked initialFilterData.chronomancy}} /> Chronomancy <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="temporal" data-filter-sub-category="AP" {{checked initialFilterData.apparition}} {{disabled initialCriteria.studies}} /> Apparition <br />
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="temporal" data-filter-sub-category="CH" {{checked initialFilterData.chronomancy}} {{disabled initialCriteria.studies}} /> Chronomancy <br />
     </div>
 </div>
 <div class="feat-filter-option">
-    <input type="checkbox" class="spell-filter-criteria" data-filter-category="metamagic" {{checked initialFilterData.metamagic}} /> Metamagic
+    <input type="checkbox" class="spell-filter-criteria" data-filter-category="metamagic" {{checked initialFilterData.metamagic}} {{disabled initialCriteria.studies}} /> Metamagic
 </div>

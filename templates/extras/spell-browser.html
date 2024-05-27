@@ -4,15 +4,17 @@
 
 <form class="{{cssClass}} {{actor.type}} newera-actorsheet-body" autocomplete="off">
 
-  {{#if initialCriteria.studies}}
-    <h3 class="newera-section-header">Choose <span id="spellsRemaining"></span> more spell(s) from this list</h3>
-    <div id="browserLoading" class="browser-loading-wheel"></div>
-    <div id="results" style="display: none">
-    
-    </div>
+  {{#if complete}}
+    <h2 class="newera-section-header">Complete</h2>
+    <p>You've finished learning spells from this list. You may now close this window.</p>
   {{else}}
-  <div class="newera-actorsheet-left feat-browser-filters">
-    <h3 class="newera-section-header">Search Spells</h3>
+
+  <div class="newera-actorsheet-left feat-browser-filters" {{#if initialCriteria.studies}}data-tooltip="You cannot change the search criteria while viewing the spell study guide. To view other spells, open the Spell Browser from the Magic tab of your character sheet." data-tooltip-direction="RIGHT"{{/if}}>
+    {{#if initialCriteria.studies}}
+      <h3 class="newera-section-header">Choose <span id="spellsRemaining">{{remainingSelections}}</span> more spell(s) from this list</h3>
+    {{else}}
+      <h3 class="newera-section-header">Search Spells</h3>
+    {{/if}}
     <div id="filterResults">
       {{> systems/newera-sol366/templates/extras/parts/spell-filters.html}}
     </div>
@@ -24,6 +26,7 @@
       
     </div>
   </div>
+
   {{/if}}
   
 </form>

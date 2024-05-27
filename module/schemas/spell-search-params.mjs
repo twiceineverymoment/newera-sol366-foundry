@@ -4,6 +4,7 @@ import { NEWERA } from "../helpers/config.mjs";
 export class SpellSearchParams {
 
     constructor(params){
+            console.log(`[DEBUG] created SpellSearchParams ${JSON.stringify(params)}`);
             this.searchTerm = params.searchTerm || "";
             this.lists = params.lists  || [];
             this.forms = params.forms || [];
@@ -18,7 +19,7 @@ export class SpellSearchParams {
                 min: params.level ? params.level.min || 1 : 1,
                 max: params.level ? params.level.max || 10 : 10,
             };
-            this.sortFunction = params.sortFunction || 0;
+            this.sortFunction = this.studies ? 5 : params.sortFunction || 0;
         if (params.html){
 
             this.level.min = params.html.find("#levelMin").val();
@@ -45,41 +46,37 @@ export class SpellSearchParams {
             const list = NEWERA.spellStudiesLists[listName];
             if (list){
                 this.forms = this.forms.concat(list.forms);
-                this.schools = this.forms.concat(list.schools.map(f => {
+                this.schools = this.schools.concat(list.schools.map(f => {
                     return Object.entries(NEWERA.schoolOfMagicNames).find(([k, v]) => v == f)[0];
                 }));
             }
         }
+        console.log(this);
     }
 
     showSpell(spell){
         if (this.searchTerm){
             if (!spell.name.toLowerCase().includes(this.searchTerm.toLowerCase()) && !this.searchTerm.toLowerCase().includes(spell.name.toLowerCase())){
-                console.log(`[DEBUG] hide ${spell.name}: search term doesn't match`);
+                //console.log(`[DEBUG] hide ${spell.name}: search term doesn't match`);
                 return false;
             }
         }
-        if (this.forms.length > 0){
-            console.log(`[DEBUG] hide ${spell.name}: form mismatch`);
-            if (!this.forms.includes(spell.system.form)) return false;
-        }
-        if (this.schools.length > 0){
-            console.log(`[DEBUG] hide ${spell.name}: school mismatch`);
-            if (!this.schools.includes(spell.system.school)) return false;
+        if (!this._includeByFormAndSchool(spell)){
+            return false;
         }
         if (this.rarity != "0"){
             if (this.showLowerRarity){
                 if (this.rarity < spell.system.rarity){
                     if (this.restricted && spell.system.rarity == "5"){
-                        console.log(`[DEBUG] including ${spell.name} due to restricted school`);
+                        //console.log(`[DEBUG] including ${spell.name} due to restricted school`);
                     } else {
-                        console.log(`[DEBUG] hide ${spell.name}: rarity above maximum`);
+                        //console.log(`[DEBUG] hide ${spell.name}: rarity above maximum`);
                         return false;
                     }
                 }
             } else {
                 if (this.rarity != spell.system.rarity){
-                    console.log(`[DEBUG] hide ${spell.name}: rarity mismatch (need exact)`);
+                    //console.log(`[DEBUG] hide ${spell.name}: rarity mismatch (need exact)`);
                     return false;
                 }
             }
@@ -91,18 +88,38 @@ export class SpellSearchParams {
                 (this.spellType == "E" && spell.typeIs(NewEraItem.Types.ENCHANTMENT)) ||
                 this.spellType == spell.system.castType
             )) {
-                console.log(`[DEBUG] hide ${spell.name}: spell type mismatch`);
+                //console.log(`[DEBUG] hide ${spell.name}: spell type mismatch`);
                 return false;
             }
         }
         if (spell.system.level > this.level.max || spell.system.level < this.level.min){
-            console.log(`[DEBUG] hide ${spell.name}: level out of range`);
+            //console.log(`[DEBUG] hide ${spell.name}: level out of range`);
             return false;
         }
 
-        console.log(`[DEBUG] show ${spell.name}`);
+        //console.log(`[DEBUG] show ${spell.name}`);
         return true;
 
+    }
+
+    _includeByFormAndSchool(spell){
+        //Return true for everything if both arrays are empty.
+        if (this.forms.length == 0 && this.schools.length == 0){
+            return true;
+        }
+        //Check form.
+        //If form match found, return true.
+        //If no forms set or match not found, check school.
+        if (this.forms.length > 0 && this.forms.includes(spell.system.form)){
+            return true;
+        }
+        //Check school.
+        //If school match found, return true.
+        if (this.schools.length > 0 && this.schools.includes(spell.system.school)){
+            return true;
+        }
+
+        return false;
     }
 
 }
