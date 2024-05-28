@@ -183,11 +183,16 @@ export class NewEraActor extends Actor {
     return cpa;
   }
 
-  _getTotalWeight(items){
+  _getTotalWeight(items, occupants = []){
     let total = 0;
     for (const item of items){
       if (!item.system.stored && typeof item.system.weight != "undefined"){
         total += item.system.weight * (item.system.quantity || 1);
+      }
+    }
+    if (this.type == "Vehicle"){
+      for (const actor of occupants){
+        total += Math.max(6 + actor.system.size.mod, 0);
       }
     }
     return total;
@@ -292,7 +297,13 @@ export class NewEraActor extends Actor {
 
   _prepareVehicleData(system){
     if (this.type != "Vehicle") return;
-    system.totalWeight = this._getTotalWeight(this.items);
+    system.passengers = system.occupants.map(id => {
+      const actor = structuredClone(game.actors.get(id));
+      actor.id = id;
+      return actor;
+    });
+    system.empty = (system.occupants.length == 0);
+    system.totalWeight = this._getTotalWeight(this.items, system.passengers);
     system.isElectric = (this.system.fuelType == "electric");
   }
 

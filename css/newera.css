@@ -1349,3 +1349,20 @@ p.storage-exceeded-msg {
 span#spellsRemaining {
   color: yellow !important;
 }
+img.vehicle-passenger-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: static;
+}
+.vehicle-occupant, .vehicle-occupant h3 {
+  text-align: center;
+  cursor: pointer;
+}
+a.occupant-delete {
+  float: right;
+  text-align: right;
+  font-size: 12px;
+  margin-right: 2px;
+  margin-top: 2px;
+}

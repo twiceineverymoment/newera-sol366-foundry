@@ -1,0 +1,17 @@
+<div class="browser-results-container vehicle-actor-dropzone">
+    {{#if system.empty}}
+        <h3 class="newera-section-header">No One's Here</h3>
+        <p>
+            Drag Actors from the sidebar to add them as passengers in the vehicle.
+        </p>
+    {{/if}}
+    {{#each system.passengers as |actor index|}}
+        <div class="browser-result vehicle-occupant" data-actor-id="{{actor.id}}">
+            <a class="occupant-delete" data-tooltip="Remove Passenger" data-tooltip-direction="LEFT">
+                <i class="fas fa-x"></i>
+            </a>
+            <img class="vehicle-passenger-img occupant-display" src="{{actor.img}}" />
+            <h3 class="newera-section-header occupant-display">{{actor.name}}</h3>
+        </div>
+    {{/each}}
+</div>

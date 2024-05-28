@@ -453,13 +453,15 @@
 			"model": "",
 			"seatingCapacity": 4,
 			"carryWeight": 100,
-			"vehicleType": "car",
-			"fuelType": "hydrogen",
+			"vehicleType": "2d",
+			"fuelType": "hydrogenEngine",
+			"color": "white",
 			"fuel": {
 				"min": 0,
 				"max": 100,
 				"value": 50
-			}
+			},
+			"occupants": []
 		}
 	},
 	"Item": {

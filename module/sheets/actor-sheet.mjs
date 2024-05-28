@@ -673,6 +673,22 @@ export class NewEraActorSheet extends ActorSheet {
       Actions.castSpell(this.actor, spell);
     });
 
+    html.find('.occupant-display').click(ev => {
+      const actorId = $(ev.currentTarget).parents(".vehicle-occupant").data("actorId");
+      const actor = game.actors.get(actorId);
+      actor.sheet.render(true);
+    });
+    html.find('.occupant-delete').click(ev => {
+      const actorId = $(ev.currentTarget).parents(".vehicle-occupant").data("actorId");
+      const actor = game.actors.get(actorId);
+      this.actor.update({
+        system: {
+          occupants: this.actor.system.occupants.filter(n => n != actorId)
+        }
+      });
+      ui.notifications.info(`${actor.name} is no longer a passenger in ${this.actor.name}.`);
+    });
+
     //Ability Score Point Buy
     if (system.level <= game.settings.get("newera-sol366", "startingLevel") && game.settings.get("newera-sol366", "characterCreation") && this.actor.typeIs(NewEraActor.Types.PC)){
       html.find('#ability-points-counter').show();
@@ -1694,6 +1710,24 @@ export class NewEraActorSheet extends ActorSheet {
     const xfr = event.originalEvent.dataTransfer;
     const json = xfr.getData("text/plain") || null;
     const dropData = JSON.parse(json);
+    //console.log(`[DEBUG] ActorSheet Drop ${json}`);
+    if (dropData && dropData.type == "Actor" && this.actor.type == "Vehicle"){
+      event.preventDefault();
+      const id = dropData.uuid.replace("Actor.", "");
+      const passenger = game.actors.get(id);
+      if (this.actor.system.occupants.includes(id)){
+        ui.notifications.warn(`${passenger.name} is already in this vehicle!`);
+        return;
+      }
+      if (passenger && passenger.typeIs(NewEraActor.Types.ANIMATE)){
+        await this.actor.update({
+          system: {
+            occupants: this.actor.system.occupants.concat([id])
+          }
+        });
+        ui.notifications.info(`${passenger.name} is now a passenger in ${this.actor.name}.`);
+      }
+    }
     if (dropData && dropData.transferAction){
       event.preventDefault();
       if (dropData.transferAction == "addFeatFromBrowser"){
