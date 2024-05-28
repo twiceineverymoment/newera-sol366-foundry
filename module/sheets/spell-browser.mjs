@@ -215,6 +215,8 @@ export class SpellBrowser extends ActorSheet {
             else if (a.system.level < b.system.level) return 1;
             else if (a.system.rarity > b.system.rarity) return -1;
             else if (a.system.rarity < b.system.rarity) return 1;
+            else if (a.type == "Enchantment" && b.type == "Spell") return 1;
+            else if (a.type == "Spell" && b.type == "Enchantment") return -1;
             else return 0;
         }
     ]
