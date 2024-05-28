@@ -5881,7 +5881,21 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    onOtherFeature: true
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -5942,7 +5956,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 4,
@@ -6020,7 +6045,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 7,
@@ -6039,6 +6084,12 @@ ClassInfo.features = {
             </div>
             `,
             spellStudies: [
+                {
+                    onOtherFeature: true
+                },
+                {
+                    onOtherFeature: true
+                },
                 {
                     choose: 2,
                     rarity: 2,
@@ -6127,7 +6178,35 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <h4>2 Common spells from any school (Level 4 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SS",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 11,
@@ -6178,17 +6257,19 @@ ClassInfo.features = {
                 {
                     choose: 2,
                     rarity: 2,
+                    metamagic: true,
                     spellType: "E",
                     level: {
-                        max: 2
+                        max: 4
                     }
                 },
                 {
-                    choose: 2,
+                    choose: 3,
                     rarity: 1,
+                    metamagic: true,
                     spellType: "E",
                     level: {
-                        max: 2
+                        max: 4
                     }
                 }
             ]
@@ -6211,7 +6292,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <h4>3 Common spells from any school (Level 5 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 2,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 5
+                    }
+                }
+            ]
         },
         {
             level: 14,
@@ -6253,7 +6354,7 @@ ClassInfo.features = {
             <p>You may learn the listed number of new enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
                 <h4>1 Rare Enchantment (Level 5 or lower)
-                <h4>2 Unommon Enchantments (Level 5 or lower)</h4>
+                <h4>2 Uncommon Enchantments (Level 5 or lower)</h4>
                 <h4>2 Common Enchantments (Level 5 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
@@ -6262,7 +6363,36 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    metamagic: true,
+                    spellType: "E",
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    metamagic: true,
+                    spellType: "E",
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    metamagic: true,
+                    spellType: "E",
+                    level: {
+                        max: 5
+                    }
+                }
+            ]
         }
     ],
     sage: [
