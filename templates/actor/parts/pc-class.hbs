@@ -98,11 +98,13 @@
             {{#if feature.spellStudies}}
                 <div class="spell-study-guide-links">
                     {{#each feature.spellStudies as |studies index|}}
-                        {{#if studies.complete}}
-                            <button class="sheet-input" data-tooltip="Spell Study Guide {{studies.status}}"><i class="fas fa-check" style="opacity: 0.5"></i></button>
-                        {{else}}
-                            <button class="sheet-input spell-studies" data-class="{{../clazz}}" data-archetype="{{../archetype}}" data-level="{{../level}}" data-index="{{studies.index}}" data-tooltip="Spell Study Guide {{studies.status}}"><i class="fa-solid fa-books"></i></button>
-                        {{/if}}
+                        {{#unless studies.onOtherFeature}}
+                            {{#if studies.complete}}
+                                <button class="sheet-input" data-tooltip="Spell Study Guide {{studies.status}}"><i class="fas fa-check" style="opacity: 0.5"></i></button>
+                            {{else}}
+                                <button class="sheet-input spell-studies" data-class="{{../clazz}}" data-archetype="{{../archetype}}" data-level="{{../level}}" data-index="{{studies.index}}" data-tooltip="Spell Study Guide {{studies.status}}"><i class="fa-solid fa-books"></i></button>
+                            {{/if}}
+                        {{/unless}}
                     {{/each}}
                 </div>
             {{/if}}

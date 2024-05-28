@@ -177,6 +177,13 @@ export class NewEraActorSheet extends ActorSheet {
           }
           if (feature.spellStudies){
             for (let i=0; i<feature.spellStudies.length; i++){
+              if (feature.spellStudies[i].onOtherFeature){
+                /*
+                Spell studies blocks with this property set are used to offset their index position for that level in the rare case of a class having multiple study-guide-enabled features at the same level.
+                They are not rendered in the sheet and should be skipped here too.
+                */
+                continue;
+              }
               //Mark the spell studies features as complete if the remaining selection counter is EXPLICITLY zero (undefined means none chosen yet)
               feature.spellStudies[i].status = feature.spellStudies.length > 1 ? `(${i+1}/${feature.spellStudies.length})` : "";
               feature.spellStudies[i].index = i;
