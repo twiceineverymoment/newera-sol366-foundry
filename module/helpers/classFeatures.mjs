@@ -2052,7 +2052,17 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>5 Common spells of any school (Level 1)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 5,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2075,6 +2085,7 @@ ClassInfo.features = {
                 }
             ]
         },
+        /* BEGIN GENERATED SECTION L2 */
         {
             level: 2,
             archetype: "pyromancy",
@@ -2092,7 +2103,18 @@ ClassInfo.features = {
                 <h4>All Common Pyromancy spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["PY"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2111,7 +2133,18 @@ ClassInfo.features = {
                 <h4>All Common Cryomancy spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["HM"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2130,7 +2163,18 @@ ClassInfo.features = {
                 <h4>All Common Lithomancy spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" data-tooltip="Lithomancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["GE"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2149,7 +2193,18 @@ ClassInfo.features = {
                 <h4>All Common Evocation spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["EV"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2168,7 +2223,18 @@ ClassInfo.features = {
                 <h4>All Common Restoration spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/restoration.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["RE"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2187,7 +2253,18 @@ ClassInfo.features = {
                 <h4>All Common Abjuration spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/abjuration.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["AB"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2206,7 +2283,18 @@ ClassInfo.features = {
                 <h4>All Common Banishment spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["BA"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2225,7 +2313,18 @@ ClassInfo.features = {
                 <h4>All Common Physiomancy spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["MA"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2244,7 +2343,18 @@ ClassInfo.features = {
                 <h4>All Common Transmutation spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/transmutation.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["TR"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2263,7 +2373,18 @@ ClassInfo.features = {
                 <h4>All Common Conjuration spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/conjuration.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["CO"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2282,7 +2403,18 @@ ClassInfo.features = {
                 <h4>All Common Illusion spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["IL"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2301,7 +2433,18 @@ ClassInfo.features = {
                 <h4>All Common Divination spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["DI"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2320,7 +2463,18 @@ ClassInfo.features = {
                 <h4>All Common Hypnotism spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["HY"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2339,7 +2493,19 @@ ClassInfo.features = {
                 <h4>All Common Sangromancy spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["CN"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2359,7 +2525,19 @@ ClassInfo.features = {
                 <h4>All Common Summoning spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/summoning.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["SU"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2379,7 +2557,19 @@ ClassInfo.features = {
                 <h4>All Common Necromancy spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/necromancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["NE"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2399,7 +2589,19 @@ ClassInfo.features = {
                 <h4>All Common Apparition spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/apparition.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["AP"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -2419,8 +2621,21 @@ ClassInfo.features = {
                 <h4>All Common Chronomancy spells (Level 1)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/chronomancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["CH"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
+        /* END GENERATED SECTION L2 */
         {
             level: 2,
             common: "specialtyImprovement"
@@ -2433,6 +2648,7 @@ ClassInfo.features = {
             level: 4,
             common: "learningExperience"
         },
+        /* BEGIN GENERATED SECTION L4 */
         {
             level: 4,
             archetype: "pyromancy",
@@ -2445,9 +2661,31 @@ ClassInfo.features = {
                 <h4>2 Other Common Elemental Spells (Level 2 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["PY"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["elemental"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "cryomancy",
             name: "Spell Studies (2<sup>nd</sup> Level Cryomancy)",
@@ -2457,11 +2695,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Cryomancy Spells (Level 2)</h4>
                 <h4>2 Other Common Elemental Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["HM"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["elemental"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "lithomancy",
             name: "Spell Studies (2<sup>nd</sup> Level Lithomancy)",
@@ -2471,11 +2731,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Lithomancy Spells (Level 2)</h4>
                 <h4>2 Other Common Elemental Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["GE"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["elemental"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "evocation",
             name: "Spell Studies (2<sup>nd</sup> Level Evocation)",
@@ -2485,11 +2767,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Evocation Spells (Level 2)</h4>
                 <h4>2 Other Common Elemental Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["EV"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["elemental"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "restoration",
             name: "Spell Studies (2<sup>nd</sup> Level Restoration)",
@@ -2499,11 +2803,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Restoration Spells (Level 2)</h4>
                 <h4>2 Other Common Divine Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/restoration.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["RE"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["divine"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "abjuration",
             name: "Spell Studies (2<sup>nd</sup> Level Abjuration)",
@@ -2513,11 +2839,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Abjuration Spells (Level 2)</h4>
                 <h4>2 Other Common Divine Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/abjuration.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["AB"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["divine"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "banishment",
             name: "Spell Studies (2<sup>nd</sup> Level Banishment)",
@@ -2527,11 +2875,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Banishment Spells (Level 2)</h4>
                 <h4>2 Other Common Divine Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/banishment.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["BA"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["divine"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "physiomancy",
             name: "Spell Studies (2<sup>nd</sup> Level Physiomancy)",
@@ -2541,11 +2911,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Physiomancy Spells (Level 2)</h4>
                 <h4>2 Other Common Physical Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["MA"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["physical"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "transmutation",
             name: "Spell Studies (2<sup>nd</sup> Level Transmutation)",
@@ -2555,11 +2947,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Transmutation Spells (Level 2)</h4>
                 <h4>2 Other Common Physical Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/transmutation.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["TR"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["physical"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "conjuration",
             name: "Spell Studies (2<sup>nd</sup> Level Conjuration)",
@@ -2569,11 +2983,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Conjuration Spells (Level 2)</h4>
                 <h4>2 Other Common Physical Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/conjuration.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["CO"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["physical"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "illusion",
             name: "Spell Studies (2<sup>nd</sup> Level Illusion)",
@@ -2583,11 +3019,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Illusion Spells (Level 2)</h4>
                 <h4>2 Other Common Psionic Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/illusion.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["IL"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["psionic"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "divination",
             name: "Spell Studies (2<sup>nd</sup> Level Divination)",
@@ -2597,11 +3055,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Divination Spells (Level 2)</h4>
                 <h4>2 Other Common Psionic Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/divination.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["HY"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["psionic"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "hypnotism",
             name: "Spell Studies (2<sup>nd</sup> Level Hypnotism)",
@@ -2611,11 +3091,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Hypnotism Spells (Level 2)</h4>
                 <h4>2 Other Common Psionic Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["DI"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["psionic"],
+                    restricted: false,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "sangromancy",
             name: "Spell Studies (2<sup>nd</sup> Level Sangromancy)",
@@ -2625,11 +3127,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Sangromancy Spells (Level 2)</h4>
                 <h4>2 Other Common Spectral Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["CN"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["spectral"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "summoning",
             name: "Spell Studies (2<sup>nd</sup> Level Summoning)",
@@ -2639,11 +3163,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Summoning Spells (Level 2)</h4>
                 <h4>2 Other Common Spectral Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/summoning.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["SU"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["spectral"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "necromancy",
             name: "Spell Studies (2<sup>nd</sup> Level Necromancy)",
@@ -2653,11 +3199,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Necromancy Spells (Level 2)</h4>
                 <h4>2 Other Common Spectral Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/necromancy.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["NE"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["spectral"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "apparition",
             name: "Spell Studies (2<sup>nd</sup> Level Apparition)",
@@ -2667,11 +3235,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Apparition Spells (Level 2)</h4>
                 <h4>2 Other Common Temporal Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/apparition.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["AP"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["temporal"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        {
             level: 4,
             archetype: "chronomancy",
             name: "Spell Studies (2<sup>nd</sup> Level Chronomancy)",
@@ -2681,10 +3271,33 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>All Common Chronomancy Spells (Level 2)</h4>
                 <h4>2 Other Common Temporal Spells (Level 2 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/chronomancy.png" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
+            `,
+            spellStudies: [
+                {
+                    choose: -1,
+                    rarity: 1,
+                    schools: ["CH"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    forms: ["temporal"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+            ]
+        },
+        /* END GENERATED SECTION L4 */
         {
             level: 5,
             name: "Specialty Improvement",
@@ -2724,6 +3337,7 @@ ClassInfo.features = {
             level: 7,
             common: "naturalSkillImprovement"
         },
+        /* BEGIN GENERATED SECTION L7 */
         {
             level: 7,
             archetype: "pyromancy",
@@ -2737,7 +3351,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["PY"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["elemental"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2752,7 +3396,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["HM"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["elemental"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2767,7 +3441,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["GE"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["elemental"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2782,7 +3486,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["EV"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["elemental"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2797,7 +3531,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/restoration.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["RE"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["divine"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2812,7 +3576,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/abjuration.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["AB"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["divine"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2827,7 +3621,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["BA"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["divine"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2842,7 +3666,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["MA"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["physical"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2857,7 +3711,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/transmutation.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["TR"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["physical"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2872,7 +3756,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/conjuration.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["CO"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["physical"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2887,7 +3801,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["IL"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["psionic"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2902,7 +3846,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["HY"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["psionic"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2917,7 +3891,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["DI"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["psionic"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2932,7 +3936,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["CN"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["spectral"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2947,7 +3981,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/summoning.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["SU"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["spectral"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2962,7 +4026,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/necromancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["NE"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["spectral"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2977,7 +4071,37 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/apparition.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["AP"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["temporal"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
 {
             level: 7,
@@ -2992,8 +4116,39 @@ ClassInfo.features = {
                 <h4>1 Common spell from any school (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/chronomancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 1,
+                schools: ["CH"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 2,
+                rarity: 1,
+                forms: ["temporal"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              },
+              {
+                choose: 1,
+                rarity: 1,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
 },
+        /* END GENERATED SECTION L7 */
         {
             level: 8,
             name: "Spellcraft",
@@ -3001,6 +4156,7 @@ ClassInfo.features = {
             description: `<p>You can create entirely new spells in your major school of magic. See the SRD page on <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a>.</p>
             <p>Your Spellcraft skill is equal to your primary proficiency bonus.`
         },
+        /* BEGIN GENERATED SECTION L8 */
         {
             level: 8,
             archetype: "pyromancy",
@@ -3011,9 +4167,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Pyromancy Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["PY"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "cryomancy",
             name: "Apprentice Cryomancy",
@@ -3023,9 +4191,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Cryomancy Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["HM"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "lithomancy",
             name: "Apprentice Lithomancy",
@@ -3035,9 +4215,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Lithomancy Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["GE"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "evocation",
             name: "Apprentice Evocation",
@@ -3047,9 +4239,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Evocation Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["EV"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "restoration",
             name: "Apprentice Restoration",
@@ -3059,9 +4263,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Restoration Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/restoration.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["RE"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "abjuration",
             name: "Apprentice Abjuration",
@@ -3071,9 +4287,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Abjuration Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/abjuration.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["AB"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "banishment",
             name: "Apprentice Banishment",
@@ -3083,9 +4311,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Banishment Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["BA"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "physiomancy",
             name: "Apprentice Physiomancy",
@@ -3095,9 +4335,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Physiomancy Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["MA"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "transmutation",
             name: "Apprentice Transmutation",
@@ -3107,9 +4359,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Transmutation Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/transmutation.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["TR"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "conjuration",
             name: "Apprentice Conjuration",
@@ -3119,9 +4383,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Conjuration Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/conjuration.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["CO"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "illusion",
             name: "Apprentice Illusion",
@@ -3131,9 +4407,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Illusion Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["IL"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "divination",
             name: "Apprentice Divination",
@@ -3143,9 +4431,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Divination Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["HY"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "hypnotism",
             name: "Apprentice Hypnotism",
@@ -3155,9 +4455,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Hypnotism Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["DI"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "sangromancy",
             name: "Apprentice Sangromancy",
@@ -3167,9 +4479,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Sangromancy Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["CN"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "summoning",
             name: "Apprentice Summoning",
@@ -3179,9 +4503,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Summoning Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/summoning.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["SU"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "necromancy",
             name: "Apprentice Necromancy",
@@ -3191,9 +4527,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Necromancy Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/necromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["NE"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "apparition",
             name: "Apprentice Apparition",
@@ -3203,9 +4551,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Apparition Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/apparition.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["AP"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        {
             level: 8,
             archetype: "chronomancy",
             name: "Apprentice Chronomancy",
@@ -3215,8 +4575,21 @@ ClassInfo.features = {
                 <h4>All Uncommon Chronomancy Spells (Level 3 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/chronomancy.png" />
             </div>
-            `
-},
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["CH"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 3
+                }
+              }
+            ]
+        },
+        /* END GENERATED SECTION L8 */
         {
             level: 9,
             common: "abilityScoreImprovement"
@@ -3234,6 +4607,7 @@ ClassInfo.features = {
                 }
             }
         },
+        /* BEGIN GENERATED SECTION L10 */
         {
             level: 10,
             archetype: "pyromancy",
@@ -3246,9 +4620,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Elemental Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["PY"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["elemental"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "cryomancy",
             name: "Spell Studies (4<sup>th</sup> Level Cryomancy)",
@@ -3260,9 +4656,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Elemental Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["HM"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["elemental"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "lithomancy",
             name: "Spell Studies (4<sup>th</sup> Level Lithomancy)",
@@ -3274,9 +4692,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Elemental Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["GE"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["elemental"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "evocation",
             name: "Spell Studies (4<sup>th</sup> Level Evocation)",
@@ -3288,9 +4728,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Elemental Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["EV"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["elemental"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "restoration",
             name: "Spell Studies (4<sup>th</sup> Level Restoration)",
@@ -3302,9 +4764,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Divine Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/restoration.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["RE"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["divine"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "abjuration",
             name: "Spell Studies (4<sup>th</sup> Level Abjuration)",
@@ -3316,9 +4800,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Divine Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/abjuration.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["AB"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["divine"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "banishment",
             name: "Spell Studies (4<sup>th</sup> Level Banishment)",
@@ -3330,9 +4836,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Divine Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["BA"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["divine"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "physiomancy",
             name: "Spell Studies (4<sup>th</sup> Level Physiomancy)",
@@ -3344,9 +4872,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Physical Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["MA"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["physical"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "transmutation",
             name: "Spell Studies (4<sup>th</sup> Level Transmutation)",
@@ -3358,9 +4908,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Physical Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/transmutation.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["TR"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["physical"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "conjuration",
             name: "Spell Studies (4<sup>th</sup> Level Conjuration)",
@@ -3372,9 +4944,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Physical Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/conjuration.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["CO"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["physical"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "illusion",
             name: "Spell Studies (4<sup>th</sup> Level Illusion)",
@@ -3386,9 +4980,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Psionic Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["IL"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["psionic"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "divination",
             name: "Spell Studies (4<sup>th</sup> Level Divination)",
@@ -3400,9 +5016,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Psionic Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["HY"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["psionic"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "hypnotism",
             name: "Spell Studies (4<sup>th</sup> Level Hypnotism)",
@@ -3414,9 +5052,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Psionic Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/hypnotism.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["DI"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["psionic"],
+                restricted: false,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "sangromancy",
             name: "Spell Studies (4<sup>th</sup> Level Sangromancy)",
@@ -3428,9 +5088,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Spectral Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["CN"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["spectral"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "summoning",
             name: "Spell Studies (4<sup>th</sup> Level Summoning)",
@@ -3442,9 +5124,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Spectral Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/summoning.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["SU"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["spectral"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "necromancy",
             name: "Spell Studies (4<sup>th</sup> Level Necromancy)",
@@ -3456,9 +5160,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Spectral Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/necromancy.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["NE"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["spectral"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "apparition",
             name: "Spell Studies (4<sup>th</sup> Level Apparition)",
@@ -3470,9 +5196,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Temporal Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/apparition.png" />
             </div>
-            `
-},
-{
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["AP"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["temporal"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        {
             level: 10,
             archetype: "chronomancy",
             name: "Spell Studies (4<sup>th</sup> Level Chronomancy)",
@@ -3484,8 +5232,31 @@ ClassInfo.features = {
                 <h4>2 Other Uncommon Temporal Spells (Level 4 and lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/chronomancy.png" />
             </div>
-            `
-},
+            `,
+            spellStudies: [
+              {
+                choose: -1,
+                rarity: 2,
+                schools: ["CH"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+              {
+                choose: 2,
+                rarity: 2,
+                forms: ["temporal"],
+                restricted: true,
+                spellType: "SE",
+                level: {
+                  max: 4
+                }
+              },
+            ]
+        },
+        /* END GENERATED SECTION L10 */
     ],
     chanter: [
         {
