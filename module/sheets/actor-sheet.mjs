@@ -167,7 +167,7 @@ export class NewEraActorSheet extends ActorSheet {
               feature.selections = commonFeature.dynamicSelections(this.actor);
             }
             if (feature.selections){
-              feature.id = `${feature.name}.${feature.level}`;
+              feature.id = `${feature.className.toLowerCase()}.${feature.common}.${feature.level}`;
             }
           }
           if (feature.tableValues){
