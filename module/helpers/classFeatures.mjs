@@ -228,7 +228,18 @@ ClassInfo.features = {
                 <h4>3 Common Pyromancy spells (Level 2 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    schools: ["PY"],
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 4,
@@ -241,7 +252,18 @@ ClassInfo.features = {
                 <h4>3 Common Cryomancy spells (Level 2 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    schools: ["HM"],
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 4,
@@ -254,7 +276,18 @@ ClassInfo.features = {
                 <h4>3 Common Lithomancy spells (Level 2 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    schools: ["GE"],
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 4,
@@ -267,7 +300,18 @@ ClassInfo.features = {
                 <h4>3 Common Evocation spells (Level 2 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    schools: ["EV"],
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 4,
@@ -384,7 +428,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    schools: ["PY"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 8,
@@ -402,7 +466,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    schools: ["HM"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 8,
@@ -420,7 +504,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    schools: ["GE"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 8,
@@ -438,7 +542,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    schools: ["EV"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 9,
@@ -511,7 +635,26 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>2 Common spells of any form (Level 4 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    schools: ["PY"],
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 12,
@@ -527,7 +670,26 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>2 Common spells of any form (Level 4 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    schools: ["HM"],
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 12,
@@ -543,7 +705,26 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>2 Common spells of any form (Level 4 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    schools: ["GE"],
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 12,
@@ -559,7 +740,26 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>2 Common spells of any form (Level 4 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    schools: ["EV"],
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 12,
@@ -729,7 +929,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    schools: ["PY"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                }
+            ]
         },
         {
             level: 15,
@@ -747,7 +967,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    schools: ["HM"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                }
+            ]
         },
         {
             level: 15,
@@ -765,7 +1005,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    schools: ["GE"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                }
+            ]
         },
         {
             level: 15,
@@ -783,7 +1043,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    schools: ["EV"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                }
+            ]
         }
     ],
     mercenary: [
@@ -1034,7 +1314,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" data-tooltip="Lithomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/abjuration.png" data-tooltip="Anjuration" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    lists: ["mercenary"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 8,
@@ -1114,7 +1405,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" data-tooltip="Lithomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/abjuration.png" data-tooltip="Anjuration" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["mercenary"],
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 12,
@@ -1186,7 +1488,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" data-tooltip="Lithomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/abjuration.png" data-tooltip="Anjuration" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    lists: ["mercenary"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["mercenary"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         }
     ],
     ranger: [
@@ -1399,7 +1721,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["ranger"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 7,
@@ -1505,7 +1838,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["ranger"],
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 12,
@@ -1605,7 +1949,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    lists: ["ranger"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["ranger"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 15,
@@ -3598,7 +3962,19 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" data-tooltip="Sangromancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["magusEnchantments"],
+                    restricted: true,
+                    spellType: "E",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -3616,7 +3992,19 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" data-tooltip="Sangromancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["magusSpells"],
+                    restricted: true,
+                    spellType: "SS",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 3,
@@ -3650,7 +4038,19 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" data-tooltip="Sangromancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["magusEnchantments"],
+                    restricted: true,
+                    spellType: "E",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 5,
@@ -3681,7 +4081,29 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" data-tooltip="Sangromancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    lists: ["magusEnchantments"],
+                    restricted: true,
+                    spellType: "E",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["magusEnchantments"],
+                    restricted: true,
+                    spellType: "E",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 7,
@@ -3707,13 +4129,35 @@ ClassInfo.features = {
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
-                <h4>1 Uncommon Magus spell (Level 1 or lower)</h4>
+                <h4>1 Uncommon Magus spell (Level 3 or lower)</h4>
                 <h4>2 Common Magus Spells (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/sangromancy.png" data-tooltip="Sangromancy" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    lists: ["magusSpells"],
+                    restricted: true,
+                    spellType: "SS",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["magusSpells"],
+                    restricted: true,
+                    spellType: "SS",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 8,
@@ -4090,7 +4534,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/conjuration.png" data-tooltip="Conjuration" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 1,
+                    lists: ["guardian"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 5,
@@ -4158,7 +4613,26 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
                 <h4>2 Common spells from any school (Level 2 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["guardian"],
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 7,
@@ -4214,7 +4688,26 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
                 <h4>2 Common spells from any school (Level 3 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["guardian"],
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 10,
@@ -4389,7 +4882,34 @@ ClassInfo.features = {
                 <h3>1 Uncommon spell from any school (Level 4 or lower)</h4>
                 <h4>2 Common spells from any school (Level 4 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 2,
+                    lists: ["guardian"],
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 1,
+                    rarity: 2,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 15,
@@ -4610,7 +5130,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/apparition.png" data-tooltip="Apparition" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["investigator"],
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 6,
@@ -4642,7 +5173,18 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/apparition.png" data-tooltip="Apparition" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["investigator"],
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 8,
@@ -4781,7 +5323,17 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>5 Common Spells (Level 1)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 5,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -4921,7 +5473,25 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>1 Uncommon spell (Level 2 or lower)</h4>
                 <h4>3 Common spells (Level 2 or lower)</h4>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 4,
@@ -4940,7 +5510,25 @@ ClassInfo.features = {
             <div class="magic-info">
                 <h4>3 Uncommon spells (Level 3 or lower)</h4>
                 <h4>3 Common spells (Level 3 or lower)</h4>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 2,
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 6,
@@ -4975,7 +5563,33 @@ ClassInfo.features = {
                 <h4>2 Uncommon spells (Level 4 or lower)</h4>
                 <h4>3 Common spells (Level 4 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 10,
@@ -5032,7 +5646,27 @@ ClassInfo.features = {
                 <h4>1 Rare spell (Level 5 or lower)</h4>
                 <h4>2 Uncommon spells (Level 5 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    spellType: "SE",
+                    restricted: true,
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    spellType: "SE",
+                    restricted: true,
+                    level: {
+                        max: 5
+                    }
+                },
+            ]
         },
         {
             level: 12,
@@ -5102,7 +5736,36 @@ ClassInfo.features = {
                 <h4>3 Uncommon spells (Level 6 or lower)</h4>
                 <h4>3 Common spells (Level 6 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 3,
+                    spellType: "SE",
+                    restricted: true,
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 2,
+                    spellType: "SE",
+                    restricted: true,
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SE",
+                    restricted: true,
+                    level: {
+                        max: 6
+                    }
+                },
+            ]
         },
         {
             level: 15,
@@ -5193,7 +5856,17 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 5,
+                    rarity: 1,
+                    spellType: "E",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 1,
@@ -5309,7 +5982,25 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    spellType: "E",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "E",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 6,
@@ -5346,7 +6037,17 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    spellType: "E",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 8,
@@ -5359,7 +6060,19 @@ ClassInfo.features = {
                 <h4>4 Common Metamagic Enchantments (Level 3 or lower)</h4>
                 <img class="resource-icon" src="${NEWERA.images}/metamagic.png" data-tooltip="Metamagic" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 4,
+                    rarity: 1,
+                    schools: ["MM"],
+                    metamagic: true,
+                    spellType: "E",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 8,
@@ -5460,7 +6173,25 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    spellType: "E",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "E",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 13, 
@@ -5688,7 +6419,19 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/summoning.png" data-tooltip="Summoning" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["sage"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 4,
@@ -5817,7 +6560,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/summoning.png" data-tooltip="Summoning" data-tooltip-direction="UP" />
                 <h4>1 Common spell from any school (Level 2 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["sage"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 6,
@@ -5848,7 +6611,29 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/summoning.png" data-tooltip="Summoning" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 2,
+                    lists: ["sage"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["sage"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 9,
@@ -6027,7 +6812,19 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/transmutation.png" data-tooltip="Transmutation" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 4,
+                    rarity: 1,
+                    lists: ["witch"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 2,
@@ -6235,7 +7032,29 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/transmutation.png" data-tooltip="Transmutation" data-tooltip-direction="UP" />
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["witch"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["witch"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 2
+                    }
+                }
+            ]
         },
         {
             level: 6,
@@ -6328,7 +7147,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <h4>2 Common spells from any school (Level 3 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 2,
+                    lists: ["witch"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
         },
         {
             level: 9,
@@ -6488,7 +7327,27 @@ ClassInfo.features = {
                 <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
                 <h4>2 Common spells from any school (Level 4 or lower)</h4>
             </div>
-            `
+            `,
+            spellStudies: [
+                {
+                    choose: 4,
+                    rarity: 2,
+                    lists: ["witch"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 14,
