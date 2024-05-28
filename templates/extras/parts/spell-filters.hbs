@@ -50,7 +50,7 @@
 <h3 class="newera-section-header">Filter Results</h3>
 <div class="feat-filter-option">
     {{#each spellLists as |list index|}}
-        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spellList" data-filter-sub-category="{{index}}" {{checked list.checked}} {{disabled ../initialCriteria.studies}} /> {{list.label}}
+        <input type="checkbox" class="spell-filter-criteria" data-filter-category="spellList" data-filter-sub-category="{{index}}" {{checked list.checked}} {{disabled ../initialCriteria.studies}} /> {{list.label}} <br />
     {{/each}}
 </div>
 <div class="feat-filter-option">
