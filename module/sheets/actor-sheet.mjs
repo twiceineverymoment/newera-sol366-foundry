@@ -1786,7 +1786,9 @@ export class NewEraActorSheet extends ActorSheet {
             ui.notifications.error(`This spell study guide is for a different actor.`);
             return;
           }
-          if (dropData.remaining > 0){
+          if (dropData.remaining == -1){
+            //For "choose all" study guides on the researcher, don't set the counter. these will never show as complete
+          } else if (dropData.remaining > 0){
             const update = {
               system: {
                   classes: {}
@@ -1813,6 +1815,8 @@ export class NewEraActorSheet extends ActorSheet {
             this.actor.actionMessage(this.actor.img, spellFromCompendium.img, "{NAME} learned {0}!", spellFromCompendium.name);
             if (dropData.remaining > 1){
               ui.notifications.info(`You learned ${spellFromCompendium.name}! You can choose ${dropData.remaining-1} more spell${dropData.remaining>2?'s':''} from the current study guide.`);
+            } else if (dropData.remaining == -1){
+              ui.notifications.info(`You learned ${spellFromCompendium.name}!`);
             } else {
               ui.notifications.info(`You learned ${spellFromCompendium.name}! You've completed this study guide.`);
             }

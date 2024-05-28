@@ -35,13 +35,18 @@ export class SpellBrowser extends ActorSheet {
         const context = super.getData();
 
         if (this.studies){
-            try {
-                this.remainingSelections = this.actor.system.classes[this.studies.className].spellStudies[this.studies.level][this.studies.index];
-                if (this.remainingSelections === undefined){
+            if (this.criteria.choose == -1){
+                context.chooseAll = true;
+                this.remainingSelections = -1;
+            } else {
+                try {
+                    this.remainingSelections = this.actor.system.classes[this.studies.className].spellStudies[this.studies.level][this.studies.index];
+                    if (this.remainingSelections === undefined){
+                        this.remainingSelections = this.criteria.choose;
+                    }
+                } catch (err) {
                     this.remainingSelections = this.criteria.choose;
                 }
-            } catch (err) {
-                this.remainingSelections = this.criteria.choose;
             }
         }
 
@@ -85,10 +90,6 @@ export class SpellBrowser extends ActorSheet {
 
     activateListeners(html) {
         super.activateListeners(html);
-
-        if (this.remainingSelections === 0){
-            this.close();
-        }
 
         //Pull the initial results with no filters
         this._searchSpells(this.criteria)
