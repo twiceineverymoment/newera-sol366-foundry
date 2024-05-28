@@ -13,6 +13,7 @@ export class SpellSearchParams {
             this.rarity = params.rarity || "0";
             this.showLowerRarity = params.showLowerRarity || !!params.choose;
             this.restricted = params.restricted || false;
+            this.metamagic = params.metamagic || false;
             this.studies = !!params.choose;
             this.choose = params.choose || 0;
             this.level = {
@@ -32,7 +33,9 @@ export class SpellSearchParams {
             //If any of the sub-category school boxes are checked, remove the parent form from this.forms
             
             params.html.find("input.spell-filter-criteria:checked").each((index, element) => {
-                if (element.dataset.filterCategory == "spellList"){
+                if (element.dataSet.filterCategory == "metamagic"){
+                    this.metamagic = true;
+                } if (element.dataset.filterCategory == "spellList"){
                     this.lists.push(element.dataset.filterSubCategory);
                 } else if (element.dataset.filterSubCategory){
                     this.forms = this.forms.filter(f => f != element.dataset.filterCategory);
@@ -103,6 +106,10 @@ export class SpellSearchParams {
     }
 
     _includeByFormAndSchool(spell){
+        //Separate parameter for including metamagic which precludes all other checks
+        if (spell.system.school == "MM"){
+            return this.metamagic;
+        }
         //Return true for everything if both arrays are empty.
         if (this.forms.length == 0 && this.schools.length == 0){
             return true;
