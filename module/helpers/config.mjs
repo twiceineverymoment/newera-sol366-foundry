@@ -4083,8 +4083,8 @@ NEWERA.spellStudiesLists = {
     },
     magusEnchantments: {
         label: "Magus Enchantments",
-        forms: ["elemental"],
-        schools: ["banishment", "sangromancy", "physiomancy", "illusion"],
+        forms: ["elemental", "divine"],
+        schools: ["sangromancy", "physiomancy", "illusion"],
     },
     guardian: {
         label: "Guardian Spells",
