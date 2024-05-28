@@ -49,7 +49,7 @@ export class SpellBrowser extends ActorSheet {
         context.initialFilterData = this._getHandlebarsInputCriteria();
         context.spellLists = this._getSpellListOptions();
         context.remainingSelections = this.remainingSelections;
-        context.complete = !!this.studies && this.remainingSelections == 0;
+        context.complete = !!this.studies.className && this.remainingSelections == 0;
 
         console.log("SPELL STUDY GUIDE CONTEXT DUMP");
         console.log(context);
