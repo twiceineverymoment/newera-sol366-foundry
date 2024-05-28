@@ -20,7 +20,7 @@ export class SpellFocus extends ActorSheet {
     }
 
     get template() {
-        return "systems/newera-sol366/templates/actor/features/spell-focus.html";
+        return "systems/newera-sol366/templates/actor/features/spell-focus.hbs";
     }
 
     getData() {

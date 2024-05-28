@@ -6,15 +6,13 @@
 
   {{!-- Sheet Header --}}
   <div class="newera-actorsheet-top">
-    {{> systems/newera-sol366/templates/actor/parts/pc-top-section.html}}
+    {{> systems/newera-sol366/templates/actor/parts/npc-top-section.hbs}}
   </div>
 
   <div class="newera-actorsheet-tabs">
     <nav class="sheet-tabs tabs" data-group="primary">
       <a class="item newera-section-header" data-tab="profile">Profile</a>
-      <a class="item newera-section-header" data-tab="class">Class</a>
       <a class="item newera-section-header" data-tab="abilities">Abilities</a>
-      <a class="item newera-section-header" data-tab="feats">Feats</a>
       <a class="item newera-section-header" data-tab="actions">Actions</a>
       <a class="item newera-section-header" data-tab="inventory">Equipment</a>
       <a class="item newera-section-header" data-tab="magic">Magic</a>
@@ -24,38 +22,30 @@
 
   <div class="newera-actorsheet-scroll">
     <div class="newera-actorsheet-left">
-      {{> systems/newera-sol366/templates/actor/parts/char-stats.html}}
+      {{> systems/newera-sol366/templates/actor/parts/char-stats.hbs}}
     </div>
   
     <div class="newera-actorsheet-right">
       <section class="sheet-body">
         <div class="tab profile" data-group="primary" data-tab="profile">
-          {{> systems/newera-sol366/templates/actor/parts/char-profile.html}}
-        </div>
-        <div class="tab profile" data-group="primary" data-tab="class">
-          {{> systems/newera-sol366/templates/actor/parts/pc-class.html}}
+          {{> systems/newera-sol366/templates/actor/parts/char-profile.hbs}}
         </div>
         <div class="tab profile" data-group="primary" data-tab="abilities">
-          {{> systems/newera-sol366/templates/actor/parts/pc-abilities.html}}
-        </div>
-        <div class="tab profile" data-group="primary" data-tab="effects">
-          {{> systems/newera-sol366/templates/actor/parts/effects.html}}
-        </div>
-        <div class="tab profile" data-group="primary" data-tab="feats">
-          {{> systems/newera-sol366/templates/actor/parts/pc-feats.html}}
+          {{> systems/newera-sol366/templates/actor/parts/npc-abilities.hbs}}
         </div>
         <div class="tab profile" data-group="primary" data-tab="actions">
-          {{> systems/newera-sol366/templates/actor/parts/actions.html}}
+          {{> systems/newera-sol366/templates/actor/parts/actions.hbs}}
         </div>
         <div class="tab profile" data-group="primary" data-tab="inventory">
-          {{> systems/newera-sol366/templates/actor/parts/char-inventory.html}}
+          {{> systems/newera-sol366/templates/actor/parts/char-inventory.hbs}}
         </div>
         <div class="tab profile" data-group="primary" data-tab="magic">
-          {{> systems/newera-sol366/templates/actor/parts/pc-magic.html}}
+          {{> systems/newera-sol366/templates/actor/parts/npc-magic.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="effects">
+          {{> systems/newera-sol366/templates/actor/parts/effects.hbs}}
         </div>
       </section>
     </div>
-
   </div>
-
 </form>

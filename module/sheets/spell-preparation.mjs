@@ -20,7 +20,7 @@ export class SpellPreparation extends ActorSheet {
     }
 
     get template() {
-        return "systems/newera-sol366/templates/actor/features/spell-preparation.html";
+        return "systems/newera-sol366/templates/actor/features/spell-preparation.hbs";
     }
 
     getData() {

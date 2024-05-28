@@ -10,7 +10,7 @@ export class FeatBrowser extends ActorSheet {
         return mergeObject(super.defaultOptions, {
           title: "Feat Browser",
           classes: ["newera", "sheet", "actor"],
-          template: "systems/newera-sol366/templates/extras/feat-browser.html",
+          template: "systems/newera-sol366/templates/extras/feat-browser.hbs",
           width: 840,
           height: 640,
           resizable: true,
@@ -23,7 +23,7 @@ export class FeatBrowser extends ActorSheet {
     }
 
     get template() {
-        return "systems/newera-sol366/templates/extras/feat-browser.html";
+        return "systems/newera-sol366/templates/extras/feat-browser.hbs";
     }
 
     async getData() {
@@ -230,7 +230,7 @@ export class FeatBrowser extends ActorSheet {
 
     async _renderResults(html, feats){
 
-        const render = await renderTemplate("systems/newera-sol366/templates/extras/parts/feat-browser-table.html", { 
+        const render = await renderTemplate("systems/newera-sol366/templates/extras/parts/feat-browser-table.hbs", { 
             results: feats,
             noResultsFound: feats.length == 0
         });

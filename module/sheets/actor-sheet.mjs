@@ -20,7 +20,7 @@ export class NewEraActorSheet extends ActorSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["newera", "sheet", "actor"],
-      template: "systems/newera-sol366/templates/actor/actor-sheet.html",
+      template: "systems/newera-sol366/templates/actor/actor-sheet.hbs",
       width: 785,
       height: 875,
       scrollY: [".newera-actorsheet-scroll", ".action-detail", ".inventory-table-container"],
@@ -34,19 +34,19 @@ export class NewEraActorSheet extends ActorSheet {
   /** @override */
   get template() {
     if (this.actor.system.defeated){
-      return `systems/newera-sol366/templates/actor/defeated-actor-sheet.html`;
+      return `systems/newera-sol366/templates/actor/defeated-actor-sheet.hbs`;
     }
     switch(this.actor.type){
       case "Player Character":
-        return `systems/newera-sol366/templates/actor/actor-character-sheet.html`;
+        return `systems/newera-sol366/templates/actor/actor-character-sheet.hbs`;
       case "Non-Player Character":
-        return `systems/newera-sol366/templates/actor/actor-npc-sheet.html`;
+        return `systems/newera-sol366/templates/actor/actor-npc-sheet.hbs`;
       case "Creature":
-        return `systems/newera-sol366/templates/actor/actor-creature-sheet.html`;
+        return `systems/newera-sol366/templates/actor/actor-creature-sheet.hbs`;
       case "Container":
-        return `systems/newera-sol366/templates/actor/actor-container-sheet.html`;
+        return `systems/newera-sol366/templates/actor/actor-container-sheet.hbs`;
       case "Vehicle":
-        return `systems/newera-sol366/templates/actor/actor-vehicle-sheet.html`;
+        return `systems/newera-sol366/templates/actor/actor-vehicle-sheet.hbs`;
     }
   }
 

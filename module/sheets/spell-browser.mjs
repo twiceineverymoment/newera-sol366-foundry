@@ -28,7 +28,7 @@ export class SpellBrowser extends ActorSheet {
     }
 
     get template() {
-        return "systems/newera-sol366/templates/extras/spell-browser.html";
+        return "systems/newera-sol366/templates/extras/spell-browser.hbs";
     }
 
     getData() {
@@ -147,7 +147,7 @@ export class SpellBrowser extends ActorSheet {
     }
 
     async _renderResults(html, spells){
-        const render = await renderTemplate("systems/newera-sol366/templates/extras/parts/spell-browser-table.html", { 
+        const render = await renderTemplate("systems/newera-sol366/templates/extras/parts/spell-browser-table.hbs", { 
             results: spells,
             noResultsFound: spells.length == 0,
             actor: this.actor
