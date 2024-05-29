@@ -1781,7 +1781,7 @@ export class NewEraActorSheet extends ActorSheet {
           ui.notifications.error("Couldn't find a feat in the CASPER database matching this item. Please report this to the developers.");
         }
       } else if (dropData.transferAction == "addSpellFromBrowser") {
-        if (dropData.studies){
+        if (dropData.studies && dropData.studies.className){
           if (this.actor.id != dropData.actorId){
             ui.notifications.error(`This spell study guide is for a different actor.`);
             return;
