@@ -33,7 +33,7 @@ export class SpellSearchParams {
             //If any of the sub-category school boxes are checked, remove the parent form from this.forms
             
             params.html.find("input.spell-filter-criteria:checked").each((index, element) => {
-                if (element.dataSet.filterCategory == "metamagic"){
+                if (element.dataset.filterCategory == "metamagic"){
                     this.metamagic = true;
                 } if (element.dataset.filterCategory == "spellList"){
                     this.lists.push(element.dataset.filterSubCategory);
