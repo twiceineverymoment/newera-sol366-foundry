@@ -122,8 +122,8 @@ export class FeatBrowser extends ActorSheet {
             }
         }
 
-        console.log("[DEBUG] searchFeats Results");
-        console.log(results);
+        //console.log("[DEBUG] searchFeats Results");
+        //console.log(results);
         return results.sort(this._sortFunctions[criteria.sortFunction]);
     }
 
