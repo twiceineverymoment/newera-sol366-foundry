@@ -1020,7 +1020,7 @@ export class NewEraActorSheet extends ActorSheet {
       ev.originalEvent.dataTransfer.setData("objectType", "equipment");
       ev.originalEvent.dataTransfer.setData("itemId", itemId);
       ev.originalEvent.dataTransfer.setData("fromZone", fromZone.data("dropZone"));
-      ev.originalEvent.dataTransfer.setData("fromActor", this.actor.id);
+      ev.originalEvent.dataTransfer.setData("fromActor", this.actor.uuid);
       ev.originalEvent.dataTransfer.effectAllowed = "move";
     });
     html.find(".newera-equipment-dropzone").on("dragover", ev => {
@@ -1031,7 +1031,7 @@ export class NewEraActorSheet extends ActorSheet {
       const sourceSlot = ev.originalEvent.dataTransfer.getData("fromZone");
       const targetSlot = $(ev.currentTarget).data("dropZone");
       const sourceActor = ev.originalEvent.dataTransfer.getData("fromActor");
-      const targetActor = this.actor.id;
+      const targetActor = this.actor.uuid;
       //Prevent listener from running on drops from unrelated stuff
       if (!itemId){
         return;
@@ -1060,7 +1060,7 @@ export class NewEraActorSheet extends ActorSheet {
       }
       //Moving an item to a different actor (new behavior)
       else {
-        const origin = game.actors.get(sourceActor);
+        const origin = fromUuidSync(sourceActor);
         if (!origin){
           ui.notifications.error("Failed to move item: Unable to locate source actor");
           return;
