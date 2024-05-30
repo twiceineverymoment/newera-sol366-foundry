@@ -25,9 +25,9 @@
                     <i class="fa-solid fa-check-circle"></i>
                 {{else}}
                     <i class="fa-solid fa-circle-star"></i> {{result.display.cost}}
-                    {{#if result.system.prerequisites}}
+                    {{#if result.display.prerequisites}}
                         <p class="feat-prerequisites" {{#if result.doubleCheck}} data-tooltip="You may meet the requirements for this feat, but we can't be certain. Please check with your GM." data-tooltip-direction="UP" {{/if}}>
-                            Requires {{result.system.prerequisites}}
+                            Requires {{result.display.prerequisites}}
                         </p>
                     {{/if}}
                 {{/if}}
