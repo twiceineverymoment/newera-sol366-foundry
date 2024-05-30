@@ -1404,6 +1404,7 @@ _preparePotionData(system){
         if (!game.settings.get("newera-sol366", "prereqCheck")){
           return true;
         }
+        if (tier < 1) tier = 1; //nextTier is set to -1 for upgrade feats. Always look at tier 1 for these
         //console.log(`[DEBUG] Evaluating prerequisites : ${this.name}`);
         const conditionTokens = this._tokenizePrerequisites(tier);
         //console.log(conditionTokens);
@@ -1462,6 +1463,7 @@ _preparePotionData(system){
   }
 
   _tokenizePrerequisites(tier){
+    //console.log(`[DEBUG] TP name=${this.name} T=${tier}`);
     if (this.type == "Feat"){
       try {
         const customCondition = NEWERA.customFeatPrerequisites[this.system.casperObjectId][tier];
