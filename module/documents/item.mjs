@@ -241,6 +241,11 @@ _preparePotionData(system){
 
   _prepareFeatData(system){
 
+    if (system.tiers.base) {
+      console.warn(`Feat ${this.name} requires migration.`);
+      return;
+    }
+
     const subTypedCategories = ["SF", "CF", "AF"];
     system.hasSubType = subTypedCategories.includes(system.featType);
     system.isSingleTiered = (system.maximumTier < 2) ? true : false; //This is true for feats with 1 tier and unlimited tiers (upgrades)
@@ -250,9 +255,6 @@ _preparePotionData(system){
 
     if (system.currentTier < 1) system.currentTier = 1;
     if (system.currentTier > system.maximumTier && !system.isUpgrade) system.currentTier = system.maximumTier;
-
-    //This function is asynchronous. For existing feats it'll be run during the initial data preparation the first time a pre-0.15 world is loaded. The remaining derived data might be weird the first time.
-    this._migrateFeatTiers(system);
 
     //The "base" object contains tier 1 data. For single-tier feats and upgrades, empty the tiers object entirely
     if (system.isSingleTiered){
@@ -313,41 +315,6 @@ _preparePotionData(system){
       system.displayName = this.name + " " + NEWERA.romanNumerals[system.currentTier];
     }
     system.displayCost = (system.featType == 'FL') ? "+"+Math.abs(system.totalCost) : system.totalCost;
-  }
-
-  //Migration function for old (pre-0.15) feats without proper multi-tiering.
-  //Returns true if the data was changed.
-  async _migrateFeatTiers(){
-    if (this.system.tiers.base){
-      const compendium = await game.packs.get("newera-sol366.feats").getDocuments();
-      const featFromCompendium = compendium.find(f => f.system.casperObjectId == this.system.casperObjectId);
-      if (featFromCompendium){
-        console.log(`Migrating Feat with id ${this.id} (${this.name}) to v0.15 (COID=${this.system.casperObjectId})`);
-        await this.update({
-          system: featFromCompendium.system,
-        });
-        await this.update({
-          system: {
-            tiers: {
-              "-=base": null
-            }
-          }
-        });
-        return true;
-      } else {
-        console.log(`Migrating Feat with id ${this.id} (${this.name}) to v0.15 (No COID match in compendium - performing direct migration)`);
-        await this.update({
-          system: {
-            base: this.system.tiers.base,
-            tiers: {
-              "-=base": null
-            }
-          }
-        });
-        return true;
-      }
-    }
-    return false;
   }
 
   _prepareMeleeWeaponData(system){

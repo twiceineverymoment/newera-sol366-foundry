@@ -1357,4 +1357,37 @@ export class NewEraActor extends Actor {
     }
     return output;
   }
+
+  async migrateFeats(){
+    const compendium = await game.packs.get('newera-sol366.feats').getDocuments();
+    for (const feat of this.items.filter(i => i.type == 'Feat')){
+      if (feat.system.tiers.base){
+        const newFeat = compendium.find(f => f.system.casperObjectId == feat.system.casperObjectId);
+        if (newFeat){
+          await feat.update({
+            system: newFeat.system
+          });
+          await feat.update({
+            system: {
+              tiers: {
+                "-=base": null
+              }
+            }
+          });
+          ui.notifications.info(`${feat.name} was migrated successfully. (${feat.system.casperObjectId})`);
+        } else {
+          await feat.update({
+            system: {
+              base: feat.system.tiers.base,
+              tiers: {
+                "-=base": null
+              }
+            }
+          });
+          ui.notifications.info(`${feat.name} was migrated using direct updates.`);
+        }
+      }
+    }
+    ui.notifications.info("Migration complete!");
+  }
 }

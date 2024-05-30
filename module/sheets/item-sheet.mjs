@@ -70,6 +70,12 @@ export class NewEraItemSheet extends ItemSheet {
     context.flags = context.item.flags;
     context.effects = context.item.effects;
 
+    //Abort data retrieval if the feat is unmigrated
+    if (this.item.type == 'Feat' && context.system.tiers.base){
+      ui.notifications.warn(`This feat requires migration. Please run the v0.15 migration script.`);
+      return {};
+    }
+
     console.log("ITEM SHEET CONTEXT DUMP");
     console.log(context);
 

@@ -615,4 +615,13 @@ export class HotbarActions {
         }
 
     }
+
+    static async migrateFeats(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        await actor.migrateFeats();
+    }
 }
