@@ -324,7 +324,14 @@ _preparePotionData(system){
       if (featFromCompendium){
         console.log(`Migrating Feat with id ${this.id} (${this.name}) to v0.15 (COID=${this.system.casperObjectId})`);
         await this.update({
-          system: featFromCompendium.system
+          system: featFromCompendium.system,
+        });
+        await this.update({
+          system: {
+            tiers: {
+              "-=base": null
+            }
+          }
         });
         return true;
       } else {
