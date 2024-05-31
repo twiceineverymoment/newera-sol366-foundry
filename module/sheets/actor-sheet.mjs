@@ -636,6 +636,7 @@ export class NewEraActorSheet extends ActorSheet {
       "S": "Social",
       "D": "Downtime Action",
       "M": "Movement",
+      "G": "Action"
     }
     const skillInfo = isCustom ? "" : (action.ability ? ` - ${action.ability.charAt(0).toUpperCase()}${action.ability.slice(1)} check` : (action.skill ? ` - ${action.skill.charAt(0).toUpperCase()}${action.skill.slice(1)} check` : '')); 
     action.typeDescription = `${actionTypes[action.actionType] || "Generic Action"}${skillInfo}`;

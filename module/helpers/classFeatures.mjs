@@ -7161,7 +7161,7 @@ ClassInfo.features = {
                     specialties: [],
                     description: `You spend one hour preparing your spells for the day during meditation. Select a spell to prepare in each of your available spell slots. Your selections last until your next full rest.`,
                     difficulty: null,
-                    actionType: "E",
+                    actionType: "G",
                     overrideMacroCommand: `game.newera.HotbarActions.openSpellPreparation()`,
                     rolls: [
                       {
@@ -7702,7 +7702,7 @@ ClassInfo.features = {
                     specialties: [],
                     description: `You utilize your Magical Focus to store spells ahead of time. You can cast your stored spells by releasing them from your focus.`,
                     difficulty: null,
-                    actionType: "E",
+                    actionType: "G",
                     overrideMacroCommand: `game.newera.HotbarActions.openSpellStorage()`,
                     rolls: [
                       {
