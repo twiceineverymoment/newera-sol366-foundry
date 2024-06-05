@@ -912,7 +912,9 @@ export class NewEraActorSheet extends ActorSheet {
         feature => 
         feature.archetype == archetype &&
         feature.level == level &&
-        !!feature.spellStudies
+        !!feature.spellStudies &&
+        !!feature.spellStudies[index] &&
+        !feature.spellStudies[index].onOtherFeature
       ).spellStudies;
       if (spellStudiesCriteria && spellStudiesCriteria[index]){
         const criteria = new SpellSearchParams(spellStudiesCriteria[index]);
