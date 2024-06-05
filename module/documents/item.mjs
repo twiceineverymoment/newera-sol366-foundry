@@ -42,7 +42,7 @@ export class NewEraItem extends Item {
     const system = this.system;
 
     if (this.type == "Spell"){
-      this._prepareSpellData(system);
+      this._prepareMagicData(system);
     } else if (this.type == "Feat"){
       this._prepareFeatData(system);
     } else if (this.type == "Melee Weapon"){
@@ -55,7 +55,7 @@ export class NewEraItem extends Item {
     } else if (this.type == "Shield"){
       this._prepareShieldData(system);
     } else if (this.type == "Enchantment"){
-      this._prepareEnchantmentData(system);
+      this._prepareMagicData(system);
     } else if (this.type == "Class"){
       this._prepareClassData(system);
     } else if (this.type == "Item"){
@@ -167,26 +167,39 @@ export class NewEraItem extends Item {
     return `${conditionLabel}${system.arcane ? "Arcane " : ""}${qualityLabel}${system.material} ${baseName}${system.enchanted ? ` of ${system.enchantmentDescriptor}` : ""}`;
   }
 
+  _prepareMagicData(system){
+    if (system.rarity == 0 && system.author){
+      const authorRef = game.actors.get(system.author);
+      system.authorName = authorRef?.name || "a modern mage";
+    }
+    system.standard = (system.rarity > 0);
+    if (!system.keywords) {
+      system.keywords = ""; //For some reason keywords are null on some enchantments. This breaks the next line causing the sheet render
+      console.warn(`Null keywords on enchantment ${this.name}`);
+    }
+    system.amplifiable = !system.keywords.includes("Static");
+    system.form = NEWERA.schoolToFormMapping[system.school];
+    system.specialty = NEWERA.schoolOfMagicNames[system.school];
+    system.spellImageUrl = `systems/newera-sol366/resources/${system.specialty}.png`;
+    this.img = system.spellImageUrl;
+    if (typeof system.ampFactor == "undefined"){
+      system.ampFactor = 1;
+    }
+    system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
+    system.amplified = (system.ampFactor > 1);
+
+    if (this.type == "Spell"){
+      this._prepareSpellData(system);
+    } else if (this.type == "Enchantment") {
+      this._prepareEnchantmentData(system);
+    } else {
+      console.error(`[ERROR] prepareMagicData invoked on non-magic item!`);
+    }
+  }
+
   _prepareSpellData(system) {
-
-      system.standard = (system.rarity > 0);
       system.concentrated = (system.castType == "F");
-      if (!system.keywords) {
-        system.keywords = ""; //For some reason keywords are null on some enchantments. This breaks the next line causing the sheet render
-        console.warn(`Null keywords on spell ${this.name}`);
-      }
-      system.amplifiable = !system.keywords.includes("Static");
       system.rangedAttack = (system.range.description == "Projectile");
-      system.form = NEWERA.schoolToFormMapping[system.school];
-      system.specialty = NEWERA.schoolOfMagicNames[system.school];
-      system.spellImageUrl = `systems/newera-sol366/resources/${system.specialty}.png`;
-      this.img = system.spellImageUrl;
-
-      if (typeof system.ampFactor == "undefined"){
-        system.ampFactor = 1;
-      }
-      system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
-      system.amplified = (system.ampFactor > 1);
       if (system.ampFactor > 1){
         system.amplifiedData = {
           level: system.level * system.ampFactor,
@@ -198,23 +211,6 @@ export class NewEraItem extends Item {
   }
 
   _prepareEnchantmentData(system) {
-
-    system.standard = (system.rarity > 0);
-    if (!system.keywords) {
-      system.keywords = ""; //For some reason keywords are null on some enchantments. This breaks the next line causing the sheet render
-      console.warn(`Null keywords on enchantment ${this.name}`);
-    }
-    system.amplifiable = !system.keywords.includes("Static");
-    system.form = NEWERA.schoolToFormMapping[system.school];
-    system.specialty = NEWERA.schoolOfMagicNames[system.school];
-    system.spellImageUrl = `systems/newera-sol366/resources/${system.specialty}.png`;
-    this.img = system.spellImageUrl;
-
-    if (typeof system.ampFactor == "undefined"){
-      system.ampFactor = 1;
-    }
-    system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
-    system.amplified = (system.ampFactor > 1);
     if (system.ampFactor > 1){
       system.amplifiedData = {
         level: system.level * system.ampFactor,
@@ -222,7 +218,6 @@ export class NewEraItem extends Item {
         aetheriumCost: system.aetheriumCost * system.ampFactor
       };
     }
-
 }
 
 _preparePotionData(system){

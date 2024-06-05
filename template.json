@@ -514,7 +514,8 @@
 				"keywords": "",
 				"static": false,
 				"refinementLevel": 0,
-				"ampFactor": 1
+				"ampFactor": 1,
+				"author": ""
 			}
 		},
 		"Item": {
