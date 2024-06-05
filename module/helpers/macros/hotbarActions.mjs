@@ -376,10 +376,16 @@ export class HotbarActions {
             ui.notifications.error("That which was never alive cannot die.");
             return;
         } else if (actor.typeIs(NewEraActor.Types.CREATURE)){
+            if (actor.system.defeated){
+                ui.notifications.info(`Looting is DISABLED for ${actor.name}.`);
+            } else {
+                ui.notifications.info(`Looting is enabled for ${actor.name}. Players can remove items from the creature's inventory.`);
+            }
             await actor.setDefeated(!actor.system.defeated);
         } else {
             if (actor.system.defeated){
                 await actor.setDefeated(false);
+                ui.notifications.info(`Looting is DISABLED for ${actor.name}.`);
             } else {
                 new Dialog({
                     title: "Mark Actor As Defeated",
