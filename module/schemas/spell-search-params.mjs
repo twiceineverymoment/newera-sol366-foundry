@@ -15,7 +15,7 @@ export class SpellSearchParams {
             this.restricted = params.restricted || false;
             this.metamagic = params.metamagic || false;
             this.studies = !!params.choose;
-            this.choose = params.choose || 0;
+            this.choose = params.choose || null;
             this.level = {
                 min: params.level ? params.level.min || 1 : 1,
                 max: params.level ? params.level.max || 10 : 10,
