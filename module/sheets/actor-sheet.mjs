@@ -1822,9 +1822,9 @@ export class NewEraActorSheet extends ActorSheet {
             this.actor.actionMessage(this.actor.img, spellFromCompendium.img, "{NAME} learned {0}!", spellFromCompendium.name);
             if (dropData.remaining > 1){
               ui.notifications.info(`You learned ${spellFromCompendium.name}! You can choose ${dropData.remaining-1} more spell${dropData.remaining>2?'s':''} from the current study guide.`);
-            } else if (dropData.remaining === 0){
+            } else if (dropData.remaining == 1){
               ui.notifications.info(`You learned ${spellFromCompendium.name}! You've completed this study guide.`);
-            } else if (dropData.remaining == -1 || dropData.remaining === null){
+            } else {
               ui.notifications.info(`You learned ${spellFromCompendium.name}!`);
             }
           }
