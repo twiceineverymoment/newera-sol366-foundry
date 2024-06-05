@@ -1325,6 +1325,14 @@ p.storage-exceeded-msg {
   height: 16px;
   margin: 2px;
 }
+img.inline-icon {
+  display: inline;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border: none;
+  outline: none;
+}
 .browser-result img.rarity {
   float: right !important;
   width: 16px;
