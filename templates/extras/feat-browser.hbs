@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Myeongjo" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aboreto" />
+
+<form class="{{cssClass}} {{actor.type}} newera-actorsheet-body" autocomplete="off">
+
+  <div class="newera-actorsheet-left feat-browser-filters">
+    <h3 class="newera-section-header">Search Feats</h3>
+    <div id="filterResults">
+      {{> systems/newera-sol366/templates/extras/parts/feat-filters.hbs}}
+    </div>
+  </div>
+
+  <div class="newera-actorsheet-right feat-browser-contents">
+    <div id="browserLoading" class="browser-loading-wheel"></div>
+    <div id="results" style="display: none">
+      
+    </div>
+  </div>
+  
+</form>

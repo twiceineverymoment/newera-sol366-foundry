@@ -1,0 +1,13 @@
+<h3 class="table-header">Attacks</h3>
+      {{#each system.attacks as |attack i|}}
+        <div class="newera-action">
+          <img class="skill-icon" src="systems/newera-sol366/resources/dt_{{attack.damageType}}.png" />
+          {{attack.name}} ({{attack.damageDie}})
+          <div class="newera-action-properties">
+            <img class="skill-icon" src="systems/newera-sol366/resources/ac_{{attack.frames}}frame.png" />
+          </div>
+        </div>
+    {{/each}}
+
+<h3 class="table-header">Actions</h3>
+{{> systems/newera-sol366/templates/item/parts/item-actions.hbs}}

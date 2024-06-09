@@ -7,6 +7,7 @@ For invoking these functions via global macros, use HotBarActions.mjs for valida
 import { Formatting } from "../formatting.mjs";
 import { NEWERA } from "../config.mjs";
 import { CharacterEnergyPool } from "../../schemas/char-energy-pool.mjs";
+import { NewEraActor } from "../../documents/actor.mjs";
 
 export class Actions {
 
@@ -40,6 +41,79 @@ export class Actions {
             },
             default: "cancel"
           }).render(true);
+    }
+
+    static async sustainCurrentSpell(actor){
+      const energyRequired = (actor.type != "Creature");
+      if (energyRequired && actor.energyPools.filter(p => !p.depleted).length == 0){
+        ui.notifications.error("Your energy is depleted. You can still continue sustaining the spell if you recover enough energy before the end of your turn.");
+        return;
+      }
+      const spell = actor.items.get(actor.system.sustaining.id);
+      if (!spell || !actor.system.sustaining.id){
+        ui.notifications.error(`${actor.name} isn't sustaining a spell.`);
+        return;
+      }
+      let dialog = new Dialog({
+        title: `Sustain ${spell.name} [${actor.name}]`,
+        content: `<form class="spell-dialog">
+          <div id="energySelect">
+            Energy Source: <select id="energyPools">${this._renderPoolOptions(actor)}</select>
+          </div>
+          <p>
+            <button class="spell-dialog-button" id="cast"><i class="fa-solid fa-hand-sparkles"></i> Sustain</button>
+            <button class="spell-dialog-button" id="attack"${spell.system.rangedAttack ? "" : `disabled data-tooltip="This spell isn't a projectile attack."`}><i class="fa-solid fa-crosshairs"></i> Attack</button>
+            <button class="spell-dialog-button" id="damage"${(spell.system.damage && spell.system.damage.type) ? "" : `disabled data-tooltip="This spell doesn't deal damage."`}><i class="fa-solid fa-heart-crack"></i> Damage</button>
+          </p>
+        </form>
+        `,
+        buttons: {
+          sheet: {
+            icon: `<i class="fas fa-edit"></i>`,
+            label: "Spell Details",
+            callback: () => {
+              stayOpen = true;
+              spell.sheet.render(true);
+            }
+          },
+          close: {
+            icon: `<i class="fas fa-x"></i>`,
+            label: "Close",
+            callback: () => {
+              stayOpen = false;
+            }
+          }
+        },
+        render: html => {
+          html.find("#cast").click(async () => {
+            const pool = Actions._getPool(actor, html, isPrepared);
+            await actor.sustain(pool);
+          });
+          html.find("#attack").click(async () => {
+            const pool = Actions._getPool(actor, html, isPrepared);
+            await actor.sustain(pool);
+          });
+          html.find("#damage").click(async () => {
+            const amp = actor.system.sustaining.ampFactor;
+            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : Formatting.amplifyValue(spell.system.damage.amount, amp);
+            const dmgRoll = new Roll(formula);
+            await dmgRoll.evaluate();
+            dmgRoll.toMessage({
+              speaker: ChatMessage.getSpeaker({actor: actor}),
+              flavor: `Damage - ${spell.name}${amp>1 ? " "+NEWERA.romanNumerals[amp] : ""}`
+            });
+            game.newera.setLastDamageAmount(dmgRoll.total);
+          });
+        },
+        close: () => {
+          if (stayOpen){
+            stayOpen = false;
+            dialog.render(true);
+          }
+        }
+      }).render(true, {
+        width: 480
+      });
     }
 
     /* Displays a dialog to cast a spell, inputting the amplification factor */
@@ -345,7 +419,7 @@ export class Actions {
                 Amount: <input type="number" id="damageAmount" data-dtype="Number" />
               </div>
               <div>
-                <input type="checkbox" id="overheal" data-dtype="Boolean" /> Overheal (heals beyond max. HP) <br />
+                <input type="checkbox" id="overheal" data-dtype="Boolean" /> Overheal (excess becomes Temporary HP) <br />
                 <input type="checkbox" id="recovery" data-dtype="Boolean" /> Recover Injuries
               </div>
             </form>`,

@@ -12,8 +12,12 @@ export class ChantSheet extends ActorSheet {
         });
     }
 
+    get title(){
+        return `Chants [${this.actor.name}]`;
+    }
+
     get template() {
-        return "systems/newera-sol366/templates/actor/features/chants.html";
+        return "systems/newera-sol366/templates/actor/features/chants.hbs";
     }
 
     getData() {

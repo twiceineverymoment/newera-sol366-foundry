@@ -7,6 +7,18 @@ import { Actions } from "./macros/actions.mjs";
  * @type {Object}
  */
 
+/**
+ * Static generic implementation of the typeIs function from the Actor and Item classes.
+ * DocumentSheets send items through structuredClone() which strips out the prototype chain, so we must use this function instead of the instance function.
+ * @param {NewEraActor | NewEraItem} document 
+ * @param {string[]} type 
+ * @returns 
+ */
+NEWERA.typeIs = function(document, type){
+    if (!document || !document.type) return false;
+    return type.includes(document.type);
+}
+
 NEWERA.images = "systems/newera-sol366/resources";
 NEWERA.objects = "https://www.newerarpg.com/resources/objects";
 
@@ -2453,42 +2465,27 @@ NEWERA.pcGeneralActions = [
         rolls: []
     },
     {
-        name: "Long Jump",
+        name: "Jump",
         images: {
             base: `${NEWERA.images}/jump1.png`,
             right: `${NEWERA.images}/ac_1frame.png`
         },
         ability: null,
         skill: "athletics",
-        specialties: ["Long Jump", "Jumping"],
-        description: "You jump across a large gap. You must get a running start of at least 6 feet in the frame prior to the jump.",
+        specialties: ["Long Jump", "High Jump", "Jumping"],
+        description: "You jump across a large gap or a great height. You can jump up to 2 feet in height and up to your speed minus your size modifier in distance. For longer or higher jumps, a check is required.",
         difficulty: "The GM sets the difficulty depending on the jump distance and environmental conditions.",
         actionType: "1",
         rolls: [
             {
-                label: "Jump",
+                label: "Long",
                 caption: "Long Jump (Athletics)",
                 die: "d20",
                 formula: "1d20+@skills.athletics.mod+@spec.jumping+@spec.long_jump",
                 difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "High Jump",
-        images: {
-            base: `${NEWERA.images}/jump2.png`,
-            right: `${NEWERA.images}/ac_1frame.png`
-        },
-        ability: null,
-        skill: "athletics",
-        specialties: ["High Jump", "Jumping"],
-        description: "Increase your jump height to your Strength modifier plus 3 feet.",
-        difficulty: "The GM sets the difficulty depending on the jump height and environmental conditions.",
-        actionType: "1",
-        rolls: [
+            },
             {
-                label: "Jump",
+                label: "High",
                 caption: "High Jump (Athletics)",
                 die: "d20",
                 formula: "1d20+@skills.athletics.mod+@spec.jumping+@spec.high_jump",
@@ -2516,52 +2513,6 @@ NEWERA.pcGeneralActions = [
                 formula: "1d20+@skills.agility.mod+@spec.jumping+@spec.dodging",
                 message: "{NAME} tries to Dodge!",
                 difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Disarm",
-        images: {
-            base: `${NEWERA.images}/drop-weapon.png`,
-            right: `${NEWERA.images}/ac_reaction.png`
-        },
-        ability: null,
-        skill: "defense",
-        specialties: ["Disarming", "Martial Arts"],
-        description: "You knock an enemy's weapon out of their hands.",
-        difficulty: "The result of your roll contests the attacker's roll if you're reacting. Otherwise, the target makes a Strength check.",
-        actionType: "R",
-        rolls: [
-            {
-                label: "Disarm",
-                caption: "Disarm (Defense)",
-                die: "d20",
-                formula: "1d20+@skills.defense.mod+@spec.disarming+@spec.martial_arts",
-                message: "{NAME} tries to Disarm their attacker!",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Stabilize",
-        images: {
-            base: `${NEWERA.images}/bandage-roll.png`,
-            right: `${NEWERA.images}/ac_2frame.png`
-        },
-        ability: null,
-        skill: "medicine",
-        specialties: ["First Aid"],
-        description: "Revive a dying ally. The creature regains hit points equal to your margin of success.",
-        difficulty: "15",
-        actionType: "2",
-        rolls: [
-            {
-                label: "Stabilize",
-                caption: "Stabilize (Medicine)",
-                die: "d20",
-                formula: "1d20+@skills.medicine.mod+@spec.first_aid",
-                message: "{NAME} tries to stabilize a dying ally!",
-                difficulty: 15,
             }
         ]
     },
@@ -2597,28 +2548,6 @@ NEWERA.pcGeneralActions = [
         ]
     },
     {
-        name: "Force Entry",
-        images: {
-            base: `${NEWERA.images}/hammer-break.png`,
-            right: `${NEWERA.images}/ac_3frame.png`
-        },
-        ability: "strength",
-        skill: null,
-        specialties: ["Forced Entry"],
-        description: "You attempt to forcefully open a locked or barred door or object.",
-        difficulty: "The GM determines the difficulty based on the strength of the object or door.",
-        actionType: "3",
-        rolls: [
-            {
-                label: "Strength",
-                caption: "Force Entry (Strength check)",
-                die: "d20",
-                formula: "1d20+@abilities.strength.mod+@spec.forced_entry",
-                difficulty: null,
-            }
-        ]
-    },
-    {
         name: "Escape",
         images: {
             base: `${NEWERA.images}/breaking-chain.png`,
@@ -2646,36 +2575,14 @@ NEWERA.pcGeneralActions = [
                 difficulty: null,
             }
         ]
-    },
-    {
-        name: "Feint",
-        images: {
-            base: `${NEWERA.images}/acrobatic.png`,
-            right: `${NEWERA.images}/ac_reaction.png`
-        },
-        ability: null,
-        skill: "deception",
-        specialties: ["Feinting"],
-        description: "You make a misleading move, leaving a target unprepared for your real attack. If the target falls for it, they may waste their time reacting to your fake attack.",
-        difficulty: "Contested (Insight)",
-        actionType: "R",
-        rolls: [
-            {
-                label: "Feint",
-                caption: "Feint Attack",
-                die: "d20",
-                formula: "1d20+@skills.deception.mod+@spec.feinting",
-                difficulty: null,
-            }
-        ]
-    },
+    }
 ];
 
 NEWERA.generalMagicActions = [
     {
         name: "Cast a Spell",
         images: {
-            base: `${NEWERA.images}/fire-spell-cast.png`,
+            base: `${NEWERA.images}/glowing-hands.png`,
         },
         ability: null,
         skill: null,
@@ -2684,11 +2591,26 @@ NEWERA.generalMagicActions = [
         difficulty: "The difficulty depends on your skill level in the spell's form of magic. Casting a spell at or below your current level doesn't require a check. For spells above your level, the difficulty is 10 for one level higher, plus 5 for each additional level.",
         altInstructions: "Cast spells and enchantments from the Magic tab.",
         actionType: "?",
+        rolls: []
+    },
+    {
+        name: "Sustain a Spell",
+        images: {
+            base: `${NEWERA.images}/fire-spell-cast.png`,
+            right: `${NEWERA.images}/ac_1frame.png`
+        },
+        ability: null,
+        skill: null,
+        specialties: [],
+        description: "You continue to concentrate on a sustained spell you're already casting. You may spend any number of frames on your turn sustaining a spell. If your turn ends without having used at least one frame to sustain a spell, the spell ends.",
+        difficulty: "0",
+        overrideMacroCommand: "game.newera.HotbarActions.sustainCurrentSpell()",
+        actionType: "1",
         rolls: [
             {
-                label: "Spells",
-                die: "spell-book",
-                id: "viewSpellList"
+                label: "Sustain",
+                die: "fire-spell-cast",
+                callback: actor => Actions.sustainCurrentSpell(actor)
             }
         ]
     },
@@ -2712,11 +2634,6 @@ NEWERA.generalMagicActions = [
                 die: "d20",
                 formula: "1d20+@abilities.wisdom.mod",
                 difficulty: 10
-            },
-            {
-                label: "Spells",
-                die: "scroll-unfurled",
-                id: "viewSpellList"
             }
         ]
     },
@@ -4099,31 +4016,113 @@ NEWERA.prerequisiteActorStatTextMatching = {
 
 NEWERA.customFeatPrerequisites = {
     "148": {
-        check: "value",
-        value: actor => {
-            return Object.values(actor.system.skills).filter(skill => skill.level == 10).length + Object.values(actor.system.magic).filter(skill => skill.level == 10).length
-        },
-        required: 1,
-        doubleCheck: "You have a skill that has reached level 10. Confirm with your GM before taking this feat."
+        "1": {
+            check: "value",
+            value: actor => {
+                return Object.values(actor.system.skills).filter(skill => skill.level == 10).length + Object.values(actor.system.magic).filter(skill => skill.level == 10).length
+            },
+            required: 1,
+            doubleCheck: "You have a skill that has reached level 10. Confirm with your GM before taking this feat."
+        }
     },
     "85": {
-        check: "value",
-        value: actor => Object.entries(actor.system.knowledges).length,
-        required: 1,
-        doubleCheck: "Confirm your foreign language knowledge with the GM."
+        "1": {
+            check: "value",
+            value: actor => Object.entries(actor.system.knowledges).length,
+            required: 1,
+            doubleCheck: "Confirm your foreign language knowledge with the GM."
+        } 
     },
     "262": {
-        check: "none",
-        doubleCheck: "Confirm your choice with the GM."
+        "1": {
+            check: "none",
+            doubleCheck: "Confirm your choice with the GM."
+        }
     },
     "367": {
-        check: "value",
-        value: actor => actor.items.filter(i => ["Spell", "Enchantment"].includes(i.type) && i.system.rarity == 0).length,
-        required: 3
+        "1": {
+            check: "value",
+            value: actor => actor.items.filter(i => ["Spell", "Enchantment"].includes(i.type) && i.system.rarity == 0).length,
+            required: 3
+        }
     },
     "458": {
-        check: "value",
-        value: actor => Object.values(actor.system.specialties).filter(spec => spec.subject && spec.subject.toLowerCase() == "Animal Handling").length,
-        required: 1
+        "1": {
+            check: "value",
+            value: actor => Object.values(actor.system.specialties).filter(spec => spec.subject && spec.subject.toLowerCase() == "Animal Handling").length,
+            required: 1
+        }  
     }
 }
+
+NEWERA.spellStudiesLists = {
+    delver: {
+        label: "Delver Spells",
+        forms: ["elemental"],
+        schools: ["banishment"],
+    },
+    mercenary: {
+        label: "Mercenary Spells",
+        forms: [],
+        schools: ["lithomancy", "physiomancy", "abjuration"],
+    },
+    ranger: {
+        label: "Ranger Spells",
+        forms: [],
+        schools: ["physiomancy", "conjuration", "divination", "pyromancy"],
+    },
+    chanter: {
+        label: "Chanter Spells",
+        forms: [],
+        schools: ["restoration", "illusion", "hypnotism"],
+    },
+    magusSpells: {
+        label: "Magus Spells",
+        forms: ["elemental"],
+        schools: ["banishment", "sangromancy"],
+    },
+    magusEnchantments: {
+        label: "Magus Enchantments",
+        forms: ["elemental", "divine"],
+        schools: ["sangromancy", "physiomancy", "illusion"],
+    },
+    guardian: {
+        label: "Guardian Spells",
+        forms: ["divine"],
+        schools: ["conjuration", "illusion"],
+    },
+    investigator: {
+        label: "Investigator Spells",
+        forms: ["psionic"],
+        schools: ["physiomancy", "apparition"],
+    },
+    scholar: {
+        label: "Scholar Spells",
+        forms: ["elemental", "divine", "physical", "psionic", "spectral", "temporal"],
+        schools: [],
+    },
+    artificerSpells: {
+        label: "Artificer Spells",
+        forms: ["physical"],
+        schools: ["pyromancy", "cryomancy", "illusion"]
+    },
+    artificerEnchantments: {
+        label: "Artificer Enchantments",
+        forms: ["elemental", "divine", "physical", "psionic", "spectral", "temporal"],
+        schools: ["metamagic"]
+    },
+    sage: {
+        label: "Sage Spells",
+        forms: [],
+        schools: ["restoration", "banishment", "illusion", "divination", "sangromancy"]
+    },
+    witch: {
+        label: "Witch Spells",
+        forms: ["spectral"],
+        schools: ["evocation", "transmutation", "illusion"]
+    }
+}
+
+NEWERA.spellRarity = [
+    "Inscribed", "Common", "Uncommon", "Rare", "Legendary", "Restricted", "Classified", "Mystery", "Innate"
+]

@@ -5,6 +5,10 @@ import { Actions } from "../helpers/macros/actions.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
 import { FeatBrowser } from "./feat-browser.mjs";
 import { FeatActions } from "../helpers/macros/featActions.mjs";
+import { NewEraActor } from "../documents/actor.mjs";
+import { NewEraItem } from "../documents/item.mjs";
+import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
+import { SpellBrowser } from "./spell-browser.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -16,7 +20,7 @@ export class NewEraActorSheet extends ActorSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["newera", "sheet", "actor"],
-      template: "systems/newera-sol366/templates/actor/actor-sheet.html",
+      template: "systems/newera-sol366/templates/actor/actor-sheet.hbs",
       width: 785,
       height: 875,
       scrollY: [".newera-actorsheet-scroll", ".action-detail", ".inventory-table-container"],
@@ -29,15 +33,20 @@ export class NewEraActorSheet extends ActorSheet {
 
   /** @override */
   get template() {
+    if (this.actor.system.defeated){
+      return `systems/newera-sol366/templates/actor/defeated-actor-sheet.hbs`;
+    }
     switch(this.actor.type){
       case "Player Character":
-        return `systems/newera-sol366/templates/actor/actor-character-sheet.html`;
+        return `systems/newera-sol366/templates/actor/actor-character-sheet.hbs`;
       case "Non-Player Character":
-        return `systems/newera-sol366/templates/actor/actor-npc-sheet.html`;
+        return `systems/newera-sol366/templates/actor/actor-npc-sheet.hbs`;
       case "Creature":
-        return `systems/newera-sol366/templates/actor/actor-creature-sheet.html`;
+        return `systems/newera-sol366/templates/actor/actor-creature-sheet.hbs`;
+      case "Container":
+        return `systems/newera-sol366/templates/actor/actor-container-sheet.hbs`;
       case "Vehicle":
-        return `systems/newera-sol366/templates/actor/actor-vehicle-sheet.html`;
+        return `systems/newera-sol366/templates/actor/actor-vehicle-sheet.hbs`;
     }
   }
 
@@ -56,29 +65,30 @@ export class NewEraActorSheet extends ActorSheet {
     context.flags = this.actor.flags;
 
     // Prepare character data and items.
-    if (this.actor.type == 'Player Character') {
-      this._prepareItems(context);
+    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       this._prepareCharacterData(context);
-      this._prepareActions(context, this.actor);
+      if (this.actor.system.defeated){
+        this._prepareCreatureItems(context); //If a character is defeated, using this item method puts all their stuff in the standard inventory list without changing the equipment slot data in case the character is revived
+      } else {
+        this._prepareItems(context);
+      }
+    }
+    if (this.actor.typeIs(NewEraActor.Types.PC)) {
       this._prepareClassFeatures(context, context.inventory.classes);
       this._prepareInspiration(context);
     }
-
-    // Prepare NPC data and items.
-    if (this.actor.type == 'Non-Player Character') {
-      this._prepareItems(context);
-      this._prepareCharacterData(context);
-      this._prepareActions(context, this.actor);
-    }
-
-    if (this.actor.type == 'Creature'){
+    if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
       this._prepareCreatureData(context);
       this._prepareCreatureItems(context);
+    }
+    if (this.actor.typeIs(NewEraActor.Types.CONTAINER)){
+      this._prepareContainerData(context);
+    }
+    if (this.actor.typeIs(NewEraActor.Types.ANIMATE)){
       this._prepareActions(context, this.actor);
     }
-
-    if (this.actor.type == 'Vehicle'){
-      this._prepareCreatureItems(context); //It's called creature items but it works for vehicles too
+    if (this.actor.typeIs(NewEraActor.Types.INANIMATE)){
+      this._prepareInanimateActorItems(context);
     }
 
     // Add roll data for TinyMCE editors.
@@ -146,15 +156,51 @@ export class NewEraActorSheet extends ActorSheet {
         if (feature.level <= clazz.system.level){
           feature.className = feature.archetype ? NEWERA.classes[clazz.system.selectedClass].archetypes[feature.archetype] : clazz.system.selectedClass;
           feature.classImg = feature.archetype ? `${NEWERA.images}/${className == "researcher" ? "" : className+"_"}${feature.archetype}.png` : clazz.img;
+          feature.clazz = clazz.system.selectedClass;
           if (feature.common){
             const commonFeature = ClassInfo.features.common[feature.common];
             feature.name = commonFeature.name;
             feature.description = commonFeature.description;
+            feature.selections = commonFeature.selections;
             feature.key = commonFeature.key; //Common features are never going to be key=true, but whatever, this'll probably confuse the hell out of me in 2 years if I hard code it to false
+            if (typeof commonFeature.dynamicSelections == "function"){
+              feature.selections = commonFeature.dynamicSelections(this.actor);
+            }
+            if (feature.selections){
+              feature.id = `${feature.className.toLowerCase()}.${feature.common}.${feature.level}`;
+            }
           }
           if (feature.tableValues){
             for (const tv of feature.tableValues){
               tv.current = tv.values[clazz.system.level];
+            }
+          }
+          if (feature.spellStudies){
+            for (let i=0; i<feature.spellStudies.length; i++){
+              if (feature.spellStudies[i].onOtherFeature){
+                /*
+                Spell studies blocks with this property set are used to offset their index position for that level in the rare case of a class having multiple study-guide-enabled features at the same level.
+                They are not rendered in the sheet and should be skipped here too.
+                */
+                continue;
+              }
+              //Mark the spell studies features as complete if the remaining selection counter is EXPLICITLY zero (undefined means none chosen yet)
+              feature.spellStudies[i].status = feature.spellStudies.length > 1 ? `(${i+1}/${feature.spellStudies.length})` : "";
+              feature.spellStudies[i].index = i;
+              try {
+                const remainingSelections = this.actor.system.classes[clazz.system.selectedClass.toLowerCase()].spellStudies[feature.level][i.toString()];
+                feature.spellStudies[i].remaining = (remainingSelections !== undefined) ? remainingSelections : feature.spellStudies[i].choose;
+                feature.spellStudies[i].complete = (remainingSelections === 0);
+                if (feature.spellStudies[i].complete){
+                  feature.spellStudies[i].status += " (Complete)";
+                } else if (remainingSelections) {
+                  feature.spellStudies[i].status += ` (${remainingSelections} Remaining)`;
+                }
+              } catch (err) {
+                //Several levels of the .classes object containing remainingSelections may not exist depending on how many spells the character has learned. Catching a ReferenceError here prevents needing to null check at every level
+                feature.spellStudies[i].complete = false;
+                feature.spellStudies[i].remaining = feature.spellStudies[i].choose;
+              }
             }
           }
           if (feature.key){
@@ -218,6 +264,11 @@ export class NewEraActorSheet extends ActorSheet {
     return effects;
   }
 
+  _prepareContainerData(context){
+    context.gm = (game.user.role >= 2);
+
+  }
+
   /**
    * Organize and classify Items for Character sheets.
    *
@@ -252,11 +303,13 @@ export class NewEraActorSheet extends ActorSheet {
     //Disable the left hand slot if a two-handed item is in the right hand
     if (equipment.rightHand){
       const itemInMainHand = this.actor.items.get(equipment.rightHand);
-      //console.log(itemInMainHand);
-      //console.log(itemInMainHand.system.handedness);
-      if (itemInMainHand.system.handedness == "2H" || (itemInMainHand.system.handedness == "1.5H" && !equipment.leftHand)){
-        equipment.twoHanded = true;
-        equipment.leftHand = "";
+      if (itemInMainHand){
+        if (itemInMainHand.system.handedness == "2H" || (itemInMainHand.system.handedness == "1.5H" && !equipment.leftHand)){
+          equipment.twoHanded = true;
+          equipment.leftHand = "";
+        }
+      } else {
+        console.warn("Encountered a nonexistent item ID in equipment");
       }
     }
 
@@ -356,15 +409,29 @@ export class NewEraActorSheet extends ActorSheet {
     };
     context.magic = [];
     for (const i of context.items){
-      if (["Item", "Potion", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Phone"].includes(i.type)){
+      if (NEWERA.typeIs(i, NewEraItem.Types.INVENTORY)){
         context.inventory.items.push(i);
-      } else if (["Spell", "Enchantment"].includes(i.type)){
+      } else if (NEWERA.typeIs(i, NewEraItem.Types.MAGIC)){
         context.magic.push(i);
-      } else if (i.type == "Action"){
+      } else if (NEWERA.typeIs(i, NewEraItem.Types.ACTION)){
         context.inventory.actions.push(i);
       } else {
         /* Crickets */ 
         // (Any other item types outside of these i.e. classes and feats should be ignored if someone adds one to a non-character actor)
+      }
+    }
+  }
+
+  _prepareInanimateActorItems(context){
+    context.inventory = {
+      items: []
+    };
+    for (const i of context.items){
+      if (NEWERA.typeIs(i, NewEraItem.Types.INVENTORY)){
+        context.inventory.items.push(i);
+      } else {
+        console.log(`Removed an item with type ${i.type} from inanimate actor`);
+        i.delete();
       }
     }
   }
@@ -392,7 +459,7 @@ export class NewEraActorSheet extends ActorSheet {
       }
     };
 
-    if (system.hitPoints.value > 0 || actor.type == "Creature"){ //If a PC or NPC's HP is 0, remove all actions and show only the death save
+    if (system.hitPoints.total > 0 || actor.type == "Creature"){ //If a PC or NPC's HP is 0, remove all actions and show only the death save
       /* Actions from inventory */
       for (const item of this.actor.items.contents){
         for (const itemAction of item.getActions()){
@@ -569,6 +636,7 @@ export class NewEraActorSheet extends ActorSheet {
       "S": "Social",
       "D": "Downtime Action",
       "M": "Movement",
+      "G": "Action"
     }
     const skillInfo = isCustom ? "" : (action.ability ? ` - ${action.ability.charAt(0).toUpperCase()}${action.ability.slice(1)} check` : (action.skill ? ` - ${action.skill.charAt(0).toUpperCase()}${action.skill.slice(1)} check` : '')); 
     action.typeDescription = `${actionTypes[action.actionType] || "Generic Action"}${skillInfo}`;
@@ -613,8 +681,24 @@ export class NewEraActorSheet extends ActorSheet {
       Actions.castSpell(this.actor, spell);
     });
 
+    html.find('.occupant-display').click(ev => {
+      const actorId = $(ev.currentTarget).parents(".vehicle-occupant").data("actorId");
+      const actor = game.actors.get(actorId);
+      actor.sheet.render(true);
+    });
+    html.find('.occupant-delete').click(ev => {
+      const actorId = $(ev.currentTarget).parents(".vehicle-occupant").data("actorId");
+      const actor = game.actors.get(actorId);
+      this.actor.update({
+        system: {
+          occupants: this.actor.system.occupants.filter(n => n != actorId)
+        }
+      });
+      ui.notifications.info(`${actor.name} is no longer a passenger in ${this.actor.name}.`);
+    });
+
     //Ability Score Point Buy
-    if (system.level == 0 && this.actor.type == "Player Character"){
+    if (system.level <= game.settings.get("newera-sol366", "startingLevel") && game.settings.get("newera-sol366", "characterCreation") && this.actor.typeIs(NewEraActor.Types.PC)){
       html.find('#ability-points-counter').show();
       if (system.abilityScorePointBuy){
         if (system.abilityScorePointBuy.outOfRange){
@@ -634,17 +718,17 @@ export class NewEraActorSheet extends ActorSheet {
     }
 
     //Progress bar dynamic styling
-    if (this.actor.type != "Vehicle"){
+    if (this.actor.typeIs(NewEraActor.Types.ANIMATE)){
       if (system.energy.max == 0){
         html.find('#energy-icon').attr('src', 'systems/newera-sol366/resources/energy.png');
         html.find('.resource-energy').addClass('resource-energy-no-magic');
         html.find('.resource-energy-no-magic').removeClass('resource-energy');
-      } else if (system.energy.value > system.energy.max) {
+      } else if (system.energyPercentage > 1.0) {
         html.find('#energy-icon').attr('src', 'systems/newera-sol366/resources/energy-over.png');
         html.find('#energy-wrapper').addClass('res-over');
       }
   
-      if (system.hitPoints.value == 0) {
+      if (system.hitPoints.total == 0) {
         html.find('#health-wrapper').addClass('hp-on-lifepoints');
         html.find("#hp-icon").attr('src', `${NEWERA.images}/hp.png`);
         html.find("#lp-icon").attr('src', `${NEWERA.images}/lp-hot.png`);
@@ -696,30 +780,32 @@ export class NewEraActorSheet extends ActorSheet {
     }
 
     //Bio field update
-    if (this.actor.type != "Vehicle"){
+    if (this.actor.typeIs(NewEraActor.Types.ANIMATE)){
       html.find('#alignment-moral').val(system.alignment.moral);
       html.find('#alignment-ethical').val(system.alignment.ethical);
     }
 
     //Other dropdown updates
-    if (this.actor.type == "Player Character" || this.actor.type == "Non-Player Character"){
+    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       html.find('#skillmode-select').val(system.advancedSkills.toString());
       html.find('#wornSlotSelect').val(system.wornItemSlots);
     }
-    if (this.actor.type == "Creature"){
+    if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
       html.find('#creature-rarity').val(system.rarity);
     }
 
     //Vehicle dropdowns
-    if (this.actor.type == "Vehicle"){
-
+    if (this.actor.typeIs(NewEraActor.Types.VEHICLE)){
+      html.find('#fuel-type').val(system.fuelType);
+      html.find('#vehicle-type').val(system.vehicleType);
+      html.find('#color').val(system.color);
     }
 
     this._setClassFeatureDropdowns(html);
     html.find(".feature-select").change(ev => this._onFeatureSelectionChange(ev));
  
     //Spellbook cast DC's
-    if (this.actor.type == "Player Character" || this.actor.type == "Non-Player Character"){
+    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       html.find(".inventory-entry-magic").each((i, val) => {
         const spellId = $(val).data("itemId");
         const dc = this._getSpellCastDifficulty(spellId, 1);
@@ -738,7 +824,7 @@ export class NewEraActorSheet extends ActorSheet {
         html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
       });
     //Monster magic stuff
-    } else if (this.actor.type == "Creature"){
+    } else if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
       html.find(".inventory-entry-magic").each((i, val) => {
         const spellId = $(val).data("itemId");
         const ampFactor = this.actor.items.get(spellId).system.ampFactor;
@@ -754,7 +840,7 @@ export class NewEraActorSheet extends ActorSheet {
     }
 
     //Feat CPA coloration
-    if (this.actor.type == "Player Character"){
+    if (this.actor.typeIs(NewEraActor.Types.PC)){
       if (this.actor.system.characterPoints.cpa < 0){
         html.find("#character-points").css("color", "red");
       } else {
@@ -763,8 +849,13 @@ export class NewEraActorSheet extends ActorSheet {
     }
 
     //Carry weight color
-    if (this.actor.type == "Player Character" || this.actor.type == "Non-Player Character"){
+    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       if (system.totalWeight > system.carryWeight.value){
+        html.find("#cw-wrapper").addClass("cw-full");
+      }
+    }
+    if (this.actor.typeIs(NewEraActor.Types.VEHICLE)){
+      if (system.totalWeight > system.carryWeight){
         html.find("#cw-wrapper").addClass("cw-full");
       }
     }
@@ -809,6 +900,29 @@ export class NewEraActorSheet extends ActorSheet {
 
     //Browser open buttons
     html.find(".feat-browser").click(() => new FeatBrowser(this.actor).render(true));
+    html.find(".spell-browser").click(() => new SpellBrowser(this.actor).render(true));
+    html.find(".spell-studies").click(ev => {
+      const element = $(ev.currentTarget);
+      const className = element.data("class");
+      const archetype = element.data("archetype") || undefined; //This comes back as an empty string for non-archetype features which isn't equivalent to undefined in the feature data
+      const level = element.data("level");
+      const index = element.data("index");
+      console.log(`[DEBUG] loading spell study guide class=${className} arch=${archetype} level=${level} index=${index}`);
+      const spellStudiesCriteria = ClassInfo.features[className.toLowerCase()].find(
+        feature => 
+        feature.archetype == archetype &&
+        feature.level == level &&
+        !!feature.spellStudies &&
+        !!feature.spellStudies[index] &&
+        !feature.spellStudies[index].onOtherFeature
+      ).spellStudies;
+      if (spellStudiesCriteria && spellStudiesCriteria[index]){
+        const criteria = new SpellSearchParams(spellStudiesCriteria[index]);
+        new SpellBrowser(this.actor, criteria, {className: className.toLowerCase(), level: level, index: index}).render(true);
+      } else {
+        ui.notifications.error("Couldn't load spell studies for this level. Please report this to the developers.");
+      }
+    });
 
     //Favorite Spells management
     html.find(".spell-favorite-add").click(async ev => {
@@ -909,6 +1023,7 @@ export class NewEraActorSheet extends ActorSheet {
       ev.originalEvent.dataTransfer.setData("objectType", "equipment");
       ev.originalEvent.dataTransfer.setData("itemId", itemId);
       ev.originalEvent.dataTransfer.setData("fromZone", fromZone.data("dropZone"));
+      ev.originalEvent.dataTransfer.setData("fromActor", this.actor.uuid);
       ev.originalEvent.dataTransfer.effectAllowed = "move";
     });
     html.find(".newera-equipment-dropzone").on("dragover", ev => {
@@ -916,24 +1031,55 @@ export class NewEraActorSheet extends ActorSheet {
     });
     html.find(".newera-equipment-dropzone").on("drop", ev => {
       const itemId = ev.originalEvent.dataTransfer.getData("itemId");
-      const movedItem = this.actor.items.get(itemId);
       const sourceSlot = ev.originalEvent.dataTransfer.getData("fromZone");
       const targetSlot = $(ev.currentTarget).data("dropZone");
-      console.log(`INV DROP ${itemId} ${sourceSlot}->${targetSlot}`);
-      if (sourceSlot == targetSlot || !sourceSlot){
-        console.log("But, it failed!");
+      const sourceActor = ev.originalEvent.dataTransfer.getData("fromActor");
+      const targetActor = this.actor.uuid;
+      //Prevent listener from running on drops from unrelated stuff
+      if (!itemId){
         return;
-      } else if (!this._isItemDroppable(itemId, targetSlot)){
-        ui.notifications.error("That item can't be placed in that slot. Try a different location.");
-      } else if (sourceSlot == "backpack" && movedItem.system.stored == true){
-        ui.notifications.error("That item is in storage. You must retrieve it before you can equip it.");
-      } else {
-        const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
-        this.actor.actionMessage(movedItem.img, frameImg, "{NAME} {0} {d} {1}!", this._getItemActionVerb(sourceSlot, targetSlot), (movedItem.type == "Phone" ? "phone" : movedItem.name));
-        this.actor.moveItem(itemId, sourceSlot, targetSlot);
-        html.find(`#newera-equipment-${this.actor.id}-${targetSlot}-input`).val(itemId);
-        html.find(`#newera-equipment-${this.actor.id}-${sourceSlot}-input`).val("");
-        this.submit();
+      }
+      console.log(`INV DROP ${itemId} ${sourceActor}.${sourceSlot}->${targetActor}.${targetSlot}`);
+      //Moving items between slots on the same actor (existing behavior)
+      if (sourceActor == targetActor){
+        const movedItem = this.actor.items.get(itemId);
+        if (sourceSlot == targetSlot || !sourceSlot){
+          console.log("But, it failed!");
+          return;
+        } else if (!this._isItemDroppable(movedItem, targetSlot)){
+          ui.notifications.error("That item can't be placed in that slot. Try a different location.");
+        } else if (sourceSlot == "backpack" && movedItem.system.stored == true){
+          ui.notifications.error("That item is in storage. You must retrieve it before you can equip it.");
+        } else {
+          const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
+          if (Formatting.sendEquipmentChangeMessages()){
+            this.actor.actionMessage(movedItem.img, frameImg, "{NAME} {0} {d} {1}!", this._getItemActionVerb(sourceSlot, targetSlot), (movedItem.type == "Phone" ? "phone" : movedItem.name));
+          }
+          this.actor.moveItem(itemId, sourceSlot, targetSlot);
+          html.find(`#newera-equipment-${this.actor.id}-${targetSlot}-input`).val(itemId);
+          html.find(`#newera-equipment-${this.actor.id}-${sourceSlot}-input`).val("");
+          this.submit();
+        }
+      }
+      //Moving an item to a different actor (new behavior)
+      else {
+        const origin = fromUuidSync(sourceActor);
+        if (!origin){
+          ui.notifications.error("Failed to move item: Unable to locate source actor");
+          return;
+        }
+        const movedItem = origin.items.get(itemId);
+        if (!movedItem){
+          ui.notifications.error("Failed to move item: The source actor doesn't seem to have that item.");
+          return;
+        }
+        if (!this._isItemDroppable(movedItem, targetSlot)){
+          ui.notifications.error("That item can't be placed in that slot. Try a different location.");
+        } else if (sourceSlot == "backpack" && movedItem.system.stored == true){
+          ui.notifications.error("That item is in storage. You must retrieve it before you can give it to someone else.");
+        } else {
+          origin.transferItem(this.actor, movedItem, targetSlot);
+        }
       }
     });
 
@@ -1097,16 +1243,20 @@ export class NewEraActorSheet extends ActorSheet {
     const type = header.dataset.type;
     // Grab any data associated with this control.
     const data = duplicate(header.dataset);
+    //For created spells and enchantments, set their author to the current actor.
+    if (type == "Spell" || type == "Enchantment"){
+      data.author = this.actor.id;
+    }
     // Initialize a default name.
     const name = `New ${type.capitalize()}`;
     // Prepare the item object.
     const itemData = {
       name: name,
       type: type,
-      data: data
+      system: data
     };
     // Remove the type from the dataset since it's in the itemData.type prop.
-    delete itemData.data["type"];
+    delete itemData.system["type"];
 
     // Finally, create the item!
     return await Item.create(itemData, {parent: this.actor});
@@ -1235,7 +1385,7 @@ export class NewEraActorSheet extends ActorSheet {
 
   _isItemDroppable(item, destination){
     //console.log(`IID ${item} ${destination}`);
-    const slotsAllowed = NewEraActorSheet._getAllowedItemSlots(this.actor.items.get(item));
+    const slotsAllowed = NewEraActorSheet._getAllowedItemSlots(item);
     const droppable = (slotsAllowed.includes(destination) || destination == "backpack" || (destination.includes("worn") && slotsAllowed.includes("worn"))); //The "worn" case is necessary because the slotsAllowed method doesn't explicitly list all 10 worn item slots
     return droppable;
   }
@@ -1574,23 +1724,113 @@ export class NewEraActorSheet extends ActorSheet {
     const xfr = event.originalEvent.dataTransfer;
     const json = xfr.getData("text/plain") || null;
     const dropData = JSON.parse(json);
+    //console.log(`[DEBUG] ActorSheet Drop ${json}`);
+    if (dropData && dropData.type == "Actor" && this.actor.type == "Vehicle"){
+      event.preventDefault();
+      const id = dropData.uuid.replace("Actor.", "");
+      const passenger = game.actors.get(id);
+      if (this.actor.system.occupants.includes(id)){
+        ui.notifications.warn(`${passenger.name} is already in this vehicle!`);
+        return;
+      }
+      if (passenger && passenger.typeIs(NewEraActor.Types.ANIMATE)){
+        await this.actor.update({
+          system: {
+            occupants: this.actor.system.occupants.concat([id])
+          }
+        });
+        ui.notifications.info(`${passenger.name} is now a passenger in ${this.actor.name}.`);
+      }
+    }
     if (dropData && dropData.transferAction){
       event.preventDefault();
-      if (dropData.transferAction = "addFeatFromBrowser"){
-        const featFromCompendium = game.packs.get("newera-sol366.feats").find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+      if (dropData.transferAction == "addFeatFromBrowser"){
+        const compendium = await game.packs.get("newera-sol366.feats").getDocuments();
+        const featFromCompendium = compendium.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+        const featFromActor = this.actor.items.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
         if (featFromCompendium){
-          if (featFromCompendium.characterMeetsFeatPrerequisites(this.actor)){
-            const featData = structuredClone(featFromCompendium);
-            await Item.create(featData, { parent: this.actor });
-            ui.notifications.info(`You took ${featFromCompendium.name} for ${featFromCompendium.system.tiers.base.cost} character points.`);
-          } else {
-            ui.notifications.warn(`${this.actor} doesn't meet the prerequisites for ${featFromCompendium.name}.`);
+          if (featFromActor){ //Increase tier
+            if (featFromActor.system.maximumTier == -1){
+              await featFromActor.update({
+                system: {
+                  currentTier: featFromActor.system.currentTier + 1
+                }
+              });
+              ui.notifications.info(`You took another instance of ${featFromActor.name} for ${featFromCompendium.system.base.cost} character points.`);
+            } else if (featFromActor.system.maximumTier == 1){
+              ui.notifications.error(`${this.actor.name} already has ${featFromCompendium.name}.`);
+            } else {
+              if (featFromActor.system.currentTier == featFromActor.system.maximumTier){
+                ui.notifications.error(`${this.actor.name} already has the highest available tier of ${featFromCompendium.name}.`);
+              } else {
+                if (featFromActor.characterMeetsFeatPrerequisites(this.actor, featFromActor.system.currentTier + 1)){
+                  await featFromActor.update({
+                    system: {
+                      currentTier: featFromActor.system.currentTier + 1
+                    }
+                  });
+                  ui.notifications.info(`You upgraded ${this.actor.name}'s ${featFromCompendium.name} feat to tier ${featFromActor.system.currentTier} for ${featFromActor.system.tiers[featFromActor.system.currentTier].cost} character points.`);
+                } else {
+                  ui.notifications.warn(`${this.actor.name} doesn't meet the prerequisites for tier ${featFromActor.system.currentTier+1} of ${featFromActor.name}.`)
+                }
+              }
+            }
+          } else { //Add new feat
+            if (featFromCompendium.characterMeetsFeatPrerequisites(this.actor, 1)){
+              const featData = structuredClone(featFromCompendium);
+              await Item.create(featData, { parent: this.actor });
+              ui.notifications.info(`You took ${featFromCompendium.name} for ${featFromCompendium.system.base.cost} character points.`);
+            } else {
+              ui.notifications.warn(`${this.actor.name} doesn't meet the prerequisites for ${featFromCompendium.name}.`);
+            }
           }
         } else {
           ui.notifications.error("Couldn't find a feat in the CASPER database matching this item. Please report this to the developers.");
         }
+      } else if (dropData.transferAction == "addSpellFromBrowser") {
+        if (dropData.studies && dropData.studies.className){
+          if (this.actor.id != dropData.actorId){
+            ui.notifications.error(`This spell study guide is for a different actor.`);
+            return;
+          }
+          if (dropData.remaining == -1){
+            //For "choose all" study guides on the researcher, don't set the counter. these will never show as complete
+          } else if (dropData.remaining > 0){
+            const update = {
+              system: {
+                  classes: {}
+              }
+            };
+            update.system.classes[dropData.studies.className] = {
+              spellStudies: {}
+            };
+            update.system.classes[dropData.studies.className].spellStudies[dropData.studies.level] = {};
+            update.system.classes[dropData.studies.className].spellStudies[dropData.studies.level][dropData.studies.index] = dropData.remaining - 1;
+            await this.actor.update(update);
+          } else {
+            ui.notifications.warn("You've completed your spell studies for this list. Please close the study guide and choose another one.");
+            return;
+          }
+        }
+        const compendium = await game.packs.get("newera-sol366.spells").getDocuments();
+        const spellFromCompendium = compendium.find(spell => 
+          spell.type == dropData.itemType &&
+          spell.system.casperObjectId == dropData.casperObjectId
+        );
+        if (spellFromCompendium){
+            await Item.create(spellFromCompendium, { parent: this.actor });
+            this.actor.actionMessage(this.actor.img, spellFromCompendium.img, "{NAME} learned {0}!", spellFromCompendium.name);
+            if (dropData.remaining > 1){
+              ui.notifications.info(`You learned ${spellFromCompendium.name}! You can choose ${dropData.remaining-1} more spell${dropData.remaining>2?'s':''} from the current study guide.`);
+            } else if (dropData.remaining == 1){
+              ui.notifications.info(`You learned ${spellFromCompendium.name}! You've completed this study guide.`);
+            } else {
+              ui.notifications.info(`You learned ${spellFromCompendium.name}!`);
+            }
+          }
+        } else {
+          ui.notifications.error(`Error: Couldn't load spell data`);
+        }
       }
     }
-  }
-
 }

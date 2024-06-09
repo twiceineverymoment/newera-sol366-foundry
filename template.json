@@ -1,12 +1,13 @@
 {
 	"Actor": {
-		"types": ["Player Character", "Non-Player Character", "Creature", "Vehicle"],
+		"types": ["Player Character", "Non-Player Character", "Creature", "Container", "Vehicle"],
 		"templates": {
 			"base": {
 				"hitPoints": {
 					"value": 10,
 					"min": 0,
-					"max": 10
+					"max": 10,
+					"temporary": 0
 				},
 				"lifePoints": {
 					"value": 10,
@@ -16,17 +17,8 @@
 				"energy": {
 					"value": 0,
 					"min": 0,
-					"max": 0
-				},
-				"temporaryHitPoints": {
-					"value": 0,
-					"min": 0,
-					"max": 0
-				},
-				"temporaryEnergy": {
-					"value": 0,
-					"min": 0,
-					"max": 0
+					"max": 0,
+					"temporary": 0
 				},
 				"additionalResources": {},
 				"abilities": {
@@ -111,7 +103,8 @@
 				"lastAction": {
 					"category": "general",
 					"index": 0
-				}
+				},
+				"defeated": false
 			},
 			"skills": {
 				"advancedSkills": false,
@@ -292,6 +285,10 @@
 				"casterLevel": 0,
 				"spellcraft": 0,
 				"favoriteSpells": [],
+				"sustaining": {
+					"id": "",
+					"ampFactor": 1
+				},
 				"magic": {
 					"elemental": {
 						"level": 0,
@@ -441,20 +438,30 @@
 			"hasMagic": false,
 			"weakPoints": ["head", "neck", "arm", "leg", "back", "heart", "eye"]
 		},
+		"Container": {
+			"templates": [],
+			"weightCapacity": 0,
+			"locked": false,
+			"pinCount": 0,
+			"pinSetDifficulty": 0,
+			"notes": ""
+		},
 		"Vehicle": {
 			"templates": [],
 			"year": 366,
 			"make": "",
 			"model": "",
 			"seatingCapacity": 4,
-			"topSpeed": 0,
-			"vehicleType": "car",
-			"fuelType": "hydrogen",
+			"carryWeight": 100,
+			"vehicleType": "2d",
+			"fuelType": "hydrogenEngine",
+			"color": "white",
 			"fuel": {
 				"min": 0,
 				"max": 100,
 				"value": 50
-			}
+			},
+			"occupants": []
 		}
 	},
 	"Item": {
@@ -507,7 +514,8 @@
 				"keywords": "",
 				"static": false,
 				"refinementLevel": 0,
-				"ampFactor": 1
+				"ampFactor": 1,
+				"author": ""
 			}
 		},
 		"Item": {
@@ -610,14 +618,13 @@
 			"chantLevel": 0,
 			"bonuses": {},
 			"choices": {},
-			"prerequisites": "",
-			"conflicts": "",
-			"tiers": {
-				"base": {
-					"cost": 0,
-					"description": ""
-				}
-			}
+			"base": {
+				"cost": 0,
+				"description": "",
+				"prerequisites": "",
+				"conflicts": ""
+			},
+			"tiers": {}
 		},
 		"Action": {
 			"templates": [],

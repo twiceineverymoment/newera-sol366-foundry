@@ -1,0 +1,135 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Myeongjo" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aboreto" />
+
+<form class="{{cssClass}} {{actor.type}} newera-actorsheet-body" autocomplete="off">
+
+  {{!-- Sheet Header --}}
+  <div class="newera-actorsheet-top">
+    <img class="newera-actorsheet-image" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="128" width="128"/>
+      <div class="newera-actorsheet-top-data">
+        <h1 class="charname"><input name="name" type="text" class="sheet-input" value="{{actor.name}}" placeholder="Name"/></h1>
+        <input type="text" name="system.year" value="{{system.year}}" class="sheet-input" style="width: 25%" data-dtype="Number" />
+        <input type="text" name="system.make" value="{{system.make}}" class="sheet-input" style="width: 25%" data-dtype="String" />
+        <input type="text" name="system.model" value="{{system.model}}" class="sheet-input" style="width: 25%" data-dtype="String" />
+      </div>
+  </div>
+
+  <div class="newera-actorsheet-tabs">
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item newera-section-header" data-tab="passengers">Party</a>
+      <a class="item newera-section-header" data-tab="profile">Item Storage</a>
+    </nav>
+  </div>
+
+  <div class="newera-actorsheet-scroll">
+      <div class="newera-actorsheet-left">
+
+      <div id="actorsheet-resources">
+        <div class="resource newera-actorsheet-resource">
+          <img class="resource-icon" src="systems/newera-sol366/resources/hydrogen.png" title="Fuel" id="fuel-icon" />
+          <div class="resource-content">
+            <input type="text" id="resourceValFuel" class="resource-input resource-hydrogen" name="system.fuel.value" value="{{system.fuel.value}}" data-dtype="Number"/>
+            <span> / </span>
+            <input type="text" id="resourceMaxFuel" class="resource-input resource-hydrogen" name="system.fuel.max" value="{{system.fuel.max}}" data-dtype="Number"/>
+          </div>
+        </div>
+        <div class="newera-actorsheet-bars">
+          <div class="resource-bars">
+            <div id="fuel-wrapper" class="progress-wrapper hydrogen">
+              <progress id="fuel-bar" value="{{system.fuel.value}}" max="{{system.fuel.max}}">FUEL</progress>
+            </div>
+          </div>
+        </div>
+        <div class="summary-stat-wrapper">
+          <h4>Fuel Type</h4>
+          <select name="system.fuelType" class="sheet-input property-select" id="fuel-type">
+            <option value="hydrogenEngine">Hydrogen Engine</option>
+            <option value="hydrogenFuelFell">Hydrogen Fuel Cell</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="plugInHybrid">Plug-In Hybrid</option>
+            <option value="electric">Electric</option>
+            <option value="fossil">Fossil Fuel</option>
+            <option value="none">Unpowered (No Fuel)</option>
+          </select>
+        </div>
+      </div>
+      <hr />
+      <div class="summary-stat-wrapper">
+        <h4>Vehicle Type</h4>
+        <select name="system.vehicleType" class="sheet-input property-select" id="vehicle-type">
+          <option value="" disabled>Cars and Trucks</option>
+          <option value="2d">Coupe (2-door)</option>
+          <option value="4d">Sedan (4-door)</option>
+          <option value="5d">Hatchback (5-door)</option>
+          <option value="suv">SUV</option>
+          <option value="minivan">Minivan</option>
+          <option value="pickup">Pickup Truck</option>
+          <option value="van">Large Van</option>
+          <option value="boxtruck">Box Truck</option>
+          <option value="semi">Semi</option>
+          <option value="" disabled>Other Land Vehicles</option>
+          <option value="bicycle">Bicycle</option>
+          <option value="motorcycle">Motorcycle</option>
+          <option value="moped">Moped / Scooter</option>
+          <option value="atv">ATV</option>
+          <option value="golfcart">Golf Cart</option>
+          <option value="snowmobile">Snowmobile</option>
+          <option value="" disabled>Marine</option>
+          <option value="speedboat">Speed Boat</option>
+          <option value="pontoon">Pontoon Boat</option>
+          <option value="bigboat">Yacht / Large Boat</option>
+          <option value="jetski">Jet Ski</option>
+          <option value="" disabled>Aviation</option>
+          <option value="helicopter">Helicopter</option>
+          <option value="plane">Small Aircraft</option>
+          <option value="bigplane">Large Aircraft</option>
+        </select>
+      </div>
+      <div class="summary-stat-wrapper">
+        <h4>Color</h4>
+        <select name="system.color" class="sheet-input property-select" id="color">
+          <option value="0">White</option>
+          <option value="1">Silver</option>
+          <option value="2">Red</option>
+          <option value="3">Blue</option>
+          <option value="4">Green</option>
+          <option value="5">Gold</option>
+          <option value="6">Yellow</option>
+          <option value="7">Brown</option>
+          <option value="8">Black</option>
+          <option value="9">Orange</option>
+          <option value="10">Pink</option>
+          <option value="11">Purple</option>
+        </select>
+      </div>
+      <div class="summary-stat-wrapper">
+        <h4>Seating Capacity</h4>
+        <input type="text" class="sheet-input" name="system.seatingCapacity" value="{{system.seatingCapacity}}" data-dtype="Number" />
+      </div>
+      <div class="summary-stat-wrapper">
+        <h4>Weight Capacity</h4>
+        <input type="text" class="sheet-input" name="system.carryWeight" value="{{system.carryWeight}}" data-dtype="Number" />
+      </div>
+    </div>
+
+    <div class="newera-actorsheet-right">
+      <section class="sheet-body">
+        <div class="resource">
+            <div id="cw-wrapper" class="progress-wrapper cw" style="text-align: center" data-tooltip="The weight of each passenger is 6 plus the creature's Size modifier.">
+                <img class="resource-icon" src="systems/newera-sol366/resources/weight.png" />
+                <progress id="carry-weight-bar" value="{{system.totalWeight}}" max="{{system.carryWeight}}">CW</progress>
+                <h3 id="carry-weight-status" style="display: inline" class="table-header">{{system.totalWeight}} / {{system.carryWeight}}</h3>
+            </div>
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="passengers">
+          {{> systems/newera-sol366/templates/actor/parts/vehicle-occupants.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="profile">
+          {{> systems/newera-sol366/templates/actor/parts/creature-items.hbs}}
+        </div>
+      </section>
+    </div>
+  </div>
+
+</form>

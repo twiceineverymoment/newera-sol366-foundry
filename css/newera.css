@@ -29,6 +29,14 @@ div.actor section.window-content, div.item section.window-content {
   font-size: 18px;
   border-bottom: none;
 }
+.container-title {
+  font-family: "Cinzel", serif;
+  color: rgb(240, 157, 41) !important;
+  font-size: 2.5em;
+  border-bottom: none;
+  text-align: center;
+  margin: 0 auto;
+}
 .spell-table-nav {
   display: flex;
   flex-direction: row;
@@ -139,6 +147,10 @@ div.newera-itemsheet-property-66 {
   border-radius: 2px;
   margin: 2px;
 }
+.enchantment-dropzone {
+  height: 100%;
+  width: 100%;
+}
 .newera-itemsheet-editor-container .editor, .newera-actorsheet-editor-container .editor {
   position: absolute;
   width: 100%;
@@ -147,6 +159,13 @@ div.newera-itemsheet-property-66 {
 }
 .newera-itemsheet-editor-container .editor .tox, .newera-actorsheet-editor-container .editor .tox {
   background-color: white;
+}
+.feat-sheet-separator {
+  border: 1px solid #222;
+}
+.feat-sheet-status {
+  float: right;
+  font-size: 20px;
 }
 #amplified-description {
   position: absolute;
@@ -265,6 +284,9 @@ input.roll-formula {
   font-family:'Courier New', Courier, monospace !important;
   font-size: 12px !important;
   background-color: #333 !important;
+}
+.property-select {
+  width: 100%;
 }
 .smol {
   font-size: 0.75em;
@@ -417,6 +439,11 @@ input.skill-checkbox {
   border: 1px solid #f88d28;
 }
 /*TinyMCE Editor restyling */
+.newera-editor {
+  position: absolute;
+  height: 240px;
+  width: 90%;
+}
 .newera-editor .editor {
   position: absolute;
   width: 100%;
@@ -471,9 +498,22 @@ input.resource-input {
   border: none;
   outline: none;
   display: inline;
-  width: 60px;
+  width: 69px; /* Nice */
   font-size: 20px;
   background-color: #1D4159;
+}
+input.resource-input-small {
+  color: gray;
+  font-family: "Nanum Myeongjo", serif;
+  border: none;
+  outline: none;
+  display: inline;
+  width: 40px;
+  font-size: 20px;
+  background-color: #1D4159;
+}
+input.resource-temporary {
+  background-color: rgba(29, 65, 89, 0.5) !important;
 }
 div.resource-content span {
   display: inline;
@@ -686,6 +726,9 @@ img.equipment-worn {
 .empty-item-slot {
   cursor: default !important;
 }
+.empty-item-slot img {
+  opacity: 0.6;
+}
 .creature-item-add {
   display: block;
   position: relative;
@@ -812,6 +855,10 @@ div.inventory-table-container {
 #spell-add-2 {
   top: 2px;
   left: 34px;
+}
+#spell-add-3 {
+  top: 2px;
+  left: 66px;
 }
 #spell-add-row, #effect-add-row {
   height: 36px;
@@ -949,6 +996,7 @@ td.class-feature {
   display: block;
   margin: 0 auto;
   text-align: left;
+  position: relative;
 }
 td.class-feature h4 {
   font-size: 1.5em;
@@ -981,6 +1029,19 @@ div.feature-selection {
 }
 div.feature-selection select, div.feature-selection input {
   width: 50%;
+}
+div.spell-study-guide-links {
+  float: right;
+  text-align: right;
+}
+div.spell-study-guide-links button {
+  width: 40px;
+  text-align: center;
+  margin-left: 3px;
+}
+div.spell-studies-container {
+  bottom: 4px;
+  left: 4px;
 }
 div.magic-info {
   text-align: center;
@@ -1179,10 +1240,6 @@ input.resource-focus-energy {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-#filterResults {
-  height: 100%;
-  overflow-y: auto;
-}
 .browser-result {
   outline: 1px solid black;
   width: 45%;
@@ -1202,6 +1259,12 @@ input.resource-focus-energy {
 .feat-prerequisites {
   font-size: 16px;
   font-weight: bold;
+}
+.feat-browser-symbols {
+  float: right;
+  margin: 4px;
+  font-size: 24px;
+  color: rgb(240, 157, 41) !important;
 }
 .feat-browser-filters, .feat-filter-option {
   text-align: left;
@@ -1252,4 +1315,62 @@ input.resource-focus-energy {
 p.storage-exceeded-msg {
   background-color: lightcoral;
   border: 1px solid darkred;
+}
+
+/* Spell Browser */
+.browser-result img.spell-preview-actions {
+  float: none !important;
+  display: inline;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+}
+img.inline-icon {
+  display: inline;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border: none;
+  outline: none;
+}
+.browser-result img.rarity {
+  float: right !important;
+  width: 16px;
+  height: 16px;
+  margin: 3px;
+}
+.truncate-text {
+  height: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.truncate-paragraphs {
+  max-height: calc(100% - 88px);
+  text-overflow: ellipsis;
+}
+.truncate-paragraphs p {
+  text-overflow: ellipsis;
+}
+.spell-preview {
+  cursor: pointer;
+}
+span#spellsRemaining {
+  color: yellow !important;
+}
+img.vehicle-passenger-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: static;
+}
+.vehicle-occupant, .vehicle-occupant h3 {
+  text-align: center;
+  cursor: pointer;
+}
+a.occupant-delete {
+  float: right;
+  text-align: right;
+  font-size: 12px;
+  margin-right: 2px;
+  margin-top: 2px;
 }

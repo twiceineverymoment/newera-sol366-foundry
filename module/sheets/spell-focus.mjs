@@ -15,8 +15,12 @@ export class SpellFocus extends ActorSheet {
         });
     }
 
+    get title() {
+        return `Spell Storage [${this.actor.name}]`;
+    }
+
     get template() {
-        return "systems/newera-sol366/templates/actor/features/spell-focus.html";
+        return "systems/newera-sol366/templates/actor/features/spell-focus.hbs";
     }
 
     getData() {

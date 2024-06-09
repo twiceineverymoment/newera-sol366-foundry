@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Myeongjo" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aboreto" />
+
+<form class="{{cssClass}} {{actor.type}} newera-actorsheet-body" autocomplete="off">
+
+  {{!-- Sheet Header --}}
+  <div class="newera-actorsheet-top">
+    {{> systems/newera-sol366/templates/actor/parts/creature-top-section.hbs}}
+  </div>
+
+  <div class="newera-actorsheet-tabs">
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item newera-section-header" data-tab="description">Description</a>
+      <a class="item newera-section-header" data-tab="abilities">Abilities</a>
+      <a class="item newera-section-header" data-tab="actions">Actions</a>
+      {{#if system.hasInventory}}
+      <a class="item newera-section-header" data-tab="inventory">Items</a>
+      {{/if}}
+      {{#if system.hasMagic}}
+      <a class="item newera-section-header" data-tab="magic">Magic</a>
+      {{/if}}
+      <a class="item newera-section-header" data-tab="effects">Effects</a>
+    </nav>
+  </div>
+
+  <div class="newera-actorsheet-scroll">
+    <div class="newera-actorsheet-left">
+      {{> systems/newera-sol366/templates/actor/parts/creature-stats.hbs}}
+    </div>
+  
+    <div class="newera-actorsheet-right">
+      <section class="sheet-body">
+        <div class="tab profile" data-group="primary" data-tab="description">
+          {{> systems/newera-sol366/templates/actor/parts/creature-description.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="abilities">
+          {{> systems/newera-sol366/templates/actor/parts/creature-abilities.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="actions">
+          {{> systems/newera-sol366/templates/actor/parts/actions.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="inventory">
+          {{> systems/newera-sol366/templates/actor/parts/creature-items.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="magic">
+          {{> systems/newera-sol366/templates/actor/parts/creature-magic.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="effects">
+          {{> systems/newera-sol366/templates/actor/parts/effects.hbs}}
+        </div>
+      </section>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Myeongjo" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aboreto" />
+
+<form class="{{cssClass}} {{actor.type}} newera-actorsheet-body" autocomplete="off">
+
+  {{#if complete}}
+    <h2 class="newera-section-header">Complete</h2>
+    <p>You've finished learning spells from this list. You may now close this window.</p>
+  {{else}}
+
+  <div class="newera-actorsheet-left feat-browser-filters" {{#if initialCriteria.studies}}data-tooltip="You cannot change the search criteria while viewing the spell study guide. To view other spells, open the Spell Browser from the Magic tab of your character sheet." data-tooltip-direction="RIGHT"{{/if}}>
+    {{#if initialCriteria.studies}}
+      {{#if chooseAll}}
+        <h3 class="newera-section-header">Learn <span id="spellsRemaining">all</span> spell(s) on this list</h3>
+      {{else}}
+        <h3 class="newera-section-header">Choose <span id="spellsRemaining">{{remainingSelections}}</span> more spell(s) from this list</h3>
+      {{/if}}
+    {{else}}
+      <h3 class="newera-section-header">Search Spells</h3>
+    {{/if}}
+    <div id="filterResults">
+      {{> systems/newera-sol366/templates/extras/parts/spell-filters.hbs}}
+    </div>
+  </div>
+
+  <div class="newera-actorsheet-right feat-browser-contents">
+    <div id="browserLoading" class="browser-loading-wheel"></div>
+    <div id="results" style="display: none">
+      
+    </div>
+  </div>
+
+  {{/if}}
+  
+</form>

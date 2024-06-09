@@ -1,0 +1,168 @@
+<form class="{{cssClass}} newera-itemsheet-body" autocomplete="off">
+  <input type="hidden" name="system.enchantedItemDescriptor" value="{{system.enchantedItemDescriptor}}" data-dtype="String" />
+  <input type="hidden" name="system.form" value="{{system.form}}" data-dtype="String" />
+  <input type="hidden" name="system.specialty" value="{{system.specialty}}" data-dtype="String" />
+  <header class="sheet-header">
+    <img class="profile-img" src="{{system.spellImageUrl}}" title="{{item.name}}"  style="border: none"/>
+    <div class="header-fields">
+      <div class="action-icon enchantment-drag">
+        <div class="action-icon-container">
+          <img class="action-image-base drag-to-enchant" draggable="true" src="systems/newera-sol366/resources/sparkles.png" data-tooltip="Drag this enchantment onto the sheet of an Item you wish to apply it to." data-tooltip-direction="LEFT" />
+        </div>
+      </div>
+      <h1 class="charname" style="width: 90%">
+        <input name="name" class="sheet-input" type="text" value="{{item.name}}" placeholder="Name" {{disabled system.standard}} />
+      </h1>
+      <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="https://www.newerarpg.com/srd/contentview/_enchantment?module=newera-sol366&id={{system.casperObjectId}}">
+        <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
+      </a>
+      <div class="resource">
+        <select name="system.rarity" class="sheet-input" id="rarity-{{item.id}}" data-dtype="Number">
+          <option value="1">Common</option>
+          <option value="2">Uncommon</option>
+          <option value="3">Rare</option>
+          <option value="4">Legendary</option>
+          <option value="5">Restricted</option>
+          <option value="6">Classified</option>
+          <option value="7">Mystery</option>
+          <option value="8">Innate</option>
+          <option value="0">Inscribed</option>
+        </select>
+        <select name="system.enchantmentType" class="sheet-input" id="ench-type-{{item.id}}" {{disabled system.standard}}>
+          <option value="E">Enchantment</option>
+          <option value="CE">Complex Enchantment</option>
+          <option value="C">Component</option>
+          <option value="A">Artifact Script</option>
+        </select>
+        {{#if system.standard}}
+        {{else}}
+        <select name="system.refinementLevel" class="sheet-input" id="refinement-{{item.id}}">
+          <option value="0">Hypothetical (-5)</option>
+          <option value="1">Theoretical (-3)</option>
+          <option value="2">Revised (-1)</option>
+          <option value="3">Fine-Tuned</option>
+          <option value="4">Perfected</option>
+        </select>
+        {{/if}}
+      </div>
+    </div>
+  </header>
+
+  <div class="newera-actorsheet-tabs">
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item newera-section-header" data-tab="properties">Properties</a>
+      <a class="item newera-section-header" data-tab="actions">Actions</a>
+    </nav>
+  </div>
+
+  <section class="sheet-body">
+  <div class="tab" data-group="primary" data-tab="properties">
+
+    <div class="newera-itemsheet-properties">
+      <div class="resource newera-itemsheet-property-50">
+        <h4>Level</h4>
+        {{#if system.amplified}}
+          <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.level}}" disabled />
+        {{else}}
+          <input type="text" class="sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled system.standard}}/>
+        {{/if}}
+      </div>
+      <div class="resource newera-itemsheet-property-50">
+        <h4>School of Magic</h4>
+        <select name="system.school" class="sheet-input" id="school-{{item.id}}" {{disabled system.standard}}>
+          <option value="??">Unknown School</option>
+          <option value="PY">Pyromancy</option>
+          <option value="HM">Cryomancy</option>
+          <option value="GE">Lithomancy</option>
+          <option value="EV">Evocation</option>
+          <option value="RE">Restoration</option>
+          <option value="AB">Abjuration</option>
+          <option value="BA">Banishment</option>
+          <option value="MA">Physiomancy</option>
+          <option value="CO">Conjuration</option>
+          <option value="TR">Transmutation</option>
+          <option value="IL">Illusion</option>
+          <option value="HY">Hypnotism</option>
+          <option value="DI">Divination</option>
+          <option value="CN">Sangromancy</option>
+          <option value="SU">Summoning</option>
+          <option value="NE">Necromancy</option>
+          <option value="AP">Apparition</option>
+          <option value="CH">Chronomancy</option>
+          <option value="MM">Metamagic</option>
+        </select>
+      </div>
+    </div>
+    <div class="newera-itemsheet-properties">
+      <div class="resource newera-itemsheet-property-33">
+        <h4><img class="bonus" src="systems/newera-sol366/resources/energy-hot.png" />Energy</h4>
+        {{#if system.amplified}}
+          <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.energyCost}}" disabled />
+        {{else}}
+          <input type="text" class="sheet-input" name="system.energyCost" value="{{system.energyCost}}" data-dtype="Number" {{disabled system.standard}} />
+        {{/if}}
+      </div>
+      <div class="resource newera-itemsheet-property-33">
+        <h4><img class="bonus" src="systems/newera-sol366/resources/aetherium.png" />Ætherium</h4>
+        {{#if system.amplified}}
+          <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.aetheriumCost}}" style="display: inline; width: 80%" disabled /> g
+        {{else}}
+          <input type="text" class="sheet-input" name="system.aetheriumCost" value="{{system.aetheriumCost}}" data-dtype="Number" style="display: inline; width: 80%" {{disabled system.standard}} /> g
+        {{/if}}
+      </div>
+      <div class="resource newera-itemsheet-property-33">
+        <h4>Additional Materials</h4>
+          <input type="text" class="sheet-input" name="system.materialCosts" value="{{system.materialCosts}}" data-dtype="String" {{disabled system.standard}} />
+      </div>
+    </div>
+    <div class="newera-itemsheet-properties">
+      <div class="newera-itemsheet-property-66">
+        <h4>Targets</h4>
+        <table>
+          <tr>
+            <td><input type="checkbox" name="system.validTargets.weapon" class="skill-checkbox" {{checked system.validTargets.weapon}} {{disabled system.standard}} /> Weapons</td>
+            <td><input type="checkbox" name="system.validTargets.clothing" class="skill-checkbox" {{checked system.validTargets.clothing}} {{disabled system.standard}} /> Clothing</td>
+            <td><input type="checkbox" name="system.validTargets.accessory" class="skill-checkbox" {{checked system.validTargets.accessory}} {{disabled system.standard}} /> Accessories</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" name="system.validTargets.shield" class="skill-checkbox" {{checked system.validTargets.shield}} {{disabled system.standard}} /> Shields</td>
+            <td><input type="checkbox" name="system.validTargets.object" class="skill-checkbox" {{checked system.validTargets.object}} {{disabled system.standard}} /> Items</td>
+            <td><input type="checkbox" name="system.validTargets.other" class="skill-checkbox" {{checked system.validTargets.other}} {{disabled system.standard}} /> Other</td>
+          </tr>
+        </table>
+      </div>
+      <div class="newera-itemsheet-property-33">
+        {{#if system.validTargets.other}}
+        <h4>Specific Targets</h4>
+        <input type="text" class="sheet-input" name="system.validTargets.details" value="{{system.validTargets.details}}" {{disabled system.standard}} />
+        {{/if}}
+      </div>
+    </div>
+    <div class="newera-itemsheet-properties">
+      <div class="resource newera-itemsheet-property-66">
+        <h4>Keywords</h4>
+        <input type="text" class="sheet-input" name="system.keywords" value="{{system.keywords}}" {{disabled system.standard}} />
+      </div>
+      <div class="resource newera-itemsheet-property-33">
+        {{#if system.amplifiable}}
+        <h4 style="color: yellow">Amplify</h4>
+        x <input type="number" class="sheet-input" style="display: inline; width: 75%" name="system.ampFactor" value="{{system.ampFactor}}" />
+        {{/if}}
+      </div>
+    </div>
+    
+    <span style="display: block">&nbsp;</span>
+
+    <div class="newera-itemsheet-editor-container amplified-editor">
+      <p id="amplified-description"></p>
+      {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+  </div>
+
+  <div class="tab actions" data-group="primary" data-tab="actions">
+    <p>These actions apply to any item bearing this enchantment.</p>
+    {{> systems/newera-sol366/templates/item/parts/item-actions.hbs}}
+  </div>
+
+  </section>
+</form>

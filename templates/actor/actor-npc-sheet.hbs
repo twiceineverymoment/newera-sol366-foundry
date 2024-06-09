@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Myeongjo" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aboreto" />
+
+<form class="{{cssClass}} {{actor.type}} newera-actorsheet-body" autocomplete="off">
+
+  {{!-- Sheet Header --}}
+  <div class="newera-actorsheet-top">
+    {{> systems/newera-sol366/templates/actor/parts/npc-top-section.hbs}}
+  </div>
+
+  <div class="newera-actorsheet-tabs">
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item newera-section-header" data-tab="profile">Profile</a>
+      <a class="item newera-section-header" data-tab="abilities">Abilities</a>
+      <a class="item newera-section-header" data-tab="actions">Actions</a>
+      <a class="item newera-section-header" data-tab="inventory">Equipment</a>
+      <a class="item newera-section-header" data-tab="magic">Magic</a>
+      <a class="item newera-section-header" data-tab="effects">Effects</a>
+    </nav>
+  </div>
+
+  <div class="newera-actorsheet-scroll">
+    <div class="newera-actorsheet-left">
+      {{> systems/newera-sol366/templates/actor/parts/char-stats.hbs}}
+    </div>
+  
+    <div class="newera-actorsheet-right">
+      <section class="sheet-body">
+        <div class="tab profile" data-group="primary" data-tab="profile">
+          {{> systems/newera-sol366/templates/actor/parts/char-profile.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="abilities">
+          {{> systems/newera-sol366/templates/actor/parts/npc-abilities.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="actions">
+          {{> systems/newera-sol366/templates/actor/parts/actions.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="inventory">
+          {{> systems/newera-sol366/templates/actor/parts/char-inventory.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="magic">
+          {{> systems/newera-sol366/templates/actor/parts/npc-magic.hbs}}
+        </div>
+        <div class="tab profile" data-group="primary" data-tab="effects">
+          {{> systems/newera-sol366/templates/actor/parts/effects.hbs}}
+        </div>
+      </section>
+    </div>
+  </div>
+</form>

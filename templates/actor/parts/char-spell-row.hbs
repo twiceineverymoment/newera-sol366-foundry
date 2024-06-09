@@ -1,0 +1,24 @@
+<!--tr tab has to be re-set to display: table-row because .tab changes it to block which fucks the whole thing up -->
+<tr class="tab inventory-entry inventory-entry-magic spell-macro" data-item-id="{{_id}}" draggable="true" data-group="spells" data-tab="{{tabGroup}}">
+    <td style="width: 10%" class="spell-cast"><img class="skill-icon" src="{{img}}" />
+      <span id="spell-level-{{_id}}">
+        {{system.level}}
+      </span>
+    </td>
+    <td style="width: 40%" class="spell-cast">
+      {{name}}{{#if system.author}} <img class="inline-icon" src="systems/newera-sol366/resources/scroll-quill-2.png" data-tooltip="Crafted by {{system.authorName}}" />{{/if}}
+    </td>
+    <td style="width: 30%" class="spell-cast">
+      <div class="spell-action-icons {{_id}}"></div>
+    </td>
+    <td style="width: 20%; text-align: right">
+      {{#if favorite}}
+        <a class="item-control spell-favorite-remove" data-tooltip="Remove from Favorites"><i class="fa-solid fa-star"></i></a>
+      {{else}}
+        <a class="item-control spell-favorite-add" data-tooltip="Add to Favorites"><i class="fa-regular fa-star"></i></a>
+      {{/if}}
+      <a class="item-control spell-cast" data-tooltip="Cast Spell"><i class="fa-solid fa-hand-sparkles"></i></a>
+      <a class="item-control item-edit" data-tooltip="Edit Spell"><i class="fas fa-edit"></i></a>
+      <a class="item-control item-delete" data-tooltip="Delete Spell"><i class="fas fa-trash"></i></a>
+    </td>
+  </tr>

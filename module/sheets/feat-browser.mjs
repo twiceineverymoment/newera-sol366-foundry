@@ -8,8 +8,9 @@ export class FeatBrowser extends ActorSheet {
 
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
+          title: "Feat Browser",
           classes: ["newera", "sheet", "actor"],
-          template: "systems/newera-sol366/templates/extras/feat-browser.html",
+          template: "systems/newera-sol366/templates/extras/feat-browser.hbs",
           width: 840,
           height: 640,
           resizable: true,
@@ -17,8 +18,12 @@ export class FeatBrowser extends ActorSheet {
         });
     }
 
+    get title(){
+        return "Feat Browser";
+    }
+
     get template() {
-        return "systems/newera-sol366/templates/extras/feat-browser.html";
+        return "systems/newera-sol366/templates/extras/feat-browser.hbs";
     }
 
     async getData() {
@@ -48,30 +53,61 @@ export class FeatBrowser extends ActorSheet {
         //Filter results
         for (const feat of allFeats){
             if (this._includeFeat(classData, feat) && criteria.showFeat(feat)){
-                feat.cost = feat.system.tiers.base.cost.toString().replace("-", "+");
+                feat.cost = feat.system.base.cost.toString().replace("-", "+");
                 feat.available = true;
                 feat.styles = "";
-                if (this.actor.items.find(i => i.type == "Feat" && i.system.casperObjectId == feat.system.casperObjectId)){
-                    feat.available = false;
-                    feat.alreadyOwned = true;
-                    feat.styles = "alreadyOwned";
-                    feat.tooltip = "You already have this feat!";
+                feat.showNextTier = "";
+                feat.isUpgrade = feat.system.maximumTier == -1;
+                const existingFeat = this.actor.items.find(i => i.type == "Feat" && i.system.casperObjectId == feat.system.casperObjectId);
+                if (existingFeat){
+                    if (feat.system.maximumTier == -1){
+                        feat.nextTier = -1;
+                    } else if (feat.system.maximumTier <= existingFeat.system.currentTier){
+                        feat.available = false;
+                        feat.alreadyOwned = true;
+                        feat.styles = "alreadyOwned";
+                        feat.tooltip = "You already have this feat!";
+                        feat.nextTier = 0;
+                        feat.isTopTier = (feat.system.maximumTier > 1);
+                    } else {
+                        feat.nextTier = existingFeat.system.currentTier + 1;
+                        feat.showNextTier = " "+NEWERA.romanNumerals[feat.nextTier];
+                        if (feat.nextTier == existingFeat.system.maximumTier){
+                            feat.isTopTier = true;
+                        } else {
+                            feat.isTiered = true;
+                        }
+                    }
                 } else {
-                    if (feat.system.tiers.base.cost > cpa){
+                    feat.nextTier = 1;
+                    feat.isTiered = (feat.system.maximumTier > 1);
+                }
+                feat.display = {
+                    name: `${feat.name}${feat.showNextTier}`,
+                    description: feat.nextTier < 2 ? feat.system.base.description : feat.system.tiers[feat.nextTier].description,
+                    cost: feat.nextTier < 2 ? feat.system.base.cost : feat.system.tiers[feat.nextTier].cost,
+                    prerequisites: feat.nextTier < 2 ? feat.system.base.prerequisites : feat.system.tiers[feat.nextTier].prerequisites
+                }
+                if (feat.nextTier){
+                    if (feat.display.cost > cpa){
                         feat.available = false;
                         feat.styles += " cantAfford";
                         feat.tooltip = "You don't have enough character points available.";
                     }
-                    if (!feat.characterMeetsFeatPrerequisites(this.actor)){
+                    if (!feat.characterMeetsFeatPrerequisites(this.actor, feat.nextTier)){
                         feat.available = false;
                         feat.styles += " missingPrerequisites";
                         feat.tooltip = "You haven't fulfilled all the requirements for this feat. (NOTE: This is experimental - if this looks to be incorrect, ask your GM to override it)";
                     } else {
-                        const customCondition = NEWERA.customFeatPrerequisites[feat.system.casperObjectId];
-                        if (customCondition && customCondition.doubleCheck){
-                            feat.styles += " doubleCheck";
-                            feat.doubleCheck = true;
-                            feat.tooltip = customCondition.doubleCheck;
+                        try {
+                            const customCondition = NEWERA.customFeatPrerequisites[feat.system.casperObjectId][feat.nextTier];
+                            if (customCondition && customCondition.doubleCheck){
+                                feat.styles += " doubleCheck";
+                                feat.doubleCheck = true;
+                                feat.tooltip = customCondition.doubleCheck;
+                            }
+                        } catch (error){
+                            //Ignore, custom condition not found
                         }
                     }
                     if (feat.system.featType == "FL"){
@@ -86,6 +122,8 @@ export class FeatBrowser extends ActorSheet {
             }
         }
 
+        //console.log("[DEBUG] searchFeats Results");
+        //console.log(results);
         return results.sort(this._sortFunctions[criteria.sortFunction]);
     }
 
@@ -192,7 +230,7 @@ export class FeatBrowser extends ActorSheet {
 
     async _renderResults(html, feats){
 
-        const render = await renderTemplate("systems/newera-sol366/templates/extras/parts/feat-browser-table.html", { 
+        const render = await renderTemplate("systems/newera-sol366/templates/extras/parts/feat-browser-table.hbs", { 
             results: feats,
             noResultsFound: feats.length == 0
         });
@@ -225,13 +263,13 @@ export class FeatBrowser extends ActorSheet {
             else return 0;
         },
         function(a, b){
-            if (a.system.tiers.base.cost < b.system.tiers.base.cost) return -1;
-            else if (a.system.tiers.base.cost > b.system.tiers.base.cost) return 1;
+            if (a.system.base.cost < b.system.base.cost) return -1;
+            else if (a.system.base.cost > b.system.base.cost) return 1;
             else return 0;
         },
         function(a, b){
-            if (a.system.tiers.base.cost > b.system.tiers.base.cost) return -1;
-            else if (a.system.tiers.base.cost < b.system.tiers.base.cost) return 1;
+            if (a.system.base.cost > b.system.base.cost) return -1;
+            else if (a.system.base.cost < b.system.base.cost) return 1;
             else return 0;
         }
     ]

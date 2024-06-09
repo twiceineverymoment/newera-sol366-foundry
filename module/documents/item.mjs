@@ -6,6 +6,31 @@ import { Formatting } from "../helpers/formatting.mjs";
  * @extends {Item}
  */
 export class NewEraItem extends Item {
+
+  static Types = {
+    BASIC_ITEM: ["Item"],
+    MELEE_WEAPON: ["Melee Weapon"],
+    RANGED_WEAPON: ["Ranged Weapon"],
+    ARMOR: ["Armor"],
+    SHIELD: ["Shield"],
+    SPELL: ["Spell"],
+    ENCHANTMENT: ["Enchantment"],
+    POTION: ["Potion"],
+    CLASS: ["Class"],
+    FEAT: ["Feat"],
+    ACTION: ["Action"],
+    PHONE: ["Phone"],
+    EQUIPMENT: ["Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
+    MAGIC: ["Spell", "Enchantment"],
+    ENCHANTABLE: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
+    INVENTORY: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Potion", "Phone"],
+    NON_INVENTORY: ["Spell", "Enchantment", "Class", "Feat", "Action"]
+  }
+
+  typeIs(types){
+    return types.includes(this.type);
+  }
+
   /**
    * Augment the basic Item data model with additional dynamic system.
    */
@@ -17,7 +42,7 @@ export class NewEraItem extends Item {
     const system = this.system;
 
     if (this.type == "Spell"){
-      this._prepareSpellData(system);
+      this._prepareMagicData(system);
     } else if (this.type == "Feat"){
       this._prepareFeatData(system);
     } else if (this.type == "Melee Weapon"){
@@ -30,7 +55,7 @@ export class NewEraItem extends Item {
     } else if (this.type == "Shield"){
       this._prepareShieldData(system);
     } else if (this.type == "Enchantment"){
-      this._prepareEnchantmentData(system);
+      this._prepareMagicData(system);
     } else if (this.type == "Class"){
       this._prepareClassData(system);
     } else if (this.type == "Item"){
@@ -142,26 +167,39 @@ export class NewEraItem extends Item {
     return `${conditionLabel}${system.arcane ? "Arcane " : ""}${qualityLabel}${system.material} ${baseName}${system.enchanted ? ` of ${system.enchantmentDescriptor}` : ""}`;
   }
 
+  _prepareMagicData(system){
+    if (system.rarity == 0 && system.author){
+      const authorRef = game.actors.get(system.author);
+      system.authorName = authorRef?.name || "a modern mage";
+    }
+    system.standard = (system.rarity > 0);
+    if (!system.keywords) {
+      system.keywords = ""; //For some reason keywords are null on some enchantments. This breaks the next line causing the sheet render
+      console.warn(`Null keywords on enchantment ${this.name}`);
+    }
+    system.amplifiable = !system.keywords.includes("Static");
+    system.form = NEWERA.schoolToFormMapping[system.school];
+    system.specialty = NEWERA.schoolOfMagicNames[system.school];
+    system.spellImageUrl = `systems/newera-sol366/resources/${system.specialty}.png`;
+    this.img = system.spellImageUrl;
+    if (typeof system.ampFactor == "undefined"){
+      system.ampFactor = 1;
+    }
+    system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
+    system.amplified = (system.ampFactor > 1);
+
+    if (this.type == "Spell"){
+      this._prepareSpellData(system);
+    } else if (this.type == "Enchantment") {
+      this._prepareEnchantmentData(system);
+    } else {
+      console.error(`[ERROR] prepareMagicData invoked on non-magic item!`);
+    }
+  }
+
   _prepareSpellData(system) {
-
-      system.standard = (system.rarity > 0);
       system.concentrated = (system.castType == "F");
-      if (!system.keywords) {
-        system.keywords = ""; //For some reason keywords are null on some enchantments. This breaks the next line causing the sheet render
-        console.warn(`Null keywords on spell ${this.name}`);
-      }
-      system.amplifiable = !system.keywords.includes("Static");
       system.rangedAttack = (system.range.description == "Projectile");
-      system.form = NEWERA.schoolToFormMapping[system.school];
-      system.specialty = NEWERA.schoolOfMagicNames[system.school];
-      system.spellImageUrl = `systems/newera-sol366/resources/${system.specialty}.png`;
-      this.img = system.spellImageUrl;
-
-      if (typeof system.ampFactor == "undefined"){
-        system.ampFactor = 1;
-      }
-      system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
-      system.amplified = (system.ampFactor > 1);
       if (system.ampFactor > 1){
         system.amplifiedData = {
           level: system.level * system.ampFactor,
@@ -173,23 +211,6 @@ export class NewEraItem extends Item {
   }
 
   _prepareEnchantmentData(system) {
-
-    system.standard = (system.rarity > 0);
-    if (!system.keywords) {
-      system.keywords = ""; //For some reason keywords are null on some enchantments. This breaks the next line causing the sheet render
-      console.warn(`Null keywords on enchantment ${this.name}`);
-    }
-    system.amplifiable = !system.keywords.includes("Static");
-    system.form = NEWERA.schoolToFormMapping[system.school];
-    system.specialty = NEWERA.schoolOfMagicNames[system.school];
-    system.spellImageUrl = `systems/newera-sol366/resources/${system.specialty}.png`;
-    this.img = system.spellImageUrl;
-
-    if (typeof system.ampFactor == "undefined"){
-      system.ampFactor = 1;
-    }
-    system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
-    system.amplified = (system.ampFactor > 1);
     if (system.ampFactor > 1){
       system.amplifiedData = {
         level: system.level * system.ampFactor,
@@ -197,7 +218,6 @@ export class NewEraItem extends Item {
         aetheriumCost: system.aetheriumCost * system.ampFactor
       };
     }
-
 }
 
 _preparePotionData(system){
@@ -216,9 +236,14 @@ _preparePotionData(system){
 
   _prepareFeatData(system){
 
+    if (system.tiers.base) {
+      console.warn(`Feat ${this.name} requires migration.`);
+      return;
+    }
+
     const subTypedCategories = ["SF", "CF", "AF"];
     system.hasSubType = subTypedCategories.includes(system.featType);
-    system.isSingleTiered = (system.maximumTier < 2) ? true : false;
+    system.isSingleTiered = (system.maximumTier < 2) ? true : false; //This is true for feats with 1 tier and unlimited tiers (upgrades)
     system.isUpgrade = (system.maximumTier == -1) ? true : false;
     system.enableTierSelect = (system.isSingleTiered || system.isUpgrade);
     system.isChant = (system.featType == "CH") ? true : false;
@@ -226,24 +251,28 @@ _preparePotionData(system){
     if (system.currentTier < 1) system.currentTier = 1;
     if (system.currentTier > system.maximumTier && !system.isUpgrade) system.currentTier = system.maximumTier;
 
-    let tierCount = (system.isUpgrade) ? 1 : system.maximumTier;
-    if (system.tiers.length > tierCount){ //Trim the tiers object based on the specified number
-      for([k, v] of Object.entries(system.tiers)){
-        if (parseInt(k) > tierCount && k != "base"){
-          delete system.tiers[k];
-        }
-      }
-    }
-    else if (system.tiers.length < tierCount){ //Add blank entries to the tiers object if count is larger
-      for(let i=2; i<=tierCount; i++){
-        if (typeof system.tiers[i.toString()] == "undefined"){
-          system.tiers[i.toString()] = {
-            "cost": 0,
-            "description": ""
+    //The "base" object contains tier 1 data. For single-tier feats and upgrades, empty the tiers object entirely
+    if (system.isSingleTiered){
+      system.tiers = {};
+    } else {
+      //When the maximum tier is increased, add empty tiers up to the new value. When decreased, delete objects with keys higher than the maximum
+      for (let i = 2; i <= 5; i++){
+        if (system.maximumTier < i && system.tiers[i]){
+          delete system.tiers[i];
+        } else if (system.maximumTier >= i && !system.tiers[i]){
+          system.tiers[i] = {
+            cost: 0,
+            description: "",
+            prerequisites: "",
+            conflicts: ""
           }
         }
       }
     }
+
+    Object.entries(system.tiers).forEach(([n, tier]) => {
+      tier.unlocked = (system.currentTier >= n);
+    });
 
     //Derive feat image
     if (system.featType == "GF"){
@@ -263,26 +292,24 @@ _preparePotionData(system){
     }
 
     //Derive total cost and display name for feat list
-    if (system.featType == "FL"){
-      system.totalCost = "+"+Math.abs(system.tiers.base.cost);
-      system.displayName = this.name;
-    } else if (system.isUpgrade) {
-      let total = system.tiers.base.cost * system.currentTier;
+    if (system.isUpgrade) {
+      let total = system.base.cost * system.currentTier;
       system.displayName = this.name + " (x" + system.currentTier + ")";
       system.totalCost = total.toString();
     } else if (system.isSingleTiered){
-      system.totalCost = system.tiers.base.cost.toString();
+      system.totalCost = system.base.cost.toString();
       system.displayName = this.name;
     } else {
-      let total = 0;
+      let total = system.base.cost;
       for (const [k, v] of Object.entries(system.tiers)){
-        if (k == "base" || parseInt(k) <= system.currentTier){
+        if (parseInt(k) <= system.currentTier){
           total += v.cost;
         }
       }
       system.totalCost = total.toString();
       system.displayName = this.name + " " + NEWERA.romanNumerals[system.currentTier];
     }
+    system.displayCost = (system.featType == 'FL') ? "+"+Math.abs(system.totalCost) : system.totalCost;
   }
 
   _prepareMeleeWeaponData(system){
@@ -464,15 +491,9 @@ _preparePotionData(system){
   }
 
   _prepareCustomActionData(actor, system){
-    const modifierList = (actor.type == "Player Character") ? actor.modifierList : false;
     for(const roll of Object.values(system.rolls)){
       roll.caption = `${roll.label} (${this.name})`;
-      if (modifierList && roll.stat){
-        const modData = modifierList.find(obj => obj.name == roll.stat);
-        roll.formula = `${roll.dieCount}d${roll.dieSize}+@${modData.type}.${modData.name}.mod`;
-      } else {
-        roll.formula = `${roll.dieCount}d${roll.dieSize}+${roll.modifier}`;
-      }
+      roll.formula = roll.customFormula || `${roll.dieCount}d${roll.dieSize}+${roll.modifier}`;
       if (["4", "6", "8", "10", "12", "20"].includes(roll.dieSize)){
         roll.die = `d${roll.dieSize}`;
       } else {
@@ -502,6 +523,43 @@ _preparePotionData(system){
           break;
         }
       }
+    }
+  }
+
+  async switchRollMode(index, advanced){
+    if (this.type != "Action") return;
+    if (this.system.rolls){
+      const rolls = this.system.rolls;
+      if (rolls[index]){
+        if (advanced){
+          rolls[index].customFormula = '1d20';
+          await this.update({
+            system: {
+              rolls: rolls
+            }
+          });
+        } else {
+          rolls[index].customFormula = null;
+          await this.update({
+            system: {
+              rolls: rolls
+            }
+          });
+        }
+      }
+    }
+  }
+
+  async deleteRoll(index){
+    if (this.type != "Action") return;
+    if (this.system.rolls){
+      const update = {
+        system: {
+          rolls: {}
+        }
+      }
+      update.system.rolls[`-=${index}`] = null;
+      await this.update(update);
     }
   }
 
@@ -1308,7 +1366,7 @@ _preparePotionData(system){
           stored: !prevState
         }
       });
-      if (this.actor){
+      if (this.actor && Formatting.sendEquipmentChangeMessages()){
         if (prevState){
           this.actor.actionMessage(this.img, `${NEWERA.images}/ac_adventuring.png`, "{NAME} retrieves {d} {0} from storage.", this.name);
         } else {
@@ -1327,14 +1385,23 @@ _preparePotionData(system){
     }
   }
 
-  characterMeetsFeatPrerequisites(actor){
+  /**
+   * Determines whether the specified actor meets the requirements for this feat.
+   * If the actor doesn't have a feat with the same object ID, this is evaluated against tier 1's prerequisites.
+   * If they do, it's evaluated against the next highest tier's prerequisites.
+   * Returns true if the actor already has the highest tier available.
+   * @param {*} actor 
+   * @returns 
+   */
+  characterMeetsFeatPrerequisites(actor, tier = 1){
     if (this.type == "Feat"){
       if (actor.type == "Player Character"){
         if (!game.settings.get("newera-sol366", "prereqCheck")){
           return true;
         }
+        if (tier < 1) tier = 1; //nextTier is set to -1 for upgrade feats. Always look at tier 1 for these
         //console.log(`[DEBUG] Evaluating prerequisites : ${this.name}`);
-        const conditionTokens = this._tokenizePrerequisites();
+        const conditionTokens = this._tokenizePrerequisites(tier);
         //console.log(conditionTokens);
         for (const ANDcondition of conditionTokens){
           let subResult = false;
@@ -1390,17 +1457,21 @@ _preparePotionData(system){
     }
   }
 
-  _tokenizePrerequisites(){
+  _tokenizePrerequisites(tier){
+    //console.log(`[DEBUG] TP name=${this.name} T=${tier}`);
     if (this.type == "Feat"){
-      const customCondition = NEWERA.customFeatPrerequisites[this.system.casperObjectId];
-      if (customCondition){
-        return [
-          [ customCondition ]
-        ];
-      }
-      if (this.system.prerequisites){
+      try {
+        const customCondition = NEWERA.customFeatPrerequisites[this.system.casperObjectId][tier];
+        if (customCondition){
+          return [
+            [ customCondition ]
+          ];
+        }
+      } catch (error){}
+      const prerequisiteString = tier == 1 ? this.system.base.prerequisites : this.system.tiers[tier].prerequisites;
+      if (prerequisiteString){
         let prerequisites = [];
-        const conditions = this.system.prerequisites.split(",");
+        const conditions = prerequisiteString.split(",");
         for (const condition of conditions){ //First, break out the expression by commas/semicolons. This step is an AND (each part must evaluate to true)
           let currentCondition = [];
           const subConditions = condition.split(" or "); //Second, break out the individual conditions by the word "or" to determine if this is a multi-part condition

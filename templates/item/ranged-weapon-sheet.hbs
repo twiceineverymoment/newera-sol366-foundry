@@ -1,0 +1,161 @@
+<form class="{{cssClass}} newera-itemsheet-body" autocomplete="off">
+  <div class="enchantment-dropzone">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{system.customName}}"/>
+      <div class="header-fields">
+        <h1 class="charname"><input name="name" class="sheet-input" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+        <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="https://www.newerarpg.com/srd/contentview/_obj_detail?module=newera-sol366&key={{system.casperObjectId}}">
+          <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
+        </a>
+        <div class="resource">
+          <select name="system.rarity" class="sheet-input" style="margin-left: 8px" id="rarity-{{item.id}}" data-dtype="Number" {{disabled system.standard}}>
+            <option value="1">Common</option>
+            <option value="2">Uncommon</option>
+            <option value="3">Rare</option>
+            <option value="4">Extremely Rare</option>
+            <option value="5">Unique</option>
+            <option value="0">Rarity Unknown</option>
+          </select>
+          <select name="system.weaponType" class="sheet-input" id="ranged-type-{{item.id}}">
+            <option value="CF">Custom (Firearm)</option>
+            <option value="CS">Custom (Shotgun)</option>
+            <option value="CB">Custom (Bow)</option>
+            <option value="" disabled>[ Handguns ]</option>
+            <option value="Pistol">Pistol</option>
+            <option value="Revolver">Revolver</option>
+            <option value="Magnum Pistol">Magnum Pistol</option>
+            <option value="Magnum Revolver">Magnum Revolver</option>
+            <option value="Snubnose Revolver">Snubnose Revolver</option>
+            <option value="" disabled>[ Shotguns ]</option>
+            <option value="Sport Shotgun">Sport Shotgun</option>
+            <option value="Pump Shotgun">Pump Shotgun</option>
+            <option value="Auto Shotgun">Auto Shotgun</option>
+            <option value="Combat Shotgun">Combat Shotgun</option>
+            <option value="" disabled>[ Rifles ]</option>
+            <option value="Hunting Rifle">Hunting Rifle</option>
+            <option value="Sniper Rifle">Sniper Rifle</option>
+            <option value="Submachine Gun">Submachine Gun</option>
+            <option value="Assault Rifle">Assault Rifle</option>
+            <option value="" disabled>[ Archery ]</option>
+            <option value="Long Bow">Long Bow</option>
+            <option value="Recurve Bow">Recurve Bow</option>
+            <option value="Compound Bow">Compound Bow</option>
+            <option value="Crossbow">Crossbow</option>
+            <option value="Compound Crossbow">Compound Crossbow</option>
+            <option value="" disabled>[ Miscellaneous ]</option>
+            <option value="Slingshot">Slingshot</option>
+            <option value="Blowgun">Blowgun</option>
+            <option value="Short Blowgun">Short Blowgun</option>
+          </select>
+        </div>
+      </div>
+    </header>
+  
+    <div class="newera-actorsheet-tabs">
+      <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item newera-section-header" data-tab="properties">Properties</a>
+        <a class="item newera-section-header" data-tab="actions">Actions</a>
+        <a class="item newera-section-header" data-tab="enchantments">Enchantments</a>
+      </nav>
+    </div>
+  
+    <section class="sheet-body">
+      <div class="tab" data-group="primary" data-tab="properties">
+        <div class="newera-itemsheet-properties">
+          <div class="resource newera-itemsheet-property-33">
+            <h4>Weight</h4>
+            <input type="text" class="sheet-input" name="system.weight" value="{{system.weight}}" data-dtype="Number" {{disabled system.standard}} />
+          </div>
+          <div class="resource newera-itemsheet-property-33">
+            <h4>Reliability
+            <span class="rollable" data-roll="d20" data-label="Reliability Check ({{item.name}})">
+              <img class="die" src="systems/newera-sol366/resources/d20-orange.png" />
+            </span>
+            </h4>
+            <input type="text" class="sheet-input" name="system.reliability" value="{{system.reliability}}" data-dtype="Number" {{disabled system.standard}} />
+          </div>
+          <div class="resource newera-itemsheet-property-33">
+            <h4>Value <i>(Estimated)</i></h4>
+            <input type="text" class="sheet-input" name="system.value" value="{{system.value}}" data-dtype="Number" {{disabled system.standard}} />
+          </div>
+        </div>
+        <div class="newera-itemsheet-properties">
+          <div class="newera-itemsheet-property-33">
+            <h4>Handedness</h4>
+            <select name="system.handedness" class="sheet-input" id="handedness-{{item.id}}" {{disabled system.standard}}>
+              <option value="1H">One-Handed</option>
+              <option value="2H">Two-Handed</option>
+            </select>
+          </div>
+          <div class="newera-itemsheet-property-33">
+            <h4>Loaded</h4>
+            <input type="text" name="system.ammo.loaded" value="{{system.ammo.loaded}}" data-dtype="Number" class="sheet-input" style="display: inline; width: 40%" />
+            / 
+            <input type="text" name="system.ammo.clipSize" value="{{system.ammo.clipSize}}" data-dtype="Number" class="sheet-input" style="display: inline; width: 40%" {{disabled system.standard}}/>
+          </div>
+          <div class="newera-itemsheet-property-33">
+            <h4>Ammunition</h4>
+            <select name="system.ammo.itemName" class="sheet-input" id="ammo-{{item.id}}" {{disabled system.standard}}>
+              <option value="">Other</option>
+              <option value="Small Firearm Ammunition">Small Rounds</option>
+              <option value="Medium Firearm Ammunition">Medium Rounds</option>
+              <option value="Large Firearm Ammunition">Large Rounds</option>
+              <option value="Shotgun Shell">Shotgun Shells</option>
+              <option value="Arrow">Arrows / Bolts</option>
+            </select>
+          </div>
+        </div>
+        <div class="newera-itemsheet-properties">
+          <div class="newera-itemsheet-property-50">
+            <h4>Firing Action</h4>
+            <select name="system.firingAction" class="sheet-input" id="action-{{item.id}}" {{disabled system.standard}}>
+              <option value="B">Bow</option>
+              <option value="M">Manual</option>
+              <option value="SA">Semi-Automatic</option>
+              <option value="FA">Full Automatic</option>
+            </select>
+            {{#if system.isFullAuto}}
+              <input type="text" class="sheet-input" name="system.shotsPerFrame" value="{{system.shotsPerFrame}}" data-dtype="Number" {{disabled system.standard}}/> rounds per frame
+            {{/if}}
+          </div>
+          <div class="newera-itemsheet-property-50">
+            <h4>Legality</h4>
+            <select name="system.licenseLevel" class="sheet-input" id="license-{{item.id}}" {{disabled system.standard}}>
+              <option value="0">Unrestricted</option>
+              <option value="1">Class I</option>
+              <option value="2">Class II</option>
+              <option value="3">Class III</option>
+            </select>
+            {{#if system.isFullAuto}}
+              <input type="text" class="sheet-input" name="system.firingRate" value="{{system.firingRate}}" data-dtype="Number" {{disabled system.standard}}/> rounds per frame
+            {{/if}}
+          </div>
+        </div>
+        <div class="newera-itemsheet-properties">
+          <div class="newera-itemsheet-property-50">
+            {{#if system.isShotgun}}
+              <h4>Range Increment (ft)</h4>
+            {{else}}
+              <h4>Effective Range (ft)</h4>
+            {{/if}}
+            <input type="text" class="sheet-input" name="system.effectiveRange" value="{{system.effectiveRange}}" {{disabled system.standard}}/>
+          </div>
+          <div class="newera-itemsheet-property-50">
+            <h4>Damage</h4>
+            <input type="text" class="sheet-input" name="system.damage" value="{{system.damage}}" {{disabled system.standard}}/>
+          </div>
+        </div>
+      </div>
+  
+      <div class="tab" data-group="primary" data-tab="actions">
+        {{> systems/newera-sol366/templates/item/parts/item-actions.hbs}}
+      </div>
+      
+      <div class="tab" data-group="primary" data-tab="enchantments">
+        {{> systems/newera-sol366/templates/item/parts/item-enchantments.hbs}}
+      </div>
+  
+    </section>
+  </div>
+  <input type="hidden" name="system.stored" value="{{system.stored}}" data-dtype="Boolean" />
+</form>

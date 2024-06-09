@@ -122,8 +122,10 @@ Handlebars.registerHelper('localizeCaps', function(str) {
 
 Handlebars.registerHelper('selected', function(check, value) {
   if (check == value){
+    //console.log(`[DEBUG] sel ${value} true`);
     return 'selected';
   } else {
+    //console.log(`[DEBUG] sel ${value} false`);
     return '';
   }
 });
@@ -181,6 +183,30 @@ Handlebars.registerHelper('htmlTooltip', function(msg, direction){
   }
 });
 
+Handlebars.registerHelper('descriptionTarget', function(key){
+  return `system.tiers.${key}.description`;
+});
+
+Handlebars.registerHelper('includes', function(haystack, value){
+  if (typeof haystack == 'array'){
+    return haystack.includes(value);
+  } else if (typeof haystack == "object"){
+    return Object.keys(haystack).includes(value);
+  } else {
+    return false;
+  }
+});
+
+Handlebars.registerHelper('populated', function(haystack){
+  if (typeof haystack == 'array'){
+    return haystack.length > 0;
+  } else if (typeof haystack == "object"){
+    return Object.keys(haystack).length > 0;
+  } else {
+    return false;
+  }
+});
+
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
@@ -230,6 +256,20 @@ function setupGameSettings(){
     requiresReload: false,
     type: Boolean,
     default: true,
+  });
+  game.settings.register("newera-sol366", "sendEquipMsgs", {
+    name: "Send Equipment Action Messages in Chat",
+    hint: "Choose whether to send messages in chat when a character equips, unequips, hands off, or drops an item",
+    scope: "world",
+    config: true,
+    requiresReload: false,
+    type: String,
+    choices: {
+      "2": "Always",
+      "1": "While In Combat",
+      "0": "Never"
+    },
+    default: "2"
   });
   game.settings.register("newera-sol366", "progressionMode", {
     name: "Progression Mode",

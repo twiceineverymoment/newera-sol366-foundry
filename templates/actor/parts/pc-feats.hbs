@@ -1,0 +1,45 @@
+<div class="newera-itemsheet-properties">
+    <h4 class="table-header">Character Points Available</h4>
+    <h3 class="table-header" id="character-points">{{system.characterPoints.cpa}} / {{system.characterPoints.cpt}}</h3>
+</div>
+
+<table class="newera-actorsheet-table">
+    <tr>
+        <td colspan="2">NAME</td>
+        <td>COST</td>
+        <td>&nbsp;</td>
+    </tr>
+    {{#each inventory.feats as |feat id|}}
+    <tr class="inventory-entry inventory-entry-feats" data-item-id="{{feat._id}}">
+        <td style="width: 10%" class="item-edit">
+            <img class="skill-icon" src="{{feat.img}}" />
+        </td>
+        <td style="width: 70%" class="item-edit">
+            {{feat.system.displayName}}
+        </td>
+        <td style="width: 10%">
+            {{feat.system.displayCost}}
+        </td>
+        <td style="width: 10%">
+            <a class="item-control item-edit" title="Edit Feat"><i class="fas fa-edit"></i></a>
+            <a class="item-control item-delete" title="Remove Feat"><i class="fas fa-trash"></i></a>
+        </td>
+    </tr>
+    {{/each}}
+    <tr>
+        <td colspan="4" id="spell-add-row">
+            <div class="equipment-box-small feat-browser" id="spell-add-1" data-tooltip="Browse Feats" data-tooltip-direction="UP">
+                <a>
+                <img src="systems/newera-sol366/resources/bookshelf.png" />
+                <i class="fa-solid fa-magnifying-glass"></i>
+                </a>
+            </div> 
+            <div class="equipment-box-small item-create" id="spell-add-2" data-type="Feat" data-tooltip="Create New Feat" data-tooltip-direction="UP">
+                <a>
+                <img src="systems/newera-sol366/resources/medal.png" />
+                <i class="fas fa-plus"></i>
+                </a>
+            </div> 
+        </td>
+    </tr>
+</table>

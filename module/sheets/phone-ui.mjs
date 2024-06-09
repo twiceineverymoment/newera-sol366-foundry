@@ -19,7 +19,7 @@ export class PhoneUI extends ItemSheet {
 
   /** @override */
   get template() {
-      return `systems/newera-sol366/templates/item/phone/phone-ui.html`;
+      return `systems/newera-sol366/templates/item/phone/phone-ui.hbs`;
   }
 
   /* -------------------------------------------- */

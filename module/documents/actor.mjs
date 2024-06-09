@@ -3,11 +3,27 @@ import { Formatting } from "../helpers/formatting.mjs";
 import { Witch } from "../helpers/classes/witch.mjs";
 import { CharacterEnergyPool } from "../schemas/char-energy-pool.mjs";
 import { ClassInfo } from "../helpers/classFeatures.mjs";
+import { NewEraItem } from "./item.mjs";
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
  */
 export class NewEraActor extends Actor {
+
+  static Types = {
+    PC: ["Player Character"],
+    NPC: ["Non-Player Character"],
+    CREATURE: ["Creature"],
+    CONTAINER: ["Container"],
+    VEHICLE: ["Vehicle"],
+    CHARACTER: ["Player Character", "Non-Player Character"],
+    ANIMATE: ["Player Character", "Non-Player Character", "Creature"],
+    INANIMATE: ["Container", "Vehicle"]
+  }
+
+  typeIs(types){
+    return types.includes(this.type);
+  }
 
   /** @override */
   prepareData() {
@@ -39,9 +55,31 @@ export class NewEraActor extends Actor {
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
+    this._validateResources(system);
     this._prepareCharacterData(system);
     this._prepareNpcData(system);
     this._prepareCreatureData(system);
+    this._prepareVehicleData(system);
+  }
+
+  /*
+  * Verify and correct problems with resource bar values, i.e. if a resource's value is negative or higher than the maximum
+  */
+  _validateResources(system){
+    if (system.hitPoints){
+      if (system.hitPoints.value < 0) system.hitPoints.value = 0;
+      if (system.hitPoints.value > system.hitPoints.max) system.hitPoints.value = system.hitPoints.max;
+      if (system.hitPoints.temporary < 0) system.hitPoints.temporary = 0;
+    }
+    if (system.lifePoints){
+      if (system.lifePoints.value < 0) system.lifePoints.value = 0;
+      if (system.lifePoints.value > system.lifePoints.max) system.lifePoints.value = system.lifePoints.max;
+    }
+    if (system.energy){
+      if (system.energy.value < 0) system.energy.value = 0;
+      if (system.energy.value > system.energy.max) system.energy.value = system.energy.max;
+      if (system.energy.temporary < 0) system.energy.temporary = 0;
+    }
   }
 
   /**
@@ -139,26 +177,22 @@ export class NewEraActor extends Actor {
     }
     for (const item of items){
       if (item.type == 'Feat'){
-        if (item.system.maximumTier == 1){
-          cpa -= item.system.tiers.base.cost;
-
-        }
-        else if (item.system.maximumTier == -1){
-          cpa -= (item.system.tiers.base.cost * item.system.currentTier);
-        }
-        else {
-          cpa -= item.system.tiers.base.cost; //TODO Update this once we figure out handling of multiple tiers in data model
-        }
+        cpa -= item.system.totalCost;
       }
     }
     return cpa;
   }
 
-  _getTotalWeight(items){
+  _getTotalWeight(items, occupants = []){
     let total = 0;
     for (const item of items){
       if (!item.system.stored && typeof item.system.weight != "undefined"){
         total += item.system.weight * (item.system.quantity || 1);
+      }
+    }
+    if (this.type == "Vehicle"){
+      for (const actor of occupants){
+        total += Math.max(6 + actor.system.size.mod, 0);
       }
     }
     return total;
@@ -227,6 +261,7 @@ export class NewEraActor extends Actor {
     if (this.type !== 'Creature') return;
     this._prepareAbilityScoreModifiers(system);
     system.rollableHP = (system.hitPoints.max == 0 && system.initialHitPoints.dieCount > 0);
+    system.hitPoints.total = system.hitPoints.value;
 
     system.saves.endurance.mod = system.abilities.strength.mod + system.abilities.constitution.mod + system.saves.endurance.bonus;
     system.saves.reflex.mod = system.abilities.dexterity.mod + system.abilities.wisdom.mod + system.saves.reflex.bonus;
@@ -258,6 +293,18 @@ export class NewEraActor extends Actor {
 
     system.armor.total = system.armor.equipped + system.armor.bonus;
 
+  }
+
+  _prepareVehicleData(system){
+    if (this.type != "Vehicle") return;
+    system.passengers = system.occupants.map(id => {
+      const actor = structuredClone(game.actors.get(id));
+      actor.id = id;
+      return actor;
+    });
+    system.empty = (system.occupants.length == 0);
+    system.totalWeight = this._getTotalWeight(this.items, system.passengers);
+    system.isElectric = (this.system.fuelType == "electric");
   }
 
   //Calculate the base and total modifiers for each ability score
@@ -367,11 +414,15 @@ export class NewEraActor extends Actor {
     system.turnLength.actions.value = system.turnLength.actions.base + system.turnLength.actions.bonus;
     system.turnLength.reactions.value = system.turnLength.reactions.base + system.turnLength.reactions.bonus;
 
+    system.hitPoints.total = system.hitPoints.value + system.hitPoints.temporary;
     if (system.hitPoints.value > 0){
-      system.hpPercentage = system.hitPoints.value / system.hitPoints.max;
+      system.hpPercentage = (system.hitPoints.value + system.hitPoints.temporary) / system.hitPointTrueMax;
     } else {
       system.hpPercentage = system.lifePoints.value / system.lifePoints.max;
     }
+
+    system.energy.total = system.energy.value + system.energy.temporary;
+    system.energyPercentage = (system.energy.value + system.energy.temporary) / system.energy.max;
 
   }
 
@@ -534,6 +585,47 @@ export class NewEraActor extends Actor {
     }
   }
 
+  /**
+   * 
+   * @param {NewEraActor} recipient The actor receiving the item
+   * @param {NewEraItem} item The item being transferred
+   * @param {string} targetSlot The inventory slot to place the transferred item in on the recipient
+   */
+  async transferItem(recipient, item, targetSlot){
+    console.log(`Entering transferItem ${this.id}->${recipient.id} item=${item.id}`);
+    const sourceSlot = this.findItemLocation(item);
+    const newItem = await Item.create(item, {parent: recipient});
+    if (targetSlot != "backpack"){
+      let recUpdate = {
+        system: {
+          equipment: {}
+        }
+      };
+      recUpdate.system.equipment[targetSlot] = newItem._id;
+      await recipient.update(recUpdate);
+    }
+    if (sourceSlot != "backpack"){
+      let srcUpdate = {
+        system: {
+          equipment: {}
+        }
+      };
+      srcUpdate.system.equipment[sourceSlot] = "";
+      await this.update(srcUpdate);
+    }
+    await item.delete();
+    if (recipient.typeIs(NewEraActor.Types.ANIMATE)){
+      const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
+      if (Formatting.sendEquipmentChangeMessages()){
+        if (this.typeIs(NewEraActor.Types.CHARACTER) && !this.system.defeated){
+          this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
+        } else {
+          recipient.actionMessage(item.img, this.img, "{NAME} takes the {0}.", item.name);
+        }
+      }
+    }
+  }
+
   actionMessage(baseImage, overlayImage, template, ...args){
     const system = this.system;
     if (!system.pronouns) return; //Creatures don't currently use action messages. This might be changed later
@@ -587,22 +679,29 @@ export class NewEraActor extends Actor {
         }
       }
     if (hasLifePoints){
-      if (system.hitPoints.value > 0){ 
-        if (system.hitPoints.value <= dmg){
-          const prevHp = system.hitPoints.value;
-          update.system.hitPoints.value = 0;
-          update.system.lifePoints.value = system.lifePoints.value - (dmg - prevHp);
-          this.actionMessage(this.img, `${NEWERA.images}/se_unconscious.png`, "{NAME} is down!");
-          dying = true;
+      let dmgAfterTemporary = dmg;
+      if (system.hitPoints.temporary > 0){
+        dmgAfterTemporary -= system.hitPoints.temporary;
+        update.system.hitPoints.temporary = Math.max(system.hitPoints.temporary - dmg, 0)
+      }
+      if (dmgAfterTemporary > 0){
+        if (system.hitPoints.value > 0){ 
+          if (system.hitPoints.value <= dmgAfterTemporary){
+            const prevHp = system.hitPoints.value;
+            update.system.hitPoints.value = 0;
+            update.system.lifePoints.value = system.lifePoints.value - (dmgAfterTemporary - prevHp);
+            this.actionMessage(this.img, `${NEWERA.images}/se_unconscious.png`, "{NAME} is down!");
+            dying = true;
+          } else {
+            update.system.hitPoints.value = system.hitPoints.value - dmgAfterTemporary;
+          }
         } else {
-          update.system.hitPoints.value = system.hitPoints.value - dmg;
-        }
-      } else {
-        update.system.lifePoints.value = system.lifePoints.value - dmg;
-        if (update.system.lifePoints.value <= 0){
-          update.system.lifePoints.value = 0;
-          this.actionMessage(`${NEWERA.images}/tombstone.png`, this.img, "{NAME} is dead!");
-          ded = true;
+          update.system.lifePoints.value = system.lifePoints.value - dmgAfterTemporary;
+          if (update.system.lifePoints.value <= 0){
+            update.system.lifePoints.value = 0;
+            this.actionMessage(`${NEWERA.images}/tombstone.png`, this.img, "{NAME} is dead!");
+            ded = true;
+          }
         }
       }
     } else {
@@ -636,7 +735,7 @@ export class NewEraActor extends Actor {
     }
   }
 
-  async heal(amount, overheal, recovery = false){
+  async heal(amount, overheal = false, recovery = false){
     const system = this.system;
     const update = {
       system: {
@@ -656,17 +755,26 @@ export class NewEraActor extends Actor {
     //Continue with healing regular HP after updating max HP from injuries
     const prevHp = system.hitPoints.value;
     const newHp = system.hitPoints.value + parseInt(amount);
-    const max = system.hitPoints.max * (overheal ? 2 : 1);
+    const max = system.hitPoints.max;
     update.system.hitPoints.value = Math.min(newHp, max);
     const gained = update.system.hitPoints.value - prevHp;
-    if (newHp > max && system.lifePoints.value < system.lifePoints.max){
-      const potentialLpGain = newHp - max;
-      const newLp = Math.min(system.lifePoints.value + potentialLpGain, system.lifePoints.max);
-      const gainedLp = newLp - system.lifePoints.value;
-      update.system.lifePoints.value = newLp;
-      this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} {0} {1} hit points and {2} life points!", overheal ? "gains" : "recovers", gained, gainedLp);
+    if (newHp > max){
+      const excess = newHp - max;
+      if (overheal){
+        update.system.hitPoints.temporary = system.hitPoints.temporary + excess;
+        this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points and gains {1} temporary hit points.", gained, excess);
+      } else if (system.lifePoints.value < system.lifePoints.max){
+        const newLp = Math.min(system.lifePoints.value + excess, system.lifePoints.max);
+        const gainedLp = newLp - system.lifePoints.value;
+        update.system.lifePoints.value = newLp;
+        this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points and {1} life points.", gained, gainedLp);
+      } else if (gained > 0) {
+        this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points.", gained);
+      } else {
+        //Character didn't actually gain any HP.
+      }
     } else {
-      this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} {0} {1} hit points!", overheal ? "gains" : "recovers", gained);
+      this.actionMessage(this.img, `${NEWERA.images}/hp-hot.png`, "{NAME} recovers {0} hit points.", gained);
     }
     
     console.log(`HEAL A=${amount} PREV=${prevHp} NEW=${newHp} MAX=${max} G=${gained}`);
@@ -934,6 +1042,25 @@ export class NewEraActor extends Actor {
     });
   }
 
+  async sustain(energyPool = undefined){
+    if (energyPool === undefined){
+      if (this.type == "Player Character" || this.type == "Non-Player Character"){
+        energyPool = new CharacterEnergyPool(this);
+      } else if (this.type == "Creature"){
+        energyPool = null;
+      }
+    }
+
+    const spell = this.items.get(this.system.sustaining.id);
+    if (!spell){
+      return;
+    }
+
+    if (energyPool){
+      await energyPool.use()
+    }
+  }
+
   async cast(spell, ampFactor = 1, attack = false, noSkillCheck = false, energyPool = undefined){
       if (energyPool === undefined){
         if (this.type == "Player Character" || this.type == "Non-Player Character"){
@@ -962,11 +1089,51 @@ export class NewEraActor extends Actor {
         });
       } 
 
+
+      if (spell.system.castType == "F" && successful){
+        let existingSustain = this.effects.find(e => e.label.includes("Sustaining"));
+        if (existingSustain){
+          existingSustain.delete();
+        }
+        await this.update({
+          system: {
+            sustaining: {
+              id: spell._id,
+              ampFactor: ampFactor
+            }
+          }
+        });
+        const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
+        await sustainEffect.delete();
+        await this.createEmbeddedDocuments("ActiveEffect", [{
+          label: `Sustaining: ${spell.name}${ampfactor > 1 && NEWERA.romanNumerals[ampFactor]}`,
+          icon: spell.img,
+          description: `<p>You're sustaining a spell.</p>
+          ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}
+          <p>You can use any number of frames on your turn to sustain the spell. You can continue sustaining it as long as you spend at least one frame doing so during your turn.
+          You stop sustaining the spell if your concentration is broken.</p>`,
+          origin: spell._id
+        }]);
+      }
+
       if (energyPool){
         await energyPool.use(energyCost, new CharacterEnergyPool(this));
       }
       return successful;
   }
+
+    async stopSustaining(){
+        const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
+        await sustainEffect.delete();
+        await this.update({
+          system: {
+            sustaining: {
+              id: "",
+              ampFactor: 1
+            }
+          }
+        })
+    }
 
     /* Determines whether an action should be shown based on the action's type and the location within the actor's equipment */
     isItemActionAvailable(action, item){
@@ -1003,6 +1170,9 @@ export class NewEraActor extends Actor {
 
     /* Returns the current equipment slot location of the specified item. Returns "backpack" if the item is not equipped anywhere, and null if not owned by the actor at all. */
     findItemLocation(item){
+      if (!this.typeIs(NewEraActor.Types.CHARACTER)){
+        return "backpack";
+      }
       const equipment = this.system.equipment;
       for (const [k, v] of Object.entries(equipment)){
         if (v == item._id){
@@ -1146,4 +1316,78 @@ export class NewEraActor extends Actor {
     }
   }
 
+  async setDefeated(defeated){
+    if (this.typeIs(NewEraActor.Types.INANIMATE)) return;
+    await this.update({
+      system: {
+        defeated: defeated
+      },
+      ownership: {
+        default: defeated ? 3 : 0
+      }
+    });
+  }
+
+  getLearningExperienceOptions(){
+    const output = {
+      improvement: {
+        label: "Make a Selection",
+        options: {}
+      }
+    };
+    for (const [k, v] of Object.entries(this.system.knowledges)){
+      if (v.level < 10){
+        output.improvement.options[k] = v.subject;
+      }
+    }
+    return output;
+  }
+
+  getSpecialtyImprovementOptions(){
+    const output = {
+      improvement: {
+        label: "Choose a Specialty",
+        options: {}
+      }
+    };
+    for (const [k, v] of Object.entries(this.system.specialties)){
+      if (v.level < 3){
+        output.improvement.options[k] = v.subject;
+      }
+    }
+    return output;
+  }
+
+  async migrateFeats(){
+    const compendium = await game.packs.get('newera-sol366.feats').getDocuments();
+    for (const feat of this.items.filter(i => i.type == 'Feat')){
+      if (feat.system.tiers.base){
+        const newFeat = compendium.find(f => f.system.casperObjectId == feat.system.casperObjectId);
+        if (newFeat){
+          await feat.update({
+            system: newFeat.system
+          });
+          await feat.update({
+            system: {
+              tiers: {
+                "-=base": null
+              }
+            }
+          });
+          ui.notifications.info(`${feat.name} was migrated successfully. (${feat.system.casperObjectId})`);
+        } else {
+          await feat.update({
+            system: {
+              base: feat.system.tiers.base,
+              tiers: {
+                "-=base": null
+              }
+            }
+          });
+          ui.notifications.info(`${feat.name} was migrated using direct updates.`);
+        }
+      }
+    }
+    ui.notifications.info("Migration complete!");
+  }
 }

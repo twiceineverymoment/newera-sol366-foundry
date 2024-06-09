@@ -1,0 +1,21 @@
+<div class="browser-results-container">
+    {{#each results as |result index|}}
+        <div class="browser-result truncate-text spell-preview {{result.styles}}" data-casper-type="{{result.type}}" data-casper-object-id="{{result.system.casperObjectId}}" {{#if result.alreadyOwned}} data-tooltip="{{../actor.name}} already knows {{result.name}}." data-tooltip-direction="UP" {{else}} draggable="true" {{/if}} >
+            <img src="{{result.img}}" data-tooltip="{{result.system.specialty}}" />
+            <img src="systems/newera-sol366/resources/sr_{{toLowerCase result.rarity}}.png" class="rarity" data-tooltip="{{result.rarity}}" />
+            <h3 class="newera-section-header" style="text-align: center; margin: 0 auto">{{result.name}}</h3>
+            <h4 class="spell-browser-level">{{result.system.level}}</h4>
+            <span style="display: block">&nbsp; <!--Float weirdness prevention --></span>
+            <div>
+                {{{result.actionIcons}}}
+            </div>
+            <div class="truncate-paragraphs">
+                {{{result.preview}}}
+            </div>
+        </div>
+    {{/each}}
+    {{#if noResultsFound}}
+        <h2 class="newera-section-header">Nothing to See Here</h2>
+        <p>Hmm... There doesn't seem to be anything that matches your search.</p>
+    {{/if}}
+</div>

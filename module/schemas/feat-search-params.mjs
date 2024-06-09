@@ -38,7 +38,7 @@ export class FeatSearchParams {
      * @param {NewEraItem} feat 
      */
     showFeat(feat){
-        if (this.cost.min > Math.abs(feat.system.tiers.base.cost) || this.cost.max < Math.abs(feat.system.tiers.base.cost)){ //TODO This will need to be looked at when multi-tiered feats are improved
+        if (this.cost.min > Math.abs(feat.system.base.cost) || this.cost.max < Math.abs(feat.system.base.cost)){ //TODO This will need to be looked at when multi-tiered feats are improved
             return false;
         }
         if (this.searchTerm){
