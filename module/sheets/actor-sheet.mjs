@@ -512,7 +512,10 @@ export class NewEraActorSheet extends ActorSheet {
     if (actor.type == "Player Character"){
       for (const clazz of context.inventory.classes){
         const className = clazz.system.selectedClass.toLowerCase();
-        const archetypes = Object.values(system.classes[className].archetype);
+        let archetypes = [];
+        try {
+          archetypes = Object.values(system.classes[className].archetype);
+        } catch (err) {}
         for (const feature of ClassInfo.features[clazz.system.selectedClass.toLowerCase()]){
           if (
             feature.level <= clazz.system.level &&
