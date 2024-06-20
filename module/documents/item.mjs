@@ -1543,5 +1543,29 @@ _preparePotionData(system){
     }
   }
 
+  async printDetails(speaker, ampFactor = 1){
+    let template = "";
+    if (this.typeIs(NewEraItem.Types.MAGIC)){
+      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
+      const title = Formatting.spellTitle(this, ampFactor);
+      const range = `${this.system.range.value * ampFactor} ft ${this.system.range.description}`;
+      const castingTime = NEWERA.spellCastingTimes[this.system.castType] || this.system.castTime;
+      template = `
+        <div class="chat-item-details">
+          <img src="${this.img}" />
+          <h2>${title}</h2>
+          <h3>Level <strong>${this.system.level * ampFactor}</strong> ${this.system.specialty}</h3>
+          <p>${description}</p>
+          <p><strong>Casting Time: </strong> ${castingTime} </p>
+          <p><strong>Range: </strong> ${range} </p>
+        </div>
+      `;
+    }
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({actor: speaker}),
+      content: template
+    });
+  }
+
 }
 

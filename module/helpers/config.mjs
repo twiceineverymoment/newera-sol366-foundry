@@ -139,6 +139,17 @@ NEWERA.schoolToFormMapping = {
   "??": "genericCast"
 }
 
+NEWERA.spellCastingTimes = {
+    "C": "Cantrip",
+    "Q": "1 Frame",
+    "S": "2 Frames",
+    "G": "3 Frames (Resolves next turn)",
+    "L": null,
+    "R": null,
+    "E": "30 minutes",
+    "F": "1 Frame (Sustained)"
+}
+
 NEWERA.conditions = [
     {
         "label": "Broken ",

@@ -141,4 +141,9 @@ export class Formatting {
         }
       }
 
+      static spellTitle(spell, ampFactor){
+        if (!ampFactor) ampFactor = spell.system.ampFactor;
+        return `${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`;
+      }
+
 }

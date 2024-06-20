@@ -1120,6 +1120,10 @@ export class NewEraActor extends Actor {
         }]);
       }
 
+      if (successful){
+        spell.printDetails(this, ampFactor);
+      }
+
       if (energyPool){
         await energyPool.use(energyCost, new CharacterEnergyPool(this));
       }
