@@ -120,7 +120,12 @@ export class Actions {
     static async castSpell(actor, spell, paramAmpFactor = 1, isPrepared = false){
       let stayOpen = false;
       const energyRequired = (!isPrepared && actor.type != "Creature");
-      if (energyRequired && actor.energyPools.filter(p => !p.depleted).length == 0){
+      const pools = actor.energyPools;
+      if (!pools || pools.length == 0){
+        ui.notifications.error(`${actor.name} can't cast spells right now.`);
+        return;
+      }
+      if (energyRequired && pools.filter(p => !p.depleted).length == 0){
         ui.notifications.error("Your energy is depleted. You can't cast any spells until you drink a potion or rest to recover.");
         return;
       }
