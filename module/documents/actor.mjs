@@ -1052,13 +1052,17 @@ export class NewEraActor extends Actor {
     }
 
     const spell = this.items.get(this.system.sustaining.id);
+    const ampFactor = this.system.sustaining.ampFactor;
     if (!spell){
       return;
     }
 
+    const energyCost = spell.system.energyCost * ampFactor;
     if (energyPool){
-      await energyPool.use()
+      await energyPool.use(energyCost, new CharacterEnergyPool(this));
     }
+
+    this.actionMessage(this.img, spell.img, `{NAME} sustains {0}.`, spell.name+(ampFactor>1 ? " "+NEWERA.romanNumerals[ampFactor] : ""));
   }
 
   async cast(spell, ampFactor = 1, attack = false, noSkillCheck = false, energyPool = undefined){
@@ -1089,7 +1093,9 @@ export class NewEraActor extends Actor {
         });
       } 
 
-
+      /**
+       * Apply Sustaining effect when starting a sustained spell
+       */
       if (spell.system.castType == "F" && successful){
         let existingSustain = this.effects.find(e => e.label.includes("Sustaining"));
         if (existingSustain){
@@ -1103,10 +1109,8 @@ export class NewEraActor extends Actor {
             }
           }
         });
-        const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
-        await sustainEffect.delete();
         await this.createEmbeddedDocuments("ActiveEffect", [{
-          label: `Sustaining: ${spell.name}${ampfactor > 1 && NEWERA.romanNumerals[ampFactor]}`,
+          label: `Sustaining: ${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`,
           icon: spell.img,
           description: `<p>You're sustaining a spell.</p>
           ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}

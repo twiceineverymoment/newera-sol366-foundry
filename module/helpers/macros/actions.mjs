@@ -44,6 +44,7 @@ export class Actions {
     }
 
     static async sustainCurrentSpell(actor){
+      let stayOpen = false;
       const energyRequired = (actor.type != "Creature");
       if (energyRequired && actor.energyPools.filter(p => !p.depleted).length == 0){
         ui.notifications.error("Your energy is depleted. You can still continue sustaining the spell if you recover enough energy before the end of your turn.");
@@ -54,8 +55,9 @@ export class Actions {
         ui.notifications.error(`${actor.name} isn't sustaining a spell.`);
         return;
       }
+      const spellTitle = `${spell.name}${actor.system.sustaining.ampFactor > 1 ? " "+NEWERA.romanNumerals[actor.system.sustaining.ampFactor] : ""}`;
       let dialog = new Dialog({
-        title: `Sustain ${spell.name} [${actor.name}]`,
+        title: `Sustain ${spellTitle} [${actor.name}]`,
         content: `<form class="spell-dialog">
           <div id="energySelect">
             Energy Source: <select id="energyPools">${this._renderPoolOptions(actor)}</select>
@@ -86,11 +88,11 @@ export class Actions {
         },
         render: html => {
           html.find("#cast").click(async () => {
-            const pool = Actions._getPool(actor, html, isPrepared);
+            const pool = Actions._getPool(actor, html, false);
             await actor.sustain(pool);
           });
           html.find("#attack").click(async () => {
-            const pool = Actions._getPool(actor, html, isPrepared);
+            const pool = Actions._getPool(actor, html, false);
             await actor.sustain(pool);
           });
           html.find("#damage").click(async () => {
