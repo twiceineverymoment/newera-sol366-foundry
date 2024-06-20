@@ -980,9 +980,6 @@ img.action-image-overlay-right {
   height: 33%;
   border: none;
 }
-p.chat-narration {
-  color: #1D4159 !important;
-}
 div.text-message { /* This is the one for the in-game chat, that's why it belongs in newera.css */
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
   color: black;
@@ -1390,4 +1387,12 @@ a.occupant-delete {
 .chat-item-details h2 {
   border: none;
   outline: none;
+}
+.chat-item-details .ampText-hot {
+  color: orangered !important;
+  text-shadow: yellow 0px 0px 2px !important;
+}
+.chat-item-details .ampText2-hot {
+  color: limegreen !important;
+  text-shadow: yellow 0px 0px 2px !important;
 }
