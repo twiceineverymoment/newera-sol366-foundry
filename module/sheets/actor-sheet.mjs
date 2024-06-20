@@ -511,8 +511,13 @@ export class NewEraActorSheet extends ActorSheet {
     /*Feature actions*/
     if (actor.type == "Player Character"){
       for (const clazz of context.inventory.classes){
+        const className = clazz.system.selectedClass.toLowerCase();
+        const archetypes = Object.values(system.classes[className].archetype);
         for (const feature of ClassInfo.features[clazz.system.selectedClass.toLowerCase()]){
-          if (feature.level <= clazz.system.level && feature.actions){
+          if (
+            feature.level <= clazz.system.level &&
+            (!feature.archetype || archetypes.includes(feature.archetype)) &&
+            feature.actions){
             for (const a of feature.actions){
               NewEraActorSheet._prepareActionContextInfo(a, false);
               a.macroClass = "action-macro-basic";
