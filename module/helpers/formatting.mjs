@@ -2,7 +2,7 @@ import { NEWERA } from "./config.mjs";
 
 export class Formatting {
 
-    static amplifyAndFormatDescription(text, multiplier, stackingBehavior){
+    static amplifyAndFormatDescription(text, multiplier, stackingBehavior = "S"){
         let tokens = text.split(/\[|\]/g);
         let markup = [];
         for(let i=0; i<tokens.length; i++){

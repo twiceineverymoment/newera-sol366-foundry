@@ -1560,6 +1560,15 @@ _preparePotionData(system){
           <p><strong>Range: </strong> ${range} </p>
         </div>
       `;
+    } else if (this.typeIs(NewEraItem.Types.POTION)){
+      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor, this.system.stackingBehavior);
+      template = `
+        <div class="chat-item-details">
+          <img src="${this.img}" />
+          <h2>${this.name}</h2>
+          <p>${description}</p>
+        </div>
+      `;
     }
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({actor: speaker}),
