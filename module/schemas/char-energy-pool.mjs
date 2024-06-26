@@ -14,7 +14,7 @@ export class CharacterEnergyPool extends ResourcePool {
         }
     }
     get available(){
-        return this.actor.system.energy.value;
+        return this.actor.system.energy.value + this.actor.system.energy.temporary;
     }
     get max(){
         return this.actor.system.energy.max;
@@ -26,18 +26,24 @@ export class CharacterEnergyPool extends ResourcePool {
         return "Energy Pool";
     }
     get depleted(){
-        return (this.actor.system.energy.value <= 0);
+        return (this.actor.system.energy.value <= 0 && this.actor.system.energy.temporary <= 0);
     }
     async use(amount, backupPool = null){
         let update = {
             system: {
-                energy: {
-                    value: Math.max(0, this.available - amount)
-                }
+                energy: {}
             }
         }
+        let amtAfterTemporary = amount;
+        if (this.actor.system.energy.temporary > 0){
+            amtAfterTemporary -= this.actor.system.energy.temporary;
+            update.system.energy.temporary = Math.max(this.actor.system.energy.temporary - amount, 0);
+        }
+        if (amtAfterTemporary > 0){
+            update.system.energy.value = this.actor.system.energy.value - amtAfterTemporary;
+        }
         if (amount > this.available){
-            await this.actor.takeDamage(amount - this.actor.system.energy.value, "exhaustion", false, false);
+            await this.actor.takeDamage(amount - this.available, "exhaustion", false, false);
         }
         await this.actor.update(update);
     }
