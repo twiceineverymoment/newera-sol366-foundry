@@ -572,11 +572,13 @@
 			"castTime": "",
 			"damage": {
 				"amount": "",
-				"type": ""
+				"type": "",
+				"scales": true
 			},
 			"range": {
 				"value": 0,
-				"description": ""
+				"description": "",
+				"scales": true
 			}
 		},
 		"Enchantment": {

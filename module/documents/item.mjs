@@ -200,6 +200,8 @@ export class NewEraItem extends Item {
   _prepareSpellData(system) {
       system.concentrated = (system.castType == "F");
       system.rangedAttack = (system.range.description == "Projectile");
+      system.amplifiedDamage = (system.amplified && system.damage.scales);
+      system.amplifiedRange = (system.amplified && system.range.scales);
       if (system.ampFactor > 1){
         system.amplifiedData = {
           level: system.level * system.ampFactor,
@@ -1551,7 +1553,7 @@ _preparePotionData(system){
     if (this.typeIs(NewEraItem.Types.MAGIC)){
       const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
       const title = Formatting.spellTitle(this, ampFactor);
-      const range = `${this.system.range.value * ampFactor} ft ${this.system.range.description}`;
+      const range = `${this.system.range.value * (this.system.range.scales ? ampFactor : 1)} ft ${this.system.range.description}`;
       const castingTime = NEWERA.spellCastingTimes[this.system.castType] || this.system.castTime;
       template = `
         <div class="chat-item-details">

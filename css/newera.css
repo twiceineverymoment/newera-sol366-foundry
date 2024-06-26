@@ -127,6 +127,18 @@ div.newera-itemsheet-property-66 {
 .newera-itemsheet-property-50 select, .newera-itemsheet-property-66 select {
   width: 100%;
 }
+.scale-control {
+  float: right;
+}
+.scale-control i, .scale-control input {
+  display: inline;
+  font-size: 0.8em;
+  color: yellow;
+}
+.scale-control input {
+  width: 10px;
+  height: 10px;
+}
 .newera-actorsheet-editor-container {
   position: relative;
   top: 0px;

@@ -220,7 +220,7 @@ export class Actions {
           });
           html.find("#damage").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : Formatting.amplifyValue(spell.system.damage.amount, amp);
+            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : (spell.system.damage.scales ? Formatting.amplifyValue(spell.system.damage.amount, amp) : spell.system.damage.amount);
             const dmgRoll = new Roll(formula);
             await dmgRoll.evaluate();
             dmgRoll.toMessage({

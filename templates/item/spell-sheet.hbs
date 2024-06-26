@@ -108,8 +108,14 @@
       </div>
       <div class="newera-itemsheet-properties">
         <div class="resource newera-itemsheet-property-33">
+          {{#if system.amplifiable}}
+          <div class="scale-control" data-tooltip="Range Increases with Amplification">
+            <i class="fa-light fa-waveform"></i>
+            <input type="checkbox" name="system.range.scales" {{checked system.range.scales}} data-dtype="Boolean" />
+          </div>
+          {{/if}}
           <h4>Range (ft)</h4>
-          {{#if system.amplified}}
+          {{#if system.amplifiedRange}}
             <input type="text" class="sheet-input amplified" style="width: 25%" value="{{system.amplifiedData.range}}" disabled />
           {{else}}
             <input type="text" class="sheet-input" style="width: 25%" name="system.range.value" value="{{system.range.value}}" data-dtype="Number" {{disabled system.standard}} />
@@ -128,8 +134,14 @@
           </select>
         </div>
         <div class="resource newera-itemsheet-property-33">
+          {{#if system.amplifiable}}
+          <div class="scale-control" data-tooltip="Damage Increases with Amplification">
+            <i class="fa-light fa-waveform"></i>
+            <input type="checkbox" name="system.damage.scales" {{checked system.damage.scales}} data-dtype="Boolean" />
+          </div>
+          {{/if}}
           <h4>Damage</h4>
-          {{#if system.amplified}}
+          {{#if system.amplifiedDamage}}
             <input type="text" class="sheet-input amplified" style="width: 30%" value="{{system.amplifiedData.damage}}" disabled />
           {{else}}
             <input type="text" class="sheet-input" style="width: 30%" name="system.damage.amount" value="{{system.damage.amount}}" {{disabled system.standard}} />
@@ -160,7 +172,7 @@
         </div>
         <div class="resource newera-itemsheet-property-33">
           {{#if system.amplifiable}}
-          <h4 style="color: yellow">Amplify</h4>
+          <h4 style="color: yellow"><i class="fa-solid fa-waveform"></i> Amplify</h4>
           x <input type="number" class="sheet-input" style="display: inline; width: 75%" name="system.ampFactor" value="{{system.ampFactor}}" />
           {{/if}}
         </div>
