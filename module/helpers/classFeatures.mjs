@@ -7153,8 +7153,7 @@ ClassInfo.features = {
                     name: "Spell Preparation",
                     images: {
                         base: `${NEWERA.images}/spell-book.png`,
-                        left: `${NEWERA.images}/scholar.png`,
-                        right: `${NEWERA.images}/ac_adventuring.png`
+                        left: `${NEWERA.images}/scholar.png`
                     },
                     ability: null,
                     skill: null,
@@ -7279,12 +7278,14 @@ ClassInfo.features = {
             description: `<p>You can create your own spells.</p>
             <p>As a Scholar, you can craft spells and simple enchantments. You can prepare your crafted spells in appropriately-leveled spell slots.</p>
             <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
-            tableValues: {
-                field: "spellcraft.scholar",
-                label: "Spellcraft Skill Level",
-                sign: false,
-                values: [null, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7]
-            }
+            tableValues: [
+                {
+                    field: "spellcraft.scholar",
+                    label: "Spellcraft Skill Level",
+                    sign: false,
+                    values: [null, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7]
+                }
+            ]
         },
         {
             level: 5,
