@@ -126,29 +126,31 @@
           <input type="text" class="sheet-input" name="system.materialCosts" value="{{system.materialCosts}}" data-dtype="String" {{disabled system.standard}} />
       </div>
     </div>
+    {{#unless system.isComponent}}
     <div class="newera-itemsheet-properties">
-      <div class="newera-itemsheet-property-66">
-        <h4>Targets</h4>
+        <h4>Enchantable Objects</h4>
         <table>
           <tr>
-            <td><input type="checkbox" name="system.validTargets.weapon" class="skill-checkbox" {{checked system.validTargets.weapon}} {{disabled system.standard}} /> Weapons</td>
+            <td><input type="checkbox" name="system.validTargets.melee" class="skill-checkbox" {{checked system.validTargets.melee}} {{disabled system.standard}} /> Melee Weapons</td>
             <td><input type="checkbox" name="system.validTargets.clothing" class="skill-checkbox" {{checked system.validTargets.clothing}} {{disabled system.standard}} /> Clothing</td>
             <td><input type="checkbox" name="system.validTargets.accessory" class="skill-checkbox" {{checked system.validTargets.accessory}} {{disabled system.standard}} /> Accessories</td>
+            <td><input type="checkbox" name="system.validTargets.creature" class="skill-checkbox" {{checked system.validTargets.creature}} {{disabled system.standard}} /> Creatures (Hex/Curse)</td>
           </tr>
           <tr>
+            <td><input type="checkbox" name="system.validTargets.ranged" class="skill-checkbox" {{checked system.validTargets.ranged}} {{disabled system.standard}} /> Ranged Weapons</td>
             <td><input type="checkbox" name="system.validTargets.shield" class="skill-checkbox" {{checked system.validTargets.shield}} {{disabled system.standard}} /> Shields</td>
             <td><input type="checkbox" name="system.validTargets.object" class="skill-checkbox" {{checked system.validTargets.object}} {{disabled system.standard}} /> Items</td>
             <td><input type="checkbox" name="system.validTargets.other" class="skill-checkbox" {{checked system.validTargets.other}} {{disabled system.standard}} /> Other</td>
           </tr>
         </table>
-      </div>
-      <div class="newera-itemsheet-property-33">
-        {{#if system.validTargets.other}}
-        <h4>Specific Targets</h4>
-        <input type="text" class="sheet-input" name="system.validTargets.details" value="{{system.validTargets.details}}" {{disabled system.standard}} />
-        {{/if}}
-      </div>
     </div>
+    {{#if system.validTargets.other}}
+    <div class="newera-itemsheet-properties">
+      <h4>Enchantable Objects (Details)</h4>
+      <input type="text" class="sheet-input" name="system.validTargets.details" value="{{system.validTargets.details}}" {{disabled system.standard}} />
+    </div>
+    {{/if}}
+    {{/unless}}
     <div class="newera-itemsheet-properties">
       <div class="resource newera-itemsheet-property-66">
         <h4>Keywords</h4>

@@ -218,6 +218,7 @@ export class NewEraItem extends Item {
         aetheriumCost: system.aetheriumCost * system.ampFactor
       };
     }
+    system.isComponent = (system.enchantmentType == "C");
     system.thingsAreComplex = (system.enchantmentType == "CE");
 }
 
@@ -1332,9 +1333,9 @@ _preparePotionData(system){
     }
     switch (this.type){
       case "Melee Weapon":
-        return targetData.weapon;
+        return targetData.melee;
       case "Ranged Weapon":
-        return targetData.weapon;
+        return targetData.ranged;
       case "Armor":
         return targetData.clothing;
       case "Shield":
@@ -1342,8 +1343,9 @@ _preparePotionData(system){
       case "Item":
         switch (this.system.equipSlot) {
           case "I":
+            return targetData.object;
           case "C":
-            return false;
+            return targetData.object || targetData.ranged;
           case "O":
           case "B":
             return targetData.clothing;
