@@ -26,13 +26,12 @@
           <option value="6">Classified</option>
           <option value="7">Mystery</option>
           <option value="8">Innate</option>
-          <option value="0">Inscribed</option>
+          <option value="0">Crafted</option>
         </select>
         <select name="system.enchantmentType" class="sheet-input" id="ench-type-{{item.id}}" {{disabled system.standard}}>
           <option value="E">Enchantment</option>
           <option value="CE">Complex Enchantment</option>
           <option value="C">Component</option>
-          <option value="A">Artifact Script</option>
         </select>
         {{#if system.standard}}
         {{else}}
@@ -44,6 +43,15 @@
           <option value="4">Perfected</option>
         </select>
         {{/if}}
+        {{#unless system.standard}}
+          <div class="resource">
+            <input type="checkbox" name="system.derivative.isDerived" {{checked system.derivative.isDerived}} data-dtype="Boolean" /> Derivative
+            {{#if system.derivative.isDerived}}
+              Based On: 
+              <input type="text" class="sheet-input" name="system.derivative.basis" value="{{system.derivative.basis}}" style="display: inline; width: 60%" />
+            {{/if}}
+          </div>
+      {{/unless}}
       </div>
     </div>
   </header>
@@ -52,6 +60,9 @@
     <nav class="sheet-tabs tabs" data-group="primary">
       <a class="item newera-section-header" data-tab="properties">Properties</a>
       <a class="item newera-section-header" data-tab="actions">Actions</a>
+      {{#if system.thingsAreComplex}}
+        <a class="item newera-section-header" data-tab="components">Components</a>
+      {{/if}}
     </nav>
   </div>
 
@@ -162,6 +173,10 @@
   <div class="tab actions" data-group="primary" data-tab="actions">
     <p>These actions apply to any item bearing this enchantment.</p>
     {{> systems/newera-sol366/templates/item/parts/item-actions.hbs}}
+  </div>
+
+  <div class="tab components" data-group="primary" data-tab="components">
+    
   </div>
 
   </section>

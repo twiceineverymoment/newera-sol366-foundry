@@ -515,7 +515,11 @@
 				"static": false,
 				"refinementLevel": 0,
 				"ampFactor": 1,
-				"author": ""
+				"author": "",
+				"derivative": {
+					"isDerived": false,
+					"basis": ""
+				}
 			}
 		},
 		"Item": {

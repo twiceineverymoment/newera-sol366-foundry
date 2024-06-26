@@ -218,6 +218,7 @@ export class NewEraItem extends Item {
         aetheriumCost: system.aetheriumCost * system.ampFactor
       };
     }
+    system.thingsAreComplex = (system.enchantmentType == "CE");
 }
 
 _preparePotionData(system){
