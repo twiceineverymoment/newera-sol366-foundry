@@ -8,6 +8,7 @@ import { Formatting } from "../formatting.mjs";
 import { NEWERA } from "../config.mjs";
 import { CharacterEnergyPool } from "../../schemas/char-energy-pool.mjs";
 import { NewEraActor } from "../../documents/actor.mjs";
+import { ResourcePool } from "../../schemas/resource-pool.mjs";
 
 export class Actions {
 
@@ -229,6 +230,9 @@ export class Actions {
             });
             game.newera.setLastDamageAmount(dmgRoll.total);
           });
+          html.find("#energyPools").change(async () => {
+            Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
+          });
         },
         close: () => {
           if (stayOpen){
@@ -253,8 +257,12 @@ export class Actions {
       if (isPrepared || actor.type == "Creature"){
         return null;
       }
-      const id = html.find("#energyPools").val();
-      return actor.energyPools.find(p => p.id == id); //The select list is populated by this same array so if this ever fails to find something is very wrong
+      try {
+        const id = html.find("#energyPools").val();
+        return actor.energyPools.find(p => p.id == id); //The select list is populated by this same array so if this ever fails to find something is very wrong
+      } catch (err){
+        return null;
+      }
     }
 
     static _renderSpellDetails(html, spell, actor, ampFactor, prepared){
@@ -263,6 +271,15 @@ export class Actions {
       const spellSkillLevel = actor.system.magic[spellSkill].level;
       const difficulty = prepared ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = prepared ? 0 : spell.system.energyCost * ampFactor;
+      let availableEnergy = 0;
+
+      //Get selected energy pool
+      if (!prepared){
+        const pool = Actions._getPool(actor, html, prepared);
+        if (pool instanceof ResourcePool){
+          availableEnergy = pool.available;
+        }
+      }
 
       //Determine chance of success
       const passiveSpellSkill = 10 + actor.system.magic[spellSkill].mod;
@@ -280,8 +297,8 @@ export class Actions {
       } else if (prepared) {
         html.find("#cost").html("Prepared");
         html.find("#energySelect").hide();
-      } else if (energyCost > actor.system.energy.value){
-        html.find("#cost").html(`${energyCost} (-${energyCost-actor.system.energy.value})`);
+      } else if (energyCost > availableEnergy){
+        html.find("#cost").html(`${energyCost} (-${energyCost-availableEnergy})`);
         html.find("#cost").css("color", "red");
       } else {
         html.find("#cost").html(energyCost);
@@ -313,6 +330,15 @@ export class Actions {
       if (spell.system.keywords.includes("Static") || actor.type == "Creature" || prepared){
         html.find("#amplify-info").hide();
       }
+    }
+
+    static displayPotionDialog(actor, potion){
+      new Dialog({
+        title: `Use ${potion.name} [${actor.name}]`,
+        content: `
+          
+        `
+      })
     }
 
     static displayDamageDialog(actor){
