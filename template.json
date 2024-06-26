@@ -586,11 +586,13 @@
 			"aetheriumCost": 0,
 			"materialCosts": "",
 			"validTargets": {
-				"weapon": false,
+				"melee": false,
+				"ranged": false,
 				"clothing": false,
 				"accessory": false,
 				"shield": false,
 				"object": false,
+				"creature": false,
 				"other": true,
 				"details": ""
 			},
