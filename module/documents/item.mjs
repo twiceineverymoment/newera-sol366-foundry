@@ -1,5 +1,6 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
+import { Actions } from "../helpers/macros/actions.mjs";
 
 /**
  * Extend the basic Item with some very simple modifications.
@@ -655,6 +656,52 @@ _preparePotionData(system){
           rolls: action.rolls
         });
       }
+    }
+    if (this.type == "Potion"){
+      let verb = "";
+      let action = "0";
+      let icon = "";
+      switch(this.system.potionType){
+        case "P":
+        case "E":
+          verb = "Drink",
+          action = "3";
+          icon = "ac_3frame";
+          break;
+        case "S":
+          verb = "Apply";
+          action = "E";
+          icon = "ac_adventuring";
+          break;
+        case "B":
+          verb = "Throw";
+          action = "1";
+          icon = "ac_1frame";
+          break;
+        case "R":
+          return; //Reagents don't have any actions
+      }
+      actions.push({
+        name: `${verb} ${this.name}`,
+        images: {
+          base: this.img,
+          right: `${NEWERA.images}/${icon}.png`
+        },
+        ability: null,
+        skill: null,
+        specialties: [],
+        description: this.system.description,
+        actionType: action,
+        show: "always",
+        overrideMacroCommand: `game.newera.HotbarActions.usePotion("${this.name}")`,
+        rolls: [
+          {
+            label: verb,
+            die: "bottle",
+            callback: actor => Actions.displayPotionDialog(actor, this)
+          }
+        ]
+      });
     }
     if (this.type == "Melee Weapon"){
       const attacks = system.attacks || [];
@@ -1571,6 +1618,7 @@ _preparePotionData(system){
         <div class="chat-item-details">
           <img src="${this.img}" />
           <h2>${this.name}</h2>
+          <p><strong>Quantity Consumed:</strong> ${ampFactor}</p>
           <p>${description}</p>
         </div>
       `;

@@ -475,7 +475,7 @@ export class NewEraActorSheet extends ActorSheet {
         itemAction.itemType = item.type;
         NewEraActorSheet._prepareActionContextInfo(itemAction, false);
 
-        if (["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Phone"].includes(item.type)){
+        if (["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Phone", "Potion"].includes(item.type)){
           actions.show.equipped = true; //This sets the equipment section to show when there is at least one item with an action in the inventory
           actions.equipped.push(itemAction);
         } else {

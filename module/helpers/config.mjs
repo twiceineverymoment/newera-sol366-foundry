@@ -30,6 +30,8 @@ NEWERA.abilityScorePointCosts = [
   null, null, null, null, null, null, 0, 1, 2, 3, 4, 5, 6, 8, 9, 11
 ];
 
+NEWERA.EMPTY_POTION_BOTTLE_ID = 3;
+
 NEWERA.levelThresholds = {
     "standard": [
         0, 20, 50, 90, 140, 200, 270, 350, 440, 540, 650, 770, 900, 1040, 1190, 1350, 1520, 1700, 1900, 2100, 2300, 2500, 2750, 3000, 3250, 3500, 3800, 4100, 4400, 4700, 5000

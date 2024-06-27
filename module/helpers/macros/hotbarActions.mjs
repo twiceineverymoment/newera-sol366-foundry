@@ -12,6 +12,7 @@ import { SpellFocus } from "../../sheets/spell-focus.mjs";
 import { ChantSheet } from "../../sheets/chants.mjs";
 import { DarkEnergySheet } from "../../sheets/dark-energy.mjs";
 import { NewEraActor } from "../../documents/actor.mjs";
+import { NewEraItem } from "../../documents/item.mjs";
 
 
 /*
@@ -407,6 +408,24 @@ export class HotbarActions {
                 }).render(true);
             }
         }
+    }
+
+    static async usePotion(potionName){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+        if (actor.typeIs(NewEraActor.Types.INANIMATE)){
+            ui.notifications.error("The selected token can't do that!");
+            return;
+        }
+        const potion = actor.items.find(i => i.typeIs(NewEraItem.Types.POTION) && i.name == potionName);
+        if (!potion){
+            ui.notifications.error(`${actor.name} doesn't have any potions called ${potionName}.`);
+            return;
+        }
+        Actions.displayPotionDialog(actor, potion);
     }
 
     //Feature-specific actions

@@ -1143,6 +1143,50 @@ export class NewEraActor extends Actor {
         })
     }
 
+    async usePotion(potion, qty){
+      const qtyAvailable = potion.system.quantity;
+      const qtyUsed = Math.min(qty, qtyAvailable);
+      await potion.printDetails(this, qtyUsed);
+      if (qtyUsed == qtyAvailable){
+        await potion.delete();
+      } else {
+        await potion.update({
+          system: {
+            quantity: qtyAvailable - qtyUsed
+          }
+        });
+      }
+      //Add a number of empty bottles to the user's inventory
+      if (game.settings.get("newera-sol366", "giveEmptyPotionBottles")){
+        //Find a stack of bottles
+        const bottles = this.items.find(i => i.type == "Item" && i.system.casperObjectId == NEWERA.EMPTY_POTION_BOTTLE_ID);
+        if (bottles){
+          await bottles.update({
+            system: {
+              quantity: bottles.system.quantity + qtyUsed
+            }
+          });
+        } else {
+          await Item.create({
+            name: "Empty Potion Bottle",
+            type: "Item",
+            img: `${NEWERA.images}/empty_bottle.png`,
+            system: {
+              casperObjectId: NEWERA.EMPTY_POTION_BOTTLE_ID,
+              quantity: qtyUsed,
+              rarity: 0,
+              description: `<p>An empty 8 ounce glass bottle that once held a potion. Re-use it for brewing new ones!</p>`,
+              actions: {},
+              weight: 0,
+              value: 0,
+              equipSlot: "C",
+              stored: false
+            }
+          }, {parent: this});
+        }
+      }
+    }
+
     /* Determines whether an action should be shown based on the action's type and the location within the actor's equipment */
     isItemActionAvailable(action, item){
       const showWhen = action.show;

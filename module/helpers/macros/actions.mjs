@@ -335,10 +335,56 @@ export class Actions {
     static displayPotionDialog(actor, potion){
       new Dialog({
         title: `Use ${potion.name} [${actor.name}]`,
-        content: `
-          
-        `
-      })
+        content: `<form class="spell-dialog">
+          <div id="amplify-info">
+            <p>How Many?</p>
+            <div id="amplify-down">
+              <i class="fa-solid fa-chevron-left"></i>
+            </div>
+            <h2 id="amplify-heading"><span id="ampFactor">1</span></h2>
+            <div id="amplify-up">
+              <i class="fa-solid fa-chevron-right"></i>
+            </div>
+          </div>
+        </form>
+        `,
+        render: html => {
+          html.find("#amplify-up").click(() => {
+            const qty = parseInt(html.find("#ampFactor").html());
+            if (qty == potion.system.quantity) {
+              ui.notifications.error(`You only have ${potion.system.quantity}!`);
+              return;
+            }
+            html.find("#ampFactor").html(qty + 1);
+          });
+          html.find("#amplify-down").click(() => {
+            const qty = parseInt(html.find("#ampFactor").html());
+            if (qty == 1) return;
+            html.find("#ampFactor").html(qty - 1);
+          });
+        },
+        buttons: {
+          confirm: {
+            icon: `<i class="fas fa-check"></i>`,
+            label: "Confirm",
+            callback: html => {
+              const qty = html.find("#ampFactor").html();
+              actor.usePotion(potion, qty);
+            }
+          },
+          details: {
+            icon: `<i class="fas fa-edit"></i>`,
+            label: "Item Details",
+            callback: () => {
+              potion.sheet.render(true);
+            }
+          },
+          cancel: {
+            icon: `<i class="fas fa-x"></i>`,
+            label: "Cancel",
+          },
+        }
+      }).render(true);
     }
 
     static displayDamageDialog(actor){
