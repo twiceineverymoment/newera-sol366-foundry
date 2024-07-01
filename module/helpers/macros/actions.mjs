@@ -268,7 +268,7 @@ export class Actions {
     static _renderSpellDetails(html, spell, actor, ampFactor, prepared){
       const level = spell.system.level * ampFactor;
       const spellSkill = spell.system.form;
-      const spellSkillLevel = actor.system.magic[spellSkill].level;
+      const spellSkillLevel = spellSkill == "genericCast" ? actor.system.casterLevel : actor.system.magic[spellSkill].level;
       const difficulty = prepared ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = prepared ? 0 : spell.system.energyCost * ampFactor;
       let availableEnergy = 0;
