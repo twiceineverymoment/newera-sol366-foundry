@@ -231,6 +231,7 @@ export class Actions {
             game.newera.setLastDamageAmount(dmgRoll.total);
           });
           html.find("#energyPools").change(async () => {
+            const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
             Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
           });
         },
