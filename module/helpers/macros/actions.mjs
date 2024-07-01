@@ -658,4 +658,29 @@ export class Actions {
       }).render(true);
     }
 
+    static async confirmUpdateItems(actor){
+      new Dialog({
+        title: `Update Items [${actor.name}]`,
+        content: `
+          <p style="color: red"><b>BAD THINGS WILL HAPPEN IF YOU DON'T READ THIS!</b></p>
+          <p>
+            This action will overwrite ALL compendium-based items, spells, enchantments, and feats this actor owns with new copies of those objects from the Compendium.
+            This is meant to be done when you need to update a character to reflect recent rules changes. Any customizations or changes made to them will be reverted.
+            <b>You cannot undo this!</b> It is STRONGLY recommended to make a backup of your world before continuing.
+          </p>
+        `,
+        buttons: {
+          confirm: {
+            icon: `<i class="fa-solid fa-arrows-rotate"></i>`,
+            label: `<b>Update All Items</b>`,
+            callback: () => actor.updateItems()
+          },
+          cancel: {
+            icon: `<i class="fas fa-x"></i>`,
+            label: "Cancel"
+          }
+        }
+      }).render(true);
+    }
+
 }

@@ -22,6 +22,7 @@ export class NewEraItem extends Item {
     ACTION: ["Action"],
     PHONE: ["Phone"],
     EQUIPMENT: ["Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
+    WEAPON: ["Melee Weapon", "Ranged Weapon"],
     MAGIC: ["Spell", "Enchantment"],
     ENCHANTABLE: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
     INVENTORY: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Potion", "Phone"],

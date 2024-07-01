@@ -1410,36 +1410,70 @@ export class NewEraActor extends Actor {
     return output;
   }
 
-  async migrateFeats(){
-    const compendium = await game.packs.get('newera-sol366.feats').getDocuments();
-    for (const feat of this.items.filter(i => i.type == 'Feat')){
-      if (feat.system.tiers.base){
-        const newFeat = compendium.find(f => f.system.casperObjectId == feat.system.casperObjectId);
-        if (newFeat){
-          await feat.update({
-            system: newFeat.system
-          });
-          await feat.update({
-            system: {
-              tiers: {
-                "-=base": null
-              }
-            }
-          });
-          ui.notifications.info(`${feat.name} was migrated successfully. (${feat.system.casperObjectId})`);
+  async updateItems(){
+    ui.notifications.warn(`Update initiated. Please wait a few seconds before doing anything else with ${this.name}.`);
+    console.log(`Initiating item update for ${this.name}`);
+    const spellsEnchantments = await game.packs.get('newera-sol366.spells').getDocuments();
+    const equipment = await game.packs.get('newera-sol366.equipment').getDocuments();
+    const consumables = await game.packs.get('newera-sol366.consumables').getDocuments();
+    const feats = await game.packs.get('newera-sol366.feats').getDocuments();
+    const weapons = await game.packs.get('newera-sol366.weapons').getDocuments();
+
+    for (const item of this.items){
+      if (item.typeIs(NewEraItem.Types.MAGIC) && item.system.casperObjectId){
+        const fromComp = spellsEnchantments.find(i => i.type == item.type && i.system.casperObjectId == item.system.casperObjectId);
+        if (fromComp){
+          await item.update(fromComp);
+          console.log(`${item.name} Updated (spell/ench - ${fromComp.id})`);
         } else {
-          await feat.update({
+          console.log(`${item.name} Not Updated - No Compendium Match`);
+        }
+      } else if (item.typeIs(NewEraItem.Types.FEAT) && item.system.casperObjectId){
+        const fromComp = feats.find(i => i.system.casperObjectId == item.system.casperObjectId);
+        if (fromComp){
+          await item.update(fromComp);
+          console.log(`${item.name} Updated (feat - ${fromComp.id})`);
+        } else {
+          console.log(`${item.name} Not Updated - No Compendium Match`);
+        }
+      } else if (item.typeIs(NewEraItem.Types.WEAPON) && item.system.casperObjectId){
+        const fromComp = weapons.find(i => i.system.casperObjectId == item.system.casperObjectId); //This field is the full lookup key for weapons
+        if (fromComp){
+          await item.update(fromComp);
+          console.log(`${item.name} Updated (weapon - ${fromComp.id})`);
+        } else {
+          console.log(`${item.name} Not Updated - No Compendium Match`);
+        }
+      } else if (item.typeIs(NewEraItem.Types.BASIC_ITEM) && item.system.casperObjectId){
+        const existingQty = item.system.quantity;
+        const fromComp1 = equipment.find(i => i.system.casperObjectId == item.system.casperObjectId);
+        if (fromComp1){
+          await item.update({
             system: {
-              base: feat.system.tiers.base,
-              tiers: {
-                "-=base": null
-              }
+              ...fromComp1.system,
+              quantity: existingQty
             }
           });
-          ui.notifications.info(`${feat.name} was migrated using direct updates.`);
+          console.log(`${item.name} Updated (equipment - ${fromComp.id})`);
+        } else {
+          const fromComp2 = consumables.find(i => i.system.casperObjectId == item.system.casperObjectId);
+          if (fromComp2){
+            await item.update({
+              system: {
+                ...fromComp2.system,
+                quantity: existingQty
+              }
+            });
+            console.log(`${item.name} Updated (consumable - ${fromComp.id})`);
+          } else {
+            console.log(`${item.name} Not Updated - No Compendium Match`);
+          }
         }
       }
     }
-    ui.notifications.info("Migration complete!");
+  }
+
+  async storeAllItems(){
+    
   }
 }
