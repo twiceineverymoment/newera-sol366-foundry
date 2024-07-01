@@ -577,7 +577,7 @@ export class NewEraActor extends Actor {
     //For "1.5H", only clear the left if the item was dragged to the right hand AND the left hand is empty. Otherwise consider it held one-handed
     if (item.system.handedness && (destination == "leftHand" || destination == "rightHand")){
       console.log("Checking for a two-handed item...");
-      if (item.system.handedness == "2H" || (item.system.handedness == "1.5H" && destination == "rightHand" && !system.equipment.leftHand)){
+      if (item.system.handedness == "2H" || (item.system.handedness == "1.5H" && destination == "rightHand" && !system.forceOneHanded)){
         console.log("Moved to right hand and cleared left");
         system.equipment.rightHand = id;
         system.equipment.leftHand = "";
@@ -1473,7 +1473,38 @@ export class NewEraActor extends Actor {
     }
   }
 
-  async storeAllItems(){
-    
+  async putAwayAll(store = false){
+    const wornItems = {};
+    for (let i=0; i<this.system.wornItemSlots; i++){
+      wornItems[`worn${i}`] = "";
+    }
+    await this.update({
+      system: {
+        equipment: {
+          "leftHand": "",
+					"rightHand": "",
+					"head": "",
+					"feet": "",
+					"hands": "",
+					"body": "",
+					"outfit": "",
+					"neck": "",
+					"waist": "",
+					"phone": "",
+          ...wornItems
+        }
+      }
+    });
+    if (store) {
+      this.items.forEach(item => {
+        if (item.typeIs(NewEraItem.Types.INVENTORY)) {
+          item.update({
+            system: {
+              stored: true
+            }
+          });
+        }
+      });
+    }
   }
 }

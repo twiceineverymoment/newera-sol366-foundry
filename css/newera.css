@@ -286,6 +286,9 @@ input.sheet-input, select.sheet-input, button.sheet-input, textarea.sheet-input 
   border: none;
   outline: none;
 }
+button.sheet-input:disabled {
+  opacity: 0.5;
+}
 input.big-sheet-input {
   font-size: 36px !important;
   max-width: 2em;
@@ -725,6 +728,19 @@ img.equipment-worn {
   position: absolute;
   bottom: 0;
   right: 0;
+}
+.equipment-utility-buttons {
+  position: absolute;
+  right: 0px;
+  bottom: 40px;
+  width: 200px;
+  vertical-align: bottom;
+  text-align: center;
+}
+.equipment-utility-buttons button {
+  display: block;
+  width: 100%;
+  margin-bottom: 3px;
 }
 .item-quantity-overlay {
   position: absolute;

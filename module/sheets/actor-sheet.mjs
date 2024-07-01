@@ -302,11 +302,15 @@ export class NewEraActorSheet extends ActorSheet {
 
     //Disable the left hand slot if a two-handed item is in the right hand
     if (equipment.rightHand){
+      context.disableHandednessSwap = true;
       const itemInMainHand = this.actor.items.get(equipment.rightHand);
       if (itemInMainHand){
-        if (itemInMainHand.system.handedness == "2H" || (itemInMainHand.system.handedness == "1.5H" && !equipment.leftHand)){
+        if (itemInMainHand.system.handedness == "2H" || (itemInMainHand.system.handedness == "1.5H" && !context.system.forceOneHanded)){
           equipment.twoHanded = true;
           equipment.leftHand = "";
+        }
+        if (itemInMainHand.system.handedness == "1.5H") {
+          context.disableHandednessSwap = false;
         }
       } else {
         console.warn("Encountered a nonexistent item ID in equipment");
@@ -905,6 +909,18 @@ export class NewEraActorSheet extends ActorSheet {
 
     /* EDIT CUTOFF - Everything below here is only run if the sheet is editable */
     if (!this.isEditable) return;
+
+    //Store All buttons
+    html.find("#putAwayAll").click(() => this.actor.putAwayAll(false));
+    html.find("#storeAll").click(() => this.actor.putAwayAll(true));
+
+    html.find("#toggleHandednessOverride").click(() => {
+      this.actor.update({
+        system: {
+          forceOneHanded: !this.actor.system.forceOneHanded
+        }
+      });
+    });
 
     //Browser open buttons
     html.find(".feat-browser").click(() => new FeatBrowser(this.actor).render(true));

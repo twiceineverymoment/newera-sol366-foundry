@@ -198,6 +198,16 @@
         </div>
         {{/each}}
 
+        <div class="equipment-utility-buttons">
+            {{#if system.forceOneHanded}}
+                <button class="sheet-input" id="toggleHandednessOverride" data-tooltip="Switch to two-handed mode for hand-and-a-half weapons." {{disabled disableHandednessSwap}}><i class="fa-solid fa-hands"></i> Two-Handed</button>
+            {{else}}
+                <button class="sheet-input" id="toggleHandednessOverride" data-tooltip="Switch to one-handed mode for hand-and-a-half weapons." {{disabled disableHandednessSwap}}><i class="fa-solid fa-hand"></i> One-Handed</button>
+            {{/if}}
+            <button class="sheet-input" id="putAwayAll"><i class="fa-solid fa-backpack"></i> Put Away All</button>
+            <button class="sheet-input" id="storeAll"><i class="fa-solid fa-box-open"></i> Store All</button>
+        </div>
+
         <div class="equipment-box-small item-create" id="equipment-add-1" data-type="Item" data-tooltip="Add Item" data-tooltip-direction="UP">
             <a title="Add Item">
             <img src="systems/newera-sol366/resources/item.png" />
