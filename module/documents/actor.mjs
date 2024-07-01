@@ -1075,7 +1075,7 @@ export class NewEraActor extends Actor {
       }
       const level = spell.system.level * ampFactor;
       const spellSkill = spell.system.form;
-      const spellSkillLevel = this.system.magic[spellSkill].level;
+      const spellSkillLevel = spellSkill == "genericCast" ? this.system.casterLevel : this.system.magic[spellSkill].level;
       const difficulty = noSkillCheck ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = spell.system.energyCost * ampFactor;
       let successful = false;
