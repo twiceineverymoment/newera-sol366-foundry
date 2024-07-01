@@ -2,7 +2,7 @@
   "id": "newera-sol366",
   "title": "New Era Sol 366 Edition",
   "description": "New Era: Sol 366 Edition",
-  "version": "0.15.20",
+  "version": "0.15.21",
   "compatibility": {
     "minimum": "10.287",
     "verified": "11.315"
@@ -15,6 +15,7 @@
     {
       "name": "spells",
       "label": "Spells and Enchantments",
+      "banner": "systems/newera-sol366/resources/banners/spells.png",
       "system": "newera-sol366",
       "path": "packs/SpellsEnchantments.db",
       "type": "Item",
@@ -126,6 +127,6 @@
   "secondaryTokenAttribute": "energy",
   "url": "https://www.newerarpg.com/",
   "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366.json",
-  "download": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366-0.15.20.zip",
+  "download": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366-0.15.21.zip",
   "license": "LICENSE.txt"
 }
