@@ -428,6 +428,19 @@ export class HotbarActions {
         Actions.displayPotionDialog(actor, potion);
     }
 
+    static async updateItems(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+        if (actor.typeIs(NewEraActor.Types.CHARACTER)){
+            ui.notifications.error("You can only run this process on PC and NPC sheets.");
+            return;
+        }
+        Actions.confirmUpdateItems(actor);
+    }
+
     //Feature-specific actions
 
     static async rage(){
