@@ -434,7 +434,7 @@ export class HotbarActions {
             ui.notifications.error("No token is selected.");
             return;
         }
-        if (actor.typeIs(NewEraActor.Types.CHARACTER)){
+        if (!actor.typeIs(NewEraActor.Types.CHARACTER)){
             ui.notifications.error("You can only run this process on PC and NPC sheets.");
             return;
         }

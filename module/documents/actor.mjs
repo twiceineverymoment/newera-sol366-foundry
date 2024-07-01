@@ -1501,6 +1501,7 @@ export class NewEraActor extends Actor {
         console.log(`${item.name} Not Updated - Not a supported item type`);
       }
     }
+    ui.notifications.info(`Item update for ${this.name} complete.`);
   }
 
   async putAwayAll(store = false){

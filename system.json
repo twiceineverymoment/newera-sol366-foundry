@@ -2,7 +2,7 @@
   "id": "newera-sol366",
   "title": "New Era Sol 366 Edition",
   "description": "New Era: Sol 366 Edition",
-  "version": "0.15.21",
+  "version": "0.15.23",
   "compatibility": {
     "minimum": "10.287",
     "verified": "11.315"
@@ -134,6 +134,6 @@
   "secondaryTokenAttribute": "energy",
   "url": "https://www.newerarpg.com/",
   "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366.json",
-  "download": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366-0.15.22.zip",
+  "download": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366-0.15.23.zip",
   "license": "LICENSE.txt"
 }
