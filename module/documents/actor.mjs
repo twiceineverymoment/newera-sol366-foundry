@@ -1440,7 +1440,13 @@ export class NewEraActor extends Actor {
         if (fromComp){
           await item.update({
             name: fromComp.name,
-            system: fromComp.system
+            system: {
+              ...fromComp.system,
+              tiers: {
+                ...fromComp.system.tiers,
+                "-=base": null
+              }
+            }
           });
           console.log(`${item.name} Updated (feat - ${fromComp.id})`);
         } else {
@@ -1517,6 +1523,18 @@ export class NewEraActor extends Actor {
           }
       } else {
         console.log(`${item.name} Not Updated - Not a supported item type`);
+      }
+      //Migration of legacy (0.14 and earlier) custom feats to new structure
+      if (item.typeIs(NewEraItem.Types.FEAT) && !item.system.casperObjectId) {
+        await item.update({
+          system: {
+            base: item.system.tiers.base,
+            tiers: {
+              "-=base": null
+            }
+          }
+        });
+        console.log(`Migrated custom feat ${this.name} to v0.15 schema`);
       }
     }
     ui.notifications.info(`Item update for ${this.name} complete.`);
