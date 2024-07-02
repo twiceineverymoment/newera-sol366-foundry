@@ -1,5 +1,6 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
+import { Actions } from "../helpers/macros/actions.mjs";
 
 /**
  * Extend the basic Item with some very simple modifications.
@@ -21,6 +22,8 @@ export class NewEraItem extends Item {
     ACTION: ["Action"],
     PHONE: ["Phone"],
     EQUIPMENT: ["Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
+    WEAPON: ["Melee Weapon", "Ranged Weapon"],
+    ARMOR_TABLE: ["Armor", "Shield"],
     MAGIC: ["Spell", "Enchantment"],
     ENCHANTABLE: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
     INVENTORY: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Potion", "Phone"],
@@ -200,6 +203,8 @@ export class NewEraItem extends Item {
   _prepareSpellData(system) {
       system.concentrated = (system.castType == "F");
       system.rangedAttack = (system.range.description == "Projectile");
+      system.amplifiedDamage = (system.amplified && system.damage.scales);
+      system.amplifiedRange = (system.amplified && system.range.scales);
       if (system.ampFactor > 1){
         system.amplifiedData = {
           level: system.level * system.ampFactor,
@@ -218,6 +223,8 @@ export class NewEraItem extends Item {
         aetheriumCost: system.aetheriumCost * system.ampFactor
       };
     }
+    system.isComponent = (system.enchantmentType == "C");
+    system.thingsAreComplex = (system.enchantmentType == "CE");
 }
 
 _preparePotionData(system){
@@ -651,6 +658,52 @@ _preparePotionData(system){
           rolls: action.rolls
         });
       }
+    }
+    if (this.type == "Potion"){
+      let verb = "";
+      let action = "0";
+      let icon = "";
+      switch(this.system.potionType){
+        case "P":
+        case "E":
+          verb = "Drink",
+          action = "3";
+          icon = "ac_3frame";
+          break;
+        case "S":
+          verb = "Apply";
+          action = "E";
+          icon = "ac_adventuring";
+          break;
+        case "B":
+          verb = "Throw";
+          action = "1";
+          icon = "ac_1frame";
+          break;
+        case "R":
+          return; //Reagents don't have any actions
+      }
+      actions.push({
+        name: `${verb} ${this.name}`,
+        images: {
+          base: this.img,
+          right: `${NEWERA.images}/${icon}.png`
+        },
+        ability: null,
+        skill: null,
+        specialties: [],
+        description: this.system.description,
+        actionType: action,
+        show: "always",
+        overrideMacroCommand: `game.newera.HotbarActions.usePotion("${this.name}")`,
+        rolls: [
+          {
+            label: verb,
+            die: "bottle",
+            callback: actor => Actions.displayPotionDialog(actor, this)
+          }
+        ]
+      });
     }
     if (this.type == "Melee Weapon"){
       const attacks = system.attacks || [];
@@ -1331,9 +1384,9 @@ _preparePotionData(system){
     }
     switch (this.type){
       case "Melee Weapon":
-        return targetData.weapon;
+        return targetData.melee;
       case "Ranged Weapon":
-        return targetData.weapon;
+        return targetData.ranged;
       case "Armor":
         return targetData.clothing;
       case "Shield":
@@ -1341,8 +1394,9 @@ _preparePotionData(system){
       case "Item":
         switch (this.system.equipSlot) {
           case "I":
+            return targetData.object;
           case "C":
-            return false;
+            return targetData.object || targetData.ranged;
           case "O":
           case "B":
             return targetData.clothing;
@@ -1541,6 +1595,40 @@ _preparePotionData(system){
     } else {
       return false;
     }
+  }
+
+  async printDetails(speaker, ampFactor = 1){
+    let template = "";
+    if (this.typeIs(NewEraItem.Types.MAGIC)){
+      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
+      const title = Formatting.spellTitle(this, ampFactor);
+      const range = `${this.system.range.value * (this.system.range.scales ? ampFactor : 1)} ft ${this.system.range.description}`;
+      const castingTime = NEWERA.spellCastingTimes[this.system.castType] || this.system.castTime;
+      template = `
+        <div class="chat-item-details">
+          <img src="${this.img}" />
+          <h2>${title}</h2>
+          <h3>Level <strong>${this.system.level * ampFactor}</strong> ${this.system.specialty}</h3>
+          <p>${description}</p>
+          <p><strong>Casting Time: </strong> ${castingTime} </p>
+          <p><strong>Range: </strong> ${range} </p>
+        </div>
+      `;
+    } else if (this.typeIs(NewEraItem.Types.POTION)){
+      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor, this.system.stackingBehavior);
+      template = `
+        <div class="chat-item-details">
+          <img src="${this.img}" />
+          <h2>${this.name}</h2>
+          <p><strong>Quantity Consumed:</strong> ${ampFactor}</p>
+          <p>${description}</p>
+        </div>
+      `;
+    }
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({actor: speaker}),
+      content: template
+    });
   }
 
 }

@@ -2,7 +2,7 @@ import { NEWERA } from "./config.mjs";
 
 export class Formatting {
 
-    static amplifyAndFormatDescription(text, multiplier, stackingBehavior){
+    static amplifyAndFormatDescription(text, multiplier, stackingBehavior = "S"){
         let tokens = text.split(/\[|\]/g);
         let markup = [];
         for(let i=0; i<tokens.length; i++){
@@ -139,6 +139,11 @@ export class Formatting {
         } else {
           return text.substring(0, length-3)+"...";
         }
+      }
+
+      static spellTitle(spell, ampFactor){
+        if (!ampFactor) ampFactor = spell.system.ampFactor;
+        return `${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`;
       }
 
 }

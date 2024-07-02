@@ -257,6 +257,15 @@ function setupGameSettings(){
     type: Boolean,
     default: true,
   });
+  game.settings.register("newera-sol366", "giveEmptyPotionBottles", {
+    name: "Keep Potion Bottles",
+    hint: "When consuming potions, replace them with empty bottles in the drinker's inventory",
+    scope: "client",
+    config: true,
+    requiresReload: false,
+    type: Boolean,
+    default: true,
+  });
   game.settings.register("newera-sol366", "sendEquipMsgs", {
     name: "Send Equipment Action Messages in Chat",
     hint: "Choose whether to send messages in chat when a character equips, unequips, hands off, or drops an item",

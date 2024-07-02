@@ -8,6 +8,7 @@ import { Formatting } from "../formatting.mjs";
 import { NEWERA } from "../config.mjs";
 import { CharacterEnergyPool } from "../../schemas/char-energy-pool.mjs";
 import { NewEraActor } from "../../documents/actor.mjs";
+import { ResourcePool } from "../../schemas/resource-pool.mjs";
 
 export class Actions {
 
@@ -44,6 +45,7 @@ export class Actions {
     }
 
     static async sustainCurrentSpell(actor){
+      let stayOpen = false;
       const energyRequired = (actor.type != "Creature");
       if (energyRequired && actor.energyPools.filter(p => !p.depleted).length == 0){
         ui.notifications.error("Your energy is depleted. You can still continue sustaining the spell if you recover enough energy before the end of your turn.");
@@ -54,8 +56,9 @@ export class Actions {
         ui.notifications.error(`${actor.name} isn't sustaining a spell.`);
         return;
       }
+      const spellTitle = `${spell.name}${actor.system.sustaining.ampFactor > 1 ? " "+NEWERA.romanNumerals[actor.system.sustaining.ampFactor] : ""}`;
       let dialog = new Dialog({
-        title: `Sustain ${spell.name} [${actor.name}]`,
+        title: `Sustain ${spellTitle} [${actor.name}]`,
         content: `<form class="spell-dialog">
           <div id="energySelect">
             Energy Source: <select id="energyPools">${this._renderPoolOptions(actor)}</select>
@@ -86,11 +89,11 @@ export class Actions {
         },
         render: html => {
           html.find("#cast").click(async () => {
-            const pool = Actions._getPool(actor, html, isPrepared);
+            const pool = Actions._getPool(actor, html, false);
             await actor.sustain(pool);
           });
           html.find("#attack").click(async () => {
-            const pool = Actions._getPool(actor, html, isPrepared);
+            const pool = Actions._getPool(actor, html, false);
             await actor.sustain(pool);
           });
           html.find("#damage").click(async () => {
@@ -120,7 +123,12 @@ export class Actions {
     static async castSpell(actor, spell, paramAmpFactor = 1, isPrepared = false){
       let stayOpen = false;
       const energyRequired = (!isPrepared && actor.type != "Creature");
-      if (energyRequired && actor.energyPools.filter(p => !p.depleted).length == 0){
+      const pools = actor.energyPools;
+      if (!pools || pools.length == 0){
+        ui.notifications.error(`${actor.name} can't cast spells right now.`);
+        return;
+      }
+      if (energyRequired && pools.filter(p => !p.depleted).length == 0){
         ui.notifications.error("Your energy is depleted. You can't cast any spells until you drink a potion or rest to recover.");
         return;
       }
@@ -213,7 +221,7 @@ export class Actions {
           });
           html.find("#damage").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : Formatting.amplifyValue(spell.system.damage.amount, amp);
+            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : (spell.system.damage.scales ? Formatting.amplifyValue(spell.system.damage.amount, amp) : spell.system.damage.amount);
             const dmgRoll = new Roll(formula);
             await dmgRoll.evaluate();
             dmgRoll.toMessage({
@@ -221,6 +229,10 @@ export class Actions {
               flavor: `Damage - ${spell.name}${amp>1 ? " "+NEWERA.romanNumerals[amp] : ""}`
             });
             game.newera.setLastDamageAmount(dmgRoll.total);
+          });
+          html.find("#energyPools").change(async () => {
+            const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
+            Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
           });
         },
         close: () => {
@@ -246,19 +258,32 @@ export class Actions {
       if (isPrepared || actor.type == "Creature"){
         return null;
       }
-      const id = html.find("#energyPools").val();
-      return actor.energyPools.find(p => p.id == id); //The select list is populated by this same array so if this ever fails to find something is very wrong
+      try {
+        const id = html.find("#energyPools").val();
+        return actor.energyPools.find(p => p.id == id); //The select list is populated by this same array so if this ever fails to find something is very wrong
+      } catch (err){
+        return null;
+      }
     }
 
     static _renderSpellDetails(html, spell, actor, ampFactor, prepared){
       const level = spell.system.level * ampFactor;
       const spellSkill = spell.system.form;
-      const spellSkillLevel = actor.system.magic[spellSkill].level;
+      const spellSkillLevel = spellSkill == "genericCast" ? actor.system.casterLevel : actor.system.magic[spellSkill].level;
       const difficulty = prepared ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = prepared ? 0 : spell.system.energyCost * ampFactor;
+      let availableEnergy = 0;
+
+      //Get selected energy pool
+      if (!prepared){
+        const pool = Actions._getPool(actor, html, prepared);
+        if (pool instanceof ResourcePool){
+          availableEnergy = pool.available;
+        }
+      }
 
       //Determine chance of success
-      const passiveSpellSkill = 10 + actor.system.magic[spellSkill].mod;
+      const passiveSpellSkill = 10 + (spellSkill == "genericCast" ? actor.system.casterLevel : actor.system.magic[spellSkill].mod);
       let pctChance = 55 + ((passiveSpellSkill - difficulty) * 5);
 
       html.find("#level").html(level);
@@ -273,8 +298,8 @@ export class Actions {
       } else if (prepared) {
         html.find("#cost").html("Prepared");
         html.find("#energySelect").hide();
-      } else if (energyCost > actor.system.energy.value){
-        html.find("#cost").html(`${energyCost} (-${energyCost-actor.system.energy.value})`);
+      } else if (energyCost > availableEnergy){
+        html.find("#cost").html(`${energyCost} (-${energyCost-availableEnergy})`);
         html.find("#cost").css("color", "red");
       } else {
         html.find("#cost").html(energyCost);
@@ -306,6 +331,61 @@ export class Actions {
       if (spell.system.keywords.includes("Static") || actor.type == "Creature" || prepared){
         html.find("#amplify-info").hide();
       }
+    }
+
+    static displayPotionDialog(actor, potion){
+      new Dialog({
+        title: `Use ${potion.name} [${actor.name}]`,
+        content: `<form class="spell-dialog">
+          <div id="amplify-info">
+            <p>How Many?</p>
+            <div id="amplify-down">
+              <i class="fa-solid fa-chevron-left"></i>
+            </div>
+            <h2 id="amplify-heading"><span id="ampFactor">1</span></h2>
+            <div id="amplify-up">
+              <i class="fa-solid fa-chevron-right"></i>
+            </div>
+          </div>
+        </form>
+        `,
+        render: html => {
+          html.find("#amplify-up").click(() => {
+            const qty = parseInt(html.find("#ampFactor").html());
+            if (qty == potion.system.quantity) {
+              ui.notifications.error(`You only have ${potion.system.quantity}!`);
+              return;
+            }
+            html.find("#ampFactor").html(qty + 1);
+          });
+          html.find("#amplify-down").click(() => {
+            const qty = parseInt(html.find("#ampFactor").html());
+            if (qty == 1) return;
+            html.find("#ampFactor").html(qty - 1);
+          });
+        },
+        buttons: {
+          confirm: {
+            icon: `<i class="fas fa-check"></i>`,
+            label: "Confirm",
+            callback: html => {
+              const qty = html.find("#ampFactor").html();
+              actor.usePotion(potion, qty);
+            }
+          },
+          details: {
+            icon: `<i class="fas fa-edit"></i>`,
+            label: "Item Details",
+            callback: () => {
+              potion.sheet.render(true);
+            }
+          },
+          cancel: {
+            icon: `<i class="fas fa-x"></i>`,
+            label: "Cancel",
+          },
+        }
+      }).render(true);
     }
 
     static displayDamageDialog(actor){
@@ -570,6 +650,31 @@ export class Actions {
               }
               ui.notifications.info(`${name} has been added to all player character phone contacts (${count} total devices.)`);
             }
+          },
+          cancel: {
+            icon: `<i class="fas fa-x"></i>`,
+            label: "Cancel"
+          }
+        }
+      }).render(true);
+    }
+
+    static async confirmUpdateItems(actor){
+      new Dialog({
+        title: `Update Items [${actor.name}]`,
+        content: `
+          <p style="color: red"><b>BAD THINGS WILL HAPPEN IF YOU DON'T READ THIS!</b></p>
+          <p>
+            This action will overwrite ALL compendium-based items, spells, enchantments, and feats this actor owns with new copies of those objects from the Compendium.
+            This is meant to be done when you need to update a character to reflect recent rules changes. Any customizations or changes made to them will be reverted.
+            <b>You cannot undo this!</b> It is STRONGLY recommended to make a backup of your world before continuing.
+          </p>
+        `,
+        buttons: {
+          confirm: {
+            icon: `<i class="fa-solid fa-arrows-rotate"></i>`,
+            label: `<b>Update All Items</b>`,
+            callback: () => actor.updateItems()
           },
           cancel: {
             icon: `<i class="fas fa-x"></i>`,

@@ -127,6 +127,18 @@ div.newera-itemsheet-property-66 {
 .newera-itemsheet-property-50 select, .newera-itemsheet-property-66 select {
   width: 100%;
 }
+.scale-control {
+  float: right;
+}
+.scale-control i, .scale-control input {
+  display: inline;
+  font-size: 0.8em;
+  color: yellow;
+}
+.scale-control input {
+  width: 10px;
+  height: 10px;
+}
 .newera-actorsheet-editor-container {
   position: relative;
   top: 0px;
@@ -273,6 +285,9 @@ input.sheet-input, select.sheet-input, button.sheet-input, textarea.sheet-input 
   font-size: 20px;
   border: none;
   outline: none;
+}
+button.sheet-input:disabled {
+  opacity: 0.5;
 }
 input.big-sheet-input {
   font-size: 36px !important;
@@ -714,6 +729,19 @@ img.equipment-worn {
   bottom: 0;
   right: 0;
 }
+.equipment-utility-buttons {
+  position: absolute;
+  right: 0px;
+  bottom: 40px;
+  width: 200px;
+  vertical-align: bottom;
+  text-align: center;
+}
+.equipment-utility-buttons button {
+  display: block;
+  width: 100%;
+  margin-bottom: 3px;
+}
 .item-quantity-overlay {
   position: absolute;
   bottom: 0;
@@ -979,9 +1007,6 @@ img.action-image-overlay-right {
   width: 33%;
   height: 33%;
   border: none;
-}
-p.chat-narration {
-  color: #1D4159 !important;
 }
 div.text-message { /* This is the one for the in-game chat, that's why it belongs in newera.css */
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
@@ -1373,4 +1398,29 @@ a.occupant-delete {
   font-size: 12px;
   margin-right: 2px;
   margin-top: 2px;
+}
+/* Chat Detail;s */
+.chat-item-details img {
+  float: right;
+  width: 48px;
+  height: 48px;
+  border: none;
+  outline: none;
+}
+.chat-item-details h3 {
+  font-style: italic;
+  border: none;
+  outline: none;
+}
+.chat-item-details h2 {
+  border: none;
+  outline: none;
+}
+.chat-item-details .ampText-hot {
+  color: orangered !important;
+  text-shadow: yellow 0px 0px 2px !important;
+}
+.chat-item-details .ampText2-hot {
+  color: limegreen !important;
+  text-shadow: yellow 0px 0px 2px !important;
 }

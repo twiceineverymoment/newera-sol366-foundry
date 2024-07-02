@@ -515,7 +515,11 @@
 				"static": false,
 				"refinementLevel": 0,
 				"ampFactor": 1,
-				"author": ""
+				"author": "",
+				"derivative": {
+					"isDerived": false,
+					"basis": ""
+				}
 			}
 		},
 		"Item": {
@@ -568,11 +572,13 @@
 			"castTime": "",
 			"damage": {
 				"amount": "",
-				"type": ""
+				"type": "",
+				"scales": true
 			},
 			"range": {
 				"value": 0,
-				"description": ""
+				"description": "",
+				"scales": true
 			}
 		},
 		"Enchantment": {
@@ -582,11 +588,13 @@
 			"aetheriumCost": 0,
 			"materialCosts": "",
 			"validTargets": {
-				"weapon": false,
+				"melee": false,
+				"ranged": false,
 				"clothing": false,
 				"accessory": false,
 				"shield": false,
 				"object": false,
+				"creature": false,
 				"other": true,
 				"details": ""
 			},

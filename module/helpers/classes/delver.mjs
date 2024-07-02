@@ -64,7 +64,7 @@ export class Delver {
         await r.evaluate();
         r.toMessage({
             speaker: ChatMessage.getSpeaker({actor: actor}),
-            flavor: `Wild Fury (Path of ${table.toUpperCase()}`
+            flavor: `Wild Fury (Path of ${table})`
         });
         actor.actionMessage(`${NEWERA.images}/embraced-energy.png`, null, `<b>Wild Fury: </b>{0}`, NEWERA.wildFuryTable[table][r.total - 1]);
     }

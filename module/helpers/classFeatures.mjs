@@ -7153,8 +7153,7 @@ ClassInfo.features = {
                     name: "Spell Preparation",
                     images: {
                         base: `${NEWERA.images}/spell-book.png`,
-                        left: `${NEWERA.images}/scholar.png`,
-                        right: `${NEWERA.images}/ac_adventuring.png`
+                        left: `${NEWERA.images}/scholar.png`
                     },
                     ability: null,
                     skill: null,
@@ -7271,6 +7270,22 @@ ClassInfo.features = {
         {
             level: 4,
             common: "learningExperience"
+        },
+        {
+            level: 5,
+            name: "Spellcraft",
+            key: true,
+            description: `<p>You can create your own spells.</p>
+            <p>As a Scholar, you can craft spells and simple enchantments. You can prepare your crafted spells in appropriately-leveled spell slots.</p>
+            <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
+            tableValues: [
+                {
+                    field: "spellcraft.scholar",
+                    label: "Spellcraft Skill Level",
+                    sign: false,
+                    values: [null, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7]
+                }
+            ]
         },
         {
             level: 5,
@@ -7441,17 +7456,16 @@ ClassInfo.features = {
         },
         {
             level: 12,
-            name: "Spellcraft",
-            key: true,
-            description: `<p>You can create your own spells.</p>
-            <p>As a Scholar, you can craft spells and simple enchantments. You can prepare your crafted spells in appropriately-leveled spell slots.</p>
-            <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
-            tableValues: {
-                field: "spellcraft.scholar",
-                label: "Spellcraft Skill Level",
-                sign: false,
-                values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2]
-            }
+            name: "Derivative Spells",
+            key: false,
+            description: `<p>You can create Derivative spells based on other spells you know.</p>
+            <p>The GM decides what changes you can make to your spells and can make additional changes to balance them.</p>`
+        },
+        {
+            level: 12,
+            name: "Creative Inspiration",
+            key: false,
+            description: `<p>During your level-up, you may either craft or refine up to three spells. New spells crafted this way start one refinement level higher.</p>`
         },
         {
             level: 13,
@@ -7540,9 +7554,34 @@ ClassInfo.features = {
         },
         {
             level: 15,
-            name: "Mindfulness Mastery",
+            name: "Tolgethic Scribe",
             key: false,
-            description: "<p>You can Meditate to learn and prepare spells as a trivial action <i>(You automatically succeed, unless there are unusual circumstances.)</i></p>"
+            description: `<p>While meditating, you can create a spell script of any spell you know, including ones you've created.</p>
+            <p>Crafted spells must be refined to the Revised state in order to be inscribed this way. If you've successfully taught a spell you created to another mage and watched them cast it, you gain a +10 bonus to further refinement checks on that spell.</p>`,
+            actions: [
+                {
+                    name: "Create a Spell Script",
+                    images: {
+                        base: `${NEWERA.images}/scroll-quill-2.png`,
+                        left: `${NEWERA.images}/scholar.png`,
+                        right: `${NEWERA.images}/ac_adventuring.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `You spend one hour preparing your spells for the day during meditation. Select a spell to prepare in each of your available spell slots. Your selections last until your next full rest.`,
+                    difficulty: null,
+                    actionType: "E",
+                    rolls: [
+                      {
+                        label: "Check",
+                        die: "scroll-quill-2",
+                        caption: "Create Spell Script",
+                        formula: `1d20+@spellcraft.mod+@knowledges.tolgethic`
+                      }
+                    ]
+                }
+            ]
         }
     ],
     artificer: [

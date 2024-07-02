@@ -577,7 +577,7 @@ export class NewEraActor extends Actor {
     //For "1.5H", only clear the left if the item was dragged to the right hand AND the left hand is empty. Otherwise consider it held one-handed
     if (item.system.handedness && (destination == "leftHand" || destination == "rightHand")){
       console.log("Checking for a two-handed item...");
-      if (item.system.handedness == "2H" || (item.system.handedness == "1.5H" && destination == "rightHand" && !system.equipment.leftHand)){
+      if (item.system.handedness == "2H" || (item.system.handedness == "1.5H" && destination == "rightHand" && !system.forceOneHanded)){
         console.log("Moved to right hand and cleared left");
         system.equipment.rightHand = id;
         system.equipment.leftHand = "";
@@ -1052,13 +1052,17 @@ export class NewEraActor extends Actor {
     }
 
     const spell = this.items.get(this.system.sustaining.id);
+    const ampFactor = this.system.sustaining.ampFactor;
     if (!spell){
       return;
     }
 
+    const energyCost = spell.system.energyCost * ampFactor;
     if (energyPool){
-      await energyPool.use()
+      await energyPool.use(energyCost, new CharacterEnergyPool(this));
     }
+
+    this.actionMessage(this.img, spell.img, `{NAME} sustains {0}.`, spell.name+(ampFactor>1 ? " "+NEWERA.romanNumerals[ampFactor] : ""));
   }
 
   async cast(spell, ampFactor = 1, attack = false, noSkillCheck = false, energyPool = undefined){
@@ -1071,7 +1075,7 @@ export class NewEraActor extends Actor {
       }
       const level = spell.system.level * ampFactor;
       const spellSkill = spell.system.form;
-      const spellSkillLevel = this.system.magic[spellSkill].level;
+      const spellSkillLevel = spellSkill == "genericCast" ? this.system.casterLevel : this.system.magic[spellSkill].level;
       const difficulty = noSkillCheck ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = spell.system.energyCost * ampFactor;
       let successful = false;
@@ -1089,7 +1093,9 @@ export class NewEraActor extends Actor {
         });
       } 
 
-
+      /**
+       * Apply Sustaining effect when starting a sustained spell
+       */
       if (spell.system.castType == "F" && successful){
         let existingSustain = this.effects.find(e => e.label.includes("Sustaining"));
         if (existingSustain){
@@ -1103,10 +1109,8 @@ export class NewEraActor extends Actor {
             }
           }
         });
-        const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
-        await sustainEffect.delete();
         await this.createEmbeddedDocuments("ActiveEffect", [{
-          label: `Sustaining: ${spell.name}${ampfactor > 1 && NEWERA.romanNumerals[ampFactor]}`,
+          label: `Sustaining: ${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`,
           icon: spell.img,
           description: `<p>You're sustaining a spell.</p>
           ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}
@@ -1114,6 +1118,10 @@ export class NewEraActor extends Actor {
           You stop sustaining the spell if your concentration is broken.</p>`,
           origin: spell._id
         }]);
+      }
+
+      if (successful){
+        spell.printDetails(this, ampFactor);
       }
 
       if (energyPool){
@@ -1133,6 +1141,50 @@ export class NewEraActor extends Actor {
             }
           }
         })
+    }
+
+    async usePotion(potion, qty){
+      const qtyAvailable = potion.system.quantity;
+      const qtyUsed = Math.min(qty, qtyAvailable);
+      await potion.printDetails(this, qtyUsed);
+      if (qtyUsed == qtyAvailable){
+        await potion.delete();
+      } else {
+        await potion.update({
+          system: {
+            quantity: qtyAvailable - qtyUsed
+          }
+        });
+      }
+      //Add a number of empty bottles to the user's inventory
+      if (game.settings.get("newera-sol366", "giveEmptyPotionBottles")){
+        //Find a stack of bottles
+        const bottles = this.items.find(i => i.type == "Item" && i.system.casperObjectId == NEWERA.EMPTY_POTION_BOTTLE_ID);
+        if (bottles){
+          await bottles.update({
+            system: {
+              quantity: bottles.system.quantity + qtyUsed
+            }
+          });
+        } else {
+          await Item.create({
+            name: "Empty Potion Bottle",
+            type: "Item",
+            img: `${NEWERA.images}/empty_bottle.png`,
+            system: {
+              casperObjectId: NEWERA.EMPTY_POTION_BOTTLE_ID,
+              quantity: qtyUsed,
+              rarity: 0,
+              description: `<p>An empty 8 ounce glass bottle that once held a potion. Re-use it for brewing new ones!</p>`,
+              actions: {},
+              weight: 0,
+              value: 0,
+              equipSlot: "C",
+              stored: false
+            }
+          }, {parent: this});
+        }
+      }
     }
 
     /* Determines whether an action should be shown based on the action's type and the location within the actor's equipment */
@@ -1358,36 +1410,168 @@ export class NewEraActor extends Actor {
     return output;
   }
 
-  async migrateFeats(){
-    const compendium = await game.packs.get('newera-sol366.feats').getDocuments();
-    for (const feat of this.items.filter(i => i.type == 'Feat')){
-      if (feat.system.tiers.base){
-        const newFeat = compendium.find(f => f.system.casperObjectId == feat.system.casperObjectId);
-        if (newFeat){
-          await feat.update({
-            system: newFeat.system
+  async updateItems(){
+    ui.notifications.warn(`Update initiated. Please wait a few seconds before doing anything else with ${this.name}.`);
+    console.log(`Initiating item update for ${this.name}`);
+    const spellsEnchantments = await game.packs.get('newera-sol366.spells').getDocuments();
+    const equipment = await game.packs.get('newera-sol366.equipment').getDocuments();
+    const consumables = await game.packs.get('newera-sol366.consumables').getDocuments();
+    const feats = await game.packs.get('newera-sol366.feats').getDocuments();
+    const weapons = await game.packs.get('newera-sol366.weapons').getDocuments();
+    const artifacts = await game.packs.get('newera-sol366.potionsArtifacts').getDocuments();
+    const wearables = await game.packs.get('newera-sol366.wearables').getDocuments();
+    const actions = await game.packs.get('newera-sol366.actions').getDocuments();
+
+    for (const item of this.items){
+      console.log(`Checking for update: ${item.name} [${item.system.casperObjectId}]`);
+      if (item.typeIs(NewEraItem.Types.MAGIC) && item.system.casperObjectId){
+        const fromComp = spellsEnchantments.find(i => i.type == item.type && i.system.casperObjectId == item.system.casperObjectId);
+        if (fromComp){
+          await item.update({
+            name: fromComp.name,
+            system: fromComp.system
           });
-          await feat.update({
-            system: {
-              tiers: {
-                "-=base": null
-              }
-            }
-          });
-          ui.notifications.info(`${feat.name} was migrated successfully. (${feat.system.casperObjectId})`);
+          console.log(`${item.name} Updated (spell/ench - ${fromComp.id})`);
         } else {
-          await feat.update({
+          console.log(`${item.name} Not Updated - No Compendium Match`);
+        }
+      } else if (item.typeIs(NewEraItem.Types.FEAT) && item.system.casperObjectId){
+        const fromComp = feats.find(i => i.system.casperObjectId == item.system.casperObjectId);
+        if (fromComp){
+          await item.update({
+            name: fromComp.name,
             system: {
-              base: feat.system.tiers.base,
+              ...fromComp.system,
               tiers: {
+                ...fromComp.system.tiers,
                 "-=base": null
               }
             }
           });
-          ui.notifications.info(`${feat.name} was migrated using direct updates.`);
+          console.log(`${item.name} Updated (feat - ${fromComp.id})`);
+        } else {
+          console.log(`${item.name} Not Updated - No Compendium Match`);
         }
+      } else if (item.typeIs(NewEraItem.Types.WEAPON) && item.system.casperObjectId){
+        const fromComp = weapons.find(i => i.system.casperObjectId == item.system.casperObjectId)
+          || artifacts.find(i => i.system.casperObjectId == item.system.casperObjectId);
+        if (fromComp){
+          await item.update({
+            name: fromComp.name,
+            system: fromComp.system
+          });
+          console.log(`${item.name} Updated (weapon - ${fromComp.id})`);
+        } else {
+          console.log(`${item.name} Not Updated - No Compendium Match`);
+        }
+      } else if (item.typeIs(NewEraItem.Types.BASIC_ITEM) && item.system.casperObjectId){
+        const existingQty = item.system.quantity;
+        const fromComp = equipment.find(i => i.system.casperObjectId == item.system.casperObjectId)
+          || consumables.find(i => i.system.casperObjectId == item.system.casperObjectId)
+          || artifacts.find(i => i.system.casperObjectId == item.system.casperObjectId)
+          || wearables.find(i => i.system.casperObjectId == item.system.casperObjectId);
+        if (fromComp) {
+          await item.update({
+          name: fromComp.name,
+          system: {
+            ...fromComp.system,
+            quantity: existingQty
+          }
+        });
+        console.log(`${item.name} Updated (item - ${fromComp.id})`);
+        } else {
+            console.log(`${item.name} Not Updated - No Compendium Match (item)`);
+        }
+      } else if (item.typeIs(NewEraItem.Types.ARMOR_TABLE) && item.system.casperObjectId){
+        const fromComp = equipment.find(i => i.system.casperObjectId == item.system.casperObjectId)
+          || wearables.find(i => i.system.casperObjectId == item.system.casperObjectId)
+          || artifacts.find(i => i.system.casperObjectId == item.system.casperObjectId);
+          if (fromComp){
+            await item.update({
+              name: fromComp.name,
+              system: fromComp.system
+            });
+            console.log(`${item.name} Updated (armor/shield - ${fromComp.id})`);
+          } else {
+            console.log(`${item.name} Not Updated - No Compendium Match (armor/shield)`);
+          }
+      } else if (item.typeIs(NewEraItem.Types.POTION) && item.system.casperObjectId){
+        const existingQty = item.system.quantity;
+        const fromComp = artifacts.find(i => item.typeIs(NewEraItem.Types.POTION) && i.system.casperObjectId == item.system.casperObjectId);
+        if (fromComp) {
+          await item.update({
+          name: fromComp.name,
+          system: {
+            ...fromComp.system,
+            quantity: existingQty
+          }
+        });
+        console.log(`${item.name} Updated (potion - ${fromComp.id})`);
+        } else {
+            console.log(`${item.name} Not Updated - No Compendium Match (potion)`);
+        }
+      } else if (item.typeIs(NewEraItem.Types.ACTION) && item.system.casperObjectId){
+        const fromComp = actions.find(i => i.system.casperObjectId == item.system.casperObjectId);
+          if (fromComp){
+            await item.update({
+              name: fromComp.name,
+              system: fromComp.system
+            });
+            console.log(`${item.name} Updated (action - ${fromComp.id})`);
+          } else {
+            console.log(`${item.name} Not Updated - No Compendium Match (action)`);
+          }
+      } else {
+        console.log(`${item.name} Not Updated - Not a supported type or not from a compendium`);
+      }
+      //Migration of legacy (0.14 and earlier) custom feats to new structure
+      if (item.typeIs(NewEraItem.Types.FEAT) && !item.system.casperObjectId) {
+        await item.update({
+          system: {
+            base: item.system.tiers.base,
+            tiers: {
+              "-=base": null
+            }
+          }
+        });
+        console.log(`Migrated custom feat ${this.name} to v0.15 schema`);
       }
     }
-    ui.notifications.info("Migration complete!");
+    ui.notifications.info(`Item update for ${this.name} complete.`);
+  }
+
+  async putAwayAll(store = false){
+    const wornItems = {};
+    for (let i=0; i<this.system.wornItemSlots; i++){
+      wornItems[`worn${i}`] = "";
+    }
+    await this.update({
+      system: {
+        equipment: {
+          "leftHand": "",
+					"rightHand": "",
+					"head": "",
+					"feet": "",
+					"hands": "",
+					"body": "",
+					"outfit": "",
+					"neck": "",
+					"waist": "",
+					"phone": "",
+          ...wornItems
+        }
+      }
+    });
+    if (store) {
+      this.items.forEach(item => {
+        if (item.typeIs(NewEraItem.Types.INVENTORY)) {
+          item.update({
+            system: {
+              stored: true
+            }
+          });
+        }
+      });
+    }
   }
 }
