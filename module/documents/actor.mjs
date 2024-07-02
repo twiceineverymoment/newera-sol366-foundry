@@ -1423,10 +1423,14 @@ export class NewEraActor extends Actor {
     const actions = await game.packs.get('newera-sol366.actions').getDocuments();
 
     for (const item of this.items){
+      console.log(`Checking for update: ${item.name} [${item.system.casperObjectId}]`);
       if (item.typeIs(NewEraItem.Types.MAGIC) && item.system.casperObjectId){
         const fromComp = spellsEnchantments.find(i => i.type == item.type && i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp){
-          await item.update(fromComp);
+          await item.update({
+            name: fromComp.name,
+            system: fromComp.system
+          });
           console.log(`${item.name} Updated (spell/ench - ${fromComp.id})`);
         } else {
           console.log(`${item.name} Not Updated - No Compendium Match`);
@@ -1434,7 +1438,10 @@ export class NewEraActor extends Actor {
       } else if (item.typeIs(NewEraItem.Types.FEAT) && item.system.casperObjectId){
         const fromComp = feats.find(i => i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp){
-          await item.update(fromComp);
+          await item.update({
+            name: fromComp.name,
+            system: fromComp.system
+          });
           console.log(`${item.name} Updated (feat - ${fromComp.id})`);
         } else {
           console.log(`${item.name} Not Updated - No Compendium Match`);
@@ -1443,7 +1450,10 @@ export class NewEraActor extends Actor {
         const fromComp = weapons.find(i => i.system.casperObjectId == item.system.casperObjectId)
           || artifacts.find(i => i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp){
-          await item.update(fromComp);
+          await item.update({
+            name: fromComp.name,
+            system: fromComp.system
+          });
           console.log(`${item.name} Updated (weapon - ${fromComp.id})`);
         } else {
           console.log(`${item.name} Not Updated - No Compendium Match`);
@@ -1456,6 +1466,7 @@ export class NewEraActor extends Actor {
           || wearables.find(i => i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp) {
           await item.update({
+          name: fromComp.name,
           system: {
             ...fromComp.system,
             quantity: existingQty
@@ -1470,7 +1481,10 @@ export class NewEraActor extends Actor {
           || wearables.find(i => i.system.casperObjectId == item.system.casperObjectId)
           || artifacts.find(i => i.system.casperObjectId == item.system.casperObjectId);
           if (fromComp){
-            await item.update(fromComp);
+            await item.update({
+              name: fromComp.name,
+              system: fromComp.system
+            });
             console.log(`${item.name} Updated (armor/shield - ${fromComp.id})`);
           } else {
             console.log(`${item.name} Not Updated - No Compendium Match (armor/shield)`);
@@ -1480,6 +1494,7 @@ export class NewEraActor extends Actor {
         const fromComp = artifacts.find(i => item.typeIs(NewEraItem.Types.POTION) && i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp) {
           await item.update({
+          name: fromComp.name,
           system: {
             ...fromComp.system,
             quantity: existingQty
@@ -1492,7 +1507,10 @@ export class NewEraActor extends Actor {
       } else if (item.typeIs(NewEraItem.Types.ACTION) && item.system.casperObjectId){
         const fromComp = actions.find(i => i.system.casperObjectId == item.system.casperObjectId);
           if (fromComp){
-            await item.update(fromComp);
+            await item.update({
+              name: fromComp.name,
+              system: fromComp.system
+            });
             console.log(`${item.name} Updated (action - ${fromComp.id})`);
           } else {
             console.log(`${item.name} Not Updated - No Compendium Match (action)`);

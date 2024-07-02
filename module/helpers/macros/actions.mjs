@@ -283,7 +283,7 @@ export class Actions {
       }
 
       //Determine chance of success
-      const passiveSpellSkill = 10 + actor.system.magic[spellSkill].mod;
+      const passiveSpellSkill = 10 + (spellSkill == "genericCast" ? actor.system.casterLevel : actor.system.magic[spellSkill].mod);
       let pctChance = 55 + ((passiveSpellSkill - difficulty) * 5);
 
       html.find("#level").html(level);
