@@ -1522,7 +1522,7 @@ export class NewEraActor extends Actor {
             console.log(`${item.name} Not Updated - No Compendium Match (action)`);
           }
       } else {
-        console.log(`${item.name} Not Updated - Not a supported item type`);
+        console.log(`${item.name} Not Updated - Not a supported type or not from a compendium`);
       }
       //Migration of legacy (0.14 and earlier) custom feats to new structure
       if (item.typeIs(NewEraItem.Types.FEAT) && !item.system.casperObjectId) {
