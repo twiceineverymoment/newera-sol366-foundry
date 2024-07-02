@@ -1733,7 +1733,28 @@ NEWERA.rangedWeaponTypes = {
         },
         "firingAction": "M",
         "licenseLevel": 2
-    }
+    },
+    "Light Machine Gun": {
+        "handedness": "2H",
+        "weight": 5,
+        "value": 240000,
+        "rarity": 3,
+        "reliability": 16,
+        "range": {
+            "effective": 1000,
+            "maximum": 2000
+        },
+        "damage": "1d10",
+        "shotgunDamage": false,
+        "magazine": true,
+        "ammo": {
+            "itemName": "Medium Firearm Ammunition",
+            "clipSize": 30
+        },
+        "firingAction": "FA",
+        "firingRate": 3,
+        "licenseLevel": 3
+    },
 }
 
 NEWERA.armorTypes = {
