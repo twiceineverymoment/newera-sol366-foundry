@@ -936,9 +936,18 @@ export class NewEraActorSheet extends ActorSheet {
         const element = $(ev.currentTarget);
         const newValue = element.val();
         const oldValue = element.data("oldValue");
-        const fromFeature = {};
-        if (typeof fromFeature.onChange == 'function') {
-          await fromFeature.onChange(this.actor, oldValue, newValue);
+        const className = element.data("class");
+        const featureSelectionId = element.data("selectionId");
+        const selectionIndex = element.data("selectionIndex");
+        try {
+          const fromFeature = ClassInfo.features[className].find(feature => feature.id == featureSelectionId);
+          const selection = fromFeature.selections[selectionIndex];
+          if (typeof selection.onChange == 'function') {
+            await selection.onChange(this.actor, oldValue, newValue);
+          }
+        } catch (err) {
+          ui.notifications.error("Error: Couldn't update data for this selection. See the log for details.");
+          console.error(`Failed to locate selection change function! class=${className} id=${featureSelectionId} index=${selectionIndex}`);
         }
       });
     }
