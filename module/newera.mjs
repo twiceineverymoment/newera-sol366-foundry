@@ -221,9 +221,9 @@ Hooks.once("ready", async function() {
 /* Game Settings */
 
 function setupGameSettings(){
-  game.settings.register("newera-sol366", "autoApplyFeatures", {
-    name: "Automatically Apply Unlocked Features (BETA)",
-    hint: "When unlocking new character or class features and making selections, certain changes will be automatically applied to your character sheet. WARNING! This feature is EXPERIMENTAL and may cause incorrect changes to your character sheet. Only enable this if you wish to test it, and take frequent backups!",
+  game.settings.register("newera-sol366", "autoLevelUp", {
+    name: "Auto Level Up (BETA)",
+    hint: "Click the Level Up button next to your class to automatically apply newly-unlocked class features to your character sheet. Changing the dropdown menus on the Class tab of your character sheet will apply changes automatically.",
     scope: "client",
     config: true,
     requiresReload: false,

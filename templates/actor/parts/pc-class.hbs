@@ -4,14 +4,17 @@
     </tr>
     {{#each inventory.classes as |entry id|}}
         <tr class="inventory-entry inventory-entry-classes" data-item-id="{{entry._id}}">
-            <td class="item-edit">
+            <td>
                 <img class="class-icon" src="{{entry.img}}" title="{{entry.name}}" />
             </td>
-        <td class="item-edit"><span class="class-name">{{entry.name}}</span></td>
+        <td><span class="class-name">{{entry.name}}</td>
         <input type="hidden" name="system.classes.{{toLowerCase entry.system.selectedClass}}.level" value="{{entry.system.level}}" />
         <td>
-            <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+            {{#if enableLevelUp}}
+                <a class="item-control level-up" data-tooltip="Level Up"><i class="fa-solid fa-square-up"></i></a>
+            {{/if}}
+            <a class="item-control item-edit" title="Edit Class"><i class="fas fa-edit"></i></a>
+            <a class="item-control item-delete" title="Remove Class"><i class="fas fa-trash"></i></a>
         </td>
     </tr>
     {{/each}}
@@ -70,7 +73,7 @@
                 {{#each feature.selections as |selection index2|}}
                     <div class="feature-selection">
                         <label>{{selection.label}}</label>
-                        <select name="system.classes.{{../id}}.{{index2}}" class="sheet-input feature-select" data-old-value="">
+                        <select name="system.classes.{{../id}}.{{index2}}" class="sheet-input feature-select" data-selection-id="{{../id}}" data-selection-number="{{index2}}" data-old-value="{{system.classes.(../id).(index2)}}">
                             <option value=""><i>Choose...</i></option>
                             {{#each selection.options as |label index3|}}
                                 <option value="{{index3}}">{{label}}</option>

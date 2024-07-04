@@ -1279,21 +1279,6 @@ export class NewEraActor extends Actor {
     }
   }
 
-  updateNaturalSkill(from, to){
-    if (this.type != "Player Character") return;
-    const update = structuredClone(this.system);
-    if (from){
-      if (update.skills[from]){
-        update.skills[from].natural = false;
-      } else if (update.magic[from]){
-        update.magic[from].natural = false;
-      } else {
-        const knowledge = update.knowledges.find(k => k.subject == from);
-        
-      }
-    }
-  }
-
   /**
    * Returns an object with information about all the different energy pool options (i.e. Focus Energy, Dark Energy) available to this actor when casting spells.
    */
@@ -1572,6 +1557,80 @@ export class NewEraActor extends Actor {
           });
         }
       });
+    }
+  }
+
+  async levelUp(clazz) {
+    const fromLevel = clazz.system.level;
+    const toLevel = fromLevel + 1;
+    await clazz.update({
+      system: {
+        level: toLevel
+      }
+    });
+    const featuresToUnlock = ClassInfo.features[clazz.system.selectedClass.toLowerCase()].filter(feature => feature.level > fromLevel && feature.level <= toLevel);
+    for (const feature of featuresToUnlock){
+      if (typeof feature.onUnlock == 'function'){
+        await feature.onUnlock(actor);
+      }
+    }
+  }
+
+  async improveNaturalSkills(){
+    const update = structuredClone(this.system);
+    for (const [k, obj] of Object.entries(update.skills)){
+      if (obj.natural && obj.level < 10) {
+        update.skills[k].level += 1;
+      }
+    }
+    for (const [k, obj] of Object.entries(update.magic)){
+      if (obj.natural && obj.level < 10) {
+        update.magic[k].level += 1;
+      }
+    }
+    for (const [k, obj] of Object.entries(update.knowledges)){
+      if (obj.natural && obj.level < 10) {
+        update.knowledges[k].level += 1;
+      }
+    }
+    await this.update({
+      system: update
+    });
+    ui.notifications.info("Your Natural Skills increased!");
+  }
+
+  updateNaturalSkill(from, to){
+    if (this.type != "Player Character") return;
+    const update = structuredClone(this.system);
+    if (from){
+      if (update.skills[from]){
+        update.skills[from].natural = false;
+      } else if (update.magic[from]){
+        update.magic[from].natural = false;
+      } else {
+        const knowledge = update.knowledges.find(k => k.subject == from);
+        if (knowledge) {
+          knowledge.natural = false;
+        } else {
+          ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+        }
+      }
+    }
+    if (to) {
+      if (update.skills[to]){
+        if (update.skills[to].natural) {
+          ui.notifications.warn(`You're already a natural in that skill!`);
+        }
+        update.skills[to].natural = true;
+      } else if (update.magic[to]){
+        if (update.magic[to].natural) {
+          ui.notifications.warn(`You're already a natural in that skill!`);
+        }
+        update.magic[to].natural = true;
+      } else {
+        const knowledge = update.knowledges.find(k => k.subject == from);
+        
+      }
     }
   }
 }

@@ -399,11 +399,25 @@ export class NewEraActorSheet extends ActorSheet {
       actions: actions
     }
 
+    if (game.settings.get("newera-sol366", "autoLevelUp")) {
+      _checkEnableLevelUp(this.actor.system.level, context.classes);
+    }
+
     //console.log(context.items);
     //console.log(equipment);
     //console.log(context.inventory);
 
     
+  }
+
+  _checkEnableLevelUp(overallLevel, classes){
+    let totalLevel = 0;
+    for (const clazz of classes) {
+      totalLevel += clazz.level;
+    }
+    if (totalLevel < overallLevel) {
+      context.enableLevelUp = true;
+    }
   }
 
   _prepareCreatureItems(context){
@@ -909,6 +923,25 @@ export class NewEraActorSheet extends ActorSheet {
 
     /* EDIT CUTOFF - Everything below here is only run if the sheet is editable */
     if (!this.isEditable) return;
+
+    //Auto level up functions
+    if (game.settings.get("newera-sol366", "autoLevelUp")) {
+      html.find(".level-up").click(ev => {
+        const li = $(ev.currentTarget).parents(".inventory-entry");
+        const clazz = this.actor.items.get(li.data("itemId"));
+        const className = clazz.system.selectedClass.toLowerCase();
+        this.actor.levelUp(className, clazz.system.level, clazz.system.level + 1);
+      });
+      html.find(".feature-select").change(async ev => {
+        const element = $(ev.currentTarget);
+        const newValue = element.val();
+        const oldValue = element.data("oldValue");
+        const fromFeature = {};
+        if (typeof fromFeature.onChange == 'function') {
+          await fromFeature.onChange(this.actor, oldValue, newValue);
+        }
+      });
+    }
 
     //Store All buttons
     html.find("#putAwayAll").click(() => this.actor.putAwayAll(false));
