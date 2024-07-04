@@ -1573,6 +1573,13 @@ export class NewEraActor extends Actor {
       if (typeof feature.onUnlock == 'function'){
         await feature.onUnlock(actor);
       }
+      if (feature.tableValues) {
+        feature.tableValues.forEach(async tv => {
+          if (typeof tv.onLevelUp == 'function'){
+            await tv.onLevelUp(actor, toLevel);
+          }
+        });
+      }
     }
   }
 
@@ -1632,5 +1639,58 @@ export class NewEraActor extends Actor {
         
       }
     }
+  }
+
+  /**
+   * Gain a level in the specified specialty.
+   * If the actor already has a specialty in that subject, increase its level by 1 unless it's already 3.
+   * Otherwise, add a new specialty at level 1.
+   * @param {*} subject 
+   * @param {*} parentSkill 
+   */
+  async gainSpecialtyLevel(subject, parentSkill = null) {
+    let existing = false;
+    const update = structuredClone(this.system);
+    Object.entries(this.system.specialties).forEach((i, spec) => {
+      if (spec.subject.toLowerCase() == subject.toLowerCase()) {
+        existing = true;
+        if (spec.level == 3) {
+          ui.notifications.warn(`Your ${subject} specialty is already level 3. Specialties can't go higher than 3 levels.`);
+          return;
+        }
+        update.specialties[i].level += 1;
+        ui.notifications.info(`Your ${subject} specialty increased to ${update.specialties[i].level}!`);
+      }
+    });
+    if (!existing) {
+      update.specialties[Object.keys(update.specialties).length] = {
+        subject: subject,
+        level: 1,
+        bonus: 0,
+        defaultParent: parentSkill
+      };
+      ui.notifications.info(`You gained a specialty in ${subject}!`);
+    }
+    await this.update({
+      system: update
+    });
+  }
+
+  async increaseCasterLevel() {
+    if (this.system.casterLevel == 10) {
+      return;
+    }
+    const newCasterLvl = this.system.casterLevel + 1;
+    const energyChange = NEWERA.baseEnergyMaximums[newCasterLvl] - NEWERA.baseEnergyMaximums[this.system.casterLevel];
+    await this.update({
+      system: {
+        casterLevel: newCasterLvl,
+        energy: {
+          max: this.system.energy.max + energyChange,
+          value: this.system.energy.value + energyChange
+        }
+      }
+    });
+    ui.notifications.info(`Your caster level increased to ${newCasterLvl}!`);
   }
 }

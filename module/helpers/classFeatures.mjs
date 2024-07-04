@@ -40,7 +40,11 @@ ClassInfo.features = {
             level: 1,
             name: "Delver Specialties",
             key: false,
-            description: "You gain 1 level in the Sight (Perception) and Climbing (Athletics) specialties."
+            description: "You gain 1 level in the Sight (Perception) and Climbing (Athletics) specialties.",
+            onUnlock: actor => {
+                actor.gainSpecialtyLevel("Sight", "perception");
+                actor.gainSpecialtyLevel("Climbing", "athletics");
+            }
         },
         {
             level: 1,
@@ -62,7 +66,8 @@ ClassInfo.features = {
                     type: "String",
                     options: {
                         agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", "elemental-magic": "Elemental Magic"
-                    }
+                    },
+                    onChange: (actor, from, to) => actor.updateNaturalSkill(from, to)
                 }
             }
         },
@@ -76,7 +81,18 @@ ClassInfo.features = {
                     field: "immenseEnergy",
                     label: "Maximum Energy",
                     sign: false,
-                    values: [null, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70, 72, 92, 95, 98, 128]
+                    values: [20, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70, 72, 92, 95, 98, 128],
+                    onLevelUp: async function (actor, level) {
+                        const energyChange = this.values[level] - this.values[level - 1];
+                        await actor.update({
+                            system: {
+                                energy: {
+                                    max: actor.system.energy.max + energyChange,
+                                    value: actor.system.energy.value + energyChange
+                                }
+                            }
+                        });
+                    }
                 }
             ]
         },
@@ -98,7 +114,12 @@ ClassInfo.features = {
                     field: "casterLevel.delver",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5]
+                    values: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5],
+                    onLevelUp: function(actor, level) {
+                        if (this.values[level] > this.values[level - 1]){
+                            actor.increaseCasterLevel();
+                        }
+                    }
                 }
             ]
         },
@@ -338,7 +359,8 @@ ClassInfo.features = {
                         passivePerception: "Passive Perception",
                         speed: "Speed",
                         carryWeight: "Carry Weight"
-                    }
+                    },
+                    onChange: (actor, from, to) => Delver.bonus(actor, from, to)
                 }
             }
         },
@@ -581,7 +603,8 @@ ClassInfo.features = {
                         passivePerception: "Passive Perception",
                         speed: "Speed",
                         carryWeight: "Carry Weight"
-                    }
+                    },
+                    onChange: (actor, from, to) => Delver.bonus(actor, from, to)
                 }
             }
         },
@@ -898,7 +921,8 @@ ClassInfo.features = {
                         passivePerception: "Passive Perception",
                         speed: "Speed",
                         carryWeight: "Carry Weight"
-                    }
+                    },
+                    onChange: (actor, from, to) => Delver.bonus(actor, from, to)
                 }
             }
         },
