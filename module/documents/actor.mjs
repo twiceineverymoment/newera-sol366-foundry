@@ -1435,6 +1435,7 @@ export class NewEraActor extends Actor {
 
     for (const item of this.items){
       console.log(`Checking for update: ${item.name} [${item.system.casperObjectId}]`);
+      const isStored = item.system.stored;
       if (item.typeIs(NewEraItem.Types.MAGIC) && item.system.casperObjectId){
         const fromComp = spellsEnchantments.find(i => i.type == item.type && i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp){
@@ -1469,7 +1470,10 @@ export class NewEraActor extends Actor {
         if (fromComp){
           await item.update({
             name: fromComp.name,
-            system: fromComp.system
+            system: {
+              ...fromComp.system,
+              stored: isStored
+            }
           });
           console.log(`${item.name} Updated (weapon - ${fromComp.id})`);
         } else {
@@ -1486,7 +1490,8 @@ export class NewEraActor extends Actor {
           name: fromComp.name,
           system: {
             ...fromComp.system,
-            quantity: existingQty
+            quantity: existingQty,
+            stored: isStored
           }
         });
         console.log(`${item.name} Updated (item - ${fromComp.id})`);
@@ -1500,7 +1505,10 @@ export class NewEraActor extends Actor {
           if (fromComp){
             await item.update({
               name: fromComp.name,
-              system: fromComp.system
+              system: {
+                ...fromComp.system,
+                stored: isStored
+              }
             });
             console.log(`${item.name} Updated (armor/shield - ${fromComp.id})`);
           } else {
@@ -1514,7 +1522,8 @@ export class NewEraActor extends Actor {
           name: fromComp.name,
           system: {
             ...fromComp.system,
-            quantity: existingQty
+            quantity: existingQty,
+            stored: isStored
           }
         });
         console.log(`${item.name} Updated (potion - ${fromComp.id})`);
