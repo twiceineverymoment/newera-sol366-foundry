@@ -459,7 +459,7 @@ export class NewEraActor extends Actor {
       for (let [k, v] of Object.entries(system.specialties)) {
         if (v.subject){
           const specId = v.subject.replace(" ", "_").toLowerCase();
-          spec[specId] = v.level;
+          spec[specId] = v.level + v.bonus;
         }
       }
       system.spec = spec;
