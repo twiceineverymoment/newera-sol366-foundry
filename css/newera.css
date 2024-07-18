@@ -68,6 +68,9 @@ div.newera-actorsheet-scroll {
   overflow-y: scroll;
   height: calc(100% - 200px);
 }
+form.feature-sheet-scroll {
+  overflow-y: auto;
+}
 div.newera-actorsheet-left {
   display: inline-block;
   width: 30%;
@@ -1145,7 +1148,6 @@ div#inspiration-cp {
   background-color: rgb(41,84,112);
   color: white;
   font-family: "Nanum Myeongjo", serif;
-  overflow-y: hidden;
   text-align: center;
 }
 .newera-spellprepsheet-body hr {

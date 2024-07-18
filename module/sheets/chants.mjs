@@ -8,7 +8,9 @@ export class ChantSheet extends ActorSheet {
           classes: ["newera", "sheet", "actor"],
           width: 480,
           height: 960,
-          resizable: false
+          resizable: false,
+          title: "Chants",
+          scrollY: [".feature-sheet-scroll"]
         });
     }
 
