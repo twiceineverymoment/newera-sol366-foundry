@@ -137,7 +137,7 @@
           {{/each}}
           <option value="spellcasting" {{selected skill.defaultParent "spellcasting"}}>Spellcasting</option>
         {{/if}}
-        <option value="Other" {{selected skill.defaultParent "other"}}>Other</option>
+        <option value="other" {{selected skill.defaultParent "other"}}>Other</option>
       </select>
     </td>
     <td style="width: 15%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.level" value="{{skill.level}}" data-dtype="Number" min="0" max="3" /></td>
