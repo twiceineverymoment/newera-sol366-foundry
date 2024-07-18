@@ -1631,5 +1631,22 @@ _preparePotionData(system){
     });
   }
 
+  get spellRollMode() {
+    if (this.typeIs(NewEraItem.Types.SPELL)) {
+      if (this.system.keywords.includes("Projectile")) {
+        return "ranged";
+      } else if (this.system.keywords.includes("Attack")) {
+        return "melee";
+      } else {
+        return "cast";
+      }
+    } else if (this.typeIs(NewEraItem.Types.ENCHANTMENT)) {
+      return "cast";
+    } else {
+      console.warn(`Trying to get roll mode for a non-spell item`);
+      return null;
+    }
+  }
+
 }
 

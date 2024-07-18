@@ -9,6 +9,7 @@ import { NEWERA } from "../config.mjs";
 import { CharacterEnergyPool } from "../../schemas/char-energy-pool.mjs";
 import { NewEraActor } from "../../documents/actor.mjs";
 import { ResourcePool } from "../../schemas/resource-pool.mjs";
+import { NewEraItem } from "../../documents/item.mjs";
 
 export class Actions {
 
@@ -132,6 +133,31 @@ export class Actions {
         ui.notifications.error("Your energy is depleted. You can't cast any spells until you drink a potion or rest to recover.");
         return;
       }
+      let castButton;
+      switch(spell.spellRollMode) {
+        case "ranged":
+          castButton = {
+            icon: 'fa-crosshairs',
+            label: 'Ranged Attack'
+          };
+          break;
+        case "melee":
+          castButton = {
+            icon: 'fa-hand-fist',
+            label: 'Melee Attack',
+          };
+          break;
+        default:
+        case "cast":
+          castButton = {
+            icon: 'fa-hand-sparkles',
+            label: 'Cast'
+          };
+          if (spell.typeIs(NewEraItem.Types.ENCHANTMENT)) {
+            castButton.label = 'Enchant';
+          }
+          break;
+      }
       let dialog = new Dialog({
         title: `Cast ${spell.name} [${actor.name}]`,
         content: `<form class="spell-dialog">
@@ -167,8 +193,7 @@ export class Actions {
             Energy Source: <select id="energyPools">${this._renderPoolOptions(actor)}</select>
           </div>
           <p>
-            <button class="spell-dialog-button" id="cast"><i class="fa-solid fa-hand-sparkles"></i> Cast</button>
-            <button class="spell-dialog-button" id="attack"${spell.system.rangedAttack ? "" : `disabled data-tooltip="This spell isn't a projectile attack."`}><i class="fa-solid fa-crosshairs"></i> Attack</button>
+            <button class="spell-dialog-button" id="cast"><i class="fa-solid ${castButton.icon}"></i> ${castButton.label}</button>
             <button class="spell-dialog-button" id="damage"${(spell.system.damage && spell.system.damage.type) ? "" : `disabled data-tooltip="This spell doesn't deal damage."`}><i class="fa-solid fa-heart-crack"></i> Damage</button>
           </p>
         </form>
@@ -210,13 +235,7 @@ export class Actions {
           html.find("#cast").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
             const pool = Actions._getPool(actor, html, isPrepared);
-            await actor.cast(spell, amp, false, isPrepared, pool);
-            Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
-          });
-          html.find("#attack").click(async () => {
-            const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            const pool = Actions._getPool(actor, html, isPrepared);
-            await actor.cast(spell, amp, true, isPrepared, pool);
+            await actor.cast(spell, amp, isPrepared, pool);
             Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
           });
           html.find("#damage").click(async () => {

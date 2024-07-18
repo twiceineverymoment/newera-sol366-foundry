@@ -1073,7 +1073,7 @@ export class NewEraActor extends Actor {
     this.actionMessage(this.img, spell.img, `{NAME} sustains {0}.`, spell.name+(ampFactor>1 ? " "+NEWERA.romanNumerals[ampFactor] : ""));
   }
 
-  async cast(spell, ampFactor = 1, attack = false, noSkillCheck = false, energyPool = undefined){
+  async cast(spell, ampFactor = 1, noSkillCheck = false, energyPool = undefined){
       if (energyPool === undefined){
         if (this.type == "Player Character" || this.type == "Non-Player Character"){
           energyPool = new CharacterEnergyPool(this);
@@ -1086,18 +1086,40 @@ export class NewEraActor extends Actor {
       const spellSkillLevel = spellSkill == "genericCast" ? this.system.casterLevel : this.system.magic[spellSkill].level;
       const difficulty = noSkillCheck ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = spell.system.energyCost * ampFactor;
+      let attack = false;
+      let attackMod = '';
+      let rollPrefix = '';
       let successful = false;
+      
+      switch (spell.spellRollMode) {
+        case "ranged":
+          attack = true;
+          attackMod = '@skills.marksmanship.mod';
+          rollPrefix = "Ranged Spell Attack -";
+          break;
+        case "melee": 
+          attack = true;
+          attackMod = spell.system.castType == 'G' ? '@skills.two-handed.mod' : '@skills.one-handed.mod';
+          rollPrefix = spell.system.castType == 'G' ? "Two-Handed Spell Attack -" : "One-Handed Spell Attack -";
+          break;
+        default:
+        case "cast":
+          attack = false;
+          attackMod = '0';
+          rollPrefix = "Cast";
+          break;
+      }
 
       if (!attack && difficulty == 0){
         this.actionMessage(this.img, `${NEWERA.images}/${spell.system.specialty}.png`, "{NAME} casts {0}!", `${spell.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`);
         successful = true;
       } else {
-        const castRoll = new Roll(`d20 + @magic.${spellSkill}.mod + ${spell.spellcraftModifier} + ${attack ? "@skills.marksmanship.mod" : 0}`, this.getRollData());
+        const castRoll = new Roll(`d20 + @magic.${spellSkill}.mod + @specialty.partial.${spell.system.specialty} + ${attackMod} + ${spell.spellcraftModifier}`, this.getRollData());
         await castRoll.evaluate();
         successful = (castRoll.total >= difficulty);
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
-          flavor: `${attack ? "Spell Attack -" : "Cast"} ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""} ${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
+          flavor: `${rollPrefix} ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""} ${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
         });
       } 
 
