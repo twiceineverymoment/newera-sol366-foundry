@@ -1313,6 +1313,9 @@ export class NewEraActor extends Actor {
   }
 
   hasFeatOrFeature(text){
+    if (!this.typeIs(NewEraActor.Types.PC)) {
+      return false;
+    }
     //console.log(`[DEBUG] Checking for feature: ${text}`);
     if (this.items.find(i => i.type == "Feat" && i.name.toLowerCase() == text.toLowerCase())) {
       //console.log(`[DEBUG] Found in feats`);
