@@ -72,9 +72,11 @@ export class NewEraItemSheet extends ItemSheet {
 
     //Abort data retrieval if the feat is unmigrated
     if (this.item.type == 'Feat' && context.system.tiers.base){
-      ui.notifications.warn(`This feat requires migration. Please run the v0.15 migration script.`);
+      ui.notifications.warn(`This feat requires migration. Please perform the Update Items (Admin) action on this token.`);
       return {};
     }
+
+    context.gm = (game.user.role >= 2);
 
     console.log("ITEM SHEET CONTEXT DUMP");
     console.log(context);
