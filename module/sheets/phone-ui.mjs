@@ -176,7 +176,7 @@ export class PhoneUI extends ItemSheet {
     html.find("#searchButton").click(async () => {
       const searchTerm = html.find("input#searchTerm").val();
       if (this.item.actor && searchTerm){
-        const r = new Roll(`d20+@skills.technology.mod+@spec.research`, this.item.actor.getRollData());
+        const r = new Roll(`d20+@skills.technology.mod+@specialty.partial.research`, this.item.actor.getRollData());
         await r.evaluate();
         this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/skye.png`, null, "{NAME} searches the web for {0}.", searchTerm);
         r.toMessage({
@@ -206,7 +206,7 @@ export class PhoneUI extends ItemSheet {
           ui.notifications.warn("Enter a name and description of the photo before rolling.");
           return;
         }
-        const r = new Roll(`d20+@skills.technology.mod+@abilities.dexterity.mod+@spec.photography`, this.item.actor.getRollData());
+        const r = new Roll(`d20+@skills.technology.mod+@abilities.dexterity.mod+@specialty.partial.photography`, this.item.actor.getRollData());
         await r.evaluate();
         html.find(`#photo-roll-${index}`).val(r.total);
         this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/app-camera.png`, null, "{NAME} takes a picture of {0}.", photo.description);

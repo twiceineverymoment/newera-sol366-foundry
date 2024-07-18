@@ -455,14 +455,22 @@ export class NewEraActor extends Actor {
 
     //Copy specialty modifiers to the top level with an abbreviated name
     if (system.specialties){
-      const spec = {};
+      const specialtyFull = {};
+      const specialty = {};
       for (let [k, v] of Object.entries(system.specialties)) {
         if (v.subject){
           const specId = v.subject.replace(" ", "_").toLowerCase();
-          spec[specId] = v.level + v.bonus;
+          specialtyFull[specId] = v.mod;
+          specialty[specId] = (v.level || 0) + (v.bonus || 0);
         }
       }
-      system.spec = spec;
+      system.spec = specialtyFull; //Backwards compatibility
+      //This object is used to refer to specialties by their name. The buttons directly on the sheet reference them by their index number in the system.specialties object.
+      system.specialty = {
+        full: specialtyFull,
+        partial: specialty
+      }
+
     }
   }
 

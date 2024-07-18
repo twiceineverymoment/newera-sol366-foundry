@@ -758,7 +758,7 @@ _preparePotionData(system){
               label: "Block",
               caption: `Parry (${this.name})`,
               die: "d20",
-              formula: "1d20+@skills.defense.mod+@spec.parrying"
+              formula: "1d20+@skills.defense.mod+@specialty.partial.parrying"
             }
           ]
         });
@@ -782,7 +782,7 @@ _preparePotionData(system){
             label: "Block",
             caption: `Block (${this.name})`,
             die: "d20",
-            formula: "1d20+@skills.defense.mod+@spec.shields"
+            formula: "1d20+@skills.defense.mod+@specialty.partial.shields"
           }
         ]
       });
