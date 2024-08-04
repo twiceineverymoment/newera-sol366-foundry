@@ -443,7 +443,7 @@ export class NewEraActor extends Actor {
 
     // Prepare character roll system.
     this._getCharacterRollData(rollData);
-
+    this._getCreatureRollData(rollData);
     return rollData;
   }
 
@@ -471,6 +471,15 @@ export class NewEraActor extends Actor {
         partial: specialty
       }
 
+    }
+  }
+
+  _getCreatureRollData(rd){
+    if (this.type !== 'Creature') return;
+    rd.special = {};
+    for (let [k, v] of Object.entries(rd.specialModifiers)) {
+      const specId = v.subject.replace(" ", "_").toLowerCase();
+      rd.special[specId] = v.mod;
     }
   }
 
