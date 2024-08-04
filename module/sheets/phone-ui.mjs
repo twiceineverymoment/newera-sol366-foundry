@@ -197,8 +197,12 @@ export class PhoneUI extends ItemSheet {
       this.submit();
     });
     html.find(".photo-close").click(() => {
-      html.find("#selectedPhoto").val("");
-      this.submit();
+      if (system.selectedPhoto) {
+        html.find("#selectedPhoto").val("");
+        this.submit();
+      } else {
+        this.closeApps();
+      }
     });
     html.find("#takePhoto").click(() => {
       html.find("#selectedPhoto").val(this.item.addPhoto());

@@ -1,5 +1,5 @@
 <div class="phoneui-app-header">
-    <a class="phoneui-close-button app-close"><i class="fa-solid fa-circle-left"></i></a>
+    <a class="phoneui-close-button photo-close" data-app-id="photos"><i class="fa-solid fa-circle-left"></i></a>
     <h3>Photos</h3>
     <a class="phoneui-right-header-button" id="takePhoto"><i class="fa-solid fa-camera"></i></a>
 </div>
@@ -10,7 +10,6 @@
                 <img src="{{photo.img}}" />
             </div>
             <div class="photo-details" id="photo-details-{{../item.id}}-{{index}}">
-                <a class="photo-close"><i class="fas fa-x"></i></a>
                 <img class="photo-full" src="{{photo.img}}" data-edit="system.photos.{{index}}.img" />
                 <input type="hidden" name="system.photos.{{index}}.roll" value="{{photo.roll}}" id="photo-roll-{{index}}" />
                 {{#if photo.roll}}

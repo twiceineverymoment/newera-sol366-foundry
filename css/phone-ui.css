@@ -397,11 +397,6 @@ img.photo-full {
     border: none;
     outline: none;
 }
-a.photo-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
 input#photo-input-name {
     color: white;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
