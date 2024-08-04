@@ -107,6 +107,12 @@ export class PhoneUI extends ItemSheet {
     context.system = system;
     context.flags = this.item.system.flags;
 
+    context.theme = this.item.system.theme;
+    if (context.theme == 'auto') {
+      const isNightTime = worldSetting.time.daylight == "night" || (worldSetting.time.daylight == "auto" && this._isNightTime(worldSetting.time.hour, worldSetting.date.month));
+      context.theme = isNightTime ? 'dark' : 'light';
+    }
+
     console.log(context);
 
     return context;
