@@ -107,6 +107,12 @@ export class PhoneUI extends ItemSheet {
     context.system = system;
     context.flags = this.item.system.flags;
 
+    context.theme = this.item.system.theme;
+    if (context.theme == 'auto') {
+      const isNightTime = worldSetting.time.daylight == "night" || (worldSetting.time.daylight == "auto" && this._isNightTime(worldSetting.time.hour, worldSetting.date.month));
+      context.theme = isNightTime ? 'dark' : 'light';
+    }
+
     console.log(context);
 
     return context;
@@ -176,7 +182,7 @@ export class PhoneUI extends ItemSheet {
     html.find("#searchButton").click(async () => {
       const searchTerm = html.find("input#searchTerm").val();
       if (this.item.actor && searchTerm){
-        const r = new Roll(`d20+@skills.technology.mod+@spec.research`, this.item.actor.getRollData());
+        const r = new Roll(`d20+@skills.technology.mod+@specialty.partial.research`, this.item.actor.getRollData());
         await r.evaluate();
         this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/skye.png`, null, "{NAME} searches the web for {0}.", searchTerm);
         r.toMessage({
@@ -191,8 +197,12 @@ export class PhoneUI extends ItemSheet {
       this.submit();
     });
     html.find(".photo-close").click(() => {
-      html.find("#selectedPhoto").val("");
-      this.submit();
+      if (system.selectedPhoto) {
+        html.find("#selectedPhoto").val("");
+        this.submit();
+      } else {
+        this.closeApps();
+      }
     });
     html.find("#takePhoto").click(() => {
       html.find("#selectedPhoto").val(this.item.addPhoto());
@@ -206,7 +216,7 @@ export class PhoneUI extends ItemSheet {
           ui.notifications.warn("Enter a name and description of the photo before rolling.");
           return;
         }
-        const r = new Roll(`d20+@skills.technology.mod+@abilities.dexterity.mod+@spec.photography`, this.item.actor.getRollData());
+        const r = new Roll(`d20+@skills.technology.mod+@abilities.dexterity.mod+@specialty.partial.photography`, this.item.actor.getRollData());
         await r.evaluate();
         html.find(`#photo-roll-${index}`).val(r.total);
         this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/app-camera.png`, null, "{NAME} takes a picture of {0}.", photo.description);

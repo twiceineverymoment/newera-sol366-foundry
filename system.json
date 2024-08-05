@@ -2,10 +2,10 @@
   "id": "newera-sol366",
   "title": "New Era Sol 366 Edition",
   "description": "New Era: Sol 366 Edition",
-  "version": "0.15.26",
+  "version": "0.15.33",
   "compatibility": {
     "minimum": "10.287",
-    "verified": "11.315"
+    "verified": "12.330"
   },
   "author": "TwiceInEveryMoment",
   "esmodules": ["module/newera.mjs"],
@@ -134,6 +134,6 @@
   "secondaryTokenAttribute": "energy",
   "url": "https://www.newerarpg.com/",
   "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366.json",
-  "download": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366-0.15.26.zip",
+  "download": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366-0.15.33.zip",
   "license": "LICENSE.txt"
 }

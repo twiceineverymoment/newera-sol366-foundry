@@ -11,7 +11,8 @@ export class SpellFocus extends ActorSheet {
           width: 480,
           height: 960,
           resizable: true,
-          title: "Magical Focus"
+          title: "Magical Focus",
+          scrollY: [".feature-sheet-scroll"]
         });
     }
 
