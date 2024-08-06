@@ -3186,7 +3186,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 1d6 Burning damage.</p>
             <p>Then this effect ends if you didn't take any Burning damage from other sources this turn.</p>
             `,
-            icon: `${NEWERA.images}/dt_burning.png`
+            img: `${NEWERA.images}/dt_burning.png`
         },
         2: {
             id: "burning",
@@ -3194,7 +3194,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 2d6 Burning damage.</p>
             <p>Then, if you didn't take any Burning damage from other sources this turn, your Burning status lowers to 1.</p>
             `,
-            icon: `${NEWERA.images}/dt_burning.png`
+            img: `${NEWERA.images}/dt_burning.png`
         },
         3: {
             id: "burning",
@@ -3202,7 +3202,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 3d6 Burning damage.</p>
             <p>Then, if you didn't take any Burning damage from other sources this turn, your Burning status lowers to 2.</p>
             `,
-            icon: `${NEWERA.images}/dt_burning.png`
+            img: `${NEWERA.images}/dt_burning.png`
         },
         4: {
             id: "burning",
@@ -3210,7 +3210,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 4d6 Burning damage.</p>
             <p>Then, if you didn't take any Burning damage from other sources this turn, your Burning status lowers to 3.</p>
             `,
-            icon: `${NEWERA.images}/dt_burning.png`
+            img: `${NEWERA.images}/dt_burning.png`
         },
         5: {
             id: "burning",
@@ -3218,7 +3218,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 5d6 Burning damage.</p>
             <p>Then, if you didn't take any Burning damage from other sources this turn, your Burning status lowers to 4.</p>
             `,
-            icon: `${NEWERA.images}/dt_burning.png`
+            img: `${NEWERA.images}/dt_burning.png`
         }
     },
     bleeding: {
@@ -3228,7 +3228,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 1d6 Bleeding damage.</p>
             <p>Receiving first aid clears this effect. Additional sources of Bleeding cause this effect's status to increase.</p>
             `,
-            icon: `${NEWERA.images}/se_bleeding.png`
+            img: `${NEWERA.images}/se_bleeding.png`
         },
         2: {
             id: "bleeding",
@@ -3236,7 +3236,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 2d6 Bleeding damage.</p>
             <p>Receiving first aid lowers your Bleeding status by 1. Additional sources of Bleeding cause this effect's status to increase.</p>
             `,
-            icon: `${NEWERA.images}/se_bleeding.png`
+            img: `${NEWERA.images}/se_bleeding.png`
         },
         3: {
             id: "bleeding",
@@ -3244,7 +3244,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 3d6 Bleeding damage.</p>
             <p>Receiving first aid lowers your Bleeding status by 1. Additional sources of Bleeding cause this effect's status to increase.</p>
             `,
-            icon: `${NEWERA.images}/se_bleeding.png`
+            img: `${NEWERA.images}/se_bleeding.png`
         },
         4: {
             id: "bleeding",
@@ -3252,7 +3252,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 4d6 Bleeding damage.</p>
             <p>Receiving first aid lowers your Bleeding status by 1. Additional sources of Bleeding cause this effect's status to increase.</p>
             `,
-            icon: `${NEWERA.images}/se_bleeding.png`
+            img: `${NEWERA.images}/se_bleeding.png`
         },
         5: {
             id: "bleeding",
@@ -3260,7 +3260,7 @@ NEWERA.statusEffects = {
             description: `<p>At the end of your turn, you take 5d6 Bleeding damage.</p>
             <p>Receiving first aid lowers your Bleeding status by 1. Additional sources of Bleeding cause this effect's status to increase.</p>
             `,
-            icon: `${NEWERA.images}/se_bleeding.png`
+            img: `${NEWERA.images}/se_bleeding.png`
         }
     },
     poisoned: {
@@ -3268,31 +3268,31 @@ NEWERA.statusEffects = {
             id: "poisoned",
             name: "Poisoned",
             description: `<p>At the end of your turn, you take 1d6 Poison damage. Then make a difficulty 15 endurance save. On a success, you are no longer Poisoned.</p>`,
-            icon: `${NEWERA.images}/se_poisoned.png`
+            img: `${NEWERA.images}/se_poisoned.png`
         },
         2: {
             id: "poisoned",
             name: "Poisoned 2",
             description: `<p>At the end of your turn, you take 2d6 Poison damage. Then make a difficulty 15 endurance save. On a success, your Poisoned status is reduced to 1.</p>`,
-            icon: `${NEWERA.images}/se_poisoned.png`
+            img: `${NEWERA.images}/se_poisoned.png`
         },
         3: {
             id: "poisoned",
             name: "Poisoned 3",
             description: `<p>At the end of your turn, you take 3d6 Poison damage. Then make a difficulty 15 endurance save. On a success, your Poisoned status is reduced to 2.</p>`,
-            icon: `${NEWERA.images}/se_poisoned.png`
+            img: `${NEWERA.images}/se_poisoned.png`
         },
         4: {
             id: "poisoned",
             name: "Poisoned 4",
             description: `<p>At the end of your turn, you take 4d6 Poison damage. Then make a difficulty 15 endurance save. On a success, your Poisoned status is reduced to 3.</p>`,
-            icon: `${NEWERA.images}/se_poisoned.png`
+            img: `${NEWERA.images}/se_poisoned.png`
         },
         5: {
             id: "poisoned",
             name: "Poisoned 5",
             description: `<p>At the end of your turn, you take 5d6 Poison damage. Then make a difficulty 15 endurance save. On a success, your Poisoned status is reduced to 4.</p>`,
-            icon: `${NEWERA.images}/se_poisoned.png`
+            img: `${NEWERA.images}/se_poisoned.png`
         }
     },
     blinded: {
@@ -3300,13 +3300,13 @@ NEWERA.statusEffects = {
             id: "partial-blind",
             name: "Blinded 1",
             description: `<p>You're blind in one eye, or your vision is obscured.</p><p>You take a -2 penalty to Perception checks involving sight, and a -5 penalty to Marksmanship. Your Passive Perception is reduced by 2.`,
-            icon: `${NEWERA.images}/se_blinded.png`
+            img: `${NEWERA.images}/se_blinded.png`
         },
         2: {
             id: "blind",
             name: "Blinded 2",
             description: `<p>You're completely blind.</p><p>You automatically fail Marksmanship and Perception checks involving your sight. Your Passive Perception is reduced by 5.</p>`,
-            icon: `${NEWERA.images}/se_blinded.png`
+            img: `${NEWERA.images}/se_blinded.png`
         }
     },
     deafened: {
@@ -3314,13 +3314,13 @@ NEWERA.statusEffects = {
             id: "deaf",
             name: "Deafened 1",
             description: `<p>Your hearing is impaired.</p><p>You take a -4 penalty to Perception checks involving your hearing. Your Passive Perception is reduced by 2.</p>`,
-            icon: `${NEWERA.images}/se_deafened.png`,
+            img: `${NEWERA.images}/se_deafened.png`,
         },
         2: {
             id: "deaf",
             name: "Deafened 2",
             description: `<p>You're completely deaf.</p><p>You automatically fail Perception checks involving your hearing. Your Passive Perception is reduced by 5.</p>`,
-            icon: `${NEWERA.images}/se_deafened.png`,
+            img: `${NEWERA.images}/se_deafened.png`,
         }
     },
     prone: {
@@ -3328,7 +3328,7 @@ NEWERA.statusEffects = {
             id: "prone",
             name: "Prone",
             description: `<p>Your attacks have disadvantage against creatures that aren't prone, and attacks against you have advantage. You move by Crawling at half your speed.</p><p>You may stand up from prone as an action {1}.`,
-            icon: `${NEWERA.images}/se_prone.png`
+            img: `${NEWERA.images}/se_prone.png`
         }
     },
     dying: {
@@ -3336,7 +3336,7 @@ NEWERA.statusEffects = {
             id: "dying",
             name: "Dying",
             description: `<p>You're unconscious. During each of your turns, you make a difficulty 15 Endurance save. If you succeed, you regain 1 hit point and wake up. If you fail, you lose 5 life points.</p><p>Any additional damage you take while Dying is dealt to your life points. If your life points reach zero, you die.</p>`,
-            icon: `${NEWERA.images}/lp-hot.png`
+            img: `${NEWERA.images}/lp-hot.png`
         }
     },
     dead: {
@@ -3344,7 +3344,7 @@ NEWERA.statusEffects = {
             id: "dead",
             name: "Dead",
             description: `<p>You have died.</p><p>You must create a new character in order to continue playing.</p>`,
-            icon: `${NEWERA.images}/se_dead.png`,
+            img: `${NEWERA.images}/se_dead.png`,
         }
     },
     unconscious: {
@@ -3352,7 +3352,7 @@ NEWERA.statusEffects = {
             id: "unconscious",
             name: "Unconscious",
             description: `<p>You're unable to act or speak, and you're unaware of your surroundings.</p><p>Your Passive Perception and Passive Agility are reduced to 0.</p>`,
-            icon: `${NEWERA.images}/se_unconscious.png`,
+            img: `${NEWERA.images}/se_unconscious.png`,
         }
     },
     incapacitated: {
@@ -3360,7 +3360,7 @@ NEWERA.statusEffects = {
             id: "incapacitated",
             name: "Incapacitated",
             description: `</p>You're unable to declare actions. Your turn length and speed are reduced to 0, and you can't react.</p><p>You can still speak, and are aware of your surroundings.</p>`,
-            icon: `${NEWERA.images}/se_incapacitated.png`
+            img: `${NEWERA.images}/se_incapacitated.png`
         }
     },
     stunned: {
@@ -3368,7 +3368,7 @@ NEWERA.statusEffects = {
             id: "stunned",
             name: "Stunned",
             description: `<p>You can't declare actions or reactions until the beginning of your next turn.</p>`,
-            icon: `${NEWERA.images}/dt_shock.png`,
+            img: `${NEWERA.images}/dt_shock.png`,
         }
     },
     busy: {
@@ -3376,7 +3376,7 @@ NEWERA.statusEffects = {
             id: "busy",
             name: "Preoccupied",
             description: `<p>You can't use reactions until you finish your current task.</p>`,
-            icon: `${NEWERA.images}/se_preoccupied.png`,
+            img: `${NEWERA.images}/se_preoccupied.png`,
         }
     },
     reacted: {
@@ -3384,19 +3384,19 @@ NEWERA.statusEffects = {
             id: "reacted",
             name: "Reaction Used",
             description: `<p>You've used <b>1</b> reaction frame this round. Your reaction frames reset at the start of your next turn.</p>`,
-            icon: `${NEWERA.images}/ac_reaction.png`
+            img: `${NEWERA.images}/ac_reaction.png`
         },
         2: {
             id: "reacted",
             name: "Reactions Used",
             description: `<p>You've used <b>2</b> reaction frames this round. Your reaction frames reset at the start of your next turn.</p>`,
-            icon: `${NEWERA.images}/ac_reaction.png`
+            img: `${NEWERA.images}/ac_reaction.png`
         },
         3: {
             id: "reacted",
             name: "Reactions Used",
             description: `<p>You've used <b>3</b> reaction frame this round. Your reaction frames reset at the start of your next turn.</p>`,
-            icon: `${NEWERA.images}/ac_reaction.png`
+            img: `${NEWERA.images}/ac_reaction.png`
         }
     },
     staggered: {
@@ -3404,19 +3404,19 @@ NEWERA.statusEffects = {
             id: "staggered",
             name: "Staggered",
             description: `<p>You lose the next frame of your turn, and are unable to use reactions.</p>`,
-            icon: `${NEWERA.images}/svg/knocked-out-stars.svg`
+            img: `${NEWERA.images}/svg/knocked-out-stars.svg`
         },
         2: {
             id: "staggered",
             name: "Staggered for 2 Frames",
             description: `<p>You lose the next two frames of your turn, and are unable to use reactions.</p>`,
-            icon: `${NEWERA.images}/knocked-out-stars.png`
+            img: `${NEWERA.images}/knocked-out-stars.png`
         },
         3: {
             id: "staggered",
             name: "Staggered for 3 Frames",
             description: `<p>You lose the next three frames of your turn, and are unable to use reactions.</p>`,
-            icon: `${NEWERA.images}/knocked-out-stars.png`
+            img: `${NEWERA.images}/knocked-out-stars.png`
         }
     },
     grappled: {
@@ -3426,7 +3426,7 @@ NEWERA.statusEffects = {
             description: `<p>You're being held by another creature.</p>
             <p>You can't move on your own. You move with the creature holding you at half its speed.</p>
             <p>You may make an Escape action check during your turn.</p>`,
-            icon: `${NEWERA.images}/grab.png`
+            img: `${NEWERA.images}/grab.png`
         }
     },
     paralyzed: {
@@ -3434,7 +3434,7 @@ NEWERA.statusEffects = {
             id: "paralyzed",
             name: "Paralyzed",
             description: `<p>You're unable to move or speak. You can't declare actions, but you're conscious and aware of your surroundings.</p>`,
-            icon: `${NEWERA.images}/se_paralyzed.png`,
+            img: `${NEWERA.images}/se_paralyzed.png`,
         }
     },
     frightened: {
@@ -3442,7 +3442,7 @@ NEWERA.statusEffects = {
             id: "frightened",
             name: "Frightened",
             description: `<p>You're frightened of a specific creature or object nearby.</p><p>You have disadvantage on all ability and skill checks while the source of your fear is within your line of sight, and you cannot willingly move closer to the source of your fear.</p>`,
-            icon: `${NEWERA.images}/se_frightened.png`
+            img: `${NEWERA.images}/se_frightened.png`
         }
     },
     extremeCold: {
@@ -3450,19 +3450,19 @@ NEWERA.statusEffects = {
             id: "cold",
             name: "Extreme Cold",
             description: `<p>You take a -1 penalty to Dexterity and Wisdom-based checks.</p>`,
-            icon: `${NEWERA.images}/ec_extreme_cold.png`,
+            img: `${NEWERA.images}/ec_extreme_cold.png`,
         },
         2: {
             id: "cold",
             name: "Extreme Cold 2",
             description: `<p>You take a -3 penalty to Dexterity and Wisdom-based checks, and a -2 penalty to all other ability and skill checks. You have disadvantage on reactions.</p>`,
-            icon: `${NEWERA.images}/ec_extreme_cold.png`,
+            img: `${NEWERA.images}/ec_extreme_cold.png`,
         },
         3: {
             id: "cold",
             name: "Extreme Cold 3",
             description: `<p>You take a -3 penalty to Dexterity and Wisdom-based checks, and a -2 penalty to all other ability and skill checks. You have disadvantage on reactions.</p><p>At the end of your turn, or every minute out of combat, you suffer Freezing damage equal to your hit point increment minus your Constitution modifier.</p>`,
-            icon: `${NEWERA.images}/ec_extreme_cold.png`,
+            img: `${NEWERA.images}/ec_extreme_cold.png`,
         }
     },
     extremeHeat: {
@@ -3470,20 +3470,20 @@ NEWERA.statusEffects = {
             id: "heat",
             name: "Extreme Heat",
             description: `<p>You take a -1 penalty to physical ability and skill checks.</p><p>You gain a level of Exhaustion every hour.</p>`,
-            icon: `${NEWERA.images}/ec_extreme_heat.png`,
+            img: `${NEWERA.images}/ec_extreme_heat.png`,
         },
         2: {
             id: "heat",
             name: "Extreme Heat 2",
             description: `<p>You take a -3 penalty to physical ability and skill checks, and a -2 penalty to all other checks.</p><p>You gain a level of Exhaustion every 30 minutes.</p>`,
-            icon: `${NEWERA.images}/ec_extreme_heat.png`,
+            img: `${NEWERA.images}/ec_extreme_heat.png`,
         },
         3: {
             id: "heat",
             name: "Extreme Heat 3",
             description: `<p>You take Burning damage equal to your hit point increment minus your constitution modifier at the end of your turn, or every minute out of combat.</p>
             <p>You take a -3 penalty to physical ability and skill checks, and a -2 penalty to all other checks.</p><p>You gain a level of Exhaustion every 30 minutes.</p>`,
-            icon: `${NEWERA.images}/ec_extreme_heat.png`,
+            img: `${NEWERA.images}/ec_extreme_heat.png`,
         }
     },
     highWinds: {
@@ -3491,20 +3491,20 @@ NEWERA.statusEffects = {
             id: "wind",
             name: "High Winds",
             description: `<p>You take a -2 penalty to Marksmanship.</p>`,
-            icon: `${NEWERA.images}/ec_wind.png`
+            img: `${NEWERA.images}/ec_wind.png`
         },
         2: {
             id: "wind",
             name: "High Winds 2",
             description: `<p>You take a -3 penalty to Marksmanship. You move at half speed against the direction of the wind.</p>`,
-            icon: `${NEWERA.images}/ec_wind.png`
+            img: `${NEWERA.images}/ec_wind.png`
         },
         3: {
             id: "wind",
             name: "High Winds 3",
             description: `<p>You take a -5 penalty to Marksmanship. You move at half speed against the direction of the wind.</p>
             <p>At the beginning of your turn, you must make an Endurance save to avoid being knocked prone by the wind.</p>`,
-            icon: `${NEWERA.images}/ec_wind.png`
+            img: `${NEWERA.images}/ec_wind.png`
         }
     },
     exhausted: {
@@ -3514,7 +3514,7 @@ NEWERA.statusEffects = {
             description:`<p>You have <b>1</b> level of exhaustion.</p>
             <p>You have disadvantage on all ability and skill checks.</p>
             `,
-            icon: `${NEWERA.images}/se_exhaustion.png`
+            img: `${NEWERA.images}/se_exhaustion.png`
         },
         2: {
             id: "exhaustion",
@@ -3522,7 +3522,7 @@ NEWERA.statusEffects = {
             description:`<p>You have <b>2</b> levels of exhaustion.</p>
             <p>You have disadvantage on all ability and skill checks, and your speed is reduced by half.</p>
             `,
-            icon: `${NEWERA.images}/se_exhaustion.png`
+            img: `${NEWERA.images}/se_exhaustion.png`
         },
         3: {
             id: "exhaustion",
@@ -3530,7 +3530,7 @@ NEWERA.statusEffects = {
             description:`<p>You have <b>3</b> levels of exhaustion.</p>
             <p>You have disadvantage on all ability and skill checks, and your speed, carry weight, and maximum hit points are each reduced by half.</p>
             `,
-            icon: `${NEWERA.images}/se_exhaustion.png`
+            img: `${NEWERA.images}/se_exhaustion.png`
         },
         4: {
             id: "exhaustion",
@@ -3538,7 +3538,7 @@ NEWERA.statusEffects = {
             description:`<p>You have <b>4</b> levels of exhaustion.</p>
             <p>You become Incapacitated. Any further exhaustion means death.</p>
             `,
-            icon: `${NEWERA.images}/se_exhaustion.png`
+            img: `${NEWERA.images}/se_exhaustion.png`
         }
     },
     sneak: {
@@ -3546,7 +3546,7 @@ NEWERA.statusEffects = {
             id: "sneak",
             name: "Sneaking",
             description: `<p>You move stealthily at half your speed.</p><p>Creatures actively looking for you make Perception checks, while oblivious creatures use their Passive Perception. The difficulty to notice you is the result of your Stealth check.</p>`,
-            icon: `${NEWERA.images}/se_sneak.png`
+            img: `${NEWERA.images}/se_sneak.png`
         }
     },
     swim: {
@@ -3554,7 +3554,7 @@ NEWERA.statusEffects = {
             id: "swim",
             name: "Underwater",
             description: `<p>You must make a difficulty 10 Endurance save after one minute. On a failure, you take 1d6 Suffocation damage and automatically fail all future saves. On a success, the difficulty of the next save increases by 1. The difficulty resets when you surface for air.</p>`,
-            icon: `${NEWERA.images}/se_swim.png`
+            img: `${NEWERA.images}/se_swim.png`
         }
     },
     fly: {
@@ -3562,7 +3562,7 @@ NEWERA.statusEffects = {
             id: "fly",
             name: "Flying",
             description: `<p>You're flying above the ground. You move laterally at your Fly Speed.`,
-            icon: `${NEWERA.images}/se_fly.png`
+            img: `${NEWERA.images}/se_fly.png`
         }
     },
     overencumbered: {
@@ -3571,14 +3571,14 @@ NEWERA.statusEffects = {
             name: "Overencumbered",
             description: `<p>You're carrying more than your maximum carry weight.</p>
             <p>Your speed is reduced by half and you have disadvantage on Reflex saves. Any failed physical ability or skill check causes you to take a level of Exhaustion.</p>`,
-            icon: `${NEWERA.images}/se_overencumbered.png`
+            img: `${NEWERA.images}/se_overencumbered.png`
         },
         2: {
             id: "overencumbered",
             name: "Overencumbered 2",
             description: `<p>You're carrying more than twice your maximum carry weight.</p>
             <p>Your speed is reduced to 0 and you are unable to attack or use reactions.</p>`,
-            icon: `${NEWERA.images}/se_overencumbered.png`
+            img: `${NEWERA.images}/se_overencumbered.png`
         }
     },
     drunk: {
@@ -3588,7 +3588,7 @@ NEWERA.statusEffects = {
             description: `<p>You're under the influence of drugs or alcohol.</p>
             <p>You gain a +1 bonus to Charisma-based checks, and a -1 penalty to Wisdom and Dexterity-based checks.</p>
             <p>If you consume another drink, make a difficulty 5 Endurance save. On a failure, you become Unconscious.</p>`,
-            icon: `${NEWERA.images}/se_drunk.png`
+            img: `${NEWERA.images}/se_drunk.png`
         },
         2: {
             id: "drunk",
@@ -3596,7 +3596,7 @@ NEWERA.statusEffects = {
             description: `<p>You're under the influence of drugs or alcohol.</p>
             <p>You gain a +2 bonus to Charisma-based checks, and a -2 penalty to Wisdom and Dexterity-based checks.</p>
             <p>If you consume another drink, make a difficulty 10 Endurance save. On a failure, you become Unconscious and are Poisoned 1.</p>`,
-            icon: `${NEWERA.images}/se_drunk.png`
+            img: `${NEWERA.images}/se_drunk.png`
         },
         3: {
             id: "drunk",
@@ -3604,7 +3604,7 @@ NEWERA.statusEffects = {
             description: `<p>You're under the influence of drugs or alcohol.</p>
             <p>You gain a +3 bonus to Charisma-based checks, and a -3 penalty to Wisdom and Dexterity-based checks.</p>
             <p>If you consume another drink, make a difficulty 15 Endurance save. On a failure, you become Unconscious and are Poisoned 2.</p>`,
-            icon: `${NEWERA.images}/se_drunk.png`
+            img: `${NEWERA.images}/se_drunk.png`
         },
         4: {
             id: "drunk",
@@ -3612,7 +3612,7 @@ NEWERA.statusEffects = {
             description: `<p>You're under the influence of drugs or alcohol.</p>
             <p>You gain a +4 bonus to Charisma-based checks, and a -4 penalty to Wisdom and Dexterity-based checks.</p>
             <p>If you consume another drink, make a difficulty 20 Endurance save. On a failure, you become Unconscious and are Poisoned 3.</p>`,
-            icon: `${NEWERA.images}/se_drunk.png`
+            img: `${NEWERA.images}/se_drunk.png`
         },
         5: {
             id: "drunk",
@@ -3620,7 +3620,7 @@ NEWERA.statusEffects = {
             description: `<p>You're under the influence of drugs or alcohol.</p>
             <p>You gain a +5 bonus to Charisma-based checks, and a -5 penalty to Wisdom and Dexterity-based checks.</p>
             <p>If you consume another drink, make a difficulty 25 Endurance save. On a failure, you become Unconscious and are Poisoned 4.</p>`,
-            icon: `${NEWERA.images}/se_drunk.png`
+            img: `${NEWERA.images}/se_drunk.png`
         }
     },
     trapped: {
@@ -3629,7 +3629,7 @@ NEWERA.statusEffects = {
             name: "Trapped",
             description: `<p>You're caught in a trap or restraint. Your speed is reduced to 0.</p>
             <p>You may make an Escape action check to escape the trap, or wait for an ally to help you.</p>`,
-            icon: `${NEWERA.images}/se_trapped.png`
+            img: `${NEWERA.images}/se_trapped.png`
         }
     },
     dazed: {
@@ -3637,7 +3637,7 @@ NEWERA.statusEffects = {
             id: "dazed",
             name: "Dazed",
             description: `<p>You have disadvantage on all mental ability and skill checks.</p>`,
-            icon: `${NEWERA.images}/se_dazed.png`
+            img: `${NEWERA.images}/se_dazed.png`
         }
     },
     wet: {
@@ -3645,7 +3645,7 @@ NEWERA.statusEffects = {
             id: "wet",
             name: "Wet",
             description: `<p>You experience the effects of Extreme Cold one level higher and Extreme Heat one level lower. Shock damage attacks that hit you become critical hits.</p>`,
-            icon: `${NEWERA.images}/se_wet.png`
+            img: `${NEWERA.images}/se_wet.png`
         }
     },
     invisible: {
@@ -3653,7 +3653,7 @@ NEWERA.statusEffects = {
             id: "invisible",
             name: "Invisible",
             description: `<p>Perception checks to detect you by sight automatically fail.</p>`,
-            icon: `${NEWERA.images}/se_invisible.png`
+            img: `${NEWERA.images}/se_invisible.png`
         }
     },
     disguised: {
@@ -3661,7 +3661,7 @@ NEWERA.statusEffects = {
             id: "disguised",
             name: "Disguised",
             description: `<p>You're dressed to disguise your true identity. Creatures you interact with must make an Insight check to see through your disguise.</p>`,
-            icon: `${NEWERA.images}/se_disguised.png`
+            img: `${NEWERA.images}/se_disguised.png`
         }
     },
     rested: {
@@ -3669,19 +3669,19 @@ NEWERA.statusEffects = {
             id: "rested",
             name: "Rested",
             description: `<p>You're feeling well-rested after a good night's sleep. You gain a +1 bonus to all skill checks and saves.</p>`,
-            icon: `${NEWERA.images}/se_rested.png`
+            img: `${NEWERA.images}/se_rested.png`
         },
         2: {
             id: "rested",
             name: "Rested 2",
             description: `<p>You're feeling well-rested after a good night's sleep. You gain a +2 bonus to all skill checks and saves.</p>`,
-            icon: `${NEWERA.images}/se_rested.png`
+            img: `${NEWERA.images}/se_rested.png`
         },
         3: {
             id: "rested",
             name: "Rested 3",
             description: `<p>You're feeling well-rested after a good night's sleep. You gain a +3 bonus to all skill checks and saves.</p>`,
-            icon: `${NEWERA.images}/se_rested.png`
+            img: `${NEWERA.images}/se_rested.png`
         }
     },
     marked: {
@@ -3689,7 +3689,7 @@ NEWERA.statusEffects = {
             id: "marked",
             name: "Marked",
             description: "You've been marked by another creature's ability or spell. The GM identifies which ability or spell is targeting you.</p>",
-            icon: `${NEWERA.images}/se_marked.png`
+            img: `${NEWERA.images}/se_marked.png`
         }
     },
     undead: {
@@ -3697,7 +3697,7 @@ NEWERA.statusEffects = {
             id: "undead",
             name: "Undead",
             description: `<p>You gain hit points when dealt Necrotic damage, and lose hit points when healed by conventional means.</p>`,
-            icon: `${NEWERA.images}/se_undead.png`
+            img: `${NEWERA.images}/se_undead.png`
         }
     },
     incorporeal: {
@@ -3706,7 +3706,7 @@ NEWERA.statusEffects = {
             name: "Incorporeal",
             description: `<p>You can move through solid walls and creatures and end your turn in the same space as an enemy.</p>
             <p>Non-magical attacks automatically miss you, and non-magical attacks you attempt automatically miss corporeal targets.</p>`,
-            icon: `${NEWERA.images}/se_incorporeal.png`
+            img: `${NEWERA.images}/se_incorporeal.png`
         }
     },
     weakened: {
@@ -3714,19 +3714,19 @@ NEWERA.statusEffects = {
             id: "weakened",
             name: "Weakened",
             description: `<p>You have disadvantage on constitution checks and endurance saves. Your speed and carry weight are reduced by 1.</p>`,
-            icon: `${NEWERA.images}/se_weakened.png`
+            img: `${NEWERA.images}/se_weakened.png`
         },
         2: {
             id: "weakened",
             name: "Weakened 2",
             description: `<p>You have disadvantage on constitution checks and endurance saves. Your speed and carry weight are reduced by 2.</p>`,
-            icon: `${NEWERA.images}/se_weakened.png`
+            img: `${NEWERA.images}/se_weakened.png`
         },
         3: {
             id: "weakened",
             name: "Weakened 3",
             description: `<p>You have disadvantage on constitution checks and endurance saves. Your speed and carry weight are reduced by 3.</p>`,
-            icon: `${NEWERA.images}/se_weakened.png`
+            img: `${NEWERA.images}/se_weakened.png`
         }
     },
     waiting: {
@@ -3734,7 +3734,7 @@ NEWERA.statusEffects = {
             id: "waiting",
             name: "Waiting",
             description: `<p>You're ready to perform a specific action when conditions are right. You may cancel your readied action at any time as a free action.</p>`,
-            icon: `${NEWERA.images}/se_waiting.png`
+            img: `${NEWERA.images}/se_waiting.png`
         }
     }
 }
