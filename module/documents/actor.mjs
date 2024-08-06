@@ -1150,7 +1150,7 @@ export class NewEraActor extends Actor {
         });
         await this.createEmbeddedDocuments("ActiveEffect", [{
           label: `Sustaining: ${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`,
-          icon: spell.img,
+          img: spell.img,
           description: `<p>You're sustaining a spell.</p>
           ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}
           <p>You can use any number of frames on your turn to sustain the spell. You can continue sustaining it as long as you spend at least one frame doing so during your turn.

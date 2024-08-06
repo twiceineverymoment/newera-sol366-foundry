@@ -1367,7 +1367,7 @@ _preparePotionData(system){
     //Create the ActiveEffect
     await this.createEmbeddedDocuments("ActiveEffect", [{
       label: enchantmentData.name,
-      icon: enchantmentData.img,
+      img: enchantmentData.img,
       description: enchantmentData.description,
       owner: this.uuid,
       disabled: false,
