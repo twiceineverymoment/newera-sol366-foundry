@@ -894,11 +894,6 @@ export class NewEraActorSheet extends ActorSheet {
       }
     });
 
-    //Effect rows (have to do this here because VS code doesn't like Handlebars in CSS)
-    html.find(".effect-row").each(function(){
-      $(this).css("background-color", $(this).data("color"));
-    });
-
     //Enchanted item glow on inventory tab
     html.find(".enchant-glow").each(function(){
       if($(this).data("enchanted") == true){
