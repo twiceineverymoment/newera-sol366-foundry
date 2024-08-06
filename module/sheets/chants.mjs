@@ -4,7 +4,7 @@ import { Chanter } from "../helpers/classes/chanter.mjs";
 export class ChantSheet extends ActorSheet {
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
           classes: ["newera", "sheet", "actor"],
           width: 480,
           height: 960,

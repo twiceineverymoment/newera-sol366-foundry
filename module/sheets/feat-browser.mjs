@@ -7,7 +7,7 @@ import { NEWERA } from "../helpers/config.mjs";
 export class FeatBrowser extends ActorSheet {
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
           title: "Feat Browser",
           classes: ["newera", "sheet", "actor"],
           template: "systems/newera-sol366/templates/extras/feat-browser.hbs",

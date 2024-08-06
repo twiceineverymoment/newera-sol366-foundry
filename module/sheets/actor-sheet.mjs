@@ -18,7 +18,7 @@ export class NewEraActorSheet extends ActorSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["newera", "sheet", "actor"],
       template: "systems/newera-sol366/templates/actor/actor-sheet.hbs",
       width: 785,

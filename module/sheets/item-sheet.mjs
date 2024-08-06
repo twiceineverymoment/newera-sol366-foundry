@@ -9,7 +9,7 @@ export class NewEraItemSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["newera", "sheet", "item"],
       width: 640,
       height: 520,

@@ -3,7 +3,7 @@ import { Witch } from "../helpers/classes/witch.mjs";
 export class DarkEnergySheet extends ActorSheet {
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
           classes: ["newera", "sheet", "actor"],
           template: "systems/newera-sol366/templates/actor/features/dark-energy.hbs",
           width: 320,
