@@ -24,7 +24,7 @@ export class Witch {
      */
     static async grantDarkEnergy(actor, target){
         await target.createEmbeddedDocuments('ActiveEffect', [{
-            icon: `${NEWERA.images}/dark-energy.png`,
+            img: `${NEWERA.images}/dark-energy.png`,
             label: `Dark Energy Link`,
             description: `<p>${actor.name} has given you the power to use ${actor.system.pronouns.possessiveDependent.toLowerCase()} dark energy pool.</p>
             <p>When you cast a spell, you can choose to cast it from the Dark Energy of any caster who has given you this power, or from your own energy.</p>`,

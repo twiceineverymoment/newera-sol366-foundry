@@ -74,7 +74,7 @@ export class Guardian {
         actor.actionMessage(actor.img, null, "{NAME} is becoming enraged!");
             await actor.createEmbeddedDocuments('ActiveEffect', [{
                 label: "Rage",
-                icon: `${NEWERA.images}/fire-dash.png`,
+                img: `${NEWERA.images}/fire-dash.png`,
                 description: `<p>Your physical abilities are enhanced at the cost of reduced presence of mind. Your Rage ends at the end of combat, or at the end of your turn if you did not attempt an attack during that turn.</p>
                 <ul>
                     <li>Your Speed is increased by 4 feet.</li>
@@ -89,7 +89,7 @@ export class Guardian {
     static stanceEffects = {
         "Gorilla": {
             label: "Gorilla Stance",
-            icon: `${NEWERA.images}/gorilla.png`,
+            img: `${NEWERA.images}/gorilla.png`,
             description: `<p>
             You move low to the ground and fight with your fists. While in this stance:
             <ul>
@@ -103,7 +103,7 @@ export class Guardian {
         },
         "Mountain": {
             label: "Mountain Stance",
-            icon: `${NEWERA.images}/peaks.png`,
+            img: `${NEWERA.images}/peaks.png`,
             description: `<p>
             You assume the stance of an immovable mountain. While in this stance:
             <ul>
@@ -115,7 +115,7 @@ export class Guardian {
         },
         "Lion": {
             label: "Lion Stance",
-            icon: `${NEWERA.images}/lion.png`,
+            img: `${NEWERA.images}/lion.png`,
             description: `<p>
             You gain the speed and reflexes of a big cat, allowing you to move about quickly to protect your allies. While in this stance:
             <ul>
@@ -127,12 +127,12 @@ export class Guardian {
         },
         "Sentinel": {
             label: "Sentinel Stance",
-            icon: `${NEWERA.images}/guards.png`,
+            img: `${NEWERA.images}/guards.png`,
             description: "Your turn length is reduced by 2 frames, but you gain 2 fraction frames"
         },
         "Swordsman": {
             label: "Swordsman Stance",
-            icon: `${NEWERA.images}/relic-blade.png`,
+            img: `${NEWERA.images}/relic-blade.png`,
             description: `<p>
             Upon entering this stance, you conjure pure energy into the shape of a <a>Longsword</a> in your hand. This item functions identically to an Iron Longsword, but its attacks are magical.
             It can be used either one- or two-handed. Activating this stance requires least one free hand. While in this stance:
@@ -146,7 +146,7 @@ export class Guardian {
         },
         "Monk": {
             label: "Monk Stance",
-            icon: `${NEWERA.images}/kindle.png`,
+            img: `${NEWERA.images}/kindle.png`,
             description: `<p>
             Most spells only require the use of one hand. This stance employs a special techique wherein by using both hands to cast spells, you're able to increase their power.
             You must have both hands free when activating this stance.
@@ -161,7 +161,7 @@ export class Guardian {
         },
         "Ward": {
             label: "Ward Stance",
-            icon: `${NEWERA.images}/rosa-shield.png`,
+            img: `${NEWERA.images}/rosa-shield.png`,
             activationCost: 6,
             description: `<p>
 			You channel your Qi into a powerful defensive posture. While in this stance:
@@ -174,7 +174,7 @@ export class Guardian {
         },
         "Lemur": {
             label: "Lemur Stance",
-            icon: `${NEWERA.images}/jump1.png`,
+            img: `${NEWERA.images}/jump1.png`,
             description: `<p>
             You leap about with incredible agility. While in this stance:
             <ul>
@@ -186,7 +186,7 @@ export class Guardian {
         },
         "Coursing River": {
             label: "Coursing River Stance",
-            icon: `${NEWERA.images}/splashy-stream.png`,
+            img: `${NEWERA.images}/splashy-stream.png`,
             activationCost: 10,
             description: `<p>
             You make flowing movements that emanate your body's natural energy. While in this stance:
@@ -198,7 +198,7 @@ export class Guardian {
         },
         "Great Typhoon": {
             label: "Great Typhoon Stance",
-            icon: `${NEWERA.images}/tornado.png`,
+            img: `${NEWERA.images}/tornado.png`,
             activationCost: 10,
             description: `<p>
             You put the full force of your body's strength behind your spells. While in this stance:
@@ -209,7 +209,7 @@ export class Guardian {
         },
         "Raging Fire": {
             label: "Raging Fire Stance",
-            icon: `${NEWERA.images}/burning-forest.png`,
+            img: `${NEWERA.images}/burning-forest.png`,
             activationCost: 10,
             description: `<p>
             You let your emotions run wild for a brief moment. While in this stance:

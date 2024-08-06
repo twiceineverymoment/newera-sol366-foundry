@@ -37,7 +37,7 @@ export class Delver {
             actor.actionMessage(actor.img, null, "{NAME} is becoming enraged!");
             await actor.createEmbeddedDocuments('ActiveEffect', [{
                 label: "Rage",
-                icon: `${NEWERA.images}/fire-dash.png`,
+                img: `${NEWERA.images}/fire-dash.png`,
                 description: `<p>Your physical abilities are enhanced at the cost of reduced presence of mind. You may end Rage at any time as a free action.</p>
                 <ul>
                     <li>Your Speed is increased by 4 feet.</li>

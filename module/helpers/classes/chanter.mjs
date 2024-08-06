@@ -66,7 +66,7 @@ export class Chanter {
         //TODO Find and delete existing chant effect
         await actor.createEmbeddedDocuments('ActiveEffect', [{
             label: `Chanting (${chant.name})`,
-            icon: `${NEWERA.images}/shouting.png`,
+            img: `${NEWERA.images}/shouting.png`,
             description: chant.system.base.description
         }]);
         const update = actor.system.chants;

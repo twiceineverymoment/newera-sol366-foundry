@@ -25,7 +25,7 @@ export class Ranger {
 
         target.createEmbeddedDocuments('ActiveEffect', [{
             label: "Prey",
-            icon: `${NEWERA.images}/mark-target.png`,
+            img: `${NEWERA.images}/mark-target.png`,
             origin: actor.name,
             description: `<p>You've been marked as Prey by ${actor.name}.</p>
             <p>${actor.system.pronouns.subjective.toUpperCase()} gets a +${preyBonus} bonus to attacks against you.</p>

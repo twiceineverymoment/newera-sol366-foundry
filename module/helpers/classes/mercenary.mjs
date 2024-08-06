@@ -10,7 +10,7 @@ export class Mercenary {
             actor.actionMessage(actor.img, null, "{NAME} is becoming enraged!");
             actor.createEmbeddedDocuments('ActiveEffect', [{
                 label: "Rage",
-                icon: `${NEWERA.images}/fire-dash.png`,
+                img: `${NEWERA.images}/fire-dash.png`,
                 description: `<p>Your physical abilities are enhanced at the cost of reduced presence of mind. Your Rage ends at the end of combat, or at the end of your turn if you did not attempt an attack during that turn.</p>
                 <ul>
                     <li>Your Speed is increased by 4 feet.</li>
@@ -38,7 +38,7 @@ export class Mercenary {
     static async recklessAttack(actor){
         actor.createEmbeddedDocuments('ActiveEffect', [{
             label: "Reckless",
-            icon: `${NEWERA.images}/hammer-drop.png`,
+            img: `${NEWERA.images}/hammer-drop.png`,
             origin: "Reckless Attack",
             "duration.rounds": undefined,
             disabled: false,
