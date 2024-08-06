@@ -586,7 +586,7 @@ export class NewEraActorSheet extends ActorSheet {
             label: "Attack",
             caption: "Unarmed Attack",
             die: "d20",
-            formula: "1d20+@skills.athletics.mod+@spec.brawl",
+            formula: "1d20+@skills.athletics.mod+@specialty.partial.brawl",
             message: "{NAME} attacks with {d} fists!",
             difficulty: null,
           },

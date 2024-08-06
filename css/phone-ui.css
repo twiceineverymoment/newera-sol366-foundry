@@ -155,25 +155,21 @@ div.phoneui-app {
     left: 0;
     width: 320px;
     height: 516px;
-    background-color: #444;
 }
 div.phoneui-app-header {
     position: absolute;
     top: 0;
     left: 0;
     text-align: center;
-    color: white;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
     width: 320px;
     height: 48px;
-    background-color: #555;
 }
 .phoneui-close-button {
     position: absolute;
     font-size: 24px;
     top: 8px;
     left: 12px;
-    color: white;
     cursor: pointer;
 }
 .phoneui-right-header-button {
@@ -181,7 +177,6 @@ div.phoneui-app-header {
     font-size: 24px;
     top: 8px;
     right: 12px;
-    color: white;
     cursor: pointer;
 }
 .phoneui-app-header h3 {
@@ -194,7 +189,6 @@ div.phoneui-app-header {
     left: 0;
     width: 320px;
     height: 468px;
-    color: white;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -205,7 +199,6 @@ div.phoneui-app-header {
     left: 0;
     width: 320px;
     height: 420px;
-    color: white;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -215,7 +208,6 @@ div.phoneui-app-footer {
     top: 468px;
     left: 0;
     text-align: center;
-    color: white;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
     width: 320px;
     height: 48px;
@@ -230,7 +222,6 @@ a.phoneui-footer-action {
 /* Calls / Contacts */
 #phoneui-call {
     text-align: center;
-    color: white;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 #phoneui-call-image {
@@ -241,14 +232,11 @@ a.phoneui-footer-action {
     outline: none;
 }
 table.phoneui-grid {
-    color: white;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
     border-top: none;
     border-bottom: none;
 }
 input.phoneui-input, select.phoneui-input, button.phoneui-input {
-    background-color: #333;
-    color: white;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
     border-radius: 2px;
     outline: none;
@@ -409,11 +397,6 @@ img.photo-full {
     border: none;
     outline: none;
 }
-a.photo-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
 input#photo-input-name {
     color: white;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
@@ -481,14 +464,12 @@ button.chat-button {
 }
 div.message-container-incoming {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 div.message-incoming {
     margin-top: 8px;
     margin-bottom: 8px;
-    margin-right: 12px;
-    color: #333;
-    background-color: #ddd;
+    margin-left: 12px;
     max-width: 70%;
     text-align: right;
     border-radius: 2px;
@@ -497,14 +478,12 @@ div.message-incoming {
 }
 div.message-container-outgoing {
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
 }
 div.message-outgoing {
     margin-top: 8px;
     margin-bottom: 8px;
-    margin-left: 12px;
-    color: white;
-    background-color: #295470;
+    margin-right: 12px;
     max-width: 70%;
     text-align: left;
     border-radius: 2px;
@@ -517,4 +496,63 @@ span.timestamp {
 }
 .unread {
     color: crimson;
+}
+/* Themed colors */
+.phoneui-light .phoneui-app-header {
+    color: #444;
+    background-color: white;
+}
+.phoneui-dark .phoneui-app-header {
+    color: white;
+    background-color: #555;
+}
+.phoneui-light .phoneui-app {
+    background-color: #EEE;
+}
+.phoneui-dark .phoneui-app {
+    background-color: #444;
+}
+.phoneui-light .phoneui-close-button, .phoneui-light .phoneui-right-header-button, .phoneui-light .phoneui-app-body, .phoneui-light .phoneui-app-body-full, .phoneui-light table.phoneui-grid {
+    color: #222;
+}
+.phoneui-dark .phoneui-close-button, .phoneui-dark .phoneui-right-header-button, .phoneui-dark .phoneui-app-body, .phoneui-dark .phoneui-app-body-full, .phoneui-dark table.phoneui-grid {
+    color: white;
+}
+.phoneui-light .phoneui-app-footer {
+    color: #444;
+    background-color: #DDD;
+}
+.phoneui-dark .phoneui-app-footer {
+    color: white;
+    background-color: #444;
+}
+.phoneui-light .phoneui-input {
+    background-color: #CCC;
+    color: black;
+}
+.phoneui-dark .phoneui-input {
+    background-color: #333;
+    color: white;
+}
+.phoneui-light #phoneui-call {
+    color: #111;
+}
+.phoneui-dark #phoneui-call {
+    color: white;
+}
+.phoneui-light div.message-incoming {
+    color: #333;
+    background-color: #ddd;
+}
+.phoneui-dark div.message-incoming {
+    color: #eee;
+    background-color: #555;
+}
+.phoneui-light div.message-outgoing {
+    color: white;
+    background-color: #345EEB;
+}
+.phoneui-dark div.message-outgoing {
+    color: white;
+    background-color: #31BF02;
 }

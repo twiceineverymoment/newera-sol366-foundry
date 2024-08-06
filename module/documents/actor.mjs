@@ -443,7 +443,7 @@ export class NewEraActor extends Actor {
 
     // Prepare character roll system.
     this._getCharacterRollData(rollData);
-
+    this._getCreatureRollData(rollData);
     return rollData;
   }
 
@@ -455,14 +455,31 @@ export class NewEraActor extends Actor {
 
     //Copy specialty modifiers to the top level with an abbreviated name
     if (system.specialties){
-      const spec = {};
+      const specialtyFull = {};
+      const specialty = {};
       for (let [k, v] of Object.entries(system.specialties)) {
         if (v.subject){
           const specId = v.subject.replace(" ", "_").toLowerCase();
-          spec[specId] = v.level;
+          specialtyFull[specId] = v.mod;
+          specialty[specId] = (v.level || 0) + (v.bonus || 0);
         }
       }
-      system.spec = spec;
+      system.spec = specialtyFull; //Backwards compatibility
+      //This object is used to refer to specialties by their name. The buttons directly on the sheet reference them by their index number in the system.specialties object.
+      system.specialty = {
+        full: specialtyFull,
+        partial: specialty
+      }
+
+    }
+  }
+
+  _getCreatureRollData(rd){
+    if (this.type !== 'Creature') return;
+    rd.special = {};
+    for (let [k, v] of Object.entries(rd.specialModifiers)) {
+      const specId = v.subject.replace(" ", "_").toLowerCase();
+      rd.special[specId] = v.mod;
     }
   }
 
@@ -1065,7 +1082,7 @@ export class NewEraActor extends Actor {
     this.actionMessage(this.img, spell.img, `{NAME} sustains {0}.`, spell.name+(ampFactor>1 ? " "+NEWERA.romanNumerals[ampFactor] : ""));
   }
 
-  async cast(spell, ampFactor = 1, attack = false, noSkillCheck = false, energyPool = undefined){
+  async cast(spell, ampFactor = 1, noSkillCheck = false, energyPool = undefined){
       if (energyPool === undefined){
         if (this.type == "Player Character" || this.type == "Non-Player Character"){
           energyPool = new CharacterEnergyPool(this);
@@ -1078,18 +1095,40 @@ export class NewEraActor extends Actor {
       const spellSkillLevel = spellSkill == "genericCast" ? this.system.casterLevel : this.system.magic[spellSkill].level;
       const difficulty = noSkillCheck ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = spell.system.energyCost * ampFactor;
+      let attack = false;
+      let attackMod = '';
+      let rollPrefix = '';
       let successful = false;
+      
+      switch (spell.spellRollMode) {
+        case "ranged":
+          attack = true;
+          attackMod = '@skills.marksmanship.mod';
+          rollPrefix = "Ranged Spell Attack -";
+          break;
+        case "melee": 
+          attack = true;
+          attackMod = spell.system.castType == 'G' ? '@skills.two-handed.mod' : '@skills.one-handed.mod';
+          rollPrefix = spell.system.castType == 'G' ? "Two-Handed Spell Attack -" : "One-Handed Spell Attack -";
+          break;
+        default:
+        case "cast":
+          attack = false;
+          attackMod = '0';
+          rollPrefix = "Cast";
+          break;
+      }
 
       if (!attack && difficulty == 0){
         this.actionMessage(this.img, `${NEWERA.images}/${spell.system.specialty}.png`, "{NAME} casts {0}!", `${spell.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`);
         successful = true;
       } else {
-        const castRoll = new Roll(`d20 + @magic.${spellSkill}.mod + ${spell.spellcraftModifier} + ${attack ? "@skills.marksmanship.mod" : 0}`, this.getRollData());
+        const castRoll = new Roll(`d20 + @magic.${spellSkill}.mod + @specialty.partial.${spell.system.specialty} + ${attackMod} + ${spell.spellcraftModifier}`, this.getRollData());
         await castRoll.evaluate();
         successful = (castRoll.total >= difficulty);
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
-          flavor: `${attack ? "Spell Attack -" : "Cast"} ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""} ${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
+          flavor: `${rollPrefix} ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""} ${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
         });
       } 
 
@@ -1313,6 +1352,9 @@ export class NewEraActor extends Actor {
   }
 
   hasFeatOrFeature(text){
+    if (!this.typeIs(NewEraActor.Types.PC)) {
+      return false;
+    }
     //console.log(`[DEBUG] Checking for feature: ${text}`);
     if (this.items.find(i => i.type == "Feat" && i.name.toLowerCase() == text.toLowerCase())) {
       //console.log(`[DEBUG] Found in feats`);
@@ -1424,6 +1466,7 @@ export class NewEraActor extends Actor {
 
     for (const item of this.items){
       console.log(`Checking for update: ${item.name} [${item.system.casperObjectId}]`);
+      const isStored = item.system.stored;
       if (item.typeIs(NewEraItem.Types.MAGIC) && item.system.casperObjectId){
         const fromComp = spellsEnchantments.find(i => i.type == item.type && i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp){
@@ -1458,7 +1501,10 @@ export class NewEraActor extends Actor {
         if (fromComp){
           await item.update({
             name: fromComp.name,
-            system: fromComp.system
+            system: {
+              ...fromComp.system,
+              stored: isStored
+            }
           });
           console.log(`${item.name} Updated (weapon - ${fromComp.id})`);
         } else {
@@ -1475,7 +1521,8 @@ export class NewEraActor extends Actor {
           name: fromComp.name,
           system: {
             ...fromComp.system,
-            quantity: existingQty
+            quantity: existingQty,
+            stored: isStored
           }
         });
         console.log(`${item.name} Updated (item - ${fromComp.id})`);
@@ -1489,7 +1536,10 @@ export class NewEraActor extends Actor {
           if (fromComp){
             await item.update({
               name: fromComp.name,
-              system: fromComp.system
+              system: {
+                ...fromComp.system,
+                stored: isStored
+              }
             });
             console.log(`${item.name} Updated (armor/shield - ${fromComp.id})`);
           } else {
@@ -1503,7 +1553,8 @@ export class NewEraActor extends Actor {
           name: fromComp.name,
           system: {
             ...fromComp.system,
-            quantity: existingQty
+            quantity: existingQty,
+            stored: isStored
           }
         });
         console.log(`${item.name} Updated (potion - ${fromComp.id})`);

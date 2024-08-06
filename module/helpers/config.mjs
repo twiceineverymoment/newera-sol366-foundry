@@ -2478,7 +2478,7 @@ NEWERA.pcGeneralActions = [
             label: "Sprint",
             caption: "Sprint (Athletics)",
             die: "d20",
-            formula: "1d20+@skills.athletics.mod+@spec.sprinting",
+            formula: "1d20+@skills.athletics.mod+@specialty.partial.sprinting",
             message: "{NAME} sprints!",
             difficulty: null,
           }
@@ -2515,14 +2515,14 @@ NEWERA.pcGeneralActions = [
                 label: "Long",
                 caption: "Long Jump (Athletics)",
                 die: "d20",
-                formula: "1d20+@skills.athletics.mod+@spec.jumping+@spec.long_jump",
+                formula: "1d20+@skills.athletics.mod+@specialty.partial.jumping+@specialty.partial.long_jump",
                 difficulty: null,
             },
             {
                 label: "High",
                 caption: "High Jump (Athletics)",
                 die: "d20",
-                formula: "1d20+@skills.athletics.mod+@spec.jumping+@spec.high_jump",
+                formula: "1d20+@skills.athletics.mod+@specialty.partial.jumping+@specialty.partial.high_jump",
                 difficulty: 20,
             }
         ]
@@ -2544,7 +2544,7 @@ NEWERA.pcGeneralActions = [
                 label: "Dodge",
                 caption: "Dodge (Agility)",
                 die: "d20",
-                formula: "1d20+@skills.agility.mod+@spec.jumping+@spec.dodging",
+                formula: "1d20+@skills.agility.mod+@specialty.partial.jumping+@specialty.partial.dodging",
                 message: "{NAME} tries to Dodge!",
                 difficulty: null,
             }
@@ -2567,7 +2567,7 @@ NEWERA.pcGeneralActions = [
                 label: "Distance",
                 caption: "Yeet for Distance (Athletics)",
                 die: "d20",
-                formula: "1d20+@skills.athletics.mod+@spec.throw_distance",
+                formula: "1d20+@skills.athletics.mod+@specialty.partial.throw_distance",
                 message: "{NAME} throws an item a great distance!",
                 difficulty: null,
             },
@@ -2575,7 +2575,7 @@ NEWERA.pcGeneralActions = [
                 label: "Accuracy",
                 caption: "Kobe for Accuracy (Marksmanship)",
                 die: "d20",
-                formula: "1d20+@skills.marksmanship.mod+@spec.throw_accuracy",
+                formula: "1d20+@skills.marksmanship.mod+@specialty.partial.throw_accuracy",
                 message: "{NAME} throws a projectile!",
                 difficulty: null,
             }
@@ -2598,14 +2598,14 @@ NEWERA.pcGeneralActions = [
                 label: "Strength",
                 caption: "Escape (Strength)",
                 die: "d20",
-                formula: "1d20+@abilities.strength.mod+@spec.escape",
+                formula: "1d20+@abilities.strength.mod+@specialty.partial.escape",
                 difficulty: null,
             },
             {
                 label: "Agility",
                 caption: "Escape (Agility)",
                 die: "d20",
-                formula: "1d20+@skills.agility.mod+@spec.escape",
+                formula: "1d20+@skills.agility.mod+@specialty.partial.escape",
                 difficulty: null,
             }
         ]
@@ -2713,7 +2713,7 @@ NEWERA.explorationActions = [
                 label: "Search",
                 caption: "Perception check",
                 die: "d20",
-                formula: "1d20+@skills.perception.mod+@spec.searching",
+                formula: "1d20+@skills.perception.mod+@specialty.partial.searching",
                 message: "{NAME} searches the area!",
                 difficulty: null,
             }
@@ -2736,14 +2736,14 @@ NEWERA.explorationActions = [
                 label: "Perception",
                 caption: "Examine Object (Perception)",
                 die: "d20",
-                formula: "1d20+@skills.perception.mod+@spec.examination",
+                formula: "1d20+@skills.perception.mod+@specialty.partial.examination",
                 difficulty: null,
             },
             {
                 label: "Logic",
                 caption: "Examine Object (Logic)",
                 die: "d20",
-                formula: "1d20+@skills.logic.mod+@spec.examination",
+                formula: "1d20+@skills.logic.mod+@specialty.partial.examination",
                 difficulty: null,
             }
         ]
@@ -2765,7 +2765,7 @@ NEWERA.explorationActions = [
                 label: "Craft",
                 caption: "Crafting check",
                 die: "d20",
-                formula: "1d20+@skills.technology.mod+@spec.crafting",
+                formula: "1d20+@skills.technology.mod+@specialty.partial.crafting",
                 difficulty: null,
             }
         ]
@@ -2787,14 +2787,14 @@ NEWERA.explorationActions = [
                 label: "Repair",
                 caption: "Crafting check - Repair",
                 die: "d20",
-                formula: "1d20+@skills.technology.mod+@spec.crafting+@spec.repair",
+                formula: "1d20+@skills.technology.mod+@specialty.partial.crafting+@specialty.partial.repair",
                 difficulty: null,
             },
             {
                 label: "Upgrade",
                 caption: "Crafting check - Upgrade",
                 die: "d20",
-                formula: "1d20+@skills.technology.mod+@spec.crafting+@spec.refinement",
+                formula: "1d20+@skills.technology.mod+@specialty.partial.crafting+@specialty.partial.refinement",
                 difficulty: null,
             }
         ]
@@ -2816,7 +2816,7 @@ NEWERA.explorationActions = [
                 label: "Cook",
                 caption: "Cooking",
                 die: "d20",
-                formula: "1d20+@skills.technology.mod+@spec.cooking",
+                formula: "1d20+@skills.technology.mod+@specialty.partial.cooking",
                 difficulty: null,
             }
         ]
@@ -2838,21 +2838,21 @@ NEWERA.explorationActions = [
                 label: "Navigate",
                 caption: "Wilderness Survival - Navigation (Instinct)",
                 die: "d20",
-                formula: "1d20+@skills.instinct.mod+@spec.navigation",
+                formula: "1d20+@skills.instinct.mod+@specialty.partial.navigation",
                 difficulty: null,
             },
             {
                 label: "Time",
                 caption: "Wilderness Survival - Time (Instinct)",
                 die: "d20",
-                formula: "1d20+@skills.instinct.mod+@spec.time",
+                formula: "1d20+@skills.instinct.mod+@specialty.partial.time",
                 difficulty: null,
             },
             {
                 label: "Weather",
                 caption: "Wilderness Survival - Weather (Instinct)",
                 die: "d20",
-                formula: "1d20+@skills.instinct.mod+@spec.weather",
+                formula: "1d20+@skills.instinct.mod+@specialty.partial.weather",
                 difficulty: null,
             }
         ]
@@ -2897,7 +2897,7 @@ NEWERA.generalSocialActions = [
                 label: "Socialize",
                 caption: "First Impression (Diplomacy)",
                 die: "d20",
-                formula: "1d20+@skills.diplomacy.mod+@spec.socialization",
+                formula: "1d20+@skills.diplomacy.mod+@specialty.partial.socialization",
                 difficulty: null,
             }
         ]
@@ -2919,7 +2919,7 @@ NEWERA.generalSocialActions = [
                 label: "Persuade",
                 caption: "Persuade (Diplomacy)",
                 die: "d20",
-                formula: "1d20+@skills.diplomacy.mod+@spec.persuasion",
+                formula: "1d20+@skills.diplomacy.mod+@specialty.partial.persuasion",
                 difficulty: null,
             }
         ]
@@ -2941,21 +2941,21 @@ NEWERA.generalSocialActions = [
                 label: "Offer",
                 caption: "Haggle - Offer (Diplomacy)",
                 die: "d20",
-                formula: "1d20+@skills.diplomacy.mod+@spec.trading",
+                formula: "1d20+@skills.diplomacy.mod+@specialty.partial.trading",
                 difficulty: null,
             },
             {
                 label: "Deceive",
                 caption: "Haggle - Offer (Deception)",
                 die: "d20",
-                formula: "1d20+@skills.deception.mod+@spec.trading",
+                formula: "1d20+@skills.deception.mod+@specialty.partial.trading",
                 difficulty: null,
             },
             {
                 label: "Check",
                 caption: "Haggle - Check Offer (Wisdom)",
                 die: "d20",
-                formula: "1d20+@abilities.wisdom.mod+@spec.trading",
+                formula: "1d20+@abilities.wisdom.mod+@specialty.partial.trading",
                 difficulty: null,
             }
         ]
@@ -2977,7 +2977,7 @@ NEWERA.generalSocialActions = [
                 label: "Seduce",
                 caption: "Seduce (Charisma)",
                 die: "d20",
-                formula: "1d20+@abilities.charisma.mod+@spec.seduction",
+                formula: "1d20+@abilities.charisma.mod+@specialty.partial.seduction",
                 difficulty: null,
             }
         ]
@@ -3021,14 +3021,14 @@ NEWERA.generalSocialActions = [
                 label: "Charisma",
                 caption: "Intimidate (Charisma)",
                 die: "d20",
-                formula: "1d20+@skills.intimidation.mod+@spec.coercion",
+                formula: "1d20+@skills.intimidation.mod+@specialty.partial.coercion",
                 difficulty: null,
             },
             {
                 label: "Strength",
                 caption: "Intimidate (Strength)",
                 die: "d20",
-                formula: "1d20+@skills.intimidation.mod+@spec.coercion+@abilities.strength.mod",
+                formula: "1d20+@skills.intimidation.mod+@specialty.partial.coercion+@abilities.strength.mod",
                 difficulty: null,
             }
         ]

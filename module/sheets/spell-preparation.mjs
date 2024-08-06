@@ -11,7 +11,8 @@ export class SpellPreparation extends ActorSheet {
           width: 480,
           height: 960,
           resizable: true,
-          title: "Spell Preparation"
+          title: "Spell Preparation",
+          scrollY: [".feature-sheet-scroll"]
         });
     }
 
