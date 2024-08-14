@@ -2,12 +2,18 @@
   "id": "newera-sol366",
   "title": "New Era Sol 366 Edition",
   "description": "New Era: Sol 366 Edition",
-  "version": "0.15.36",
+  "version": "0.15.37",
   "compatibility": {
     "minimum": "12.316",
     "verified": "12.330"
   },
-  "author": "TwiceInEveryMoment",
+  "authors": [
+    {
+      "name": "TwiceInEveryMoment",
+      "url": "https://www.valleyandridgegames.com/",
+      "discord": "twiceineverymoment"
+    }
+  ],
   "esmodules": ["module/newera.mjs"],
   "styles": ["css/boilerplate.css", "css/newera.css", "css/phone-ui.css"],
   "scripts": [],
@@ -137,6 +143,6 @@
   "secondaryTokenAttribute": "energy",
   "url": "https://www.newerarpg.com/",
   "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366.json",
-  "download": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366-0.15.36.zip",
+  "download": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366-0.15.37.zip",
   "license": "LICENSE.txt"
 }
