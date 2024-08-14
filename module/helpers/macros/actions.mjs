@@ -294,10 +294,11 @@ export class Actions {
       const difficulty = prepared ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = prepared ? 0 : spell.system.energyCost * ampFactor;
       let availableEnergy = 0;
+      let pool = null;
 
       //Get selected energy pool
       if (!prepared){
-        const pool = Actions._getPool(actor, html, prepared);
+        pool = Actions._getPool(actor, html, prepared);
         if (pool instanceof ResourcePool){
           availableEnergy = pool.available;
         }
@@ -310,6 +311,7 @@ export class Actions {
       html.find("#level").html(level);
       html.find("#difficulty").html(difficulty);
       html.find("#energyPools").html(Actions._renderPoolOptions(actor));
+      html.find("#energyPools").val(pool.id);
       
       if (actor.type == "Creature"){
         html.find("#cast-table").hide();
