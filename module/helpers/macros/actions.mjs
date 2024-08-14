@@ -311,7 +311,9 @@ export class Actions {
       html.find("#level").html(level);
       html.find("#difficulty").html(difficulty);
       html.find("#energyPools").html(Actions._renderPoolOptions(actor));
-      html.find("#energyPools").val(pool.id);
+      if (pool) {
+        html.find("#energyPools").val(pool.id);
+      }
       
       if (actor.type == "Creature"){
         html.find("#cast-table").hide();
