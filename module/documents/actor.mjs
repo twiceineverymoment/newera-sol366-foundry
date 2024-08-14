@@ -1125,7 +1125,7 @@ export class NewEraActor extends Actor {
         await castRoll.evaluate();
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
-          flavor: `Cast ${spell.name}`
+          flavor: `Cast ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""}`
         });
         successful = true;
       } else if (!attack && difficulty == 0){
