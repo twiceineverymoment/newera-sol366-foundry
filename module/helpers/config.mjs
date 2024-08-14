@@ -141,6 +141,15 @@ NEWERA.schoolToFormMapping = {
   "??": "genericCast"
 }
 
+NEWERA.schoolAttributes = {
+    "elemental": "strength",
+    "divine": "constitution",
+    "physical": "dexterity",
+    "psionic": "intelligence",
+    "spectral": "charisma",
+    "temporal": "wisdom"
+}
+
 NEWERA.spellCastingTimes = {
     "C": "Cantrip",
     "Q": "1 Frame",

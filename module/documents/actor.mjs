@@ -1119,7 +1119,16 @@ export class NewEraActor extends Actor {
           break;
       }
 
-      if (!attack && difficulty == 0){
+      if (this.type == 'Creature') {
+        const spellAttr = NEWERA.schoolAttributes[spell.system.form];
+        const castRoll = new Roll(`d20 + @abilities.${spellAttr}.mod + @special.${spell.system.specialty} + @special.spellcasting`, this.getRollData());
+        await castRoll.evaluate();
+        castRoll.toMessage({
+          speaker: ChatMessage.getSpeaker({actor: this}),
+          flavor: `Cast ${spell.name}`
+        });
+        successful = true;
+      } else if (!attack && difficulty == 0){
         this.actionMessage(this.img, `${NEWERA.images}/${spell.system.specialty}.png`, "{NAME} casts {0}!", `${spell.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`);
         successful = true;
       } else {
@@ -1159,7 +1168,7 @@ export class NewEraActor extends Actor {
         }]);
       }
 
-      if (successful){
+      if (successful && this.type != 'Creature'){
         spell.printDetails(this, ampFactor);
       }
 
