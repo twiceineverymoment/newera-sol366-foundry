@@ -1,5 +1,6 @@
 import { NEWERA } from "./config.mjs";
 
+import { Actions } from "./macros/actions.mjs";
 import { Delver } from "./classes/delver.mjs";
 import { Mercenary } from "./classes/mercenary.mjs";
 import { Ranger } from "./classes/ranger.mjs";
@@ -1139,6 +1140,11 @@ ClassInfo.features = {
                       {
                         label: "Activate",
                         die: "chain-lightning",
+                        callback: actor => Actions.printAbilityInfo(actor, {
+                            title: "Lightning Charge",
+                            img: `${NEWERA.images}/ac_0frame.png`,
+                            details: "The next time you would deal Shock damage this turn, the target instead gains energy with overcharge equal to the amount you roll."
+                        })
                       }
                     ]
                 },
