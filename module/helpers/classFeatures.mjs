@@ -606,12 +606,12 @@ ClassInfo.features = {
                     actionType: "1",
                     allowed: (actor) => actor.system.energy.value >= 10,
                     disallowMessage: "You don't have enough energy to enter Rage!",
+                    overrideMacroCommand: 'game.newera.HotbarActions.rage()',
                     rolls: [
                       {
                         label: "Rage",
                         die: "fire-dash",
-                        message: "{NAME} becomes enraged!",
-                        difficulty: null
+                        callback: actor => Delver.rage(actor)
                       }
                     ]
                 },
