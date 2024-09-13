@@ -76,7 +76,7 @@ ClassInfo.features = {
                     field: "immenseEnergy",
                     label: "Maximum Energy",
                     sign: false,
-                    values: [null, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70, 72, 92, 95, 98, 128]
+                    values: [null, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70, 72, 92, 95, 98, 128, 135, 142, 150, 160, 190]
                 }
             ]
         },
@@ -98,7 +98,7 @@ ClassInfo.features = {
                     field: "casterLevel.delver",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5]
+                    values: [null, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 6]
                 }
             ]
         },
@@ -165,7 +165,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver.fire",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5]
                 }
             ]
         },
@@ -181,7 +181,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver.water",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5]
                 }
             ]
         },
@@ -197,7 +197,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver.earth",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5]
                 }
             ]
         },
@@ -213,7 +213,7 @@ ClassInfo.features = {
                     field: "proficiencyBonus.delver",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5]
                 }
             ]
         },
@@ -355,7 +355,7 @@ ClassInfo.features = {
                    field: "elementalChannelingDmgDie",
                     label: "Elemental Damage",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, "1d4", "1d4", "1d6", "1d6", "1d8", "1d8", "1d10", "1d10", "1d12"] 
+                    values: [null, 0, 0, 0, 0, 0, 0, "1d4", "1d4", "1d6", "1d6", "1d8", "1d8", "1d10", "1d10", "1d12", "1d12", "1d12", "3d4", "3d4", "2d8"] 
                 }
             ],
             actions: [
@@ -1061,6 +1061,321 @@ ClassInfo.features = {
                     spellType: "SE",
                     level: {
                         max: 5
+                    }
+                }
+            ]
+        },
+        {
+            level: 16,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 17,
+            common: "learningExperience"
+        },
+        {
+            level: 17,
+            id: "delver.bonus",
+            name: "Delver Bonus",
+            key: false,
+            description: "Choose one of the following stats to gain a +1 class bonus to.",
+            selections: {
+                "4": {
+                    label: "Choose a Stat Increase",
+                    options: {
+                        passivePerception: "Passive Perception",
+                        speed: "Speed",
+                        carryWeight: "Carry Weight"
+                    }
+                }
+            }
+        },
+        {
+            level: 18,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 18,
+            archetype: "fire",
+            name: "Burning Passion",
+            key: false,
+            description: `While raging, your body emits bright light in a 20-foot radius, and creatures standing within 6 feet of you take 3 points of burning damage per frame.`
+        },
+        {
+            level: 18,
+            archetype: "water",
+            name: "Water Bender",
+            key: false,
+            description: `<p>You can swim at your full movement speed.</p><p>Whenever you make a Hold Breath check underwater, you may spend energy equal to half the difficulty of that check. If you do, you automatically succeed.</p>`
+        },
+        {
+            level: 18,
+            archetype: "earth",
+            name: "Seismic Sense",
+            key: false,
+            description: "Your Perception skill allows you to sense nearby moving creatures or objects within 100 feet through vibrations in the ground. You use your sense of touch for this ability, so it isn't impeded by reduced visibility or blindness."
+        },
+        {
+            level: 18,
+            archetype: "wind",
+            name: "Lightning Charge",
+            key: false,
+            description: "Whenever you would deal Shock damage to any target, you can choose to replace the damage with energy recovery for that creature. You must activate this ability before rolling.",
+            actions: [
+                {
+                    name: "Lightning Charge",
+                    images: {
+                        base: `${NEWERA.images}/chain-lightning.png`,
+                        left: `${NEWERA.images}/delver_wind.png`,
+                        right: `${NEWERA.images}/ac_0frame.png`,
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "The next time you would deal Shock damage this turn, the target instead gains energy with overcharge equal to the amount you roll.",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "chain-lightning",
+                      }
+                    ]
+                },
+            ]
+        },
+        {
+            level: 19,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 19,
+            id: "delver.bonus",
+            name: "Delver Bonus",
+            key: false,
+            description: "Choose one of the following stats to gain a +1 class bonus to.",
+            selections: {
+                "5": {
+                    label: "Choose a Stat Increase",
+                    options: {
+                        passivePerception: "Passive Perception",
+                        speed: "Speed",
+                        carryWeight: "Carry Weight"
+                    }
+                }
+            }
+        },
+        {
+            level: 20,
+            id: "delver.archetype",
+            name: "Duality",
+            key: false,
+            description: "<p>Choose a second Delver Archetype.</p><p>Your Proficiency Bonus applies to spells cast in this school as well as your original elemental path.</p>",
+            selections: {
+                "2": {
+                    label: "Choose an Elemental Path",
+                    type: "String",
+                    options: {
+                        fire: `Path of Fire`,
+                        water: `Path of Water`,
+                        earth: `Path of Earth`,
+                        wind: `Path of Wind`,
+                    }
+                }
+            }
+        },
+        {
+            level: 20,
+            archetype: "fire",
+            name: "Spell Studies (6<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Pyromancy spell (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Uncommon Delver spells (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common spells of any school (Level 6 or lower)</h4>
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    schools: ["PY"],
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                }
+            ]
+        },
+        {
+            level: 20,
+            archetype: "water",
+            name: "Spell Studies (6<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Cryomancy spell (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Uncommon Delver spells (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common spells of any school (Level 6 or lower)</h4>
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    schools: ["HM"],
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                }
+            ]
+        },
+        {
+            level: 20,
+            archetype: "earth",
+            name: "Spell Studies (6<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Lithomancy spell (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Uncommon Delver spells (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common spells of any school (Level 6 or lower)</h4>
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    schools: ["GE"],
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                }
+            ]
+        },
+        {
+            level: 20,
+            archetype: "wind",
+            name: "Spell Studies (6<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Evocation spell (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/evocation.png" />
+            </div>
+            <div class="magic-info">
+                <h4>2 Uncommon Delver spells (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/banishment.png" data-tooltip="Banishment" data-tooltip-direction="UP" />
+            </div>
+            <div class="magic-info">
+                <h4>3 Common spells of any school (Level 6 or lower)</h4>
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    schools: ["EV"],
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["delver"],
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 6
                     }
                 }
             ]
