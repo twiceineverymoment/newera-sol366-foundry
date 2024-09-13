@@ -1,3 +1,5 @@
+import { NEWERA } from "../config.mjs";
+
 export class Investigator {
     static classFeatures = [
         {

@@ -1,5 +1,3 @@
-import { NEWERA } from "./config.mjs";
-
 import { Delver } from "./classes/delver.mjs";
 import { Mercenary } from "./classes/mercenary.mjs";
 import { Ranger } from "./classes/ranger.mjs";

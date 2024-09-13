@@ -1,3 +1,6 @@
+import { NEWERA } from "../config.mjs";
+
+
 export class Magus {
     static classFeatures = [
         {
