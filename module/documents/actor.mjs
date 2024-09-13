@@ -1009,11 +1009,11 @@ export class NewEraActor extends Actor {
         currentTier: 1,
         maximumTier: 1,
         isUpgrade: false,
-        tiers: {
-          base: {
-            cost: cost,
-            description: ""
-          }
+        base: {
+          cost: cost,
+          description: "",
+          prerequisites: "",
+          conflicts: ""
         }
       }
     }, {parent: this});
