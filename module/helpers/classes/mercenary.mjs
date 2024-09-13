@@ -1,6 +1,7 @@
 /* Contains class-specific ability functions for the Mercenary. */
 
 import { NEWERA } from "../config.mjs";
+import { Actions } from "../macros/actions.mjs";
 
 export class Mercenary {
 
@@ -81,7 +82,7 @@ export class Mercenary {
                     field: "rage",
                     label: "Rage Uses Per Day",
                     sign: false,
-                    values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4]
+                    values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
                 }
             ]
         },
@@ -123,13 +124,13 @@ export class Mercenary {
                     field: "proficiencyBonus.mercenary.raider",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5]
                 },
                 {
                     field: "proficiencyDamageBonus.raider",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9]
                 }
             ]
         },
@@ -144,13 +145,13 @@ export class Mercenary {
                     field: "proficiencyBonus.mercenary.enforcer",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5]
                 },
                 {
                     field: "proficiencyDamageBonus.enforcer",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9]
                 }
             ]
         },
@@ -165,13 +166,13 @@ export class Mercenary {
                     field: "proficiencyBonus.mercenary.woodsman",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5]
                 },
                 {
                     field: "proficiencyDamageBonus.woodsman",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9]
                 }
             ]
         },
@@ -186,13 +187,13 @@ export class Mercenary {
                     field: "proficiencyBonus.mercenary.warrior",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5]
                 },
                 {
                     field: "proficiencyDamageBonus.warrior",
                     label: "Proficiency Damage Bonus",
                     sign: true,
-                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+                    values: [null, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9]
                 }
             ]
         },
@@ -236,7 +237,7 @@ export class Mercenary {
                     field: "casterLevel.mercenary",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3]
+                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4]
                 }
             ]
         },
@@ -447,20 +448,142 @@ export class Mercenary {
                     }
                 }
             ]
+        },
+        {
+            level: 16,
+            archetype: "raider",
+            retroactive: true,
+            name: "Savage Raider",
+            key: false,
+            modifies: "Rage",
+            description: "When using one-handed swords while Raging, your rage damage bonus increases to +2d."
+        },
+        {
+            level: 16,
+            archetype: "enforcer",
+            retroactive: true,
+            name: "Savage Enforcer",
+            key: false,
+            modifies: "Rage",
+            description: "When using blunt weapons while Raging, your rage damage bonus increases to +2d."
+        },
+        {
+            level: 16,
+            archetype: "woodsman",
+            retroactive: true,
+            name: "Savage Woodsman",
+            key: false,
+            modifies: "Rage",
+            description: "When using axes while Raging, your rage damage bonus increases to +2d."
+        },
+        {
+            level: 16,
+            archetype: "warrior",
+            retroactive: true,
+            name: "Savage Warrior",
+            key: false,
+            modifies: "Rage",
+            description: "When using two-handed swords while Raging, your rage damage bonus increases to +2d."
+        },
+        {
+            level: 17,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 18,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 18,
+            common: "learningExperience"
+        },
+        {
+            level: 19,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 19,
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Uncommon Mercenary spells (Level 4 or lower)</h4>
+                <h4>2 Common Mercenary spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/lithomancy.png" data-tooltip="Lithomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/abjuration.png" data-tooltip="Anjuration" data-tooltip-direction="UP" />
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["mercenary"],
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 1,
+                    lists: ["mercenary"],
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
+        },
+        {
+            level: 20,
+            name: "Combat Master",
+            key: false,
+            modifies: "Combat Expert",
+            description: `<p>You've mastered the art of battle. Your turn length increases by one frame.</p><p>During your turn you may Stay On Guard. If you do, your turn ends and any unused frames become reaction frames until the start of your next turn.</p>`,
+            actions: [
+                {
+                    name: "Stay On Guard",
+                    images: {
+                        base: `${NEWERA.images}/armor-upgrade.png`,
+                        left: `${NEWERA.images}/mercenary.png`,
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: "<p>You keep watch for incoming threats. Your turn ends, and you gain reaction frames equal to the number of unused frames left in your turn. Extra reaction frames are lost if they aren't used before your next turn.</p>",
+                    overrideMacroCommand: "game.newera.HotbarActions.stayOnGuard()",
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "armor-upgrade",
+                        callback: (actor) => Actions.printAbilityInfo(actor, {
+                            title: "Stay On Guard",
+                            img: `${NEWERA.images}/armor-upgrade.png`,
+                            details: "You keep watch for incoming threats. Your turn ends, and you gain reaction frames equal to the number of unused frames left in your turn. Extra reaction frames are lost if they aren't used before your next turn."
+                        })
+                      }
+                    ]
+                }
+            ]
         }
     ]
 
     static async rage(actor){
         const rageResource = Object.entries(actor.system.additionalResources).find(r => r[1].name == "Rage");
+        const isSavageFighter = actor.getClassLevel("mercenary") >= 16;
         if (rageResource && rageResource[1].value > 0){
             actor.actionMessage(actor.img, null, "{NAME} is becoming enraged!");
             actor.createEmbeddedDocuments('ActiveEffect', [{
-                label: "Rage",
+                label: "Rage" + (isSavageFighter && "(Savage)"),
                 img: `${NEWERA.images}/fire-dash.png`,
                 description: `<p>Your physical abilities are enhanced at the cost of reduced presence of mind. Your Rage ends at the end of combat, or at the end of your turn if you did not attempt an attack during that turn.</p>
                 <ul>
                     <li>Your Speed is increased by 4 feet.</li>
-                    <li>Strength-based attacks deal additional damage according to your Rage Damage Bonus in the Mercenary table.</li>
+                    <li>Strength-based attacks deal +${isSavageFighter?2:1}d damage.</li>
                     <li>You're immune to being staggered.</li>
                     <li>You have disadvantage on all mental ability-based checks.</li>
                     <li>Your Passive Perception is reduced by 4.</li>
