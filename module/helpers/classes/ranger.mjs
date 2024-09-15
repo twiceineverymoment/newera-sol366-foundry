@@ -482,6 +482,92 @@ export class Ranger {
                     }
                 }
             }
+        },
+        {
+            level: 16,
+            id: "ranger.specialties",
+            name: "Ranger Specialty",
+            key: false,
+            description: "Choose an additional Specialty.",
+            selections: {
+                "6": {
+                    label: "Specialty #6",
+                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"}
+                }
+            }
+        },
+        {
+            level: 16,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 17,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 17,
+            id: "ranger.bonus",
+            name: "Ranger Bonus",
+            key: false,
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "3": {
+                    label: "Choose a Bonus",
+                    options: {
+                        "passivePerception": "+1 Passive Perception",
+                        "carryWeight": "+1 Carry Weight",
+                        "increase": "Increase Natural Skill, Knowledge, or Specialty"
+                    }
+                }
+            }
+        },
+        {
+            level: 18,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 18,
+            name: "Combat Expert",
+            key: false,
+            description: "Your Turn Length increases by 1 frame."
+        },
+        {
+            level: 19,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 19,
+            name: "Spell Studies (4<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>3 Uncommon Ranger spells (Level 4 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physiomancy.png" data-tooltip="Physiomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/conjuration.png" data-tooltip="Conjuration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 2,
+                    lists: ["ranger"],
+                    spellType: "SE",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
+        },
+        {
+            level: 20,
+            name: "Lethal Shot",
+            key: false,
+            modifies: "Hunter's Focus",
+            description: `<p>Called shots against your Prey don't take an additional frame.</p>
+            <p>If your Prey is immobilized, incapacitated, or didn't move during its most recent turn, you have a +10 bonus to hit.</p>`
         }
     ]
 
