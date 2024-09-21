@@ -1381,7 +1381,10 @@ export class NewEraActorSheet extends ActorSheet {
   }
 
   _getSpellCastDifficulty(spellId, ampFactor){
-      const spell = this.actor.items.get(spellId);
+        const spell = this.actor.items.get(spellId);
+        if (spell.system.school == "CL") { //Channeling spells don't have a casting difficulty.
+          return null;
+        }
         let form = spell.system.form;
         let formSkill = 0;
         if (spell.system.school == "??" || spell.system.school == "MM"){
