@@ -475,6 +475,20 @@ export class HotbarActions {
         }
     }
 
+    static async hotBloodedBoost(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+
+        if (actor.getClassLevel("guardian") >= 16){
+            Guardian.hotBloodedBoostPrompt(actor);
+        } else {
+            ui.notifications.error("The selected token doesn't have that ability.");
+        }
+    }
+
     static async exitStance(){
         const actor = this.getSelectedActor();
         if (!actor){

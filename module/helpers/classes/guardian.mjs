@@ -1,4 +1,6 @@
 import { NEWERA } from "../config.mjs";
+import { Formatting } from "../formatting.mjs";
+import { Actions } from "../macros/actions.mjs";
 export class Guardian {
 
     static classFeatures = [
@@ -90,7 +92,7 @@ export class Guardian {
                     field: "proficiencyBonus.guardian",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5]
+                    values: [null, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7]
                 }
             ]
         },
@@ -292,7 +294,7 @@ export class Guardian {
                     field: "casterLevel.guardian",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5]
                 }
             ]
         },
@@ -340,13 +342,13 @@ export class Guardian {
                     field: "secondWind.roll",
                     label: "Second Wind Die",
                     sign: false,
-                    values: [null, "", "", "", "", "", "d6", "d6", "d6", "d8", "d8", "d8", "d8", "d8", "d8", "d10"]
+                    values: [null, "", "", "", "", "", "d6", "d6", "d6", "d8", "d8", "d8", "d8", "d8", "d8", "d10", "d10", "d10", "d10", "d10", "d10"]
                 },
                 {
                     field: "secondWind.count",
                     label: "Dice per Day",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 8, 9, 10, 10]
+                    values: [null, 0, 0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 8, 9, 10, 10, 11, 12, 13, 14, 15]
                 }
             ],
             actions: [
@@ -696,6 +698,174 @@ export class Guardian {
             name: "Combat Expert",
             key: false,
             description: "Your turn length increases by one action frame and one reaction frame."
+        },
+        {
+            level: 16,
+            name: "Hot-Blooded",
+            key: false,
+            modifies: "Second Wind",
+            description: `<p>You may use up to three of your Second Wind dice to increase the healing done by a Restoration spell or Medicine check you perform, or to increase the damage dealt by a spell or unarmed attack you make.</p>`,
+            actions: [
+                {
+                    name: "Healing/Damage Boost",
+                    images: {
+                      base: `${NEWERA.images}/blast.png`,
+                      left: `${NEWERA.images}/guardian.png`,
+                      right: `${NEWERA.images}/ac_0frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `<p>Roll up to three of your Second Wind dice. The next time you make a Medicine check, unarmed attack, or cast a spell this turn, add the result of these rolls to the healing or damage done by that action.</p>`,
+                    difficulty: null,
+                    overrideMacroCommand: "game.newera.HotbarActions.hotBloodedBoost()",
+                    type: "0",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "blast",
+                        callback: actor => Guardian.hotBloodedBoostPrompt(actor)
+                      }
+                    ]
+                }
+            ]
+        },
+        {
+            level: 17,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 18,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 18,
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Guardian Spell (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/conjuration.png" data-tooltip="Conjuration" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divination.png" data-tooltip="Divination" data-tooltip-direction="UP" />
+                <h3>3 Uncommon spells from any school (Level 5 or lower)</h4>
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    lists: ["guardian"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 2,
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                }
+            ]
+        },
+        {
+            level: 19,
+            id: "guardian.bonus",
+            name: "Guardian Bonus",
+            key: false,
+            description: "Choose one of the following stats to gain a +1 class bonus to.",
+            selections: {
+                "3": {
+                    label: "Choose a Stat Bonus",
+                    options: {
+                        speed: "Speed",
+                        carryWeight: "Carry Weight",
+                        naturalArmor: "Natural Armor"
+                    }
+                }
+            }
+        },
+        {
+            level: 19,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 20,
+            common: "learningExperience"
+        },
+        {
+            level: 20,
+            name: "Advanced Fighting Techniques",
+            key: false,
+            modifies: "Qi",
+            description: "You learn the Phalanx Stance and Flanking Stance.",
+            actions: [
+                {
+                    name: "Phalanx Stance",
+                    images: {
+                      base: `${NEWERA.images}/backup.png`,
+                      left: `${NEWERA.images}/guardian.png`,
+                      right: `${NEWERA.images}/ac_1frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `
+                    <p>You project your Qi into a protective and invigorating energy field which forms a straight line perpendicular to the direction you're facing. Allies standing on your sides form a Phalanx formation, taking advantage of your energy to create a powerful defensive wall. Allies are part of the Phalanx formation as long as they're standing immediately to your left or right, or to the left or right of another ally that is also part of the formation.</p>
+                    <p>While in this stance:</p>
+                    <ul>
+					<li style="color: lightblue">Allies have advantage on attack actions and <a>Defense</a> checks while positioned immediately to your left or right side. Other allies to the side of those creatures also gain these benefits. You gain the same benefit as long as the formation is maintained.</li>
+					<li style="color: lightblue">Whenever you move on your turn, any allies on your left or right side can move up to their speed as a free action to maintain their positions in the phalanx.</li>
+					<li style="color: salmon">You exit the stance whenever no ally is standing on your immediate left or right.</li>
+				    </ul>`,
+                    difficulty: null,
+                    overrideMacroCommand: "game.newera.HotbarActions.enterStance('Phalanx')",
+                    type: "1",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "backup",
+                        callback: actor => Guardian.activateFightingStance(actor, "Phalanx")
+                      }
+                    ]
+                },
+                {
+                    name: "Flanking Stance",
+                    images: {
+                      base: `${NEWERA.images}/encirclement.png`,
+                      left: `${NEWERA.images}/guardian.png`,
+                      right: `${NEWERA.images}/ac_1frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `
+                    <p>
+                        Your Qi amplifies your <a>Perception</a> and situational awareness. While in this stance, you and one or more allies can Flank an enemy creature for a tactical edge.
+				        A creature is flanked as long as you and at least one ally are adjacent to an enemy and on opposite sides or corners.
+                    </p>
+                    <p>While in this stance:</p>
+                    <ul>
+                        <li style="color: lightblue">You and your allies have advantage on attack actions and <a>Defense</a> checks against flanked creatures.</li>
+					    <li style="color: lightblue">Whenever an enemy you're flanking attacks an ally, you get an <a page="opportunity">opportunity attack</a> against that creature.</li>
+					    <li style="color: salmon">If you aren't flanking at least one enemy when your turn ends, you exit this stance.</li>
+				    </ul>`,
+                    difficulty: null,
+                    overrideMacroCommand: "game.newera.HotbarActions.enterStance('Flanking')",
+                    type: "1",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "encirclement",
+                        callback: actor => Guardian.activateFightingStance(actor, "Flanking")
+                      }
+                    ]
+                }
+            ]
         }
     ]
 
@@ -764,6 +934,56 @@ export class Guardian {
             ui.notifications.info(`You recovered ${roll.total} HP with Second Wind. ${actor.name} has ${resource[1].value - 1} Second Wind dice left.`);
         } else {
             ui.notifications.error(`${actor.name} has expended all their Second Wind dice. Recover one die per hour of resting, or all your dice on a full rest.`);
+        }
+    }
+
+    static async hotBloodedBoostPrompt(actor) {
+        new Dialog({
+            title: `Hot-Blooded Boost [${actor.name}]`,
+            content: `<p>Select the number of dice to roll.</p>`,
+            buttons: {
+                roll1: {
+                    icon: `<i class="fa-solid fa-dice"></i>`,
+                    label: `Roll 1`,
+                    callback: () => Guardian.hotBloodedBoost(actor, 1)
+                },
+                roll2: {
+                    icon: `<i class="fa-solid fa-dice"></i>`,
+                    label: `Roll 2`,
+                    callback: () => Guardian.hotBloodedBoost(actor, 2)
+                },
+                roll3: {
+                    icon: `<i class="fa-solid fa-dice"></i>`,
+                    label: `Roll 3`,
+                    callback: () => Guardian.hotBloodedBoost(actor, 3)
+                }
+            }
+        }).render(true);
+    }
+
+    static async hotBloodedBoost(actor, amount) {
+        const resource = Object.entries(actor.system.additionalResources).find(r => r[1].name.toLowerCase().includes("second wind"));
+        if (resource && resource[1].value >= amount){
+            const die = actor.system.tableValues.secondWind.roll;
+            const formula = `${amount}${die}`;
+            const roll = new Roll(formula, actor.getRollData());
+            await roll.evaluate();
+            await actor.actionMessage(actor.img, '', "{NAME} spends {0} of {d} Second Wind dice to increase damage or healing.", amount);
+            roll.toMessage({
+                speaker: ChatMessage.getSpeaker({actor: actor}),
+                flavor: "Healing/Damage Boost (Hot-Blooded)"
+            });
+            let update = {
+                system: {
+                    additionalResources: {}
+                }
+            };
+            update.system.additionalResources[resource[0]] = {
+                value: resource[1].value - amount
+            };
+            await actor.update(update);
+        } else {
+            ui.notifications.error(`${actor.name} doesn't have that many Second Wind dice available. Recover one die per hour of resting, or all your dice on a full rest.`);
         }
     }
 
@@ -915,6 +1135,32 @@ export class Guardian {
                 <li style="color: lightblue">All Pyromancy spells cast by you and allies within 30 feet are amplified one level higher.</li>
             </ul>
         </p>`
+        },
+        "Phalanx": {
+            label: "Phalanx Stance",
+            img: ``,
+            description: `<p>
+				You project your Qi into a protective and invigorating energy field which forms a straight line perpendicular to the direction you're facing. Allies standing on your sides form a Phalanx formation, taking advantage of your energy to create a powerful defensive wall.
+				Allies are part of the Phalanx formation as long as they're standing immediately to your left or right, or to the left or right of another ally that is also part of the formation.
+				<ul>
+					<li style="color: lightblue">Allies have advantage on attack actions and <a>Defense</a> checks while positioned immediately to your left or right side. Other allies to the side of those creatures also gain these benefits. You gain the same benefit as long as the formation is maintained.</li>
+					<li style="color: lightblue">Whenever you move on your turn, any allies on your left or right side can move up to their speed as a free action to maintain their positions in the phalanx.</li>
+					<li style="color: salmon">You exit the stance whenever no ally is standing on your immediate left or right.</li>
+				</ul>
+			</p>`
+        },
+        "Flanking": {
+            label: "Flanking Stance",
+            img: ``,
+            description: `<p>
+				Your Qi amplifies your <a>Perception</a> and situational awareness. While in this stance, you and one or more allies can Flank an enemy creature for a tactical edge.
+				A creature is flanked as long as you and at least one ally are adjacent to an enemy and on opposite sides or corners. While in this stance:
+				<ul>
+					<li style="color: lightblue">You and your allies have advantage on attack actions and <a>Defense</a> checks against flanked creatures.</li>
+					<li style="color: lightblue">Whenever an enemy you're flanking attacks an ally, you get an <a page="opportunity">opportunity attack</a> against that creature.</li>
+					<li style="color: salmon">If you aren't flanking at least one enemy when your turn ends, you exit this stance.</li>
+				</ul>
+			</p>`
         }
     }
 }
