@@ -70,7 +70,7 @@ export class Scholar {
                     field: "casterLevel.scholar",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 6]
+                    values: [null, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7]
                 }
             ]
         },
@@ -166,61 +166,61 @@ export class Scholar {
                     field: "spellSlots.1",
                     label: "Level 1 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 2, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+                    values: [null, 0, 0, 2, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 10]
                 },
                 {
                     field: "spellSlots.2",
                     label: "Level 2 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 1, 2, 2, 3, 3, 5, 5, 5, 5, 5, 5]
+                    values: [null, 0, 0, 0, 0, 1, 2, 2, 3, 3, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7]
                 },
                 {
                     field: "spellSlots.3",
                     label: "Level 3 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 5, 5]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 5, 5, 5, 5, 7, 7, 7]
                 },
                 {
                     field: "spellSlots.4",
                     label: "Level 4 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3, 5, 5, 7, 7, 7]
                 },
                 {
                     field: "spellSlots.5",
                     label: "Level 5 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 5, 5, 5]
                 },
                 {
                     field: "spellSlots.6",
                     label: "Level 6 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3]
                 },
                 {
                     field: "spellSlots.7",
                     label: "Level 7 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
                 },
                 {
                     field: "spellSlots.8",
                     label: "Level 8 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.9",
                     label: "Level 9 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     field: "spellSlots.10",
                     label: "Level 10 Spell Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
             ]
         },
