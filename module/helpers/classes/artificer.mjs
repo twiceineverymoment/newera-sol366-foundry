@@ -67,7 +67,7 @@ export class Artificer {
                     field: "casterLevel.artificer",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5]
+                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7]
                 }
             ]
         },
@@ -146,7 +146,7 @@ export class Artificer {
                     field: "focusEnergy",
                     label: "Focus Energy",
                     sign: false,
-                    values: [null, 0, 0, 20, 24, 30, 36, 42, 50, 56, 64, 72, 84, 96, 110, 120]
+                    values: [null, 0, 0, 20, 24, 30, 36, 42, 50, 56, 64, 72, 84, 96, 110, 120, 136, 148, 164, 184, 200]
                 }
             ],
             actions: [
@@ -536,7 +536,6 @@ export class Artificer {
                 {
                     choose: 3,
                     rarity: 1,
-                    lists: ["artificerSpells"],
                     spellType: "SS",
                     level: {
                         max: 5
@@ -623,6 +622,148 @@ export class Artificer {
                     }
                 }
             ]
+        },
+        {
+            level: 16,
+            name: "Spellcraft",
+            key: true,
+            description: `<p>You can create your own spells.</p>
+            <p>As an Artificer, you can craft simple and complex enchantments using any combination of other spells, enchantments, and metamagic components you know. Crafted spells may be stored in your focus.</p>
+            <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
+            tableValues: [
+                {
+                    field: "spellcraft.artificer",
+                    label: "Spellcraft Skill Level",
+                    sign: false,
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3]
+                }
+            ]
+        },
+        {
+            level: 17,
+            name: "Spell Studies (6<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Artificer Spell (Level 6 or lower)</h4>
+                <h4>2 Uncommon Artificer Spells (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physical.png" data-tooltip="All Physical Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+                <h4>3 Common spells from any school (Level 6 or lower)</h4>
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SS",
+                    level: {
+                        max: 6
+                    }
+                }
+            ]
+        },
+        {
+            level: 17,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 18,
+            common: "naturalSkillImprovement"
+        },
+        {
+            level: 18,
+            common: "learningExperience"
+        },
+        {
+            level: 18,
+            id: "artificer.bonus",
+            key: false,
+            name: "Artificer Bonus",
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "5": {
+                    label: "Choose a Bonus",
+                    options: {
+                        magicSkill: "+1 bonus to a magical skill",
+                        enchantment: "Learn one common spell or enchantment of any level",
+                        alchemy: "Learn one common or uncommon potion recipe",
+                        carryWeight: "+1 Carry Weight bonus",
+                    }
+                }
+            }
+        },
+        {
+            level: 19,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 19,
+            name: "Enchantment Studies",
+            key: false,
+            description: `<p>You learn new enchantments from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Rare Enchantments (Level 6 or lower)
+                <h4>3 Uncommon Enchantments (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/elemental.png" data-tooltip="All Elemental Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/divine.png" data-tooltip="All Divine Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/physical.png" data-tooltip="All Physical Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/psionic.png" data-tooltip="All Psionic Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/temporal.png" data-tooltip="All Temporal Schools" data-tooltip-direction="UP" />
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 3,
+                    metamagic: true,
+                    spellType: "E",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 2,
+                    metamagic: true,
+                    spellType: "E",
+                    level: {
+                        max: 6
+                    }
+                }
+            ]
+        },
+        {
+            level: 20,
+            name: "Bond of Friendship",
+            key: false,
+            modifies: "Magical Focus",
+            description: `<p>Your allies can store spells in your Focus.</p>
+            <p>Only you can cast stored spells, and it can only be used while in your hand.</p>
+            `
         }
     ]
 
