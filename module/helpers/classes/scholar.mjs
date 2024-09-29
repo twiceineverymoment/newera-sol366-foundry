@@ -1,5 +1,6 @@
 import { SpellPreparation } from "../../sheets/spell-preparation.mjs";
 import { NEWERA } from "../config.mjs";
+import { Actions } from "../macros/actions.mjs";
 
 export class Scholar {
 
@@ -543,7 +544,7 @@ export class Scholar {
         },
         {
             level: 15,
-            name: "Tolgethic Scribe",
+            name: "Spell Scribe",
             key: false,
             description: `<p>While meditating, you can create a spell script of any spell you know, including ones you've created.</p>
             <p>Crafted spells must be refined to the Revised state in order to be inscribed this way. If you've successfully taught a spell you created to another mage and watched them cast it, you gain a +10 bonus to further refinement checks on that spell.</p>`,
@@ -571,6 +572,152 @@ export class Scholar {
                     ]
                 }
             ]
+        },
+        {
+            level: 16,
+            name: "Readied Casting",
+            key: false,
+            modifies: "Prepared Spells",
+            description: "Once per turn, you may cast a prepared spell that takes 2 or 3 frames in a single frame.",
+            actions: [
+                {
+                    name: "Readied Cast",
+                    images: {
+                        base: `${NEWERA.images}/hazard-sign.png`,
+                        left: `${NEWERA.images}/scholar.png`,
+                        right: `${NEWERA.images}/ac_0frame.png`
+                    },
+                    ability: null,
+                    skill: null,
+                    specialties: [],
+                    description: `The next standard or charged spell you cast this turn from your prepared spells takes only one frame. Use this ability only once per turn.`,
+                    difficulty: null,
+                    actionType: "0",
+                    rolls: [
+                      {
+                        label: "Activate",
+                        die: "hazard-sign",
+                        callback: actor => Actions.printAbilityInfo(actor, {
+                            img: actor.img,
+                            title: "Readied Cast",
+                            details: "Once per turn, you cast a prepared standard or charged spell in one frame, as though it were a quick spell."
+                        })
+                      }
+                    ]
+                }
+            ]
+        },
+        {
+            level: 17,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 17,
+            name: "Extra Natural Skill",
+            id: "scholar.naturalSkills",
+            key: false,
+            description: `<p>You may choose an additional skill to become a natural in.</p>`,
+            choices: {
+                "3": {
+                    label: "Third Choice",
+                    options: {
+                        "diplomacy": "Diplomacy",
+                        "logic": "Logic",
+                        "insight": "Insight",
+                        "elemental-magic": "Elemental Magic",
+                        "divine-magic": "Divine Magic",
+                        "physical-magic": "Physical Magic",
+                        "psionic-magic": "Psionic Magic",
+                        "spectral-magic": "Spectral Magic",
+                        "temporal-magic": "Temporal Magic"
+                    }
+                },
+            }
+        },
+        {
+            level: 18,
+            name: "Spell Studies (7<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Rare spells (Level 6 or lower)</h4>
+                <h4>3 Uncommon spells (Level 6 or lower)</h4>
+                <h4>3 Common spells (Level 6 or lower)</h4>
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 3,
+                    rarity: 3,
+                    spellType: "SE",
+                    restricted: true,
+                    level: {
+                        max: 7
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 2,
+                    spellType: "SE",
+                    restricted: true,
+                    level: {
+                        max: 7
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 1,
+                    spellType: "SE",
+                    restricted: true,
+                    level: {
+                        max: 7
+                    }
+                },
+            ]
+        },
+        {
+            level: 18,
+            id: "scholar.bonus",
+            name: "Scholar Bonus",
+            key: false,
+            description: "Choose two of your magical skills and gain a +1 class bonus to their modifiers.",
+            selections: {
+                "4.1": {
+                    label: "First Choice",
+                    options: {
+                        "elemental-magic": "Elemental",
+                        "divine-magic": "Divine",
+                        "physical-magic": "Physical",
+                        "psionic-magic": "Psionic",
+                        "spectral-magic": "Spectral",
+                        "temporal-magic": "Temporal"
+                    }
+                },
+                "4.2": {
+                    label: "Second Choice",
+                    options: {
+                        "elemental-magic": "Elemental",
+                        "divine-magic": "Divine",
+                        "physical-magic": "Physical",
+                        "psionic-magic": "Psionic",
+                        "spectral-magic": "Spectral",
+                        "temporal-magic": "Temporal"
+                    }
+                }
+            }
+        },
+        //TODO Additional feature at lvl 18 or 19 in S366 v1.2.1
+        {
+            level: 19,
+            common: "learningExperience"
+        },
+        {
+            level: 20,
+            name: "Trivial Spellcasting (1<sup>st</sup> Level)",
+            key: false,
+            modifies: "Prepared Spells",
+            description: `<p>Your Level 1 spell slots aren't expended when you cast them at base level. (You can prepare up to 10 1st-level spells and cast those spells an unlimited number of times, but using Flexible Casting to amplify the spell will expend it.)</p>`
         }
     ]
 
