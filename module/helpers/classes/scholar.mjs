@@ -559,7 +559,7 @@ export class Scholar {
                     ability: null,
                     skill: null,
                     specialties: [],
-                    description: `You spend one hour preparing your spells for the day during meditation. Select a spell to prepare in each of your available spell slots. Your selections last until your next full rest.`,
+                    description: `You spend one hour while meditating to create a script of a spell you know. If the spell is one you created, it must be refined to the Revised state or higher.`,
                     difficulty: null,
                     actionType: "E",
                     rolls: [
@@ -567,7 +567,7 @@ export class Scholar {
                         label: "Check",
                         die: "scroll-quill-2",
                         caption: "Create Spell Script",
-                        formula: `1d20+@spellcraft.mod+@knowledges.tolgethic`
+                        formula: `1d20+@spellcraft.mod+@knowledges.tolgethic.mod`
                       }
                     ]
                 }
