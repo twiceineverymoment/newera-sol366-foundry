@@ -1,3 +1,4 @@
+import { SpellstrikeSheet } from "../../sheets/spellstrike.mjs";
 import { NEWERA } from "../config.mjs";
 import { Actions } from "../macros/actions.mjs";
 
@@ -59,7 +60,7 @@ export class Magus {
                     field: "casterLevel.magus",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 3, 3, 3, 3, 3]
+                    values: [null, 1, 1, 1, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6]
                 }
             ]
         },
@@ -131,7 +132,7 @@ export class Magus {
                     field: "proficiencyBonus.magus",
                     label: "Proficiency Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+                    values: [null, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6]
                 }
             ]
         },
@@ -286,7 +287,7 @@ export class Magus {
                     field: "spellstrikeSlots",
                     label: "Spellstrike Slots",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 5, 6, 6, 8, 8, 10, 12, 12, 15, 15]
                 }
             ],
             actions: [
@@ -300,13 +301,14 @@ export class Magus {
                     skill: null,
                     specialties: [],
                     description: "<p>You cast a spell alongside an attack, turning it into a Spellstrike.</p><p>Choose a spell you know that deals damage, and a melee attack using a held weapon.</p>",
+                    overrideMacroCommand: `game.newera.HotbarActions.spellstrike()`,
                     difficulty: null,
                     actionType: "0",
                     rolls: [
                       {
                         label: "Activate",
                         die: "saber-slash",
-                        callback: (actor) => Magus.spellstrike(actor)
+                        callback: (actor) => new SpellstrikeSheet(actor).render(true)
                       }
                     ]
                 }
@@ -726,8 +728,31 @@ export class Magus {
 
     static spellstrikeSlotNames = ["spellstrike", "spellstrikes", "spellstrike slots"];
 
+    static async initializeSpellstrike(actor) {
+        const currMaxSpellstrikes = actor.system.tableValues.spellstrikeSlots;
+        if (!actor.system.spellstrikes) {
+            await actor.update({
+                system: {
+                    spellstrikes: {
+                        value: currMaxSpellstrikes,
+                        max: currMaxSpellstrikes
+                    }
+                }
+            })
+        }
+        if (actor.system.spellstrikes.max != currMaxSpellstrikes) {
+            await actor.update({
+                system: {
+                    spellstrikes: {
+                        max: currMaxSpellstrikes
+                    }
+                }
+            })
+        }
+    }
+
     static async spellstrike(actor) {
-        const resource = Object.entries(actor.system.additionalResources).find(r => Magus.spellstrikeSlotNames.includes(r.name.toLowerCase()));
+        const resource = Object.entries(actor.system.additionalResources).find(r => Magus.spellstrikeSlotNames.includes(r[1].name.toLowerCase()));
         if (resource && resource[1].value > 0) {
             Actions.printAbilityInfo(actor, {
                 img: actor.img,
