@@ -1132,7 +1132,7 @@ export class NewEraActor extends Actor {
         this.actionMessage(this.img, `${NEWERA.images}/${spell.system.specialty}.png`, "{NAME} casts {0}!", `${spell.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`);
         successful = true;
       } else {
-        const castRoll = new Roll(`d20 + @magic.${spellSkill}.mod + @specialty.partial.${spell.system.specialty} + ${attackMod} + ${spell.spellcraftModifier}`, this.getRollData());
+        const castRoll = new Roll(`d20 + ${spellSkill == "genericCast" ? `@casterLevel` : `@magic.${spellSkill}.mod`} + @specialty.partial.${spell.system.specialty} + ${attackMod} + ${spell.spellcraftModifier}`, this.getRollData());
         await castRoll.evaluate();
         successful = (castRoll.total >= difficulty);
         castRoll.toMessage({
