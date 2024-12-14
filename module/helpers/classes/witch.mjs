@@ -98,7 +98,7 @@ export class Witch {
                     field: "casterLevel.witch",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4]
+                    values: [null, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6]
                 }
             ]
         },
@@ -174,7 +174,7 @@ export class Witch {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28, 32, 36, 40, 45, 50]
                 }
             ]
         },
@@ -191,7 +191,7 @@ export class Witch {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28, 32, 36, 40, 45, 50]
                 }
             ]
         },
@@ -208,7 +208,7 @@ export class Witch {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28, 32, 36, 40, 45, 50]
                 }
             ]
         },
@@ -225,7 +225,7 @@ export class Witch {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28, 32, 36, 40, 45, 50]
                 }
             ]
         },
@@ -242,7 +242,7 @@ export class Witch {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28, 32, 36, 40, 45, 50]
                 }
             ]
         },
@@ -259,7 +259,7 @@ export class Witch {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28, 32, 36, 40, 45, 50]
                 }
             ]
         },
@@ -276,7 +276,7 @@ export class Witch {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28, 32, 36, 40, 45, 50]
                 }
             ]
         },
@@ -293,7 +293,7 @@ export class Witch {
                     field: "familiarBonusHp",
                     label: "Familiar Bonus HP",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28]
+                    values: [null, 0, 0, 0, 0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28, 32, 36, 40, 45, 50]
                 }
             ]
         },
@@ -380,7 +380,7 @@ export class Witch {
                     field: "darkEnergy",
                     label: "Max. Dark Energy",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 15, 20, 25, 40, 45, 50, 55, 60, 65]
+                    values: [null, 0, 0, 0, 0, 0, 0, 15, 20, 25, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 100]
                 }
             ],
             actions: [
@@ -677,6 +677,81 @@ export class Witch {
             name: "Collective Might",
             key: false,
             description: `<p>Whenever a spell is cast using your Dark Energy, another creature in range can assist on the spellcasting check. That creature has disadvantage unless they also know the spell being cast.</p><p>Spells cast with assistance using this ability are automatically amplified to the next-highest factor.</p>`
+        },
+        {
+            level: 16,
+            common:"naturalSkillImprovement"
+        },
+        {
+            level: 16,
+            name: "Spell Studies (5<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Witch Spell (Level 5 or lower)</h4>
+                <h4>3 Uncommon Witch Spells (Level 5 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/evocation.png" data-tooltip="Evocation" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/transmutation.png" data-tooltip="Transmutation" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    lists: ["witch"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 2,
+                    lists: ["witch"],
+                    spellType: "SE",
+                    level: {
+                        max: 5
+                    }
+                }
+            ]
+        },
+        {
+            level: 17,
+            common: "abilityScoreImprovement"
+        },
+        {
+            level: 18,
+            id: "witch.bonus",
+            name: "Witch Bonus",
+            key: false,
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "3": {
+                    label: "Choose a bonus",
+                    options: {
+                        "extraSpell": "Learn 1 Common spell of any school",
+                        "extraPotion": "Learn 1 Common potion recipe",
+                    }
+                }
+            }
+        },
+        {
+            level: 18,
+            archetype: "raven",
+            key: false,
+            name: "Wild Intelligence",
+            description: "Your familiar gains the Logic, Insight, and Instinct skills with a level of 2. Your familiar can assist you on any of these skills, even for actions where assistance isn't usually possible."
+        },
+        {
+            level: 18,
+            archetype: "snake",
+            key: false,
+            name: "Rapid Strike",
+            description: "Your familiar can use its Strike attack twice in a "
         }
     ];
 
