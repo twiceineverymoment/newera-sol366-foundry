@@ -72,10 +72,10 @@ export class SpellstrikeSheet extends ActorSheet {
             const spellId = $(ev.currentTarget).data("spellId");
             const ampFactor = $(ev.currentTarget).data("ampFactor");
             const spell = this.actor.items.find(s => s.id == spellId);
-            Actions.printAbilityInfo(actor, {
-                img: actor.img,
+            Actions.printAbilityInfo(this.actor, {
+                img: this.actor.img,
                 title: "Spellstrike",
-                details: `<p>${actor.name} infuses an attack with the power of ${spell.name}!</p>`
+                details: `<p>${this.actor.name} infuses an attack with the power of ${spell.name}!</p>`
             });
             Actions.castSpell(this.actor, spell, ampFactor, true);
             //Decrement spellstrike
