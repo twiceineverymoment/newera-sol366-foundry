@@ -746,6 +746,7 @@ export class NewEraActorSheet extends ActorSheet {
         html.find("#lp-icon").attr('src', `${NEWERA.images}/lp-hot.png`);
         html.find("#resourceMaxHp").removeClass("resource-hp");
         html.find("#resourceValHp").removeClass("resource-hp");
+        html.find("#resourceTempHp").removeClass("resource-hp");
         html.find("#resourceMaxLp").addClass("resource-hp");
         html.find("#resourceValLp").addClass("resource-hp");
       }
