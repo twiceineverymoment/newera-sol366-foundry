@@ -733,7 +733,7 @@ export class Magus {
                 img: actor.img,
                 title: "Spellstrike",
                 details: `<p>${actor.name} infuses an attack with the power of a spell.</p>`
-            })
+            });
             let update = {
                 system: {
                     additionalResources: {}
@@ -743,6 +743,7 @@ export class Magus {
                 value: resource[1].value - 1
             };
             await actor.update(update);
+            ui.notifications.info(`${actor.name} has ${resource[1].value - 1} / ${resource[1].max} spellstrikes remaining.`);
         } else {
             ui.notifications.warn(`${actor.name} is out of Spellstrikes. Take a full rest to replenish your energy.`);
         }
