@@ -799,6 +799,18 @@ export class Artificer {
                 }
             });
         }
+
+        //If the actor has a table value for focus energy and it doesn't match the current max, update it (this prevents needing to reset the focus to get increased maximum after a level up)
+        if (actor.system.tableValues.focusEnergy && (actor.system.focusEnergy.max != actor.system.tableValues.focusEnergy)) {
+            console.log(`[DEBUG] Updating max focus energy!`);
+            await actor.update({
+                system: {
+                    focusEnergy: {
+                        max: actor.system.tableValues.focusEnergy
+                    }
+                }
+            });
+        }
     }
 
     static getTotalStoredEnergy(actor){
