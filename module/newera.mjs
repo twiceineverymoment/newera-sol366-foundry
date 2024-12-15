@@ -213,8 +213,25 @@ Handlebars.registerHelper('populated', function(haystack){
 
 Hooks.once("ready", async function() {
   Hooks.on("hotbarDrop", (bar, data, slot) => HotbarManager.onHotbarDrop(bar, data, slot));
-  Hooks.on("combatTurn", (combat, updateData, updateOptions) => {
-    
+  Hooks.on("combatTurnChange", async (combat, updateData, updateOptions) => {
+    if (game.settings.get("newera-sol366", "autoClearCombatantStatus")) {
+      console.log(`[DEBUG] Clearing turn status effects from next actor`);
+      const actor = combat.combatants.get(combat.current.combatantId).actor;
+      if (actor) {
+        const reactionUsed = actor.effects.find(eff => ["Reaction Used", "Reactions Used"].includes(eff.label));
+        const preoccupied = actor.effects.find(eff => eff.label == "Preoccupied");
+        const waiting = actor.effects.find(eff => eff.label == "Waiting");
+        if (reactionUsed) {
+          await reactionUsed.delete();
+        }
+        if (preoccupied) {
+          await preoccupied.delete();
+        }
+        if (waiting) {
+          await waiting.delete();
+        }
+      }
+    }
   });
 });
 
@@ -261,6 +278,24 @@ function setupGameSettings(){
     name: "Keep Potion Bottles",
     hint: "When consuming potions, replace them with empty bottles in the drinker's inventory",
     scope: "client",
+    config: true,
+    requiresReload: false,
+    type: Boolean,
+    default: true,
+  });
+  game.settings.register("newera-sol366", "favoriteSpellActions", {
+    name: "Show Favorite Spells on the Actions Tab",
+    hint: "Spells marked as Favorites for a PC or NPC will appear next to your equipment actions on the Actions tab.",
+    scope: "client",
+    config: true,
+    requiresReload: false,
+    type: Boolean,
+    default: false,
+  });
+  game.settings.register("newera-sol366", "autoClearCombatantStatus", {
+    name: "Clear Combat Status Effects on Turn Start",
+    hint: "Automatically remove the Reaction Used, Preoccupied, and Waiting status effects when a combatant starts their turn",
+    scope: "world",
     config: true,
     requiresReload: false,
     type: Boolean,

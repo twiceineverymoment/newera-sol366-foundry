@@ -151,9 +151,14 @@ export class NewEraActor extends Actor {
     system.classlessLevels = classlessLevels;
     if (classlessLevels < 0){
       system.classlessLevels = 0;
-      ui.notifications.warn("Your level doesn't meet the requirement for the number of class levels you have. Reduce your class levels so their total doesn't exceed your overall level.");
-    } else if (classlessLevels < 0){
-      ui.notifications.info(`LEVEL UP! Choose a class for ${this.name} to gain a level in on the Class tab.`);
+      system.isOverLeveled = true;
+      system.isUnderLeveled = false;
+    } else if (classlessLevels > 0){
+      system.isUnderLeveled = true;
+      system.isOverLeveled = false;
+    } else {
+      system.isOverLeveled = false;
+      system.isUnderLeveled = false;
     }
   }
 
