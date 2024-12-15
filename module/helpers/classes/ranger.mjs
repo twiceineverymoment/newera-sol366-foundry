@@ -160,7 +160,7 @@ export class Ranger {
                     field: "preyBonus",
                     label: "Prey Bonus",
                     sign: true,
-                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 5]
+                    values: [null, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6]
                 }
             ]
         },
@@ -195,7 +195,7 @@ export class Ranger {
                     field: "casterLevel.ranger",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3]
+                    values: [null, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4]
                 }
             ]
         },
@@ -237,7 +237,7 @@ export class Ranger {
                     field: "deadeyeDamage",
                     label: "Damage per Frame",
                     sign: true,
-                    values: [null, 0, 0, 0, 0, 0, 0, 2, 2, 2, 3, 3, 3, 3, 4, 4]
+                    values: [null, 0, 0, 0, 0, 0, 0, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5]
                 }
             ],
             actions: [
