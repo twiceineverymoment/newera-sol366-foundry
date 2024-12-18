@@ -13,6 +13,7 @@ import { ChantSheet } from "../../sheets/chants.mjs";
 import { DarkEnergySheet } from "../../sheets/dark-energy.mjs";
 import { NewEraActor } from "../../documents/actor.mjs";
 import { NewEraItem } from "../../documents/item.mjs";
+import { SpellstrikeSheet } from "../../sheets/spellstrike.mjs";
 
 
 /*
@@ -475,6 +476,20 @@ export class HotbarActions {
         }
     }
 
+    static async hotBloodedBoost(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+
+        if (actor.getClassLevel("guardian") >= 16){
+            Guardian.hotBloodedBoostPrompt(actor);
+        } else {
+            ui.notifications.error("The selected token doesn't have that ability.");
+        }
+    }
+
     static async exitStance(){
         const actor = this.getSelectedActor();
         if (!actor){
@@ -602,6 +617,19 @@ export class HotbarActions {
         }
         if (actor.getClassLevel("witch") >= 7){
             new DarkEnergySheet(actor).render(true);
+        } else {
+            ui.notifications.error(this.INVALID_FEATURE_ERROR);
+        }
+  }
+
+  static async spellstrike(){
+    const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        if (actor.getClassLevel("magus") >= 8){
+            new SpellstrikeSheet(actor).render(true);
         } else {
             ui.notifications.error(this.INVALID_FEATURE_ERROR);
         }

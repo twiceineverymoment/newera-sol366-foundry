@@ -123,6 +123,21 @@
 </div>
 {{/if}}
 
+{{#if actions.show.spells}}
+<h3 class="table-header">Spells</h3>
+<div class="action-category">
+  {{#each actions.spells as |action index|}}
+  <div class="action-icon spell-macro" data-action-category="spells" data-item-id="{{action.itemId}}" data-action-id="{{index}}" draggable="true">
+    <div class="action-data">{{json action}}</div>
+    <div {{#if action.disabled}}class="action-icon-container disabled-action"{{else}}class="action-icon-container"{{/if}} data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+      <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
+      <div class="action-spell-level-overlay">{{action.spellLevel}}</div>
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}
+
 {{#if actions.show.feats}}
 <h3 class="table-header">Feats and Skills</h3>
 <div class="action-category">

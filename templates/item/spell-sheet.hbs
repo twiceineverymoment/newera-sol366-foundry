@@ -121,6 +121,7 @@
             <input type="text" class="sheet-input" style="width: 25%" name="system.range.value" value="{{system.range.value}}" data-dtype="Number" {{disabled system.standard}} />
           {{/if}}
             <select name="system.range.description" style="width: 65%" class="sheet-input" id="range-desc-{{item.id}}" {{disabled system.standard}}>
+            <option value="">Other (see description)</option>
             <option value="Self">Self</option>
             <option value="Touch">Touch</option>
             <option value="Projectile">Projectile</option>
@@ -148,6 +149,7 @@
           {{/if}}
             <select name="system.damage.type" class="sheet-input" style="width: 50%" id="damage-type-{{item.id}}" {{disabled system.standard}}>
             <option value="">(None)</option>
+            <option value="other">(Nonspecific)</option>
             <option value="bludgeoning">Bludgeoning</option>
             <option value="slashing">Slashing</option>
             <option value="piercing">Piercing</option>

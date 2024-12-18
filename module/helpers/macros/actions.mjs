@@ -13,6 +13,20 @@ import { NewEraItem } from "../../documents/item.mjs";
 
 export class Actions {
 
+    static printAbilityInfo(actor, info){
+      const template = `
+        <div class="chat-item-details">
+          <img src="${info.img}" />
+          <h2>${info.title}</h2>
+          <p>${info.details}</p>
+        </div>
+      `;
+      ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({actor: actor}),
+        content: template
+      });
+    }
+
     /* Displays the dialog to rest for a number of hours. */
     static restForTheNight(actor){
         new Dialog({

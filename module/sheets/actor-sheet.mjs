@@ -452,6 +452,7 @@ export class NewEraActorSheet extends ActorSheet {
       downtime: [],
       magic: [],
       custom: [],
+      spells: [],
       death: false,
       show: {
         general: (actor.type == "Player Character" || actor.type == "Non-Player Character" || system.hasStandardActions),
@@ -459,7 +460,8 @@ export class NewEraActorSheet extends ActorSheet {
         feats: false,
         exploration: (actor.type == "Player Character" || actor.type == "Non-Player Character"),
         social: (actor.type == "Player Character" || actor.type == "Non-Player Character"),
-        magic: (actor.type == "Creature" && system.hasMagic) || (system.casterLevel > 0)
+        magic: (actor.type == "Creature" && system.hasMagic) || (system.casterLevel > 0),
+        spells: (actor.typeIs(NewEraActor.Types.CHARACTER) && system.casterLevel > 0 && game.settings.get("newera-sol366", "favoriteSpellActions"))
       }
     };
 
@@ -565,6 +567,39 @@ export class NewEraActorSheet extends ActorSheet {
       actions.magic = [...NEWERA.generalMagicActions];
       actions.magic.forEach((a) => NewEraActorSheet._prepareActionContextInfo(a, false));
       system.customActionSection = true;
+    }
+
+    /* List favorited spells as actions */
+    if (actions.show.spells) {
+      const spells = this.actor.items.filter(i => i.type == "Spell" && system.favoriteSpells.includes(i.id));
+      spells.forEach(spell => {
+        const actionSheetData = {
+          name: spell.name,
+          itemId: spell._id,
+          images: {
+            base: spell.img,
+            left: "",
+            right: ""
+          },
+          ability: `${spell.system.form} Spell`,
+          skill: null,
+          specialties: [],
+          description: Formatting.amplifyAndFormatDescription(spell.system.description, 1),
+          overrideMacroCommand: `game.newera.HotbarActions.castSpell(${spell.name})`,
+          difficulty: null,
+          actionType: "",
+          spellLevel: spell.system.level,
+          rolls: [
+            {
+              label: "Cast",
+              die: "glowing-hands",
+              callback: actor => Actions.castSpell(actor, spell)
+            }
+          ]
+        };
+        NewEraActorSheet._prepareActionContextInfo(actionSheetData, false);
+        actions.spells.push(actionSheetData);
+      });
     }
 
     /* Unarmed attack */
@@ -746,6 +781,7 @@ export class NewEraActorSheet extends ActorSheet {
         html.find("#lp-icon").attr('src', `${NEWERA.images}/lp-hot.png`);
         html.find("#resourceMaxHp").removeClass("resource-hp");
         html.find("#resourceValHp").removeClass("resource-hp");
+        html.find("#resourceTempHp").removeClass("resource-hp");
         html.find("#resourceMaxLp").addClass("resource-hp");
         html.find("#resourceValLp").addClass("resource-hp");
       }
@@ -904,6 +940,19 @@ export class NewEraActorSheet extends ActorSheet {
 
     /* EDIT CUTOFF - Everything below here is only run if the sheet is editable */
     if (!this.isEditable) return;
+
+    //Level Up buttons for classes
+    html.find(".class-level-up").click(async (ev) => {
+      const li = $(ev.currentTarget).parents(".inventory-entry");
+      const item = this.actor.items.get(li.data("itemId"));
+      if (item.typeIs(NewEraItem.Types.CLASS)) {
+        await item.update({
+          system: {
+            level: item.system.level + 1
+          }
+        })
+      }
+    });
 
     //Store All buttons
     html.find("#putAwayAll").click(() => this.actor.putAwayAll(false));
@@ -1381,7 +1430,10 @@ export class NewEraActorSheet extends ActorSheet {
   }
 
   _getSpellCastDifficulty(spellId, ampFactor){
-      const spell = this.actor.items.get(spellId);
+        const spell = this.actor.items.get(spellId);
+        if (spell.system.school == "CL") { //Channeling spells don't have a casting difficulty.
+          return null;
+        }
         let form = spell.system.form;
         let formSkill = 0;
         if (spell.system.school == "??" || spell.system.school == "MM"){
