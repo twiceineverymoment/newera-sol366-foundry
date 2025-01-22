@@ -289,6 +289,10 @@
 					"id": "",
 					"ampFactor": 1
 				},
+				"magicTolerance": {
+					"current": 0,
+					"max": 0
+				},
 				"magic": {
 					"elemental": {
 						"level": 0,
@@ -488,6 +492,7 @@
 				"arcane": false,
 				"enchantmentDescriptor": "",
 				"enchantmentColor": "#000000",
+				"totalEnchantmentLevel": 0,
 				"useCharge": false,
 				"charges": {
 					"min": 0,

@@ -121,6 +121,7 @@ export class NewEraActor extends Actor {
     if (system.inspiration < 0){
       system.inspiration = 0;
     }
+    system.magicTolerance.max = Math.max(5, system.level);
   }
 
   _calculateLevel(){
