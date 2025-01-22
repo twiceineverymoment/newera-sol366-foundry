@@ -1,0 +1,37 @@
+<form class="{{cssClass}} {{actor.type}} newera-spellprepsheet-body feature-sheet-scroll" autocomplete="off">
+    <h3 class="table-header">Spellstrike</h3>
+    <div class="resource newera-actorsheet-resource">
+        <div class="resource-content">
+          <input type="text" id="resourceValFocusEnergy" class="resource-input resource-focus-energy" name="system.spellstrikes.value" value="{{spellstrikes.value}}" data-dtype="Number" />
+          <span> / </span>
+          <input type="text" id="resourceMaxFocusEnergy" class="resource-input resource-focus-energy" value="{{spellstrikes.max}}" data-dtype="Number" disabled />
+        </div>
+    </div>
+
+    <h3 class="table-header">Spells</h3>
+    <table class="newera-actorsheet-table">
+        <tr style="display: none"></tr>
+        {{#each spells as |spell index|}}
+            <tr class="cast-strike" data-spell-id="{{spell.id}}" data-amp-factor="{{spell.autoAmpFactor}}">
+                <td style="width: 20%"><img class="skill-icon" src="{{spell.img}}" />
+                    <span id="spell-level" class="{{#if spell.amplified}}ampText-hot{{/if}}">
+                      {{spell.castLevel}}
+                    </span>
+                </td>
+                <td style="width: 40%" class="spell-cast">
+                    {{spell.name}} {{romanNumeral spell.autoAmpFactor false}}
+                </td>
+                <td style="width: 40%; text-align: left">
+                    <div class="spell-action-icons" data-spell="{{spell.id}}"></div>
+                </td>
+            </tr>
+        {{/each}}
+        <tr>
+            <td colspan="3">
+                <i>
+                    Click on a spell to perform a Spellstrike. Spells are automatically amplified to the highest level that doesn't require a skill check. Only spells that deal damage are shown.
+                </i>
+            </td>
+        </tr>
+    </table>
+</form>

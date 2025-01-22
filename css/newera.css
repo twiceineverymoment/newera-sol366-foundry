@@ -412,8 +412,11 @@ span.class-name {
 .sheet-error {
   color: orangered !important;
 }
-.item-create, .item-edit, .spell-cast {
+.item-create, .item-edit, .spell-cast, .class-level-up {
   cursor: pointer;
+}
+.class-level-up {
+  color: yellow;
 }
 /* Tables */
 .vertical-separator {
@@ -1014,6 +1017,19 @@ img.action-image-overlay-right {
   width: 33%;
   height: 33%;
   border: none;
+}
+div.action-spell-level-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 33%;
+  height: 33%;
+  border: none;
+  font-family: "Nanum Myeongjo", serif;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: right;
 }
 div.text-message { /* This is the one for the in-game chat, that's why it belongs in newera.css */
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
