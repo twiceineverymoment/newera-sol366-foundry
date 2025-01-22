@@ -11,6 +11,7 @@
               <a class="item spell-table-tab" data-tab="spectral" data-tooltip="Spectral Magic" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/spectral.png" /></a>
               <a class="item spell-table-tab" data-tab="temporal" data-tooltip="Temporal Magic" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/temporal.png" /></a>
               <a class="item spell-table-tab" data-tab="enchantments" data-tooltip="Enchantments" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/sp_enchantment.png" /></a>
+              <a class="item spell-table-tab" data-tab="recipes" data-tooltip="Alchemy Recipes" data-tooltip-direction="UP"><img class="skill-icon" src="systems/newera-sol366/resources/pr_blank.png" /></a>
             </nav>
           </td>         
     </tr>
@@ -41,6 +42,9 @@
       {{#each inventory.magic.enchantments as |entry id|}}
         {{> systems/newera-sol366/templates/actor/parts/char-spell-row.hbs tabGroup="enchantments"}}
       {{/each}}
+      {{#each inventory.magic.recipes as |entry id|}}
+        {{> systems/newera-sol366/templates/actor/parts/char-spell-row.hbs tabGroup="recipes"}}
+      {{/each}}
     <tr>
       <td colspan="4" id="spell-add-row">
         <div class="equipment-box-small spell-browser" id="spell-add-1" data-type="Enchantment" data-tooltip="Browse Spells" data-tooltip-direction="UP">
@@ -58,6 +62,12 @@
         <div class="equipment-box-small item-create" id="spell-add-3" data-type="Enchantment" data-tooltip="Create New Enchantment" data-tooltip-direction="UP">
           <a title="Create New Enchantment">
           <img src="systems/newera-sol366/resources/spell-book.png" />
+          <i class="fas fa-plus"></i>
+          </a>
+        </div>
+        <div class="equipment-box-small item-create" id="spell-add-4" data-type="Potion" data-potion-recipe="true" data-tooltip="Create New Alchemy Recipe" data-tooltip-direction="UP">
+          <a title="Create New Recipe">
+          <img src="systems/newera-sol366/resources/potion.png" />
           <i class="fas fa-plus"></i>
           </a>
         </div> 

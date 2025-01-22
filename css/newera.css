@@ -891,6 +891,10 @@ div.inventory-table-container {
   top: 2px;
   left: 66px;
 }
+#spell-add-4 {
+  top: 2px;
+  left: 98px;
+}
 #spell-add-row, #effect-add-row {
   height: 36px;
   position: relative;
