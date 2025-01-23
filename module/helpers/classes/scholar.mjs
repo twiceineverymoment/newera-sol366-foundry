@@ -590,7 +590,7 @@ export class Scholar {
                     ability: null,
                     skill: null,
                     specialties: [],
-                    description: `The next standard or charged spell you cast this turn from your prepared spells takes only one frame. Use this ability only once per turn.`,
+                    description: `The next standard or channeled spell you cast this turn from your prepared spells takes only one frame. Use this ability only once per turn.`,
                     difficulty: null,
                     actionType: "0",
                     rolls: [
@@ -600,7 +600,7 @@ export class Scholar {
                         callback: actor => Actions.printAbilityInfo(actor, {
                             img: actor.img,
                             title: "Readied Cast",
-                            details: "Once per turn, you cast a prepared standard or charged spell in one frame, as though it were a quick spell."
+                            details: "Once per turn, you cast a prepared standard or channeled spell in one frame, as though it were a quick spell."
                         })
                       }
                     ]
