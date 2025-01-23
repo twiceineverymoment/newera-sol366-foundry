@@ -1648,5 +1648,57 @@ _preparePotionData(system){
     }
   }
 
+  async addMaterialCost() {
+    if (this.typeIs(NewEraItem.Types.MAGIC)) {
+      const newKey = Object.keys(this.system.materialCosts).length;
+      const materials = {};
+      materials[newKey] = {
+        name: "Material",
+        quantity: 1,
+        scales: false,
+        unique: false
+      };
+      await this.update({
+        system: {
+          materialCosts: materials
+        }
+      });
+    }
+  }
+
+  async deleteMaterialCost(index){
+    await this.update({
+      system: {
+        materialCosts: Formatting.spliceIndexedObject(this.system.materialCosts, index)
+      }
+    });
+  }
+
+  async addComponent() {
+    if (this.typeIs(NewEraItem.Types.ENCHANTMENT)) {
+      const newKey = Object.keys(this.system.components).length;
+      const components = {};
+      components[newKey] = {
+        name: "New Component",
+        level: 1,
+        check: "??",
+        scales: false
+      };
+      await this.update({
+        system: {
+          components
+        }
+      });
+    }
+  }
+
+  async deleteComponent(index){
+    await this.update({
+      system: {
+        components: Formatting.spliceIndexedObject(this.system.components, index)
+      }
+    });
+  }
+
 }
 

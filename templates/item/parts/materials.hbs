@@ -21,16 +21,15 @@
                     <img class="inline-icon" src="/systems/newera-sol366/resources/pouch-no.png" />
                     <input type="checkbox" name="system.materialCosts.{{index}}.unique" {{checked material.unique}} data-dtype="Boolean" {{disabled system.standard}} />
                 </div>
+                <a class="deleteMaterialCost" data-index="{{index}}" data-tooltip="Delete Row">
+                    <i class="fas fa-trash"></i>
+                </a>
             </td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td colspan="3"><h4><a class="addMaterialCost"><i class="fas fa-plus"></i> Add Material</a></h4></td>
         </tr>
       {{/each}}
       <tr>
-        <td colspan="4">
-          <h4><a id="addItemAction"><i class="fas fa-plus"></i> Add Action</a></h4>
+        <td colspan="3">
+          <h4><a id="addMaterialCost"><i class="fas fa-plus"></i> Add Required Material</a></h4>
         </td>
       </tr>
   </table>

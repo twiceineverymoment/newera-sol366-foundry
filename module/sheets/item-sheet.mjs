@@ -1,4 +1,5 @@
 import { NEWERA } from "../helpers/config.mjs";
+import { NewEraItem } from "../documents/item.mjs";
 import {createEffect, editEffect, deleteEffect, toggleEffect} from "../helpers/effects.mjs";
 
 /**
@@ -74,6 +75,25 @@ export class NewEraItemSheet extends ItemSheet {
     if (this.item.type == 'Feat' && context.system.tiers.base){
       ui.notifications.warn(`This feat requires migration. Please run the v0.15 migration script.`);
       return {};
+    }
+
+    if (this.item.typeIs(NewEraItem.Types.SPELL)) {
+      if (this.item.system.keywords.includes("Material")) {
+        context.showMaterials = true;
+      }
+    }
+
+    if (this.item.typeIs(NewEraItem.Types.ENCHANTMENT)) {
+      if (this.item.system.enchantmentType == 'CE') {
+        context.thingsAreComplex = true;
+      }
+    }
+
+    if (context.thingsAreComplex) {
+      for (const [key, comp] of Object.entries(this.item.system.components)) {
+        const school = NEWERA.schoolOfMagicNames[comp.check];
+        this.item.system.components[key].img = `/systems/newera-sol366/resources/${school}.png`;
+      }
     }
 
     console.log("ITEM SHEET CONTEXT DUMP");
@@ -224,6 +244,21 @@ export class NewEraItemSheet extends ItemSheet {
       const actionIndex = $(ev.currentTarget).data("actionIndex");
       this.item.addActionRoll(actionIndex);
       this.render(false);
+    });
+
+    html.find("#addMaterialCost").click(() => {
+      this.item.addMaterialCost();
+    });
+    html.find(".deleteMaterialCost").click(ev => {
+      const index = $(ev.currentTarget).data("index");
+      this.item.deleteMaterialCost(index);
+    });
+    html.find("#addComponent").click(() => {
+      this.item.addComponent();
+    });
+    html.find(".deleteComponent").click(ev => {
+      const index = $(ev.currentTarget).data("index");
+      this.item.deleteComponent(index);
     });
 
     // Active Effect management

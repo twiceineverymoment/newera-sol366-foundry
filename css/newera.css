@@ -138,7 +138,7 @@ div.newera-itemsheet-property-66 {
   font-size: 0.8em;
   color: yellow;
 }
-.scale-control input {
+.scale-control input, .cost-control input {
   width: 10px;
   height: 10px;
 }

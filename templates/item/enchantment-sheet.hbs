@@ -59,8 +59,9 @@
   <div class="newera-actorsheet-tabs">
     <nav class="sheet-tabs tabs" data-group="primary">
       <a class="item newera-section-header" data-tab="properties">Properties</a>
+      <a class="item newera-section-header" data-tab="materials">Materials</a>
       <a class="item newera-section-header" data-tab="actions">Actions</a>
-      {{#if system.thingsAreComplex}}
+      {{#if thingsAreComplex}}
         <a class="item newera-section-header" data-tab="components">Components</a>
       {{/if}}
     </nav>
@@ -172,13 +173,17 @@
     </div>
   </div>
 
+  <div class="tab" data-group="primary" data-tab="materials">
+      {{> systems/newera-sol366/templates/item/parts/materials.hbs}}
+    </div>
+
   <div class="tab actions" data-group="primary" data-tab="actions">
     <p>These actions apply to any item bearing this enchantment.</p>
     {{> systems/newera-sol366/templates/item/parts/item-actions.hbs}}
   </div>
 
   <div class="tab components" data-group="primary" data-tab="components">
-    
+    {{> systems/newera-sol366/templates/item/parts/components.hbs}}
   </div>
 
   </section>
