@@ -55,6 +55,9 @@
   <div class="newera-actorsheet-tabs">
     <nav class="sheet-tabs tabs" data-group="primary">
       <a class="item newera-section-header" data-tab="properties">Properties</a>
+      {{#if showMaterials}}
+        <a class="item newera-section-header" data-tab="materials">Materials</a>
+      {{/if}}
       <a class="item newera-section-header" data-tab="effects">Effects</a>
     </nav>
   </div>
@@ -111,7 +114,7 @@
           {{#if system.amplifiable}}
           <div class="scale-control" data-tooltip="Range Increases with Amplification">
             <i class="fa-light fa-waveform"></i>
-            <input type="checkbox" name="system.range.scales" {{checked system.range.scales}} data-dtype="Boolean" />
+            <input type="checkbox" name="system.range.scales" {{checked system.range.scales}} data-dtype="Boolean" {{disabled system.standard}} />
           </div>
           {{/if}}
           <h4>Range (ft)</h4>
@@ -138,7 +141,7 @@
           {{#if system.amplifiable}}
           <div class="scale-control" data-tooltip="Damage Increases with Amplification">
             <i class="fa-light fa-waveform"></i>
-            <input type="checkbox" name="system.damage.scales" {{checked system.damage.scales}} data-dtype="Boolean" />
+            <input type="checkbox" name="system.damage.scales" {{checked system.damage.scales}} data-dtype="Boolean" {{disabled system.standard}} />
           </div>
           {{/if}}
           <h4>Damage</h4>
@@ -186,6 +189,10 @@
         <p id="amplified-description"></p>
         {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
       </div>
+    </div>
+
+    <div class="tab" data-group="primary" data-tab="materials">
+      {{> systems/newera-sol366/templates/item/parts/materials.hbs}}
     </div>
 
     <div class="tab" data-group="primary" data-tab="effects">

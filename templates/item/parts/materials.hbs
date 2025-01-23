@@ -1,0 +1,36 @@
+<table class="newera-actorsheet-table">
+    <tr>
+        <td>Item</td>
+        <td>Quantity</td>
+        <td>Properties</td>
+    </tr>
+      {{#each system.materialCosts as |material index|}}
+        <tr>
+            <td style="width: 60%">
+                <input type="text" name="system.materialCosts.{{index}}.name" class="sheet-input" value="{{material.name}}" {{disabled system.standard}} />
+            </td>
+            <td style="width: 20%">
+                <input type="text" name="system.materialCosts.{{index}}.quantity" class="sheet-input" value="{{material.quantity}}" {{disabled system.standard}} />
+            </td>
+            <td style="width: 20%">
+                <div class="cost-control" data-tooltip="Quantity Increases with Amplification" data-tooltip-direction="RIGHT">
+                    <i class="fa-light fa-waveform"></i>
+                    <input type="checkbox" name="system.materialCosts.{{index}}.scales" {{checked material.scales}} data-dtype="Boolean" {{disabled system.standard}} />
+                </div>
+                <div class="cost-control" data-tooltip="Special Cost - Can't be paid with Alchemist's Pouch" data-tooltip-direction="RIGHT">
+                    <img class="inline-icon" src="/systems/newera-sol366/resources/pouch-no.png" />
+                    <input type="checkbox" name="system.materialCosts.{{index}}.unique" {{checked material.unique}} data-dtype="Boolean" {{disabled system.standard}} />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3"><h4><a class="addMaterialCost"><i class="fas fa-plus"></i> Add Material</a></h4></td>
+        </tr>
+      {{/each}}
+      <tr>
+        <td colspan="4">
+          <h4><a id="addItemAction"><i class="fas fa-plus"></i> Add Action</a></h4>
+        </td>
+      </tr>
+  </table>
