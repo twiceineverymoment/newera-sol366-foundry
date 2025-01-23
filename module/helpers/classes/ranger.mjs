@@ -230,7 +230,7 @@ export class Ranger {
             name: "Deadeye",
             key: true,
             description: `<p>You can Take Aim for up to five frames before firing a shot with any ranged weapon or spell.</p>
-            <p>Each frame adds +2 to your attack roll and increases the damage according to the Ranger table.</p>
+            <p>Each frame adds +1 to your attack roll and increases the damage according to the Ranger table.</p>
             <p>You're preoccupied while Taking Aim.</p>`,
             tableValues: [
                 {

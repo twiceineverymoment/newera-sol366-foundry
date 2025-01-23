@@ -128,6 +128,13 @@ export class Artificer {
             ]
         },
         {
+            level: 1,
+            name: "Alchemist's Pouch",
+            key: true,
+            description: `<p>You can designate one small container as your Alchemist's Pouch.</p><p>Once per day, you may use your Alchemist's Pouch to satisfy the material costs of a common spell or enchantment you cast, at or below your skill level in that form of magic. If the enchantment is complex, your pouch supplies all necessary materials for all of its components.</p>
+            <p>If you amplify the spell, your pouch can supply the amount of materials needed to cast it at the highest level that's trivial for you.</p>`
+        },
+        {
             level: 2,
             common: "learningExperience"
         },
@@ -262,6 +269,12 @@ export class Artificer {
             common: "abilityScoreImprovement"
         },
         {
+            level: 6,
+            name: "Alchemist's Pouch - Uncommon",
+            key: false,
+            description: `<p>Your Alchemist's Pouch can supply materials for Uncommon enchantments.</p>`
+        },
+        {
             level: 7,
             name: "Spell Studies (3<sup>rd</sup> Level)",
             key: false,
@@ -332,36 +345,19 @@ export class Artificer {
         },
         {
             level: 8,
-            key: false,
-            name: "Introduction to Metamagic",
-            description: `<p>You gain an introductory knowledge of Metamagic.</p>
-            <p>You learn metamagic enchantments from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
-            <p>You may learn the listed number of new enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
-            <div class="magic-info">
-                <h4>4 Common Metamagic Enchantments (Level 3 or lower)</h4>
-                <img class="resource-icon" src="${NEWERA.images}/metamagic.png" data-tooltip="Metamagic" data-tooltip-direction="UP" />
-            </div>
-            `,
-            spellStudies: [
+            name: "Spellcraft",
+            key: true,
+            description: `<p>You can create your own spells.</p>
+            <p>As an Artificer, you can craft simple and complex enchantments using any combination of other spells, enchantments, and metamagic components you know. Crafted spells may be stored in your focus.</p>
+            <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
+            tableValues: [
                 {
-                    choose: 4,
-                    rarity: 1,
-                    schools: ["MM"],
-                    metamagic: true,
-                    spellType: "E",
-                    level: {
-                        max: 3
-                    }
+                    field: "spellcraft.artificer",
+                    label: "Spellcraft Skill Level",
+                    sign: false,
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3]
                 }
             ]
-        },
-        {
-            level: 8,
-            key: true,
-            name: "Metamagic",
-            description: `<p>You can use Metamagic, creating magical artifacts and complex enchantments by working with the magical code that forms the building blocks of the ancient art.</p>
-            <p>You may learn Metamagic enchantments and components as part of your future Enchantment Studies.
-            `
         },
         {
             level: 8,
@@ -439,6 +435,48 @@ export class Artificer {
             ]
         },
         {
+            level: 10,
+            key: true,
+            name: "Metamagic",
+            description: `<p>You can use Metamagic, creating magical artifacts and complex enchantments by working with the magical code that forms the building blocks of the ancient art.</p>
+            <p>You may learn Metamagic enchantments and components as part of your future Enchantment Studies.
+            `
+        },
+        {
+            level: 10,
+            key: false,
+            name: "Introduction to Metamagic",
+            description: `<p>You gain an introductory knowledge of Metamagic.</p>
+            <p>You learn metamagic enchantments from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>4 Common Metamagic Enchantments (Level 3 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/metamagic.png" data-tooltip="Metamagic" data-tooltip-direction="UP" />
+            </div>
+            `,
+            spellStudies: [
+                {
+                    onOtherFeature: true
+                },
+                {
+                    onOtherFeature: true
+                },
+                {
+                    onOtherFeature: true
+                },
+                {
+                    choose: 4,
+                    rarity: 1,
+                    schools: ["MM"],
+                    metamagic: true,
+                    spellType: "E",
+                    level: {
+                        max: 3
+                    }
+                }
+            ]
+        },
+        {
             level: 11,
             common: "abilityScoreImprovement"
         },
@@ -462,9 +500,10 @@ export class Artificer {
         },
         {
             level: 12,
-            name: "Arcane Enchanter",
+            name: "Fleeting Enchantments",
             key: false,
-            description: `<p>You can store Enchantments in your focus.</p><p>Stored enchantments can be released onto targets in-range as a two-frame action and have a range of 20 feet. Any material costs for the enchantment are consumed when the enchantment is stored in your focus.</p>`
+            description: `<p>You may cast any simple enchantment you know without paying its material costs. Enchantments cast this way are called Fleeting Enchantments, and their effects wear off after one day.</p>
+            <p>You may store fleeting enchantments in your focus. Stored enchantments can be released as standard spells with the Targeting keyword, targeting any legal object for the enchantment, and with a range of 30 feet.</p>`
         },
         {
             level: 12,
@@ -549,10 +588,6 @@ export class Artificer {
         },
         {
             level: 14,
-            common: "specialtyImprovement"
-        },
-        {
-            level: 14,
             id: "artificer.bonus",
             key: false,
             name: "Artificer Bonus",
@@ -571,9 +606,7 @@ export class Artificer {
         },
         {
             level: 15,
-            name: "Ætherium Conservation",
-            key: false,
-            description: `<p>You cast enchantments for half their usual Ætherium costs.`
+            common: "specialtyImprovement"
         },
         {
             level: 15,
@@ -625,19 +658,10 @@ export class Artificer {
         },
         {
             level: 16,
-            name: "Spellcraft",
-            key: true,
-            description: `<p>You can create your own spells.</p>
-            <p>As an Artificer, you can craft simple and complex enchantments using any combination of other spells, enchantments, and metamagic components you know. Crafted spells may be stored in your focus.</p>
-            <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
-            tableValues: [
-                {
-                    field: "spellcraft.artificer",
-                    label: "Spellcraft Skill Level",
-                    sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3]
-                }
-            ]
+            name: "Advanced Enchanter",
+            key: false,
+            modifies: "Alchemist's Pouch",
+            description: `<p>Your Alchemist's Pouch can now supply the materials for Rare enchantments, and can be used up to three times per day.</p>`
         },
         {
             level: 17,
@@ -764,6 +788,41 @@ export class Artificer {
             description: `<p>Your allies can store spells in your Focus.</p>
             <p>Only you can cast stored spells, and it can only be used while in your hand.</p>
             `
+        },
+        {
+            level: 20,
+            name: "Spell Studies (7<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>2 Rare Artificer Spells (Level 7 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/physical.png" data-tooltip="All Physical Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/pyromancy.png" data-tooltip="Pyromancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/cryomancy.png" data-tooltip="Cryomancy" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+                <h4>3 Uncommon Spells from any school (Level 7 or lower)</h4>
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 2,
+                    rarity: 3,
+                    lists: ["artificerSpells"],
+                    spellType: "SS",
+                    level: {
+                        max: 7
+                    }
+                },
+                {
+                    choose: 3,
+                    rarity: 2,
+                    spellType: "SS",
+                    level: {
+                        max: 7
+                    }
+                }
+            ]
         }
     ]
 
