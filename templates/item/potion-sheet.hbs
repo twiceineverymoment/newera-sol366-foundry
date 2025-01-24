@@ -20,6 +20,8 @@
           <option value="P">Potion</option>
           <option value="E">Elixir</option>
           <option value="S">Salve</option>
+          <option value="T">Tonic</option>
+          <option value="I">Incense</option>
           <option value="B">Alchemical Bomb</option>
           <option value="R">Alchemical Reagent</option>
         </select>
@@ -39,6 +41,9 @@
   <div class="newera-actorsheet-tabs">
     <nav class="sheet-tabs tabs" data-group="primary">
       <a class="item newera-section-header" data-tab="properties">Properties</a>
+      {{#if system.isRecipe}}
+        <a class="item newera-section-header" data-tab="recipe">Recipe</a>
+      {{/if}}
       <a class="item newera-section-header" data-tab="effects">Effects</a>
     </nav>
   </div>
@@ -57,8 +62,16 @@
           </select>
         </div>
         <div class="resource newera-itemsheet-property-33">
+          <div class="scale-control" data-tooltip="Alchemy Recipe" style="color: burlywood !impoirtant">
+            <i class="fa-solid fa-scroll"></i>
+            <input type="checkbox" name="system.isRecipe" {{checked system.isRecipe}} data-dtype="Boolean" />
+          </div>
           <h4>Quantity</h4>
-          <input type="text" class="sheet-input" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+          {{#if system.isRecipe}}
+            <input type="text" class="sheet-input" value="(Recipe)" disabled />
+          {{else}}
+            <input type="text" class="sheet-input" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+          {{/if}}
         </div>
         <div class="resource newera-itemsheet-property-33">
           <h4>Value <i>(Estimated)</i></h4>
@@ -72,6 +85,12 @@
         {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
       </div>
     </div>
+
+    {{#if system.isRecipe}}
+    <div class="tab" data-group="primary" data-tab="recipe">
+      
+    </div>
+    {{/if}}
 
     <div class="tab" data-group="primary" data-tab="effects">
       {{> systems/newera-sol366/templates/item/parts/item-effects.hbs}}

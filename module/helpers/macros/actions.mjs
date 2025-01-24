@@ -13,6 +13,11 @@ import { NewEraItem } from "../../documents/item.mjs";
 
 export class Actions {
 
+    static brewPotion(actor, recipe) {
+      ui.notifications.info("Coming soon!");
+      actor.actionMessage(actor.img, recipe.img, "{NAME} creates {0}.", recipe.name);
+    }
+
     static printAbilityInfo(actor, info){
       const template = `
         <div class="chat-item-details">

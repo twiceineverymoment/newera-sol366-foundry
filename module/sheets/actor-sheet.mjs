@@ -297,7 +297,8 @@ export class NewEraActorSheet extends ActorSheet {
       psionic: [],
       spectral: [],
       temporal: [],
-      enchantments: []
+      enchantments: [],
+      recipes: []
     };
 
     //Disable the left hand slot if a two-handed item is in the right hand
@@ -324,13 +325,17 @@ export class NewEraActorSheet extends ActorSheet {
       i.img = i.img || DEFAULT_TOKEN;
       i.multiple = (i.system.quantity && i.system.quantity > 1);
       switch(i.type){
+        case "Potion":
+          if (i.system.isRecipe) {
+            magic.recipes.push(i);
+            break; //Break inside the if statement so actual potions will continue into the block below (equipment)
+          }
         case "Item":
         case "Melee Weapon":
         case "Ranged Weapon":
         case "Armor":
         case "Shield":
         case "Phone":
-        case "Potion":
             let inBackpack = true;
             for (const [slot, id] of Object.entries(equipment)){
               if (id == i._id){ //This should return false for the worn array, so no need for a type check here (probably)
@@ -724,8 +729,14 @@ export class NewEraActorSheet extends ActorSheet {
 
     html.find('.spell-cast').click(ev => {
       const li = $(ev.currentTarget).parents(".inventory-entry");
-      const spell = this.actor.items.get(li.data("itemId"));
-      Actions.castSpell(this.actor, spell);
+      const item = this.actor.items.get(li.data("itemId"));
+      if (item.typeIs(NewEraItem.Types.MAGIC)) {
+        Actions.castSpell(this.actor, item);
+      } else if (item.typeIs(NewEraItem.Types.POTION)) {
+        Actions.brewPotion(this.actor, item);
+      } else {
+        ui.notifications.error("Huh?");
+      }
     });
 
     html.find('.occupant-display').click(ev => {
@@ -855,21 +866,11 @@ export class NewEraActorSheet extends ActorSheet {
     //Spellbook cast DC's
     if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       html.find(".inventory-entry-magic").each((i, val) => {
-        const spellId = $(val).data("itemId");
-        const dc = this._getSpellCastDifficulty(spellId, 1);
-        if (this.actor.items.get(spellId).system.energyCost > this.actor.system.energy.value) {
-          html.find(`#spell-dc-${spellId}`).html(`Not enough energy!`);
-          html.find(`#spell-dc-${spellId}`).addClass("sheet-error");
-          html.find(`#spell-dc-${spellId}`).show();
-        } else if (dc){
-          html.find(`#spell-dc-${spellId}`).html(`Diff. <b>${dc}</b>`);
-          html.find(`#spell-cast-${spellId}`).attr("data-difficulty", dc);
-          html.find(`#spell-attack-${spellId}`).attr("data-difficulty", dc);
-          html.find(`#spell-dc-${spellId}`).show();
-        } else {
-          html.find(`#spell-dc-${spellId}`).hide();
+        const id = $(val).data("itemId");
+        const item = this.actor.items.get(id);
+        if (item.typeIs(NewEraItem.Types.MAGIC)) {
+          html.find(`.spell-action-icons.${id}`).html(Formatting.getSpellActionIcons(item));
         }
-        html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
       });
     //Monster magic stuff
     } else if (this.actor.typeIs(NewEraActor.Types.CREATURE)){

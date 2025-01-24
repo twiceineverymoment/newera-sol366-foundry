@@ -234,7 +234,10 @@ _preparePotionData(system){
   }
   system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.doses, system.stackingBehavior);
   system.amplified = (system.doses > 1);
-  if (system.quantity > 1){
+  if (system.isRecipe) {
+    system.listDisplayName = this.name + " Recipe";
+    this.img = `/systems/newera-sol366/resources/pr_${NEWERA.chantLevels[this.system.recipeLevel]}.png`; //Chant levels are the same as potion levels so this works
+  } else if (system.quantity > 1){
     system.listDisplayName = `${this.name} x${system.quantity}`;
   } else {
     system.listDisplayName = this.name;
@@ -659,7 +662,7 @@ _preparePotionData(system){
         });
       }
     }
-    if (this.type == "Potion"){
+    if (this.type == "Potion" && !this.system.isRecipe){
       let verb = "";
       let action = "0";
       let icon = "";
