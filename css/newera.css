@@ -580,6 +580,10 @@ input.resource-battery {
   padding: 1px;
   border: 1px solid white;
 }
+.progress-side-by-side {
+  display: inline-block;
+  width: 45%;
+}
 .energy progress[value]::-webkit-progress-value {
   background: rgb(17,111,250);
   background-color: rgb(17,111,250);
@@ -645,6 +649,9 @@ div#cp-wrapper {
 }
 .focus-energy progress[value]::-webkit-progress-value {
   background: #8850FF !important;
+}
+.mt progress[value]::-webkit-progress-value {
+  background: chartreuse;
 }
 div.cp {
   display: inline;

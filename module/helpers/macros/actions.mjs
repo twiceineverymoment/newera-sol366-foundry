@@ -505,7 +505,7 @@ export class Actions {
             },
             psychic: {
               icon: `<img class="skill-icon" src="${NEWERA.images}/dt_psychic.png" />`,
-              label: "Mental",
+              label: "Psychic",
               callback: html => Actions._damage(actor, html, "psychic")
             },
             poison: {
