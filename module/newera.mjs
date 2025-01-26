@@ -111,6 +111,12 @@ Handlebars.registerHelper('toUpperCase', function(str) {
   return str.toUpperCase();
 });
 
+Handlebars.registerHelper('enabled', function(val) { //Easy inverse of the 'disabled' helper
+  if (!val) {
+    return "disabled";
+  }
+});
+
 Handlebars.registerHelper('capitalize', function(str) {
   const words = str.split(" ");
   return words.map(s => s[0].toUpperCase() + s.substr(1)).join(" ");
@@ -300,6 +306,15 @@ function setupGameSettings(){
     requiresReload: false,
     type: Boolean,
     default: true,
+  });
+  game.settings.register("newera-sol366", "enforceFreeHandsForSpells", {
+    name: "Enforce Free Hand Requirements for Spells",
+    hint: "When enabled, PCs and NPCs need at least one free hand to cast most spells, or both to cast Channeled spells, unless the spell has the Asomatic keyword",
+    scope: "client",
+    config: true,
+    requiresReload: false,
+    type: Boolean,
+    default: false,
   });
   game.settings.register("newera-sol366", "sendEquipMsgs", {
     name: "Send Equipment Action Messages in Chat",

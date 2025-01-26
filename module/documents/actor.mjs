@@ -93,7 +93,7 @@ export class NewEraActor extends Actor {
       this._doAbilityScorePoints();
     }
     system.characterPoints.cpa = this._calculateCpa(system.characterPoints.cpt, system.age, this.items);
-    system.totalWeight = this._getTotalWeight(this.items);
+    this._calculateInventoryLoad(system, this.items);
     this._prepareAbilityScoreModifiers(system);
     this._prepareCalculatedStats(system);
     this._prepareSkillModifiers(system);
@@ -121,7 +121,6 @@ export class NewEraActor extends Actor {
     if (system.inspiration < 0){
       system.inspiration = 0;
     }
-    system.magicTolerance.max = Math.max(5, system.level);
   }
 
   _calculateLevel(){
@@ -189,29 +188,42 @@ export class NewEraActor extends Actor {
     return cpa;
   }
 
-  _getTotalWeight(items, occupants = []){
+  /**
+   * Calculate values which depend on the items in the actor's inventory
+   * @param {} system 
+   * @param {*} items 
+   */
+  _calculateInventoryLoad(system, items){
+    let weight = 0;
+    let ench = 0;
+    let armor = 0;
+    for (const item of items){
+      if (item.typeIs(NewEraItem.Types.INVENTORY) && !item.system.stored && typeof item.system.weight != "undefined"){
+        weight += item.system.weight * (item.system.quantity || 1);
+      }
+      if (item.typeIs(NewEraItem.Types.ENCHANTABLE) && item.system.enchanted) {
+        ench += item.system.totalEnchantmentLevel;
+      }
+      if (item.typeIs(NewEraItem.Types.ARMOR)) {
+        if (item.system.armorType == "Chest" || item.system.armorType == "Full Body"){
+          armor += item.system.armorRating;
+        }
+      }
+    }
+    system.carryWeight.current = weight;
+    system.magicTolerance.current = ench;
+    system.armor.equipped = armor;
+  }
+
+  _getTotalVehicleWeight(items, occupants = []){
     let total = 0;
     for (const item of items){
       if (!item.system.stored && typeof item.system.weight != "undefined"){
         total += item.system.weight * (item.system.quantity || 1);
       }
     }
-    if (this.type == "Vehicle"){
-      for (const actor of occupants){
-        total += Math.max(6 + actor.system.size.mod, 0);
-      }
-    }
-    return total;
-  }
-
-  _getEquippedArmor(items){
-    let total = 0;
-    for (const item of items){
-      if (item.type == "Armor"){
-        if (item.system.armorType == "Chest" || item.system.armorType == "Full Body"){
-          total += item.system.armorRating;
-        }
-      }
+    for (const actor of occupants){
+      total += Math.max(6 + actor.system.size.mod, 0);
     }
     return total;
   }
@@ -257,7 +269,7 @@ export class NewEraActor extends Actor {
 
     system.injured = (system.hitPointTrueMax > system.hitPoints.max);
 
-    system.totalWeight = this._getTotalWeight(this.items);
+    this._calculateInventoryLoad(system, this.items);
     this._prepareAbilityScoreModifiers(system);
     this._prepareSkillModifiers(system);
     this._prepareCalculatedStats(system);
@@ -309,7 +321,7 @@ export class NewEraActor extends Actor {
       return actor;
     });
     system.empty = (system.occupants.length == 0);
-    system.totalWeight = this._getTotalWeight(this.items, system.passengers);
+    system.totalWeight = this._getTotalVehicleWeight(this.items, system.passengers);
     system.isElectric = (this.system.fuelType == "electric");
   }
 
@@ -395,7 +407,6 @@ export class NewEraActor extends Actor {
     const armor = system.armor;
     armor.calculated = Math.max(system.size.mod, 0);
     armor.natural = armor.calculated + armor.bonus;
-    armor.equipped = this._getEquippedArmor(this.items);
     armor.total = armor.natural + armor.equipped;
 
     const passiveAgility = system.passiveAgility;
@@ -429,6 +440,8 @@ export class NewEraActor extends Actor {
 
     system.energy.total = system.energy.value + system.energy.temporary;
     system.energyPercentage = (system.energy.value + system.energy.temporary) / system.energy.max;
+
+    system.magicTolerance.max = Math.max(5, system.level);
 
   }
 

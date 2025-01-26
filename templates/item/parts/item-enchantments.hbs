@@ -10,6 +10,20 @@
         <h4>Enchantment Suffix</h4>
         <input type="text" name="system.enchantmentDescriptor" value="{{system.enchantmentDescriptor}}" class="sheet-input" data-dtype="String" />
     </div>
+</div>
+<div class="newera-itemsheet-properties">
+    <div class="newera-itemsheet-property-33">
+        <h4>Total Enchantment Level</h4>
+        <input type="text" name="system.totalEnchantmentLevel" value="{{system.totalEnchantmentLevel}}" class="sheet-input" data-dtype="Number" />
+    </div>
+    <div class="newera-itemsheet-property-33">
+        <div class="scale-control" data-tooltip="Enable Charges">
+            <input type="checkbox" name="system.useCharge" {{checked system.useCharge}} data-dtype="Boolean" />
+          </div>
+        <h4>Charges</h4>
+        <input type="text" name="system.charges.value" value="{{system.charges.value}}" class="sheet-input" data-dtype="Number" style="display: inline; width: 40%" {{enabled system.useCharge}} /> /
+        <input type="text" name="system.charges.max" value="{{system.charges.max}}" class="sheet-input" data-dtype="Number" style="display: inline; width: 40%" {{enabled system.useCharge}} />
+    </div>
     <div class="newera-itemsheet-property-33">
         <h4>Aura Color</h4>
         <input type="color" name="system.enchantmentColor" value="{{system.enchantmentColor}}" class="sheet-input" data-dtype="String" />

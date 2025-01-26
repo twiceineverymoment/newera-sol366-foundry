@@ -318,8 +318,6 @@ export class NewEraActorSheet extends ActorSheet {
       }
     }
 
-    let highestHpIncrement = 0;
-
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
@@ -897,11 +895,14 @@ export class NewEraActorSheet extends ActorSheet {
       }
     }
 
-    //Carry weight color
+    //Carry weight and Magic Tolerance color
     if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
-      if (system.totalWeight > system.carryWeight.value){
+      if (system.carryWeight.current > system.carryWeight.value){
         html.find("#cw-wrapper").addClass("cw-full");
       }
+      if (system.magicTolerance.current > system.magicTolerance.max){
+        html.find("#mt-wrapper").addClass("cw-full");
+      } 
     }
     if (this.actor.typeIs(NewEraActor.Types.VEHICLE)){
       if (system.totalWeight > system.carryWeight){
