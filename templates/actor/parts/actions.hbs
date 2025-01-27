@@ -56,7 +56,7 @@
     {{/if}}
     <p class="action-alt-instruction">{{actions.selected.altInstructions}}</p>
     {{#if actions.selected.disallowed}}
-      <div class="not-right-now">You can't take this action during combat.</div>
+      <div class="not-right-now">{{actions.selected.disallowed}}</div>
     {{else}}
       {{#if actions.selected.disabled}}
         <div class="not-right-now">Equip your {{actions.selected.itemName}} to use this action.</div>

@@ -31,7 +31,10 @@ export class SpellstrikeSheet extends ActorSheet {
 
         const spellstrikeSpells = this.actor.items.filter(i => {
             if (i.type == 'Spell'
-                && i.system.damage.amount
+                && (
+                    (i.system.damage.amount && !i.system.damage.condition)
+                    || i.system.keywords.includes("Attack")
+                )
                 && ['Q', 'S'].includes(i.system.castType)
             ) {
                 const spellSkillLevel = this.actor.system.magic[i.system.form].level;

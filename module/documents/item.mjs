@@ -1638,12 +1638,17 @@ _preparePotionData(system){
     if (this.typeIs(NewEraItem.Types.SPELL)) {
       if (this.system.keywords.includes("Projectile")) {
         return "ranged";
-      } else if (this.system.keywords.includes("Attack")) {
-        return "melee";
+      } else if (this.system.keywords.includes("Contested")) {
+        return "contested";
+      } else if (this.system.rarity == 0 && this.system.refinementLevel < 4) {
+        return "wildMagic";
       } else {
         return "cast";
       }
     } else if (this.typeIs(NewEraItem.Types.ENCHANTMENT)) {
+      if (this.system.rarity == 0 && this.system.refinementLevel < 4) {
+        return "wildMagic";
+      }
       return "cast";
     } else {
       console.warn(`Trying to get roll mode for a non-spell item`);

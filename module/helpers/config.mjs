@@ -2702,6 +2702,28 @@ NEWERA.generalMagicActions = [
             },
         ]
     },
+    {
+        name: "End Spell",
+        images: {
+            base: `${NEWERA.images}/halt-2.png`,
+            right: `${NEWERA.images}/ac_0frame.png`
+        },
+        ability: null,
+        skill: null,
+        specialties: [],
+        description: "You end the effects of any sustained or ephemeral spell you're casting.",
+        difficulty: "0",
+        overrideMacroCommand: "game.newera.HotbarActions.endSpell()",
+        actionType: "0",
+        disallow: actor => (!actor.system.ephemeralEffectActive && !actor.system.sustaining.id) ? "You aren't casting any spells right now." : false,
+        rolls: [
+            {
+                label: "End Spell",
+                die: "halt-2",
+                callback: actor => actor.stopAllSpells()
+            }
+        ]
+    },
 ];
 
 NEWERA.explorationActions = [
@@ -3924,6 +3946,10 @@ NEWERA.actionTypeIcons = {
     "M": `${NEWERA.images}/ac_movement.png`,
     "D": `${NEWERA.images}/ac_downtime.png`
 }
+
+NEWERA.spellcraftSuffixes = [
+    "Experimental", "Alpha", "Beta", "Revised", "Published"
+]
 
 NEWERA.lightningBoltDamageRolls = [
     "0", "1d4", "1d8", "1d12", "1d16", "1d20", "1d24", "1d30", "1d50", "1d60", "1d100"

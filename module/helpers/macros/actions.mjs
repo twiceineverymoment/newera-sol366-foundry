@@ -141,6 +141,23 @@ export class Actions {
 
     /* Displays a dialog to cast a spell, inputting the amplification factor */
     static async castSpell(actor, spell, paramAmpFactor = 1, isPrepared = false){
+      if (game.settings.get('newera-sol366', 'enforceFreeHandsForSpells') && !spell.system.keywords.includes('Asomatic')) {
+        if (['G', 'L', 'R'].includes(spell.system.castType)) {
+          if (actor.system.equipment.leftHand || actor.system.equipment.rightHand) { //For channeled and long spells, error out if either hand is occupied
+            ui.notifications.warn(`You need both hands free in order to cast ${spell.name}!`);
+            return;
+          }
+        } else {
+          if (
+            (actor.system.equipment.leftHand && actor.system.equipment.rightHand)
+            || (actor.system.equipment.rightHand && actor.items.get(actor.system.equipment.rightHand).system.handedness == '2H')
+            || (actor.system.equipment.rightHand && actor.items.get(actor.system.equipment.rightHand).system.handedness == '1.5H' && !actor.system.forceOneHanded)
+            ) { //For all other spell types, only error if both hands are occupied
+            ui.notifications.warn(`You need a free hand in order to cast ${spell.name}!`);
+            return;
+          }
+        }
+      }
       let stayOpen = false;
       const energyRequired = (!isPrepared && actor.type != "Creature");
       const pools = actor.energyPools;

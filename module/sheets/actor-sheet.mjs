@@ -691,7 +691,11 @@ export class NewEraActorSheet extends ActorSheet {
     const skillInfo = isCustom ? "" : (action.ability ? ` - ${action.ability.charAt(0).toUpperCase()}${action.ability.slice(1)} check` : (action.skill ? ` - ${action.skill.charAt(0).toUpperCase()}${action.skill.slice(1)} check` : '')); 
     action.typeDescription = `${actionTypes[action.actionType] || "Generic Action"}${skillInfo}`;
 
-    action.disallowed = ["E", "S", "D"].includes(action.actionType) && game.combat && game.combat.active && game.combat.round > 0;
+    if (typeof action.disallow == 'function') {
+      action.disallowed = action.disallow(this.actor);
+    } else {
+      action.disallowed = ["E", "S", "D"].includes(action.actionType) && game.combat && game.combat.active && game.combat.round > 0 ? "You can't do this during combat." : false;
+    }
 
     const rolls = action.rolls ? (typeof action.rolls == "Array" ? action.rolls : Object.values(action.rolls)) : [];
     for (const roll of rolls) {

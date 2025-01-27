@@ -1114,25 +1114,42 @@ export class NewEraActor extends Actor {
       const spellSkillLevel = spellSkill == "genericCast" ? this.system.casterLevel : this.system.magic[spellSkill].level;
       const difficulty = noSkillCheck ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = spell.system.energyCost * ampFactor;
-      let attack = false;
+      let alwaysRoll = false;
       let attackMod = '';
       let rollPrefix = '';
       let successful = false;
+
+      //For complex enchantments - cast the component list, then proceed to the regular logic for the final roll
+      if (spell.type == 'Enchantment' && spell.system.enchantmentType == 'CE') {
+        if (!await this.castComplexComponents(spell)) {
+          return false;
+        }
+      }
       
       switch (spell.spellRollMode) {
-        case "ranged":
-          attack = true;
+        case "ranged": //The projectile keyword takes precedence over all other roll conditions
+          alwaysRoll = true;
           attackMod = '@skills.marksmanship.mod';
           rollPrefix = "Ranged Spell Attack -";
           break;
-        case "melee": 
-          attack = true;
+        case "melee": //This mode is not used as of S366 v1.3 but might be in the future
+          alwaysRoll = true;
           attackMod = spell.system.castType == 'G' ? '@skills.two-handed.mod' : '@skills.one-handed.mod';
           rollPrefix = spell.system.castType == 'G' ? "Two-Handed Spell Attack -" : "One-Handed Spell Attack -";
           break;
+        case "contested": //If the spell has a contested check/save, always roll (but don't set an attack mod)
+          alwaysRoll = true;
+          rollPrefix = "Cast";
+          rollSuffix = " (Contested) ";
+          attackMod = '0';
+        case "wildMagic": //Same if the spell is crafted and is anything less than perfected, as there's a possibility of wild magic on a low roll
+          alwaysRoll = true;
+          rollPrefix = "Cast";
+          rollSuffix = ` (${NEWERA.spellcraftSuffixes[spell.system.refinementLevel]}) `;
+          attackMod = '0';
         default:
         case "cast":
-          attack = false;
+          alwaysRoll = false;
           attackMod = '0';
           rollPrefix = "Cast";
           break;
@@ -1147,7 +1164,7 @@ export class NewEraActor extends Actor {
           flavor: `Cast ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""}`
         });
         successful = true;
-      } else if (!attack && difficulty == 0){
+      } else if (!alwaysRoll && difficulty == 0){
         this.actionMessage(this.img, `${NEWERA.images}/${spell.system.specialty}.png`, "{NAME} casts {0}!", `${spell.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`);
         successful = true;
       } else {
@@ -1156,7 +1173,7 @@ export class NewEraActor extends Actor {
         successful = (castRoll.total >= difficulty);
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
-          flavor: `${rollPrefix} ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""} ${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
+          flavor: `${rollPrefix} ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""}${rollSuffix}${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
         });
       } 
 
@@ -1185,6 +1202,20 @@ export class NewEraActor extends Actor {
           You stop sustaining the spell if your concentration is broken.</p>`,
           origin: spell._id
         }]);
+      } else if (spell.system.keywords.includes("Ephemeral") && successful) {
+        await this.update({
+          system: {
+            ephemeralEffectActive: true
+          }
+        });
+        await this.createEmbeddedDocuments("ActiveEffect", [{
+          label: `Casting: ${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`,
+          img: spell.img,
+          description: `<p>You're casting an Ephemeral spell.</p>
+          <p>You can end this effect at any time as a free action from the Actions tab.</p>
+          ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}`,
+          origin: spell._id
+        }]);
       }
 
       if (successful && this.type != 'Creature'){
@@ -1197,6 +1228,49 @@ export class NewEraActor extends Actor {
       return successful;
   }
 
+  async castComplexComponents(enchantment, ampFactor = 1) {
+    for (const [stepNo, component] of Object.entries(enchantment.system.components)) {
+      const school = NEWERA.schoolOfMagicNames[component.check];
+      const form = NEWERA.schoolToFormMapping[component.check];
+      const spellSkillLevel = form == "genericCast" ? this.system.casterLevel : this.system.magic[form].level;
+      const level = component.level * (component.scales ? ampFactor : 1);
+      const difficulty = level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5);
+      if (difficulty > 0) {
+        const castRoll = new Roll(`d20 + ${form == "genericCast" ? `@casterLevel` : `@magic.${form}.mod`} + @specialty.partial.${school}`, this.getRollData());
+        await castRoll.evaluate();
+        const successful = (castRoll.total >= difficulty);
+        castRoll.toMessage({
+          speaker: ChatMessage.getSpeaker({actor: this}),
+          flavor: `Step ${stepNo+1}: ${spell.name} (Difficulty ${difficulty})`
+        });
+        if (!successful) {
+          return false;
+        }
+      } else {
+        console.log(`Skipped rolling for step ${stepNo+1} because difficulty is 0`);
+      }
+    }
+    return true;
+  }
+
+  async stopAllSpells(){
+    await this.endSpell(false);
+    await this.stopSustaining();
+  }
+
+  async endSpell(message = true){
+    const spellEffect = this.effects.find(e => e.label.includes("Casting: "));
+    const spell = this.items.find(spellEffect.origin);
+    await spellEffect.delete();
+    await this.update({
+      system: {
+        ephemeralEffectActive: false
+      }
+    });
+    if (message) {
+      this.actionMessage(this.img, null, "{NAME} ends {0}.", spell ? spell.name : "the spell");
+    }
+}
     async stopSustaining(){
         const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
         await sustainEffect.delete();
@@ -1500,7 +1574,10 @@ export class NewEraActor extends Actor {
         if (fromComp){
           await item.update({
             name: fromComp.name,
-            system: fromComp.system
+            system: {
+              ...fromComp.system,
+              ampFactor: item.system.ampFactor
+            }
           });
           console.log(`${item.name} Updated (spell/ench - ${fromComp.id})`);
         } else {

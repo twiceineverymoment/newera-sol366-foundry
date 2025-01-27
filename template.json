@@ -289,6 +289,7 @@
 					"id": "",
 					"ampFactor": 1
 				},
+				"ephemeralEffectActive": false,
 				"magicTolerance": {
 					"current": 0,
 					"max": 0
@@ -498,6 +499,7 @@
 				"arcane": false,
 				"enchantmentDescriptor": "",
 				"enchantmentColor": "#000000",
+				"enchantabilityModifier": 0,
 				"totalEnchantmentLevel": 0,
 				"useCharge": false,
 				"charges": {

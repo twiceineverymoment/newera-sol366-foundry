@@ -32,10 +32,10 @@
         {{#if system.standard}}
         {{else}}
         <select name="system.refinementLevel" class="sheet-input" id="refinement-{{item.id}}" data-dtype="Number">
-          <option value="0">Hypothetical (-5)</option>
-          <option value="1">Theoretical (-3)</option>
-          <option value="2">Revised (-1)</option>
-          <option value="3">Fine-Tuned</option>
+          <option value="0">Experimental (-5)</option>
+          <option value="1">Alpha (-3)</option>
+          <option value="2">Beta (-1)</option>
+          <option value="3">Revised (0)</option>
           <option value="4">Perfected</option>
         </select>
         {{/if}}
@@ -163,7 +163,8 @@
             <option value="psychic">Psychic</option>
             <option value="suffocation">Suffocation</option>
             <option value="necrotic">Necrotic</option>
-          </select>
+          </select><br />
+          <input type="text" class="sheet-input" name="system.damage.condition" value="{{system.damage.condition}}" {{disabled system.standard}} data-tooltip="Conditional damage" data-tooltip-direction="UP" />
         </div>
         <div class="resource newera-itemsheet-property-33">
           <h4>Casting Time</h4>
