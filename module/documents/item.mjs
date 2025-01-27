@@ -1299,46 +1299,25 @@ _preparePotionData(system){
     }
   }
 
-  onEnchantmentDragStart(event, ampFactor){
-    //event.preventDefault();
-    const oe = event.originalEvent;
-    console.log(`ENCHANTMENT DRAG START ${this.name} x${ampFactor}`);
-    oe.dataTransfer.setData("enchantmentName", `${this.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`);
-    oe.dataTransfer.setData("enchantmentImage", this.img);
-    oe.dataTransfer.setData("enchantmentDescription", Formatting.amplifyAndFormatDescription(this.system.description, ampFactor, "S"));
-    oe.dataTransfer.setData("enchantmentApplyToActor", this.system.applyToActor);
-    oe.dataTransfer.setData("enchantmentActions", JSON.stringify(this.system.actions));
-    oe.dataTransfer.setData("enchantmentValidTargets", JSON.stringify(this.system.validTargets));
-    oe.dataTransfer.setData("enchantmentColor", NEWERA.enchantmentAuraColors[this.system.school]);
-    oe.dataTransfer.setData("enchantmentDescriptor", this.system.enchantedItemDescriptor || this.name);
+  async enchant(enchantment, ampFactor = 1, caster = undefined, noSkillCheck = false, energyPool = undefined){
+    console.log(`Entering enchant()`);
 
-    oe.dataTransfer.effectAllowed = "copy";
-  }
-
-  async onEnchantmentDrop(event){
-    const oe = event.originalEvent;
-    const system = this.system;
-    console.log(`Entering onEnchantmentDrop`);
-    //Get the data from the drop
-    const enchantmentData = {
-      name: oe.dataTransfer.getData("enchantmentName"),
-      suffix: oe.dataTransfer.getData("enchantmentDescriptor"),
-      color: oe.dataTransfer.getData("enchantmentColor"),
-      description: oe.dataTransfer.getData("enchantmentDescription"),
-      img: oe.dataTransfer.getData("enchantmentImage"),
-      transfer: oe.dataTransfer.getData("enchantmentTransferToActor"),
-      actions: JSON.parse(oe.dataTransfer.getData("enchantmentActions")),
-      validTargets: JSON.parse(oe.dataTransfer.getData("enchantmentValidTargets")),
-    };
-    console.log(enchantmentData);
     //Check that the enchantment can be applied to this item
-    if (!this.isEnchantmentValid(enchantmentData.validTargets)) {
-      ui.notifications.error(`${enchantmentData.name} can't be applied to this item.`);
+    if (!this.isEnchantmentValid(enchantment.system.validTargets)) {
+      ui.notifications.error(`${enchantment.name} can't be applied to this item.`);
       return;
     }
-    //Add the actions from the enchantment
+
+    if (caster) {
+      const success = await caster.cast(enchantment, ampFactor, noSkillCheck, energyPool);
+      if (!success) {
+        return false;
+      }
+    }
+
+    //Copy the actions from the enchantment to the item
     const newActions = {};
-    for (const action of Object.values(enchantmentData.actions)){
+    for (const action of Object.values(enchantment.system.actions)){
       newActions[Object.keys(newActions).length + Object.keys(this.system.actions).length] = action;
     }
     console.log("Updated Actions object");
@@ -1352,33 +1331,44 @@ _preparePotionData(system){
       }
     });
     //Update the item's properties
-    if (!system.enchanted){
+    const level = enchantment.system.level * ampFactor;
+    const totalLevel = this.system.totalEnchantmentLevel + level;
+    if (!this.system.enchanted){
       this.update({
         system: {
           enchanted: true,
-          enchantmentDescriptor: enchantmentData.suffix,
-          enchantmentColor: enchantmentData.color
+          enchantmentDescriptor: enchantment.system.enchantedItemDescriptor,
+          enchantmentColor: enchantment.system.effectColor,
+          totalEnchantmentLevel: totalLevel,
+          useCharge: enchantment.system.keywords.includes("Charged"),
+          charges: {
+            min: 0,
+            max: enchantment.system.maxCharges,
+            value: enchantment.system.maxCharges
+          }
         }
       });
     } else {
       this.update({
         system: {
-          arcane: true
+          arcane: true,
+          totalEnchantmentLevel: totalLevel
         }
       });
     }
     //Create the ActiveEffect
     await this.createEmbeddedDocuments("ActiveEffect", [{
-      label: enchantmentData.name,
-      img: enchantmentData.img,
-      description: enchantmentData.description,
+      label: enchantment.name,
+      img: enchantment.img,
+      description: enchantment.system.description,
       owner: this.uuid,
       disabled: false,
-      transfer: enchantmentData.transfer
+      //transfer: enchantment.system.transfer //This function will be re-enabled when we figure out how to make ActiveEffects actually work this way
     }]);
-    ui.notifications.info(`Applied enchantment ${enchantmentData.name} to ${this.name}`);
-    console.log("Exiting onEnchantmentDrop");
+    ui.notifications.info(`Applied enchantment ${enchantment.name} to ${this.name}`);
+    console.log("Exiting enchant()");
     console.log(system);
+    return true;
   }
 
   isEnchantmentValid(targetData){

@@ -227,10 +227,10 @@ export class NewEraItemSheet extends ItemSheet {
     }
 
     //Enchantment drag-and-drop to items
-    html.find(".drag-to-enchant").on("dragstart", ev => this.item.onEnchantmentDragStart(ev, this.item.system.ampFactor));
+    html.find(".drag-to-enchant").on("dragstart", ev => this.onEnchantmentDragStart(ev));
     html.find(".enchantment-dropzone").on("dragover", ev => ev.preventDefault());
     html.find(".enchantment-dropzone").on("drop", ev => {
-      this.item.onEnchantmentDrop(ev);
+      this.onEnchantmentDrop(ev);
     });
 
     // Everything below here is only needed if the sheet is editable
@@ -268,5 +268,27 @@ export class NewEraItemSheet extends ItemSheet {
     html.find(".effect-toggle").click((ev => toggleEffect(ev, this.item)));
 
     // Roll handlers, click handlers, etc. would go here.
+  }
+
+  async onEnchantmentDragStart(event) {
+    //event.preventDefault();
+    const ampFactor = this.item.system.ampFactor;
+    const oe = event.originalEvent;
+    console.log(`ENCHANTMENT DRAG START ${this.item.name} x${ampFactor}`);
+    oe.dataTransfer.setData("enchantmentUuid", this.item.uuid);
+    oe.dataTransfer.setData("ampFactor", this.item.system.ampFactor);
+    oe.dataTransfer.effectAllowed = "copy";
+  }
+
+  async onEnchantmentDrop(event) {
+    const oe = event.originalEvent;
+    console.log(`Entering NEW onEnchantmentDrop`);
+    //Get the data from the drop
+    const uuid = oe.dataTransfer.getData("enchantmentUuid");
+    const ampFactor = oe.dataTransfer.getData("ampFactor");
+    const enchantment = await fromUuid(uuid);
+    if (enchantment && enchantment.typeIs(NewEraItem.Types.ENCHANTMENT)) {
+      await this.item.enchant(enchantment, ampFactor);
+    }
   }
 }
