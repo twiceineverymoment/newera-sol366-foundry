@@ -1,11 +1,11 @@
 <!--tr tab has to be re-set to display: table-row because .tab changes it to block which fucks the whole thing up -->
 <tr class="tab inventory-entry inventory-entry-magic spell-macro" data-item-id="{{_id}}" draggable="true" data-group="spells" data-tab="{{tabGroup}}">
     <td style="width: 10%" class="spell-cast"><img class="skill-icon" src="{{img}}" />
-      {{#unless system.isRecipe}}
+      {{#if system.level}}
       <span id="spell-level-{{_id}}">
         {{system.level}}
       </span>
-      {{/unless}}
+      {{/if}}
     </td>
     <td style="width: 40%" class="spell-cast">
       {{name}}{{#if system.author}} <img class="inline-icon" src="systems/newera-sol366/resources/scroll-quill-2.png" data-tooltip="Crafted by {{system.authorName}}" />{{/if}}
