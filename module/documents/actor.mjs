@@ -1554,6 +1554,10 @@ export class NewEraActor extends Actor {
     return output;
   }
 
+  /**
+   * Updates the data on all owned items that have a casperObjectId property with refreshed data from the latest compendiums.
+   * Some properties are preserved from the old items if they have been modified by the user.
+   */
   async updateItems(){
     ui.notifications.warn(`Update initiated. Please wait a few seconds before doing anything else with ${this.name}.`);
     console.log(`Initiating item update for ${this.name}`);
@@ -1590,6 +1594,7 @@ export class NewEraActor extends Actor {
             name: fromComp.name,
             system: {
               ...fromComp.system,
+              currentTier: item.system.currentTier,
               tiers: {
                 ...fromComp.system.tiers,
                 "-=base": null
@@ -1604,19 +1609,56 @@ export class NewEraActor extends Actor {
         const fromComp = weapons.find(i => i.system.casperObjectId == item.system.casperObjectId)
           || artifacts.find(i => i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp){
-          await item.update({
-            name: fromComp.name,
-            system: {
-              ...fromComp.system,
-              stored: isStored
-            }
-          });
+          if (item.typeIs(NewEraItem.Types.MELEE_WEAPON)) {
+            await item.update({
+              name: fromComp.name,
+              system: {
+                ...fromComp.system,
+                stored: item.system.stored,
+                customName: item.system.customName,
+                useCustomItemName: item.system.useCustomItemName,
+                condition: item.system.condition,
+                quality: item.system.quality,
+                //Preserve enchantment data
+                enchanted: item.system.enchanted,
+                arcane: item.system.arcane,
+                enchantmentDescriptor: item.system.enchantmentDescriptor,
+                enchantmentColor: item.system.enchantmentColor,
+                totalEnchantmentLevel: item.system.totalEnchantmentLevel,
+                useCharge: item.system.useCharge,
+                charges: item.system.charges,
+                recharge: item.system.recharge
+              }
+            });
+          } else if (item.typeIs(NewEraItem.Types.RANGED_WEAPON)) {
+            await item.update({
+              name: fromComp.name,
+              system: {
+                ...fromComp.system,
+                stored: item.system.stored,
+                condition: item.system.condition,
+                quality: item.system.quality,
+                ammo: {
+                  ...fromComp.system.ammo,
+                  loaded: item.system.ammo.loaded
+                },
+                //Preserve enchantment data
+                enchanted: item.system.enchanted,
+                arcane: item.system.arcane,
+                enchantmentDescriptor: item.system.enchantmentDescriptor,
+                enchantmentColor: item.system.enchantmentColor,
+                totalEnchantmentLevel: item.system.totalEnchantmentLevel,
+                useCharge: item.system.useCharge,
+                charges: item.system.charges,
+                recharge: item.system.recharge
+              }
+            });
+          }
           console.log(`${item.name} Updated (weapon - ${fromComp.id})`);
         } else {
           console.log(`${item.name} Not Updated - No Compendium Match`);
         }
       } else if (item.typeIs(NewEraItem.Types.BASIC_ITEM) && item.system.casperObjectId){
-        const existingQty = item.system.quantity;
         const fromComp = equipment.find(i => i.system.casperObjectId == item.system.casperObjectId)
           || consumables.find(i => i.system.casperObjectId == item.system.casperObjectId)
           || artifacts.find(i => i.system.casperObjectId == item.system.casperObjectId)
@@ -1626,8 +1668,17 @@ export class NewEraActor extends Actor {
           name: fromComp.name,
           system: {
             ...fromComp.system,
-            quantity: existingQty,
-            stored: isStored
+            quantity: item.system.quantity,
+            stored: item.system.stored,
+            //Preserve enchantment data
+            enchanted: item.system.enchanted,
+            arcane: item.system.arcane,
+            enchantmentDescriptor: item.system.enchantmentDescriptor,
+            enchantmentColor: item.system.enchantmentColor,
+            totalEnchantmentLevel: item.system.totalEnchantmentLevel,
+            useCharge: item.system.useCharge,
+            charges: item.system.charges,
+            recharge: item.system.recharge
           }
         });
         console.log(`${item.name} Updated (item - ${fromComp.id})`);
@@ -1643,7 +1694,18 @@ export class NewEraActor extends Actor {
               name: fromComp.name,
               system: {
                 ...fromComp.system,
-                stored: isStored
+                stored: item.system.stored,
+                condition: item.system.condition,
+                quality: item.system.quality,
+                //Preserve enchantment data
+                enchanted: item.system.enchanted,
+                arcane: item.system.arcane,
+                enchantmentDescriptor: item.system.enchantmentDescriptor,
+                enchantmentColor: item.system.enchantmentColor,
+                totalEnchantmentLevel: item.system.totalEnchantmentLevel,
+                useCharge: item.system.useCharge,
+                charges: item.system.charges,
+                recharge: item.system.recharge
               }
             });
             console.log(`${item.name} Updated (armor/shield - ${fromComp.id})`);
@@ -1651,15 +1713,14 @@ export class NewEraActor extends Actor {
             console.log(`${item.name} Not Updated - No Compendium Match (armor/shield)`);
           }
       } else if (item.typeIs(NewEraItem.Types.POTION) && item.system.casperObjectId){
-        const existingQty = item.system.quantity;
         const fromComp = artifacts.find(i => item.typeIs(NewEraItem.Types.POTION) && i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp) {
           await item.update({
           name: fromComp.name,
           system: {
             ...fromComp.system,
-            quantity: existingQty,
-            stored: isStored
+            quantity: item.system.quantity,
+            stored: item.system.stored
           }
         });
         console.log(`${item.name} Updated (potion - ${fromComp.id})`);
