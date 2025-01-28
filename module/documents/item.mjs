@@ -1261,7 +1261,8 @@ _preparePotionData(system){
       icon: "unknown",
       actionType: "E",
       description: "Enter a description...",
-      enable: "equipped",
+      show: "equipped",
+      decrement: false,
       rolls: {}
     }
   }
@@ -1318,6 +1319,8 @@ _preparePotionData(system){
     //Copy the actions from the enchantment to the item
     const newActions = {};
     for (const action of Object.values(enchantment.system.actions)){
+      action.name = action.name.replaceAll("{NAME}", this.name);
+      action.description = action.description.replaceAll("{NAME}", this.name);
       newActions[Object.keys(newActions).length + Object.keys(this.system.actions).length] = action;
     }
     console.log("Updated Actions object");

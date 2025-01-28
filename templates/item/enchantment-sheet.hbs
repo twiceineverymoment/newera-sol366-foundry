@@ -123,8 +123,14 @@
         {{/if}}
       </div>
       <div class="resource newera-itemsheet-property-33">
-        <h4>Additional Materials</h4>
-          <input type="text" class="sheet-input" name="system.materialCosts" value="{{system.materialCosts}}" data-dtype="String" {{disabled system.standard}} />
+        {{#if charged}}
+        <div class="scale-control" data-tooltip="Charge Count Increases with Amplification">
+            <i class="fa-light fa-waveform"></i>
+            <input type="checkbox" name="system.scaleCharges" {{checked system.scaleCharges}} data-dtype="Boolean" {{disabled system.standard}} />
+          </div>
+        <h4>Charges</h4>
+        <input type="text" class="sheet-input" name="system.maxCharges" value="{{system.maxCharges}}" data-dtype="Number" {{disabled system.standard}} />
+        {{/if}}
       </div>
     </div>
     {{#unless system.isComponent}}

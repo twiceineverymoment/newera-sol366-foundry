@@ -12,7 +12,7 @@ export class NewEraItemSheet extends ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["newera", "sheet", "item"],
-      width: 640,
+      width: 680,
       height: 520,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "properties" }],
       scrollY: [".sheet-body"]
@@ -84,9 +84,8 @@ export class NewEraItemSheet extends ItemSheet {
     }
 
     if (this.item.typeIs(NewEraItem.Types.ENCHANTMENT)) {
-      if (this.item.system.enchantmentType == 'CE') {
-        context.thingsAreComplex = true;
-      }
+      context.thingsAreComplex = (this.item.system.enchantmentType == 'CE');
+      context.charged = this.item.system.keywords.includes("Charged");
     }
 
     if (context.thingsAreComplex) {
@@ -182,7 +181,6 @@ export class NewEraItemSheet extends ItemSheet {
       html.find("#ench-type-"+this.item.id).val(system.enchantmentType);
       html.find("#school-"+this.item.id).val(system.school);
       html.find("#refinement-"+this.item.id).val(system.refinementLevel);
-
       html.find(".editor-content").css("color", "rgba(0, 0, 0, 0.0)");
       html.find("#amplified-description").html(system.formattedDescription);
     } else if (this.item.type == "Class"){

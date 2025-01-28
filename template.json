@@ -625,6 +625,7 @@
 			},
 			"enchantmentType": "E",
 			"maxCharges": 0,
+			"scaleCharges": false,
 			"components": {}
 		},
 		"Potion": {
