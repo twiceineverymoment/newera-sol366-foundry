@@ -217,6 +217,7 @@ export class Actions {
               <td><strong id="cost"></strong></td>
             </tr>
           </table>
+          <div id="complex-stuff"></div>
           <div id="amplify-info">
             <p>Amplification Level:</p>
             <div id="amplify-down">
@@ -341,8 +342,9 @@ export class Actions {
       }
 
       //Determine chance of success
+      const thingsAreComplex = (spell.type == 'Enchantment' && spell.system.enchantmentType == 'CE');
       const passiveSpellSkill = 10 + (spellSkill == "genericCast" ? actor.system.casterLevel : actor.system.magic[spellSkill].mod);
-      let pctChance = 55 + ((passiveSpellSkill - difficulty) * 5);
+      let pctChance = thingsAreComplex ? _getComplexPercentage(spell, actor) : 55 + ((passiveSpellSkill - difficulty) * 5);
 
       html.find("#level").html(level);
       html.find("#difficulty").html(difficulty);
@@ -388,10 +390,28 @@ export class Actions {
         html.find("#chance").html(`100%`);
         html.find("#chance").css("color", "green");
       }
+      if (thingsAreComplex) {
+        html.find("#chance").append('*');
+        html.find("#complexStuff").html(`<p>*This is a complex enchantment with <b>${Object.entries(spell.components).length}</b> components. You will attempt to cast each one in sequence. If any step fails, the GM decides what ultimately happens.</p>`);
+      }
 
       if (spell.system.keywords.includes("Static") || actor.type == "Creature" || prepared){
         html.find("#amplify-info").hide();
       }
+    }
+
+    static _getComplexPercentage(enchantment, actor) {
+      let prob = 1.0;
+      for (const component of Object.values(enchantment.components)) {
+        const form = NEWERA.schoolToFormMapping[component.check];
+        const spellSkillLevel = form == "genericCast" ? this.system.casterLevel : this.system.magic[form].level;
+        const level = component.level * (component.scales ? ampFactor : 1);
+        const difficulty = level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5);
+        const passiveSpellSkill = 10 + (form == "genericCast" ? actor.system.casterLevel : actor.system.magic[form].mod);
+        const stepProb = 0.55 + ((passiveSpellSkill - difficulty) * 0.05);
+        prob *= stepProb;
+      }
+      return Math.round(prob * 100);
     }
 
     static displayPotionDialog(actor, potion){

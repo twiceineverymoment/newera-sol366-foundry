@@ -1257,7 +1257,7 @@ export class NewEraActor extends Actor {
         const successful = (castRoll.total >= difficulty);
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
-          flavor: `Step ${stepNo+1}: ${spell.name} (Difficulty ${difficulty})`
+          flavor: `Step ${stepNo+1}: ${component.name} (Difficulty ${difficulty})`
         });
         if (!successful) {
           return false;
