@@ -745,4 +745,63 @@ export class Actions {
       }).render(true);
     }
 
+    static async advanceGameClock(time = {}) {
+      const current = {
+        year: game.settings.get("newera-sol366", "world.date.year"),
+        month: game.settings.get("newera-sol366", "world.date.month"),
+        day: game.settings.get("newera-sol366", "world.date.day"),
+        hour: game.settings.get("newera-sol366", "world.time.hour"),
+        minute: game.settings.get("newera-sol366", "world.time.minute"),
+      }
+      const next = structuredClone(current);
+      const advance = {
+        years: 0,
+        months: 0,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        ...time
+      };
+      next.minute += advance.minutes;
+      if (next.minute >= 60) {
+        next.hour += Math.floor(next.minute / 60);
+        next.minute = next.minute % 60;
+      }
+      next.hour += advance.hours;
+      if (next.hour >= 24) {
+        next.day += Math.floor(next.hour / 24);
+        next.hour = next.hour % 24;
+      }
+      next.day += advance.days;
+      if (next.day > 28) {
+        next.month += Math.floor(next.day / 28);
+        next.day = (next.day % 28) + 1;
+      }
+      next.month += advance.months;
+      if (next.month > 13) {
+        next.year += Math.floor(next.month / 13);
+        next.month = (next.month % 13) + 1;
+      }
+      next.year += advance.years;
+      await game.settings.set("newera-sol366", "world.date.year", next.year);
+      await game.settings.set("newera-sol366", "world.date.month", next.month);
+      await game.settings.set("newera-sol366", "world.date.day", next.day);
+      await game.settings.set("newera-sol366", "world.time.hour", next.hour);
+      await game.settings.set("newera-sol366", "world.time.minute", next.minute);
+    }
+
+    static _is29DayMonth(year, month) {
+      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+        return (month == 13 || month == 1);
+      } else if (year % 2 == 0) {
+        return (month == 7);
+      } else if ((year+1) % 2 == 0) {
+        return (month == 4);
+      } else if ((year-1) % 2 == 0) {
+        return (month == 10);
+      } else { //bruh
+        return false;
+      }
+    }
+
 }
