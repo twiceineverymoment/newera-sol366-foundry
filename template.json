@@ -604,14 +604,13 @@
 				"value": 0,
 				"description": "",
 				"scales": true
-			}
+			},
+			"materialCosts": {}
 		},
 		"Enchantment": {
 			"templates": ["base", "magic"],
 			"enchantedItemDescriptor": "",
 			"effectColor": "",
-			"aetheriumCost": 0,
-			"materialCosts": "",
 			"validTargets": {
 				"melee": false,
 				"ranged": false,
@@ -626,6 +625,7 @@
 			"enchantmentType": "E",
 			"maxCharges": 0,
 			"scaleCharges": false,
+			"materialCosts": {},
 			"components": {}
 		},
 		"Potion": {
