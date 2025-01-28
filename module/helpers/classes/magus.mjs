@@ -93,6 +93,13 @@ export class Magus {
             ]
         },
         {
+            level: 1,
+            name: "Alchemist's Pouch",
+            key: false,
+            description: `<p>You can designate one small container as your Alchemist's Pouch.</p><p>Once per day, you may use your Alchemist's Pouch to satisfy the material costs of a common enchantment you cast, at or below your skill level in that form of magic.</p>
+            <p>If you amplify the enchantment, your pouch can supply the amount of materials needed to cast it at the highest level that's trivial for you.</p>`
+        },
+        {
             level: 2,
             common: "specialtyImprovement"
         },
@@ -328,20 +335,19 @@ export class Magus {
         },
         {
             level: 10,
-            id: "magus.bonus",
-            key: false,
-            name: "Magus Bonus",
-            description: "Gain a +1 class bonus to one of the following stats.",
-            selections: {
-                "2": {
-                    label: "Choose a Stat Increase",
-                    options: {
-                        carryWeight: "Carry Weight",
-                        initiative: "Initiative",
-                        passiveAgility: "Passive Agility"
-                    }
+            name: "Spellcraft",
+            key: true,
+            description: `<p>You can create your own spells.</p>
+            <p>As a Magus, you can craft spells and simple enchantments. You can perform Spellstrikes using spells you create.</p>
+            <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
+            tableValues: [
+                {
+                    field: "spellcraft.artificer",
+                    label: "Spellcraft Skill Level",
+                    sign: false,
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3]
                 }
-            }
+            ]
         },
         {
             level: 11,
@@ -398,6 +404,12 @@ export class Magus {
             `,
             spellStudies: [
                 {
+                    onOtherFeature: true
+                },
+                {
+                    onOtherFeature: true
+                },
+                {
                     choose: 3,
                     rarity: 2,
                     lists: ["magusEnchantments"],
@@ -424,6 +436,23 @@ export class Magus {
             key: false,
             description: `<p>You can put two simple enchantments on one item.</p>
             <p>You gain the ability to cast simple enchantments on items that are already enchanted. You take a -5 penalty to cast the second enchantment. The penalty is reduced to -3 if the second enchantment is of the same form of magic as the existing enchantment, and to -1 if from the same school of magic.</p>`
+        },
+        {
+            level: 12,
+            id: "magus.bonus",
+            key: false,
+            name: "Magus Bonus",
+            description: "Gain a +1 class bonus to one of the following stats.",
+            selections: {
+                "2": {
+                    label: "Choose a Stat Increase",
+                    options: {
+                        carryWeight: "Carry Weight",
+                        initiative: "Initiative",
+                        passiveAgility: "Passive Agility"
+                    }
+                }
+            }
         },
         {
             level: 13,
@@ -584,27 +613,11 @@ export class Magus {
         },
         {
             level: 17,
-            common: "learningExperience"
-        },
-        {
-            level: 17,
             common: "abilityScoreImprovement"
         },
         {
             level: 18,
-            name: "Spellcraft",
-            key: true,
-            description: `<p>You can create your own spells.</p>
-            <p>As a Magus, you can craft spells and simple enchantments. You can perform Spellstrikes using spells you create.</p>
-            <p>See the <a href="https://www.newerarpg.com/srd/newera-sol366/spellcraft">Spellcraft</a> section of the rulebook for details.</p>`,
-            tableValues: [
-                {
-                    field: "spellcraft.artificer",
-                    label: "Spellcraft Skill Level",
-                    sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3]
-                }
-            ]
+            common: "learningExperience"
         },
         {
             level: 18,
