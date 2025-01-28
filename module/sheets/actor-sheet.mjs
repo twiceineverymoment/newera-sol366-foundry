@@ -487,11 +487,11 @@ export class NewEraActorSheet extends ActorSheet {
         if (["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Phone", "Potion"].includes(item.type)){
           actions.show.equipped = true; //This sets the equipment section to show when there is at least one item with an action in the inventory
           actions.equipped.push(itemAction);
-        } else {
+        } else if (["Feat", "Spell"].includes(item.type)){
           actions.show.feats = true;
           itemAction.macroClass = "action-macro-item";
           actions.feats.push(itemAction);
-        }
+        } //Don't push actions from enchantments here, they only apply to items that get enchanted
       }
     }
 
