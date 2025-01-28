@@ -295,6 +295,11 @@ input.sheet-input, select.sheet-input, button.sheet-input, textarea.sheet-input 
   border: none;
   outline: none;
 }
+select.sheet-input option { /* This style doesn't do anything on Mac but should on Windows */
+  color: white !important;
+  background-color: #1D4159 !important;
+  font-family: "Nanum Myeongjo", serif;
+}
 button.sheet-input:disabled {
   opacity: 0.5;
 }
