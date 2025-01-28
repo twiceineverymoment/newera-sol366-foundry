@@ -202,7 +202,10 @@ export class NewEraActor extends Actor {
         weight += item.system.weight * (item.system.quantity || 1);
       }
       if (item.typeIs(NewEraItem.Types.ENCHANTABLE) && item.system.enchanted) {
-        ench += item.system.totalEnchantmentLevel;
+        const slot = this.findItemLocation(item);
+        if (slot && slot != "backpack") {
+          ench += item.system.totalEnchantmentLevel;
+        }
       }
       if (item.typeIs(NewEraItem.Types.ARMOR)) {
         if (item.system.armorType == "Chest" || item.system.armorType == "Full Body"){
