@@ -71,7 +71,7 @@
   <div class="tab" data-group="primary" data-tab="properties">
 
     <div class="newera-itemsheet-properties">
-      <div class="resource newera-itemsheet-property-50">
+      <div class="resource newera-itemsheet-property-33">
         <h4>Level</h4>
         {{#if system.amplified}}
           <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.level}}" disabled />
@@ -79,7 +79,7 @@
           <input type="text" class="sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled system.standard}}/>
         {{/if}}
       </div>
-      <div class="resource newera-itemsheet-property-50">
+      <div class="resource newera-itemsheet-property-33">
         <h4>School of Magic</h4>
         <select name="system.school" class="sheet-input" id="school-{{item.id}}" {{disabled system.standard}}>
           <option value="??">Unknown School</option>
@@ -104,32 +104,12 @@
           <option value="MM">Metamagic</option>
         </select>
       </div>
-    </div>
-    <div class="newera-itemsheet-properties">
       <div class="resource newera-itemsheet-property-33">
         <h4><img class="bonus" src="systems/newera-sol366/resources/energy-hot.png" />Energy</h4>
         {{#if system.amplified}}
           <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.energyCost}}" disabled />
         {{else}}
           <input type="text" class="sheet-input" name="system.energyCost" value="{{system.energyCost}}" data-dtype="Number" {{disabled system.standard}} />
-        {{/if}}
-      </div>
-      <div class="resource newera-itemsheet-property-33">
-        <h4><img class="bonus" src="systems/newera-sol366/resources/aetherium.png" />Ætherium</h4>
-        {{#if system.amplified}}
-          <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.aetheriumCost}}" style="display: inline; width: 80%" disabled /> g
-        {{else}}
-          <input type="text" class="sheet-input" name="system.aetheriumCost" value="{{system.aetheriumCost}}" data-dtype="Number" style="display: inline; width: 80%" {{disabled system.standard}} /> g
-        {{/if}}
-      </div>
-      <div class="resource newera-itemsheet-property-33">
-        {{#if charged}}
-        <div class="scale-control" data-tooltip="Charge Count Increases with Amplification">
-            <i class="fa-light fa-waveform"></i>
-            <input type="checkbox" name="system.scaleCharges" {{checked system.scaleCharges}} data-dtype="Boolean" {{disabled system.standard}} />
-          </div>
-        <h4>Charges</h4>
-        <input type="text" class="sheet-input" name="system.maxCharges" value="{{system.maxCharges}}" data-dtype="Number" {{disabled system.standard}} />
         {{/if}}
       </div>
     </div>
@@ -184,7 +164,21 @@
   </div>
 
   <div class="tab actions" data-group="primary" data-tab="actions">
-    <p>These actions apply to any item bearing this enchantment.</p>
+    <div class="newera-itemsheet-properties">
+      <div class="newera-itemsheet-property-50">
+        <p>Actions apply to any item bearing this enchantment. Use &#123;NAME&#125; to represent the name of the enchanted item.</p>
+      </div>
+      <div class="resource newera-itemsheet-property-33">
+        {{#if charged}}
+        <div class="scale-control" data-tooltip="Charge Count Increases with Amplification">
+            <i class="fa-light fa-waveform"></i>
+            <input type="checkbox" name="system.scaleCharges" {{checked system.scaleCharges}} data-dtype="Boolean" {{disabled system.standard}} />
+          </div>
+        <h4>Charges</h4>
+        <input type="text" class="sheet-input" name="system.maxCharges" value="{{system.maxCharges}}" data-dtype="Number" {{disabled system.standard}} />
+        {{/if}}
+      </div>
+    </div>
     {{> systems/newera-sol366/templates/item/parts/item-actions.hbs}}
   </div>
 
