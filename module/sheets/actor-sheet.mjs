@@ -482,7 +482,7 @@ export class NewEraActorSheet extends ActorSheet {
         itemAction.itemName = item.name;
         itemAction.itemId = item.id;
         itemAction.itemType = item.type;
-        NewEraActorSheet._prepareActionContextInfo(itemAction, false);
+        this._prepareActionContextInfo(itemAction, false);
 
         if (["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Phone", "Potion"].includes(item.type)){
           actions.show.equipped = true; //This sets the equipment section to show when there is at least one item with an action in the inventory
@@ -513,7 +513,7 @@ export class NewEraActorSheet extends ActorSheet {
           actionType: action.system.actionType,
           rolls: action.system.rolls
       };
-      NewEraActorSheet._prepareActionContextInfo(actionSheetData, true);
+      this._prepareActionContextInfo(actionSheetData, true);
       actions.custom.push(actionSheetData);
     }
 
@@ -531,7 +531,7 @@ export class NewEraActorSheet extends ActorSheet {
             (!feature.archetype || archetypes.includes(feature.archetype)) &&
             feature.actions){
             for (const a of feature.actions){
-              NewEraActorSheet._prepareActionContextInfo(a, false);
+              this._prepareActionContextInfo(a, false);
               a.macroClass = "action-macro-basic";
               actions.feats.push(a);
             }
@@ -546,7 +546,7 @@ export class NewEraActorSheet extends ActorSheet {
         const extendedFeatData = FeatActions.find(f => f.casperObjectId == feat.system.casperObjectId);
         if (extendedFeatData){
           for (const a of extendedFeatData.actions){
-            NewEraActorSheet._prepareActionContextInfo(a, false);
+            this._prepareActionContextInfo(a, false);
             a.macroClass = "action-macro-basic";
             actions.feats.push(a);
           }
@@ -562,13 +562,13 @@ export class NewEraActorSheet extends ActorSheet {
     /* General actions from config for characters and humanoid creatures */
     if (actor.type == "Player Character" || actor.type == "Non-Player Character" || system.hasStandardActions){
       actions.general = [...NEWERA.pcGeneralActions];
-      actions.general.forEach((a) => NewEraActorSheet._prepareActionContextInfo(a, false));
+      actions.general.forEach((a) => this._prepareActionContextInfo(a, false));
       actions.exploration = [...NEWERA.explorationActions];
-      actions.exploration.forEach((a) => NewEraActorSheet._prepareActionContextInfo(a, false));
+      actions.exploration.forEach((a) => this._prepareActionContextInfo(a, false));
       actions.social = [...NEWERA.generalSocialActions];
-      actions.social.forEach((a) => NewEraActorSheet._prepareActionContextInfo(a, false));
+      actions.social.forEach((a) => this._prepareActionContextInfo(a, false));
       actions.magic = [...NEWERA.generalMagicActions];
-      actions.magic.forEach((a) => NewEraActorSheet._prepareActionContextInfo(a, false));
+      actions.magic.forEach((a) => this._prepareActionContextInfo(a, false));
       system.customActionSection = true;
     }
 
@@ -600,7 +600,7 @@ export class NewEraActorSheet extends ActorSheet {
             }
           ]
         };
-        NewEraActorSheet._prepareActionContextInfo(actionSheetData, false);
+        this._prepareActionContextInfo(actionSheetData, false);
         actions.spells.push(actionSheetData);
       });
     }
@@ -673,7 +673,7 @@ export class NewEraActorSheet extends ActorSheet {
 
   }
 
-  static _prepareActionContextInfo(action, isCustom){
+  _prepareActionContextInfo(action, isCustom){
     const actionTypes = {
       "1": "1 Frame",
       "2": "2 Frames",
