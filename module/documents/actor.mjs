@@ -215,6 +215,19 @@ export class NewEraActor extends Actor {
     system.armor.equipped = armor;
   }
 
+  async _applyConditionalStatusEffects(weight, enchantments) {
+    let updated = false;
+    if (weight > this.system.carryWeight.value && !this.token.hasStatusEffect("overencumbered")) {
+      await this.toggleStatusEffect("overencumbered", true);
+      updated = true;
+    }
+    if (enchantments > this.system.magicTolerance.max && !this.token.hasStatusEffect("spellsick")) {
+      await this.toggleStatusEffect("spellsick", true);
+      updated = true;
+    }
+    return updated;
+  }
+
   _getTotalVehicleWeight(items, occupants = []){
     let total = 0;
     for (const item of items){
