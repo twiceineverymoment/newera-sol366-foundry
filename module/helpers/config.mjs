@@ -3784,13 +3784,7 @@ NEWERA.statusEffects = {
         3: {
             id: "winded",
             name: "Winded 3",
-            description: `<p>You take a -3 penalty to all physical ability and skill checks.</p>`,
-            img: `${NEWERA.images}/se_winded.png`
-        },
-        4: {
-            id: "winded",
-            name: "Winded 4",
-            description: `<p>You take a -4 penalty to all physical ability and skill checks.</p><p>Any further Winded effects will cause you to suffer a level of Exhaustion.</p>`,
+            description: `<p>You take a -3 penalty to all physical ability and skill checks.</p><p>Any further Winded effects will cause you to suffer a level of Exhaustion.</p>`,
             img: `${NEWERA.images}/se_winded.png`
         }
     },
