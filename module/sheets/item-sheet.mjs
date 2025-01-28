@@ -86,6 +86,7 @@ export class NewEraItemSheet extends ItemSheet {
     if (this.item.typeIs(NewEraItem.Types.ENCHANTMENT)) {
       context.thingsAreComplex = (this.item.system.enchantmentType == 'CE');
       context.charged = this.item.system.keywords.includes("Charged");
+      context.totalEnergyCost = this.item.totalEnergyCost;
     }
 
     if (context.thingsAreComplex) {

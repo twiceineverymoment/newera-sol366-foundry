@@ -1130,15 +1130,23 @@ export class NewEraActor extends Actor {
       const spellSkillLevel = spellSkill == "genericCast" ? this.system.casterLevel : this.system.magic[spellSkill].level;
       const difficulty = noSkillCheck ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = spell.system.energyCost * ampFactor;
+      let totalEnergyCost = energyCost;
       let alwaysRoll = false;
       let attackMod = '';
       let rollPrefix = '';
+      let rollSuffix = '';
       let successful = false;
 
       //For complex enchantments - cast the component list, then proceed to the regular logic for the final roll
       if (spell.type == 'Enchantment' && spell.system.enchantmentType == 'CE') {
-        if (!await this.castComplexComponents(spell)) {
+        const stepResults = await this.castComplexComponents(spell);
+        if (!stepResults.success) {
+          if (energyPool){
+            await energyPool.use(stepResults.energyUsed, new CharacterEnergyPool(this));
+          }
           return false;
+        } else {
+          totalEnergyCost += stepResults.energyUsed;
         }
       }
       
@@ -1239,13 +1247,15 @@ export class NewEraActor extends Actor {
       }
 
       if (energyPool){
-        await energyPool.use(energyCost, new CharacterEnergyPool(this));
+        await energyPool.use(totalEnergyCost, new CharacterEnergyPool(this));
       }
       return successful;
   }
 
   async castComplexComponents(enchantment, ampFactor = 1) {
+    let energyConsumed = 0;
     for (const [stepNo, component] of Object.entries(enchantment.system.components)) {
+      energyConsumed += (component.energyCost * (component.scales ? ampFactor : 1));
       const school = NEWERA.schoolOfMagicNames[component.check];
       const form = NEWERA.schoolToFormMapping[component.check];
       const spellSkillLevel = form == "genericCast" ? this.system.casterLevel : this.system.magic[form].level;
@@ -1257,16 +1267,22 @@ export class NewEraActor extends Actor {
         const successful = (castRoll.total >= difficulty);
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
-          flavor: `Step ${stepNo+1}: ${component.name} (Difficulty ${difficulty})`
+          flavor: `Step ${parseInt(stepNo)+1}: ${component.name} (Difficulty ${difficulty})`
         });
         if (!successful) {
-          return false;
+          return {
+            energyUsed: energyConsumed,
+            success: false
+          };
         }
       } else {
-        console.log(`Skipped rolling for step ${stepNo+1} because difficulty is 0`);
+        console.log(`Skipped rolling for step ${parseInt(stepNo)+1} because difficulty is 0`);
       }
     }
-    return true;
+    return {
+      energyUsed: energyConsumed,
+      success: true
+    };
   }
 
   async stopAllSpells(){

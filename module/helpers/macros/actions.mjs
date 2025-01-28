@@ -329,7 +329,7 @@ export class Actions {
       const spellSkill = spell.system.form;
       const spellSkillLevel = spellSkill == "genericCast" ? actor.system.casterLevel : actor.system.magic[spellSkill].level;
       const difficulty = prepared ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
-      const energyCost = prepared ? 0 : spell.system.energyCost * ampFactor;
+      const energyCost = prepared ? 0 : spell.totalEnergyCost * ampFactor;
       let availableEnergy = 0;
       let pool = null;
 
@@ -344,7 +344,7 @@ export class Actions {
       //Determine chance of success
       const thingsAreComplex = (spell.type == 'Enchantment' && spell.system.enchantmentType == 'CE');
       const passiveSpellSkill = 10 + (spellSkill == "genericCast" ? actor.system.casterLevel : actor.system.magic[spellSkill].mod);
-      let pctChance = thingsAreComplex ? _getComplexPercentage(spell, actor) : 55 + ((passiveSpellSkill - difficulty) * 5);
+      let pctChance = thingsAreComplex ? Actions._getComplexPercentage(spell, actor, ampFactor) : 55 + ((passiveSpellSkill - difficulty) * 5);
 
       html.find("#level").html(level);
       html.find("#difficulty").html(difficulty);
@@ -392,7 +392,7 @@ export class Actions {
       }
       if (thingsAreComplex) {
         html.find("#chance").append('*');
-        html.find("#complexStuff").html(`<p>*This is a complex enchantment with <b>${Object.entries(spell.components).length}</b> components. You will attempt to cast each one in sequence. If any step fails, the GM decides what ultimately happens.</p>`);
+        html.find("#complex-stuff").html(`<p>*This is a complex enchantment with <b>${Object.entries(spell.system.components).length}</b> components. You will attempt to cast each one in sequence. If any step fails, the GM decides what ultimately happens.</p>`);
       }
 
       if (spell.system.keywords.includes("Static") || actor.type == "Creature" || prepared){
@@ -400,16 +400,17 @@ export class Actions {
       }
     }
 
-    static _getComplexPercentage(enchantment, actor) {
+    static _getComplexPercentage(enchantment, actor, ampFactor) {
       let prob = 1.0;
-      for (const component of Object.values(enchantment.components)) {
+      for (const component of Object.values(enchantment.system.components)) {
         const form = NEWERA.schoolToFormMapping[component.check];
-        const spellSkillLevel = form == "genericCast" ? this.system.casterLevel : this.system.magic[form].level;
+        const spellSkillLevel = form == "genericCast" ? actor.system.casterLevel : actor.system.magic[form].level;
         const level = component.level * (component.scales ? ampFactor : 1);
         const difficulty = level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5);
         const passiveSpellSkill = 10 + (form == "genericCast" ? actor.system.casterLevel : actor.system.magic[form].mod);
-        const stepProb = 0.55 + ((passiveSpellSkill - difficulty) * 0.05);
+        const stepProb = Math.min(1.0, 0.55 + ((passiveSpellSkill - difficulty) * 0.05));
         prob *= stepProb;
+        console.log(`[DEBUG] component form=${form} level=${level} skill=${spellSkillLevel} diff=${difficulty} passive=${passiveSpellSkill} prob=${stepProb} cumulative=${prob}`);
       }
       return Math.round(prob * 100);
     }

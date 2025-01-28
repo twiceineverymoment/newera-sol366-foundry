@@ -106,10 +106,14 @@
       </div>
       <div class="resource newera-itemsheet-property-33">
         <h4><img class="bonus" src="systems/newera-sol366/resources/energy-hot.png" />Energy</h4>
-        {{#if system.amplified}}
-          <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.energyCost}}" disabled />
-        {{else}}
-          <input type="text" class="sheet-input" name="system.energyCost" value="{{system.energyCost}}" data-dtype="Number" {{disabled system.standard}} />
+        {{#if thingsAreComplex}}
+          <input type="text" class="sheet-input" value="{{totalEnergyCost}}" data-tooltip="This is the total energy cost. See Components for details." disabled />
+        {{else}} 
+          {{#if system.amplified}}
+            <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.energyCost}}" disabled />
+          {{else}}
+            <input type="text" class="sheet-input" name="system.energyCost" value="{{system.energyCost}}" data-dtype="Number" {{disabled system.standard}} />
+          {{/if}}
         {{/if}}
       </div>
     </div>

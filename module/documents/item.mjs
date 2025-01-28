@@ -1254,6 +1254,20 @@ _preparePotionData(system){
     return `${year}/${month<10?"0":""}${month}/${day<10?"0":""}${day} ${hour<10?"0":""}${hour}:${minute<10?"0":""}${minute}`;
   }
 
+  get totalEnergyCost(){
+    if (this.typeIs(NewEraItem.Types.ENCHANTMENT) && this.system.enchantmentType == 'CE') {
+    let total = this.system.energyCost;
+    Object.values(this.system.components).forEach(comp => {
+      total += comp.energyCost;
+    });
+    return total;
+    } else if (this.typeIs(NewEraItem.Types.MAGIC)) {
+      return this.system.energyCost;
+    } else {
+      return null;
+    }
+  }
+
   addAction() {
     const system = this.system;
     system.actions[Object.keys(system.actions).length] = {
@@ -1595,7 +1609,7 @@ _preparePotionData(system){
 
   async printDetails(speaker, ampFactor = 1){
     let template = "";
-    if (this.typeIs(NewEraItem.Types.MAGIC)){
+    if (this.typeIs(NewEraItem.Types.SPELL)){
       const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
       const title = Formatting.spellTitle(this, ampFactor);
       const range = `${this.system.range.value * (this.system.range.scales ? ampFactor : 1)} ft ${this.system.range.description}`;
@@ -1608,6 +1622,17 @@ _preparePotionData(system){
           <p>${description}</p>
           <p><strong>Casting Time: </strong> ${castingTime} </p>
           <p><strong>Range: </strong> ${range} </p>
+        </div>
+      `;
+    } else if (this.typeIs(NewEraItem.Types.ENCHANTMENT)){
+      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
+      const title = Formatting.spellTitle(this, ampFactor);
+      template = `
+        <div class="chat-item-details">
+          <img src="${this.img}" />
+          <h2>${title}</h2>
+          <h3>Level <strong>${this.system.level * ampFactor}</strong> ${this.system.specialty}</h3>
+          <p>${description}</p>
         </div>
       `;
     } else if (this.typeIs(NewEraItem.Types.POTION)){
