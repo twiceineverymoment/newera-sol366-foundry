@@ -203,7 +203,7 @@ export class NewEraActor extends Actor {
       }
       if (item.typeIs(NewEraItem.Types.ENCHANTABLE) && item.system.enchanted) {
         const slot = this.findItemLocation(item);
-        if (slot && slot != "backpack") {
+        if (slot && !["backpack", "leftHand", "rightHand"].includes(slot) && !item.typeIs(NewEraItem.Types.WEAPON)) { //Count enchanted items, that are not weapons, and are worn on the body
           ench += item.system.totalEnchantmentLevel;
         }
       }
