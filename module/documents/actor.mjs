@@ -1606,8 +1606,7 @@ export class NewEraActor extends Actor {
 
     for (const item of this.items){
       console.log(`Checking for update: ${item.name} [${item.system.casperObjectId}]`);
-      const isStored = item.system.stored;
-      if (item.typeIs(NewEraItem.Types.MAGIC) && item.system.casperObjectId){
+      if (item.typeIs(NewEraItem.Types.MAGIC) && item.system.casperObjectId && item.system.rarity > 0){
         const fromComp = spellsEnchantments.find(i => i.type == item.type && i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp){
           await item.update({
