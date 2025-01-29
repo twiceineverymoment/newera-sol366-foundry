@@ -220,8 +220,8 @@ Handlebars.registerHelper('populated', function(haystack){
 Hooks.once("ready", async function() {
   Hooks.on("hotbarDrop", (bar, data, slot) => HotbarManager.onHotbarDrop(bar, data, slot));
   Hooks.on("combatTurnChange", async (combat, updateData, updateOptions) => {
-    if (game.settings.get("newera-sol366", "autoClearCombatantStatus")) {
-      console.log(`[DEBUG] Clearing turn status effects from next actor`);
+    if (game.settings.get("newera-sol366", "autoClearCombatantStatus") && game.users.activeGM.isSelf) { //This hook fires on all clients so isSelf is used so only the GM performs the update
+      //console.log(`[DEBUG] Clearing turn status effects from next actor`);
       const actor = combat.combatants.get(combat.current.combatantId).actor;
       if (actor) {
         const reactionUsed = actor.effects.find(eff => ["Reaction Used", "Reactions Used"].includes(eff.label));
