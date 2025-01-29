@@ -1294,7 +1294,7 @@ export class NewEraActor extends Actor {
 
   async endSpell(message = true){
     const spellEffect = this.effects.find(e => e.label.includes("Casting: "));
-    const spell = this.items.find(spellEffect.origin);
+    const spell = this.items.get(spellEffect.origin);
     await spellEffect.delete();
     await this.update({
       system: {
@@ -1302,7 +1302,7 @@ export class NewEraActor extends Actor {
       }
     });
     if (message) {
-      this.actionMessage(this.img, null, "{NAME} ends {0}.", spell ? spell.name : "the spell");
+      this.actionMessage(this.img, null, "{NAME} cancels {0}.", spell ? spell.name : "the spell");
     }
 }
     async stopSustaining(){
