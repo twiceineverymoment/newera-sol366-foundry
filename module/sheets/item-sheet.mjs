@@ -92,7 +92,7 @@ export class NewEraItemSheet extends ItemSheet {
     if (context.thingsAreComplex) {
       for (const [key, comp] of Object.entries(this.item.system.components)) {
         const school = NEWERA.schoolOfMagicNames[comp.check];
-        this.item.system.components[key].img = `/systems/newera-sol366/resources/${school}.png`;
+        this.item.system.components[key].img = `systems/newera-sol366/resources/${school}.png`;
       }
     }
 

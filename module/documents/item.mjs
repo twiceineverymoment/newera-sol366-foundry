@@ -236,7 +236,7 @@ _preparePotionData(system){
   system.amplified = (system.doses > 1);
   if (system.isRecipe) {
     system.listDisplayName = this.name + " Recipe";
-    this.img = `/systems/newera-sol366/resources/pr_${NEWERA.chantLevels[this.system.recipeLevel]}.png`; //Chant levels are the same as potion levels so this works
+    this.img = `systems/newera-sol366/resources/pr_${NEWERA.chantLevels[this.system.recipeLevel]}.png`; //Chant levels are the same as potion levels so this works
   } else if (system.quantity > 1){
     system.listDisplayName = `${this.name} x${system.quantity}`;
   } else {
