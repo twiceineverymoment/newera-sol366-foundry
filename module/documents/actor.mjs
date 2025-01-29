@@ -1166,11 +1166,13 @@ export class NewEraActor extends Actor {
           rollPrefix = "Cast";
           rollSuffix = " (Contested) ";
           attackMod = '0';
+          break;
         case "wildMagic": //Same if the spell is crafted and is anything less than perfected, as there's a possibility of wild magic on a low roll
           alwaysRoll = true;
           rollPrefix = "Cast";
           rollSuffix = ` (${NEWERA.spellcraftSuffixes[spell.system.refinementLevel]}) `;
           attackMod = '0';
+          break;
         default:
         case "cast":
           alwaysRoll = false;
