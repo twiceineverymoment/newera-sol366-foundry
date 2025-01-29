@@ -1288,7 +1288,7 @@ export class NewEraActor extends Actor {
   }
 
   async stopAllSpells(){
-    await this.endSpell(false);
+    await this.endSpell(true);
     await this.stopSustaining();
   }
 

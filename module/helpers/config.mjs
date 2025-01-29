@@ -2713,7 +2713,7 @@ NEWERA.generalMagicActions = [
         specialties: [],
         description: "You end the effects of any sustained or ephemeral spell you're casting.",
         difficulty: "0",
-        overrideMacroCommand: "game.newera.HotbarActions.endSpell()",
+        overrideMacroCommand: "game.newera.HotbarActions.stopAllSpells()",
         actionType: "0",
         disallow: actor => (!actor.system.ephemeralEffectActive && !actor.system.sustaining.id) ? "You aren't casting any spells right now." : false,
         rolls: [
