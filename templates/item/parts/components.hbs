@@ -1,0 +1,83 @@
+<p>
+    This enchantment is made up of multiple components. You must cast each component successfully, 
+    in the order shown below.
+</p>
+<table class="newera-actorsheet-table">
+    <tr>
+        <td colspan="2">Component</td>
+        <td>Check</td>
+        <td>Level</td>
+        <td>Energy</td>
+        <td>Properties</td>
+    </tr>
+      {{#each system.components as |comp index|}}
+        {{log ..}}
+        <tr>
+            <td style="width: 5%">
+                <img src="{{comp.img}}" class="resource-icon" />
+            </td>
+            <td style="width: 35%">
+                <input type="text" name="system.components.{{index}}.name" class="sheet-input" value="{{comp.name}}" {{disabled ../system.standard}} />
+            </td>
+            <td style="width: 30%">
+                <select name="system.components.{{index}}.check" class="sheet-input auto-value" {{disabled ../system.standard}}>
+                    <option value="??">Spellcasting</option>
+                    <option value="PY">Pyromancy</option>
+                    <option value="HM">Cryomancy</option>
+                    <option value="GE">Lithomancy</option>
+                    <option value="EV">Evocation</option>
+                    <option value="RE">Restoration</option>
+                    <option value="AB">Abjuration</option>
+                    <option value="BA">Banishment</option>
+                    <option value="MA">Physiomancy</option>
+                    <option value="CO">Conjuration</option>
+                    <option value="TR">Transmutation</option>
+                    <option value="IL">Illusion</option>
+                    <option value="HY">Hypnotism</option>
+                    <option value="DI">Divination</option>
+                    <option value="CN">Sangromancy</option>
+                    <option value="SU">Summoning</option>
+                    <option value="NE">Necromancy</option>
+                    <option value="AP">Apparition</option>
+                    <option value="CH">Chronomancy</option>
+                    <option value="MM">Metamagic</option>
+                    <option value="CL">Channeling</option>
+                </select>
+            </td>
+            <td style="width: 10%">
+                <input type="text" name="system.components.{{index}}.level" class="sheet-input" value="{{comp.level}}" data-dtype="Number" {{disabled ../system.standard}} />
+            </td>
+            <td style="width: 10%">
+                <input type="text" name="system.components.{{index}}.energyCost" class="sheet-input" value="{{comp.energyCost}}" data-dtype="Number" {{disabled ../system.standard}} />
+            </td>
+            <td style="width: 10%">
+                <div class="cost-control" data-tooltip="Component Level Scales with Amplification" data-tooltip-direction="RIGHT">
+                    <i class="fa-light fa-waveform"></i>
+                    <input type="checkbox" name="system.components.{{index}}.scales" {{checked comp.scales}} data-dtype="Boolean" {{disabled ../system.standard}} />
+                </div>
+                <a class="deleteComponent" data-index="{{index}}" data-tooltip="Delete Row">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+      {{/each}}
+      <tr>
+        <td style="width: 5%">
+            <img src="{{item.img}}" class="resource-icon" />
+        </td>
+        <td style="width: 75%" colspan="3">
+            <input type="text" class="sheet-input" value="Final step: {{item.name}}" {{disabled system.standard}} />
+        </td>
+        <td style="width: 10%">
+            <input type="text" name="system.energyCost" class="sheet-input" value="{{system.energyCost}}" data-dtype="Number" {{disabled system.standard}} />
+        </td>
+        <td style="width: 10%">
+            &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6">
+          <h4><a id="addComponent"><i class="fas fa-plus"></i> Add Component</a></h4>
+        </td>
+      </tr>
+  </table>

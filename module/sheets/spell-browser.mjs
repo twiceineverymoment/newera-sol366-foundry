@@ -118,7 +118,8 @@ export class SpellBrowser extends ActorSheet {
 
     async _searchSpells(criteria){
         let results = [];
-        this.compendium = await game.packs.get("newera-sol366.spells").getDocuments();
+        const documents = await game.packs.get("newera-sol366.spells").getDocuments();
+        this.compendium = documents.filter(doc => doc.typeIs(NewEraItem.Types.MAGIC)); //As of v1.3, alchemy recipes now live in the spells compendium. We only want the spell browser to deal with spells and enchantments
         for (const spell of this.compendium){
             if (criteria.showSpell(spell)){
                 const description = Formatting.amplifyAndFormatDescription(spell.system.description);

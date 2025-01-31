@@ -289,6 +289,11 @@
 					"id": "",
 					"ampFactor": 1
 				},
+				"ephemeralEffectActive": false,
+				"magicTolerance": {
+					"current": 0,
+					"max": 0
+				},
 				"magic": {
 					"elemental": {
 						"level": 0,
@@ -392,7 +397,13 @@
 			},
 			"hitPointIncrement": 8,
 			"hitPointTrueMax": 10,
-			"inspiration": 0
+			"inspiration": 0,
+			"alchemistsPouch": {
+				"type": "none",
+				"min": 0,
+				"current": 0,
+				"max": 0
+			}
 		},
 		"Non-Player Character": {
 			"templates": ["base", "skills", "biography", "magic", "money"],
@@ -487,7 +498,21 @@
 				"enchanted": false,
 				"arcane": false,
 				"enchantmentDescriptor": "",
-				"enchantmentColor": "#000000"
+				"enchantmentColor": "#000000",
+				"enchantabilityModifier": 0,
+				"totalEnchantmentLevel": 0,
+				"useCharge": false,
+				"charges": {
+					"min": 0,
+					"max": 0,
+					"value": 0
+				},
+				"recharge": {
+					"useRechargeAction": false,
+					"energyCost": 0,
+					"materialName": "",
+					"materialQty": 0
+				}
 			},
 			"condition": {
 				"durability": 10,
@@ -503,9 +528,6 @@
 					"modifier": 0
 				}
 			},
-			"recipe": {
-
-			},
 			"magic": {
 				"level": 1,
 				"energyCost": 0,
@@ -519,13 +541,15 @@
 				"derivative": {
 					"isDerived": false,
 					"basis": ""
-				}
+				},
+				"materialCosts": {}
 			}
 		},
 		"Item": {
 			"templates": ["base", "equipment", "stackable", "enchantable"],
 			"units": "",
-			"outfitType": ""
+			"outfitType": "",
+			"isAlchemistsPouch": false
 		},
 		"Melee Weapon": {
 			"templates": ["base", "equipment", "condition", "enchantable"],
@@ -573,20 +597,20 @@
 			"damage": {
 				"amount": "",
 				"type": "",
+				"condition": "",
 				"scales": true
 			},
 			"range": {
 				"value": 0,
 				"description": "",
 				"scales": true
-			}
+			},
+			"materialCosts": {}
 		},
 		"Enchantment": {
 			"templates": ["base", "magic"],
 			"enchantedItemDescriptor": "",
 			"effectColor": "",
-			"aetheriumCost": 0,
-			"materialCosts": "",
 			"validTargets": {
 				"melee": false,
 				"ranged": false,
@@ -599,13 +623,17 @@
 				"details": ""
 			},
 			"enchantmentType": "E",
+			"maxCharges": 0,
+			"scaleCharges": false,
+			"materialCosts": {},
 			"components": {}
 		},
 		"Potion": {
 			"templates": ["base", "equipment", "stackable"],
 			"potionType": "Potion",
 			"recipeLevel": 0,
-			"stackingBehavior": ""
+			"stackingBehavior": "",
+			"isRecipe": false
 		},
 		"Class": {
 			"templates": ["base"],

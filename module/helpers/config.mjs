@@ -2702,6 +2702,28 @@ NEWERA.generalMagicActions = [
             },
         ]
     },
+    {
+        name: "End Spell",
+        images: {
+            base: `${NEWERA.images}/halt-2.png`,
+            right: `${NEWERA.images}/ac_0frame.png`
+        },
+        ability: null,
+        skill: null,
+        specialties: [],
+        description: "You end the effects of any sustained or ephemeral spell you're casting.",
+        difficulty: "0",
+        overrideMacroCommand: "game.newera.HotbarActions.stopAllSpells()",
+        actionType: "0",
+        disallow: actor => (!actor.system.ephemeralEffectActive && !actor.system.sustaining.id) ? "You aren't casting any spells right now." : false,
+        rolls: [
+            {
+                label: "End Spell",
+                die: "halt-2",
+                callback: actor => actor.stopAllSpells()
+            }
+        ]
+    },
 ];
 
 NEWERA.explorationActions = [
@@ -3745,7 +3767,99 @@ NEWERA.statusEffects = {
             description: `<p>You're ready to perform a specific action when conditions are right. You may cancel your readied action at any time as a free action.</p>`,
             img: `${NEWERA.images}/se_waiting.png`
         }
-    }
+    },
+    winded: {
+        1: {
+            id: "winded",
+            name: "Winded",
+            description: `<p>You take a -1 penalty to all physical ability and skill checks.</p>`,
+            img: `${NEWERA.images}/se_winded.png`
+        },
+        2: {
+            id: "winded",
+            name: "Winded 2",
+            description: `<p>You take a -2 penalty to all physical ability and skill checks.</p>`,
+            img: `${NEWERA.images}/se_winded.png`
+        },
+        3: {
+            id: "winded",
+            name: "Winded 3",
+            description: `<p>You take a -3 penalty to all physical ability and skill checks.</p><p>Any further Winded effects will cause you to suffer a level of Exhaustion.</p>`,
+            img: `${NEWERA.images}/se_winded.png`
+        }
+    },
+    hastened: {
+        1: {
+            id: "hastened",
+            name: "Hastened",
+            description: `<p>You have advantage on reactions, and your Turn Length is increased by one frame.</p>`,
+            img: `${NEWERA.images}/se_hastened.png`
+        },
+        2: {
+            id: "hastened",
+            name: "Hastened 2",
+            description: `<p>You have advantage on reactions, and your Turn Length is increased by two frames.</p>`,
+            img: `${NEWERA.images}/se_hastened.png`
+        },
+        3: {
+            id: "hastened",
+            name: "Hastened 3",
+            description: `<p>You have advantage on reactions, and your Turn Length is increased by three frames.</p>`,
+            img: `${NEWERA.images}/se_hastened.png`
+        }
+    },
+    slowed: {
+        1: {
+            id: "slowed",
+            name: "Slowed",
+            description: `<p>You have disadvantage on reactions, and your Turn Length is reduced by one frame.</p>`,
+            img: `${NEWERA.images}/se_slowed.png`
+        },
+        2: {
+            id: "slowed",
+            name: "Slowed 2",
+            description: `<p>You have disadvantage on reactions, and your Turn Length is reduced by two frames.</p><p>This effect can't reduce your turn length to less than one frame.</p>`,
+            img: `${NEWERA.images}/se_slowed.png`
+        },
+        3: {
+            id: "slowed",
+            name: "Slowed 3",
+            description: `<p>You have disadvantage on reactions, and your Turn Length is reduced by three frames.</p><p>This effect can't reduce your turn length to less than one frame.</p>`,
+            img: `${NEWERA.images}/se_slowed.png`
+        }
+    },
+    opportunity: {
+        1: {
+            id: "opportunity",
+            name: "Opportunity",
+            description: `<p>You've gained an opportunity action.</p><p>You have exclusive priority until your opportunity frames are expended.</p>`,
+            img: `${NEWERA.images}/ac_opportunity.png`
+        }
+    },
+    surprised: {
+        1: {
+            id: "surprised",
+            name: "Surprised",
+            description: `<p>You skip your first turn this combat.</p>`,
+            img: `${NEWERA.images}/se_surprised.png`
+        }
+    },
+    spellsick: {
+        1: {
+            id: "spellsick",
+            name: "Spellsickness",
+            description: `<p>You're affected by more enchantments than your body can handle.</p><p>You take a penalty to all Intelligence and Wisdom checks equal to the difference between your Total Enchantment Level and your Magic Tolerance.</p>`,
+            img: `${NEWERA.images}/se_spellsickness.png`
+        }
+    },
+    insane: {
+        1: {
+            id: "insane",
+            name: "Insane",
+            description: `<p>Whenever you perform any action, you must succeed on a difficulty 10 Intelligence or Wisdom check. On a failure, you act erratically instead of performing the intended action. The specifics of what you do while Insane are at the GM's discretion.</p>`,
+            img: `${NEWERA.images}/se_insane.png`
+        }
+    },
 }
 
 NEWERA.defaultStatusEffects = [
@@ -3753,7 +3867,7 @@ NEWERA.defaultStatusEffects = [
     NEWERA.statusEffects.reacted[1],
     NEWERA.statusEffects.waiting[1],
     NEWERA.statusEffects.busy[1],
-    NEWERA.statusEffects.staggered[1],
+    NEWERA.statusEffects.opportunity[1],
 
     //Movement statuses
     NEWERA.statusEffects.prone[1],
@@ -3787,17 +3901,27 @@ NEWERA.defaultStatusEffects = [
     //Effects involving other creatures
     NEWERA.statusEffects.grappled[1],
     NEWERA.statusEffects.trapped[1],
-    NEWERA.statusEffects.frightened[1],
+    NEWERA.statusEffects.staggered[1],
     NEWERA.statusEffects.stunned[1],
+
+    NEWERA.statusEffects.frightened[1],
+    NEWERA.statusEffects.surprised[1],
+    NEWERA.statusEffects.hastened[1],
+    NEWERA.statusEffects.slowed[1],
+
+    NEWERA.statusEffects.overencumbered[1],
+    NEWERA.statusEffects.spellsick[1],
+    NEWERA.statusEffects.winded[1],
+    NEWERA.statusEffects.exhausted[1],
 
     //Handicaps
     NEWERA.statusEffects.blinded[1],
     NEWERA.statusEffects.deafened[1],
     NEWERA.statusEffects.paralyzed[1],
-    NEWERA.statusEffects.unconscious[1],
+    NEWERA.statusEffects.insane[1],
 
     //Death-related effects
-    NEWERA.statusEffects.exhausted[1],
+    NEWERA.statusEffects.unconscious[1],
     NEWERA.statusEffects.incapacitated[1],
     NEWERA.statusEffects.dying[1],
     NEWERA.statusEffects.dead[1],
@@ -3816,6 +3940,10 @@ NEWERA.actionTypeIcons = {
     "M": `${NEWERA.images}/ac_movement.png`,
     "D": `${NEWERA.images}/ac_downtime.png`
 }
+
+NEWERA.spellcraftSuffixes = [
+    "Experimental", "Alpha", "Beta", "Revised", "Published"
+]
 
 NEWERA.lightningBoltDamageRolls = [
     "0", "1d4", "1d8", "1d12", "1d16", "1d20", "1d24", "1d30", "1d50", "1d60", "1d100"

@@ -297,7 +297,8 @@ export class NewEraActorSheet extends ActorSheet {
       psionic: [],
       spectral: [],
       temporal: [],
-      enchantments: []
+      enchantments: [],
+      recipes: []
     };
 
     //Disable the left hand slot if a two-handed item is in the right hand
@@ -317,20 +318,22 @@ export class NewEraActorSheet extends ActorSheet {
       }
     }
 
-    let highestHpIncrement = 0;
-
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
       i.multiple = (i.system.quantity && i.system.quantity > 1);
       switch(i.type){
+        case "Potion":
+          if (i.system.isRecipe) {
+            magic.recipes.push(i);
+            break; //Break inside the if statement so actual potions will continue into the block below (equipment)
+          }
         case "Item":
         case "Melee Weapon":
         case "Ranged Weapon":
         case "Armor":
         case "Shield":
         case "Phone":
-        case "Potion":
             let inBackpack = true;
             for (const [slot, id] of Object.entries(equipment)){
               if (id == i._id){ //This should return false for the worn array, so no need for a type check here (probably)
@@ -479,16 +482,16 @@ export class NewEraActorSheet extends ActorSheet {
         itemAction.itemName = item.name;
         itemAction.itemId = item.id;
         itemAction.itemType = item.type;
-        NewEraActorSheet._prepareActionContextInfo(itemAction, false);
+        this._prepareActionContextInfo(itemAction, false);
 
         if (["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Phone", "Potion"].includes(item.type)){
           actions.show.equipped = true; //This sets the equipment section to show when there is at least one item with an action in the inventory
           actions.equipped.push(itemAction);
-        } else {
+        } else if (["Feat", "Spell"].includes(item.type)){
           actions.show.feats = true;
           itemAction.macroClass = "action-macro-item";
           actions.feats.push(itemAction);
-        }
+        } //Don't push actions from enchantments here, they only apply to items that get enchanted
       }
     }
 
@@ -510,7 +513,7 @@ export class NewEraActorSheet extends ActorSheet {
           actionType: action.system.actionType,
           rolls: action.system.rolls
       };
-      NewEraActorSheet._prepareActionContextInfo(actionSheetData, true);
+      this._prepareActionContextInfo(actionSheetData, true);
       actions.custom.push(actionSheetData);
     }
 
@@ -528,7 +531,7 @@ export class NewEraActorSheet extends ActorSheet {
             (!feature.archetype || archetypes.includes(feature.archetype)) &&
             feature.actions){
             for (const a of feature.actions){
-              NewEraActorSheet._prepareActionContextInfo(a, false);
+              this._prepareActionContextInfo(a, false);
               a.macroClass = "action-macro-basic";
               actions.feats.push(a);
             }
@@ -543,7 +546,7 @@ export class NewEraActorSheet extends ActorSheet {
         const extendedFeatData = FeatActions.find(f => f.casperObjectId == feat.system.casperObjectId);
         if (extendedFeatData){
           for (const a of extendedFeatData.actions){
-            NewEraActorSheet._prepareActionContextInfo(a, false);
+            this._prepareActionContextInfo(a, false);
             a.macroClass = "action-macro-basic";
             actions.feats.push(a);
           }
@@ -559,13 +562,13 @@ export class NewEraActorSheet extends ActorSheet {
     /* General actions from config for characters and humanoid creatures */
     if (actor.type == "Player Character" || actor.type == "Non-Player Character" || system.hasStandardActions){
       actions.general = [...NEWERA.pcGeneralActions];
-      actions.general.forEach((a) => NewEraActorSheet._prepareActionContextInfo(a, false));
+      actions.general.forEach((a) => this._prepareActionContextInfo(a, false));
       actions.exploration = [...NEWERA.explorationActions];
-      actions.exploration.forEach((a) => NewEraActorSheet._prepareActionContextInfo(a, false));
+      actions.exploration.forEach((a) => this._prepareActionContextInfo(a, false));
       actions.social = [...NEWERA.generalSocialActions];
-      actions.social.forEach((a) => NewEraActorSheet._prepareActionContextInfo(a, false));
+      actions.social.forEach((a) => this._prepareActionContextInfo(a, false));
       actions.magic = [...NEWERA.generalMagicActions];
-      actions.magic.forEach((a) => NewEraActorSheet._prepareActionContextInfo(a, false));
+      actions.magic.forEach((a) => this._prepareActionContextInfo(a, false));
       system.customActionSection = true;
     }
 
@@ -597,7 +600,7 @@ export class NewEraActorSheet extends ActorSheet {
             }
           ]
         };
-        NewEraActorSheet._prepareActionContextInfo(actionSheetData, false);
+        this._prepareActionContextInfo(actionSheetData, false);
         actions.spells.push(actionSheetData);
       });
     }
@@ -670,7 +673,7 @@ export class NewEraActorSheet extends ActorSheet {
 
   }
 
-  static _prepareActionContextInfo(action, isCustom){
+  _prepareActionContextInfo(action, isCustom){
     const actionTypes = {
       "1": "1 Frame",
       "2": "2 Frames",
@@ -688,7 +691,11 @@ export class NewEraActorSheet extends ActorSheet {
     const skillInfo = isCustom ? "" : (action.ability ? ` - ${action.ability.charAt(0).toUpperCase()}${action.ability.slice(1)} check` : (action.skill ? ` - ${action.skill.charAt(0).toUpperCase()}${action.skill.slice(1)} check` : '')); 
     action.typeDescription = `${actionTypes[action.actionType] || "Generic Action"}${skillInfo}`;
 
-    action.disallowed = ["E", "S", "D"].includes(action.actionType) && game.combat && game.combat.active && game.combat.round > 0;
+    if (typeof action.disallow == 'function') {
+      action.disallowed = action.disallow(this.actor);
+    } else {
+      action.disallowed = ["E", "S", "D"].includes(action.actionType) && game.combat && game.combat.active && game.combat.round > 0 ? "You can't do this during combat." : false;
+    }
 
     const rolls = action.rolls ? (typeof action.rolls == "Array" ? action.rolls : Object.values(action.rolls)) : [];
     for (const roll of rolls) {
@@ -724,8 +731,14 @@ export class NewEraActorSheet extends ActorSheet {
 
     html.find('.spell-cast').click(ev => {
       const li = $(ev.currentTarget).parents(".inventory-entry");
-      const spell = this.actor.items.get(li.data("itemId"));
-      Actions.castSpell(this.actor, spell);
+      const item = this.actor.items.get(li.data("itemId"));
+      if (item.typeIs(NewEraItem.Types.MAGIC)) {
+        Actions.castSpell(this.actor, item);
+      } else if (item.typeIs(NewEraItem.Types.POTION)) {
+        Actions.brewPotion(this.actor, item);
+      } else {
+        ui.notifications.error("Huh?");
+      }
     });
 
     html.find('.occupant-display').click(ev => {
@@ -855,21 +868,11 @@ export class NewEraActorSheet extends ActorSheet {
     //Spellbook cast DC's
     if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
       html.find(".inventory-entry-magic").each((i, val) => {
-        const spellId = $(val).data("itemId");
-        const dc = this._getSpellCastDifficulty(spellId, 1);
-        if (this.actor.items.get(spellId).system.energyCost > this.actor.system.energy.value) {
-          html.find(`#spell-dc-${spellId}`).html(`Not enough energy!`);
-          html.find(`#spell-dc-${spellId}`).addClass("sheet-error");
-          html.find(`#spell-dc-${spellId}`).show();
-        } else if (dc){
-          html.find(`#spell-dc-${spellId}`).html(`Diff. <b>${dc}</b>`);
-          html.find(`#spell-cast-${spellId}`).attr("data-difficulty", dc);
-          html.find(`#spell-attack-${spellId}`).attr("data-difficulty", dc);
-          html.find(`#spell-dc-${spellId}`).show();
-        } else {
-          html.find(`#spell-dc-${spellId}`).hide();
+        const id = $(val).data("itemId");
+        const item = this.actor.items.get(id);
+        if (item.typeIs(NewEraItem.Types.MAGIC)) {
+          html.find(`.spell-action-icons.${id}`).html(Formatting.getSpellActionIcons(item));
         }
-        html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
       });
     //Monster magic stuff
     } else if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
@@ -896,11 +899,14 @@ export class NewEraActorSheet extends ActorSheet {
       }
     }
 
-    //Carry weight color
+    //Carry weight and Magic Tolerance color
     if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
-      if (system.totalWeight > system.carryWeight.value){
+      if (system.carryWeight.current > system.carryWeight.value){
         html.find("#cw-wrapper").addClass("cw-full");
       }
+      if (system.magicTolerance.current > system.magicTolerance.max){
+        html.find("#mt-wrapper").addClass("cw-full");
+      } 
     }
     if (this.actor.typeIs(NewEraActor.Types.VEHICLE)){
       if (system.totalWeight > system.carryWeight){

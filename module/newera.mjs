@@ -111,6 +111,12 @@ Handlebars.registerHelper('toUpperCase', function(str) {
   return str.toUpperCase();
 });
 
+Handlebars.registerHelper('enabled', function(val) { //Easy inverse of the 'disabled' helper
+  if (!val) {
+    return "disabled";
+  }
+});
+
 Handlebars.registerHelper('capitalize', function(str) {
   const words = str.split(" ");
   return words.map(s => s[0].toUpperCase() + s.substr(1)).join(" ");
@@ -214,8 +220,8 @@ Handlebars.registerHelper('populated', function(haystack){
 Hooks.once("ready", async function() {
   Hooks.on("hotbarDrop", (bar, data, slot) => HotbarManager.onHotbarDrop(bar, data, slot));
   Hooks.on("combatTurnChange", async (combat, updateData, updateOptions) => {
-    if (game.settings.get("newera-sol366", "autoClearCombatantStatus")) {
-      console.log(`[DEBUG] Clearing turn status effects from next actor`);
+    if (game.settings.get("newera-sol366", "autoClearCombatantStatus") && game.users.activeGM.isSelf) { //This hook fires on all clients so isSelf is used so only the GM performs the update
+      //console.log(`[DEBUG] Clearing turn status effects from next actor`);
       const actor = combat.combatants.get(combat.current.combatantId).actor;
       if (actor) {
         const reactionUsed = actor.effects.find(eff => ["Reaction Used", "Reactions Used"].includes(eff.label));
@@ -300,6 +306,15 @@ function setupGameSettings(){
     requiresReload: false,
     type: Boolean,
     default: true,
+  });
+  game.settings.register("newera-sol366", "enforceFreeHandsForSpells", {
+    name: "Enforce Free Hand Requirements for Spells",
+    hint: "When enabled, PCs and NPCs need at least one free hand to cast most spells, or both to cast Channeled spells, unless the spell has the Asomatic keyword",
+    scope: "client",
+    config: true,
+    requiresReload: false,
+    type: Boolean,
+    default: false,
   });
   game.settings.register("newera-sol366", "sendEquipMsgs", {
     name: "Send Equipment Action Messages in Chat",

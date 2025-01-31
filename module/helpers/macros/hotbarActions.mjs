@@ -145,6 +145,33 @@ export class HotbarActions {
         Actions.sustainCurrentSpell(actor);
     }
 
+    static async endAllSpells(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+        actor.stopAllSpells();
+    }
+
+    static async endSustainedSpell(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+        actor.stopSustaining();
+    }
+
+    static async endEphemeralSpells(){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error("No token is selected.");
+            return;
+        }
+        actor.endSpell(true);
+    }
+
     static async openPhone(){
         const actor = this.getSelectedActor();
         if (!actor){

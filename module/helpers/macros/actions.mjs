@@ -13,6 +13,11 @@ import { NewEraItem } from "../../documents/item.mjs";
 
 export class Actions {
 
+    static brewPotion(actor, recipe) {
+      ui.notifications.info("Coming soon!");
+      actor.actionMessage(actor.img, recipe.img, "{NAME} creates {0}.", recipe.name);
+    }
+
     static printAbilityInfo(actor, info){
       const template = `
         <div class="chat-item-details">
@@ -136,6 +141,23 @@ export class Actions {
 
     /* Displays a dialog to cast a spell, inputting the amplification factor */
     static async castSpell(actor, spell, paramAmpFactor = 1, isPrepared = false){
+      if (game.settings.get('newera-sol366', 'enforceFreeHandsForSpells') && !spell.system.keywords.includes('Asomatic')) {
+        if (['G', 'L', 'R'].includes(spell.system.castType)) {
+          if (actor.system.equipment.leftHand || actor.system.equipment.rightHand) { //For channeled and long spells, error out if either hand is occupied
+            ui.notifications.warn(`You need both hands free in order to cast ${spell.name}!`);
+            return;
+          }
+        } else {
+          if (
+            (actor.system.equipment.leftHand && actor.system.equipment.rightHand)
+            || (actor.system.equipment.rightHand && actor.items.get(actor.system.equipment.rightHand).system.handedness == '2H')
+            || (actor.system.equipment.rightHand && actor.items.get(actor.system.equipment.rightHand).system.handedness == '1.5H' && !actor.system.forceOneHanded)
+            ) { //For all other spell types, only error if both hands are occupied
+            ui.notifications.warn(`You need a free hand in order to cast ${spell.name}!`);
+            return;
+          }
+        }
+      }
       let stayOpen = false;
       const energyRequired = (!isPrepared && actor.type != "Creature");
       const pools = actor.energyPools;
@@ -195,6 +217,7 @@ export class Actions {
               <td><strong id="cost"></strong></td>
             </tr>
           </table>
+          <div id="complex-stuff"></div>
           <div id="amplify-info">
             <p>Amplification Level:</p>
             <div id="amplify-down">
@@ -306,7 +329,7 @@ export class Actions {
       const spellSkill = spell.system.form;
       const spellSkillLevel = spellSkill == "genericCast" ? actor.system.casterLevel : actor.system.magic[spellSkill].level;
       const difficulty = prepared ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
-      const energyCost = prepared ? 0 : spell.system.energyCost * ampFactor;
+      const energyCost = prepared ? 0 : spell.totalEnergyCost * ampFactor;
       let availableEnergy = 0;
       let pool = null;
 
@@ -319,8 +342,9 @@ export class Actions {
       }
 
       //Determine chance of success
+      const thingsAreComplex = (spell.type == 'Enchantment' && spell.system.enchantmentType == 'CE');
       const passiveSpellSkill = 10 + (spellSkill == "genericCast" ? actor.system.casterLevel : actor.system.magic[spellSkill].mod);
-      let pctChance = 55 + ((passiveSpellSkill - difficulty) * 5);
+      let pctChance = thingsAreComplex ? Actions._getComplexPercentage(spell, actor, ampFactor) : 55 + ((passiveSpellSkill - difficulty) * 5);
 
       html.find("#level").html(level);
       html.find("#difficulty").html(difficulty);
@@ -366,10 +390,29 @@ export class Actions {
         html.find("#chance").html(`100%`);
         html.find("#chance").css("color", "green");
       }
+      if (thingsAreComplex) {
+        html.find("#chance").append('*');
+        html.find("#complex-stuff").html(`<p>*This is a complex enchantment with <b>${Object.entries(spell.system.components).length}</b> components. You will attempt to cast each one in sequence. If any step fails, the GM decides what ultimately happens.</p>`);
+      }
 
       if (spell.system.keywords.includes("Static") || actor.type == "Creature" || prepared){
         html.find("#amplify-info").hide();
       }
+    }
+
+    static _getComplexPercentage(enchantment, actor, ampFactor) {
+      let prob = 1.0;
+      for (const component of Object.values(enchantment.system.components)) {
+        const form = NEWERA.schoolToFormMapping[component.check];
+        const spellSkillLevel = form == "genericCast" ? actor.system.casterLevel : actor.system.magic[form].level;
+        const level = component.level * (component.scales ? ampFactor : 1);
+        const difficulty = level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5);
+        const passiveSpellSkill = 10 + (form == "genericCast" ? actor.system.casterLevel : actor.system.magic[form].mod);
+        const stepProb = Math.min(1.0, 0.55 + ((passiveSpellSkill - difficulty) * 0.05));
+        prob *= stepProb;
+        console.log(`[DEBUG] component form=${form} level=${level} skill=${spellSkillLevel} diff=${difficulty} passive=${passiveSpellSkill} prob=${stepProb} cumulative=${prob}`);
+      }
+      return Math.round(prob * 100);
     }
 
     static displayPotionDialog(actor, potion){
@@ -500,7 +543,7 @@ export class Actions {
             },
             psychic: {
               icon: `<img class="skill-icon" src="${NEWERA.images}/dt_psychic.png" />`,
-              label: "Mental",
+              label: "Psychic",
               callback: html => Actions._damage(actor, html, "psychic")
             },
             poison: {
@@ -721,6 +764,65 @@ export class Actions {
           }
         }
       }).render(true);
+    }
+
+    static async advanceGameClock(time = {}) {
+      const current = {
+        year: game.settings.get("newera-sol366", "world.date.year"),
+        month: game.settings.get("newera-sol366", "world.date.month"),
+        day: game.settings.get("newera-sol366", "world.date.day"),
+        hour: game.settings.get("newera-sol366", "world.time.hour"),
+        minute: game.settings.get("newera-sol366", "world.time.minute"),
+      }
+      const next = structuredClone(current);
+      const advance = {
+        years: 0,
+        months: 0,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        ...time
+      };
+      next.minute += advance.minutes;
+      if (next.minute >= 60) {
+        next.hour += Math.floor(next.minute / 60);
+        next.minute = next.minute % 60;
+      }
+      next.hour += advance.hours;
+      if (next.hour >= 24) {
+        next.day += Math.floor(next.hour / 24);
+        next.hour = next.hour % 24;
+      }
+      next.day += advance.days;
+      if (next.day > 28) {
+        next.month += Math.floor(next.day / 28);
+        next.day = (next.day % 28) + 1;
+      }
+      next.month += advance.months;
+      if (next.month > 13) {
+        next.year += Math.floor(next.month / 13);
+        next.month = (next.month % 13) + 1;
+      }
+      next.year += advance.years;
+      await game.settings.set("newera-sol366", "world.date.year", next.year);
+      await game.settings.set("newera-sol366", "world.date.month", next.month);
+      await game.settings.set("newera-sol366", "world.date.day", next.day);
+      await game.settings.set("newera-sol366", "world.time.hour", next.hour);
+      await game.settings.set("newera-sol366", "world.time.minute", next.minute);
+    }
+
+    static _is29DayMonth(year, month) {
+      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+        return (month == 13 || month == 1);
+      } else if (year % 2 == 0) {
+        return (month == 7);
+      } else if ((year+1) % 2 == 0) {
+        return (month == 4);
+      } else if ((year-1) % 2 == 0) {
+        return (month == 10);
+      } else { //bruh
+        return false;
+      }
     }
 
 }

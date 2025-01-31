@@ -234,7 +234,10 @@ _preparePotionData(system){
   }
   system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.doses, system.stackingBehavior);
   system.amplified = (system.doses > 1);
-  if (system.quantity > 1){
+  if (system.isRecipe) {
+    system.listDisplayName = this.name + " Recipe";
+    this.img = `systems/newera-sol366/resources/pr_${NEWERA.chantLevels[this.system.recipeLevel]}.png`; //Chant levels are the same as potion levels so this works
+  } else if (system.quantity > 1){
     system.listDisplayName = `${this.name} x${system.quantity}`;
   } else {
     system.listDisplayName = this.name;
@@ -659,7 +662,7 @@ _preparePotionData(system){
         });
       }
     }
-    if (this.type == "Potion"){
+    if (this.type == "Potion" && !this.system.isRecipe){
       let verb = "";
       let action = "0";
       let icon = "";
@@ -1251,6 +1254,20 @@ _preparePotionData(system){
     return `${year}/${month<10?"0":""}${month}/${day<10?"0":""}${day} ${hour<10?"0":""}${hour}:${minute<10?"0":""}${minute}`;
   }
 
+  get totalEnergyCost(){
+    if (this.typeIs(NewEraItem.Types.ENCHANTMENT) && this.system.enchantmentType == 'CE') {
+    let total = this.system.energyCost;
+    Object.values(this.system.components).forEach(comp => {
+      total += comp.energyCost;
+    });
+    return total;
+    } else if (this.typeIs(NewEraItem.Types.MAGIC)) {
+      return this.system.energyCost;
+    } else {
+      return null;
+    }
+  }
+
   addAction() {
     const system = this.system;
     system.actions[Object.keys(system.actions).length] = {
@@ -1258,7 +1275,8 @@ _preparePotionData(system){
       icon: "unknown",
       actionType: "E",
       description: "Enter a description...",
-      enable: "equipped",
+      show: "equipped",
+      decrement: false,
       rolls: {}
     }
   }
@@ -1296,46 +1314,27 @@ _preparePotionData(system){
     }
   }
 
-  onEnchantmentDragStart(event, ampFactor){
-    //event.preventDefault();
-    const oe = event.originalEvent;
-    console.log(`ENCHANTMENT DRAG START ${this.name} x${ampFactor}`);
-    oe.dataTransfer.setData("enchantmentName", `${this.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`);
-    oe.dataTransfer.setData("enchantmentImage", this.img);
-    oe.dataTransfer.setData("enchantmentDescription", Formatting.amplifyAndFormatDescription(this.system.description, ampFactor, "S"));
-    oe.dataTransfer.setData("enchantmentApplyToActor", this.system.applyToActor);
-    oe.dataTransfer.setData("enchantmentActions", JSON.stringify(this.system.actions));
-    oe.dataTransfer.setData("enchantmentValidTargets", JSON.stringify(this.system.validTargets));
-    oe.dataTransfer.setData("enchantmentColor", NEWERA.enchantmentAuraColors[this.system.school]);
-    oe.dataTransfer.setData("enchantmentDescriptor", this.system.enchantedItemDescriptor || this.name);
+  async enchant(enchantment, ampFactor = 1, caster = undefined, noSkillCheck = false, energyPool = undefined){
+    console.log(`Entering enchant()`);
 
-    oe.dataTransfer.effectAllowed = "copy";
-  }
-
-  async onEnchantmentDrop(event){
-    const oe = event.originalEvent;
-    const system = this.system;
-    console.log(`Entering onEnchantmentDrop`);
-    //Get the data from the drop
-    const enchantmentData = {
-      name: oe.dataTransfer.getData("enchantmentName"),
-      suffix: oe.dataTransfer.getData("enchantmentDescriptor"),
-      color: oe.dataTransfer.getData("enchantmentColor"),
-      description: oe.dataTransfer.getData("enchantmentDescription"),
-      img: oe.dataTransfer.getData("enchantmentImage"),
-      transfer: oe.dataTransfer.getData("enchantmentTransferToActor"),
-      actions: JSON.parse(oe.dataTransfer.getData("enchantmentActions")),
-      validTargets: JSON.parse(oe.dataTransfer.getData("enchantmentValidTargets")),
-    };
-    console.log(enchantmentData);
     //Check that the enchantment can be applied to this item
-    if (!this.isEnchantmentValid(enchantmentData.validTargets)) {
-      ui.notifications.error(`${enchantmentData.name} can't be applied to this item.`);
+    if (!this.isEnchantmentValid(enchantment.system.validTargets)) {
+      ui.notifications.error(`${enchantment.name} can't be applied to this item.`);
       return;
     }
-    //Add the actions from the enchantment
+
+    if (caster) {
+      const success = await caster.cast(enchantment, ampFactor, noSkillCheck, energyPool);
+      if (!success) {
+        return false;
+      }
+    }
+
+    //Copy the actions from the enchantment to the item
     const newActions = {};
-    for (const action of Object.values(enchantmentData.actions)){
+    for (const action of Object.values(enchantment.system.actions)){
+      action.name = action.name.replaceAll("{NAME}", this.name);
+      action.description = action.description.replaceAll("{NAME}", this.name);
       newActions[Object.keys(newActions).length + Object.keys(this.system.actions).length] = action;
     }
     console.log("Updated Actions object");
@@ -1349,33 +1348,44 @@ _preparePotionData(system){
       }
     });
     //Update the item's properties
-    if (!system.enchanted){
+    const level = enchantment.system.level * ampFactor;
+    const totalLevel = this.system.totalEnchantmentLevel + level;
+    if (!this.system.enchanted){
       this.update({
         system: {
           enchanted: true,
-          enchantmentDescriptor: enchantmentData.suffix,
-          enchantmentColor: enchantmentData.color
+          enchantmentDescriptor: enchantment.system.enchantedItemDescriptor,
+          enchantmentColor: enchantment.system.effectColor,
+          totalEnchantmentLevel: totalLevel,
+          useCharge: enchantment.system.keywords.includes("Charged"),
+          charges: {
+            min: 0,
+            max: enchantment.system.maxCharges,
+            value: enchantment.system.maxCharges
+          }
         }
       });
     } else {
       this.update({
         system: {
-          arcane: true
+          arcane: true,
+          totalEnchantmentLevel: totalLevel
         }
       });
     }
     //Create the ActiveEffect
     await this.createEmbeddedDocuments("ActiveEffect", [{
-      label: enchantmentData.name,
-      img: enchantmentData.img,
-      description: enchantmentData.description,
+      label: enchantment.name,
+      img: enchantment.img,
+      description: enchantment.system.description,
       owner: this.uuid,
       disabled: false,
-      transfer: enchantmentData.transfer
+      //transfer: enchantment.system.transfer //This function will be re-enabled when we figure out how to make ActiveEffects actually work this way
     }]);
-    ui.notifications.info(`Applied enchantment ${enchantmentData.name} to ${this.name}`);
-    console.log("Exiting onEnchantmentDrop");
+    ui.notifications.info(`Applied enchantment ${enchantment.name} to ${this.name}`);
+    console.log("Exiting enchant()");
     console.log(system);
+    return true;
   }
 
   isEnchantmentValid(targetData){
@@ -1599,7 +1609,7 @@ _preparePotionData(system){
 
   async printDetails(speaker, ampFactor = 1){
     let template = "";
-    if (this.typeIs(NewEraItem.Types.MAGIC)){
+    if (this.typeIs(NewEraItem.Types.SPELL)){
       const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
       const title = Formatting.spellTitle(this, ampFactor);
       const range = `${this.system.range.value * (this.system.range.scales ? ampFactor : 1)} ft ${this.system.range.description}`;
@@ -1612,6 +1622,17 @@ _preparePotionData(system){
           <p>${description}</p>
           <p><strong>Casting Time: </strong> ${castingTime} </p>
           <p><strong>Range: </strong> ${range} </p>
+        </div>
+      `;
+    } else if (this.typeIs(NewEraItem.Types.ENCHANTMENT)){
+      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
+      const title = Formatting.spellTitle(this, ampFactor);
+      template = `
+        <div class="chat-item-details">
+          <img src="${this.img}" />
+          <h2>${title}</h2>
+          <h3>Level <strong>${this.system.level * ampFactor}</strong> ${this.system.specialty}</h3>
+          <p>${description}</p>
         </div>
       `;
     } else if (this.typeIs(NewEraItem.Types.POTION)){
@@ -1635,17 +1656,74 @@ _preparePotionData(system){
     if (this.typeIs(NewEraItem.Types.SPELL)) {
       if (this.system.keywords.includes("Projectile")) {
         return "ranged";
-      } else if (this.system.keywords.includes("Attack")) {
-        return "melee";
+      } else if (this.system.keywords.includes("Contested")) {
+        return "contested";
+      } else if (this.system.rarity == 0 && this.system.refinementLevel < 4) {
+        return "wildMagic";
       } else {
         return "cast";
       }
     } else if (this.typeIs(NewEraItem.Types.ENCHANTMENT)) {
+      if (this.system.rarity == 0 && this.system.refinementLevel < 4) {
+        return "wildMagic";
+      }
       return "cast";
     } else {
       console.warn(`Trying to get roll mode for a non-spell item`);
       return null;
     }
+  }
+
+  async addMaterialCost() {
+    if (this.typeIs(NewEraItem.Types.MAGIC)) {
+      const newKey = Object.keys(this.system.materialCosts).length;
+      const materials = {};
+      materials[newKey] = {
+        name: "Material",
+        quantity: 1,
+        scales: false,
+        unique: false
+      };
+      await this.update({
+        system: {
+          materialCosts: materials
+        }
+      });
+    }
+  }
+
+  async deleteMaterialCost(index){
+    await this.update({
+      system: {
+        materialCosts: Formatting.spliceIndexedObject(this.system.materialCosts, index)
+      }
+    });
+  }
+
+  async addComponent() {
+    if (this.typeIs(NewEraItem.Types.ENCHANTMENT)) {
+      const newKey = Object.keys(this.system.components).length;
+      const components = {};
+      components[newKey] = {
+        name: "New Component",
+        level: 1,
+        check: "??",
+        scales: false
+      };
+      await this.update({
+        system: {
+          components
+        }
+      });
+    }
+  }
+
+  async deleteComponent(index){
+    await this.update({
+      system: {
+        components: Formatting.spliceIndexedObject(this.system.components, index)
+      }
+    });
   }
 
 }

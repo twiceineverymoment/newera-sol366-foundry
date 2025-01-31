@@ -138,9 +138,15 @@ div.newera-itemsheet-property-66 {
   font-size: 0.8em;
   color: yellow;
 }
-.scale-control input {
+.scale-control input, .cost-control input {
   width: 10px;
   height: 10px;
+}
+.cost-control {
+  display: inline;
+  width: 40%;
+  color: yellow;
+  font-size: 0.9em;
 }
 .newera-actorsheet-editor-container {
   position: relative;
@@ -288,6 +294,11 @@ input.sheet-input, select.sheet-input, button.sheet-input, textarea.sheet-input 
   font-size: 20px;
   border: none;
   outline: none;
+}
+select.sheet-input option { /* This style doesn't do anything on Mac but should on Windows */
+  color: white !important;
+  background-color: #1D4159 !important;
+  font-family: "Nanum Myeongjo", serif;
 }
 button.sheet-input:disabled {
   opacity: 0.5;
@@ -574,6 +585,10 @@ input.resource-battery {
   padding: 1px;
   border: 1px solid white;
 }
+.progress-side-by-side {
+  display: inline-block;
+  width: 45%;
+}
 .energy progress[value]::-webkit-progress-value {
   background: rgb(17,111,250);
   background-color: rgb(17,111,250);
@@ -639,6 +654,9 @@ div#cp-wrapper {
 }
 .focus-energy progress[value]::-webkit-progress-value {
   background: #8850FF !important;
+}
+.mt progress[value]::-webkit-progress-value {
+  background: chartreuse;
 }
 div.cp {
   display: inline;
@@ -893,6 +911,10 @@ div.inventory-table-container {
 #spell-add-3 {
   top: 2px;
   left: 66px;
+}
+#spell-add-4 {
+  top: 2px;
+  left: 98px;
 }
 #spell-add-row, #effect-add-row {
   height: 36px;

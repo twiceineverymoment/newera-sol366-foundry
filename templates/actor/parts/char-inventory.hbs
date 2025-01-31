@@ -1,10 +1,15 @@
 <h3 class="table-header">Equipped Items</h3>
 
-<div class="resource">
-    <div id="cw-wrapper" class="progress-wrapper cw" style="text-align: center">
+<div class="resource" style="text-align: center">
+    <div id="cw-wrapper" class="progress-wrapper cw progress-side-by-side" style="text-align: center" data-tooltip="Carry Weight">
         <img class="resource-icon" src="systems/newera-sol366/resources/weight.png" />
-        <progress id="carry-weight-bar" value="{{system.totalWeight}}" max="{{system.carryWeight.value}}">CW</progress>
-        <h3 id="carry-weight-status" style="display: inline" class="table-header">{{system.totalWeight}} / {{system.carryWeight.value}}</h3>
+        <progress id="carry-weight-bar" value="{{system.carryWeight.current}}" max="{{system.carryWeight.value}}">CW</progress>
+        <h3 id="carry-weight-status" style="display: inline" class="table-header">{{system.carryWeight.current}} / {{system.carryWeight.value}}</h3>
+    </div>
+    <div id="mt-wrapper" class="progress-wrapper mt progress-side-by-side" style="text-align: center" data-tooltip="Magic Tolerance">
+        <img class="resource-icon" src="systems/newera-sol366/resources/aura.png" />
+        <progress id="magic-tolerance-bar" value="{{system.magicTolerance.current}}" max="{{system.magicTolerance.max}}">MT</progress>
+        <h3 id="magic-tolerance-status" style="display: inline" class="table-header">{{system.magicTolerance.current}} / {{system.magicTolerance.max}}</h3>
     </div>
 </div>
 

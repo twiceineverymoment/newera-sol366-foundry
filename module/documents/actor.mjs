@@ -93,7 +93,7 @@ export class NewEraActor extends Actor {
       this._doAbilityScorePoints();
     }
     system.characterPoints.cpa = this._calculateCpa(system.characterPoints.cpt, system.age, this.items);
-    system.totalWeight = this._getTotalWeight(this.items);
+    this._calculateInventoryLoad(system, this.items);
     this._prepareAbilityScoreModifiers(system);
     this._prepareCalculatedStats(system);
     this._prepareSkillModifiers(system);
@@ -188,29 +188,58 @@ export class NewEraActor extends Actor {
     return cpa;
   }
 
-  _getTotalWeight(items, occupants = []){
+  /**
+   * Calculate values which depend on the items in the actor's inventory
+   * @param {} system 
+   * @param {*} items 
+   */
+  _calculateInventoryLoad(system, items){
+    let weight = 0;
+    let ench = 0;
+    let armor = 0;
+    for (const item of items){
+      if (item.typeIs(NewEraItem.Types.INVENTORY) && !item.system.stored && typeof item.system.weight != "undefined"){
+        weight += item.system.weight * (item.system.quantity || 1);
+      }
+      if (item.typeIs(NewEraItem.Types.ENCHANTABLE) && item.system.enchanted) {
+        const slot = this.findItemLocation(item);
+        if (slot && !["backpack", "leftHand", "rightHand"].includes(slot) && !item.typeIs(NewEraItem.Types.WEAPON)) { //Count enchanted items, that are not weapons, and are worn on the body
+          ench += item.system.totalEnchantmentLevel;
+        }
+      }
+      if (item.typeIs(NewEraItem.Types.ARMOR)) {
+        if (item.system.armorType == "Chest" || item.system.armorType == "Full Body"){
+          armor += item.system.armorRating;
+        }
+      }
+    }
+    system.carryWeight.current = weight;
+    system.magicTolerance.current = ench;
+    system.armor.equipped = armor;
+  }
+
+  async _applyConditionalStatusEffects(weight, enchantments) {
+    let updated = false;
+    if (weight > this.system.carryWeight.value && !this.token.hasStatusEffect("overencumbered")) {
+      await this.toggleStatusEffect("overencumbered", true);
+      updated = true;
+    }
+    if (enchantments > this.system.magicTolerance.max && !this.token.hasStatusEffect("spellsick")) {
+      await this.toggleStatusEffect("spellsick", true);
+      updated = true;
+    }
+    return updated;
+  }
+
+  _getTotalVehicleWeight(items, occupants = []){
     let total = 0;
     for (const item of items){
       if (!item.system.stored && typeof item.system.weight != "undefined"){
         total += item.system.weight * (item.system.quantity || 1);
       }
     }
-    if (this.type == "Vehicle"){
-      for (const actor of occupants){
-        total += Math.max(6 + actor.system.size.mod, 0);
-      }
-    }
-    return total;
-  }
-
-  _getEquippedArmor(items){
-    let total = 0;
-    for (const item of items){
-      if (item.type == "Armor"){
-        if (item.system.armorType == "Chest" || item.system.armorType == "Full Body"){
-          total += item.system.armorRating;
-        }
-      }
+    for (const actor of occupants){
+      total += Math.max(6 + actor.system.size.mod, 0);
     }
     return total;
   }
@@ -256,7 +285,7 @@ export class NewEraActor extends Actor {
 
     system.injured = (system.hitPointTrueMax > system.hitPoints.max);
 
-    system.totalWeight = this._getTotalWeight(this.items);
+    this._calculateInventoryLoad(system, this.items);
     this._prepareAbilityScoreModifiers(system);
     this._prepareSkillModifiers(system);
     this._prepareCalculatedStats(system);
@@ -308,7 +337,7 @@ export class NewEraActor extends Actor {
       return actor;
     });
     system.empty = (system.occupants.length == 0);
-    system.totalWeight = this._getTotalWeight(this.items, system.passengers);
+    system.totalWeight = this._getTotalVehicleWeight(this.items, system.passengers);
     system.isElectric = (this.system.fuelType == "electric");
   }
 
@@ -394,7 +423,6 @@ export class NewEraActor extends Actor {
     const armor = system.armor;
     armor.calculated = Math.max(system.size.mod, 0);
     armor.natural = armor.calculated + armor.bonus;
-    armor.equipped = this._getEquippedArmor(this.items);
     armor.total = armor.natural + armor.equipped;
 
     const passiveAgility = system.passiveAgility;
@@ -428,6 +456,8 @@ export class NewEraActor extends Actor {
 
     system.energy.total = system.energy.value + system.energy.temporary;
     system.energyPercentage = (system.energy.value + system.energy.temporary) / system.energy.max;
+
+    system.magicTolerance.max = Math.max(5, system.level);
 
   }
 
@@ -1100,25 +1130,52 @@ export class NewEraActor extends Actor {
       const spellSkillLevel = spellSkill == "genericCast" ? this.system.casterLevel : this.system.magic[spellSkill].level;
       const difficulty = noSkillCheck ? 0 : (level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5));
       const energyCost = spell.system.energyCost * ampFactor;
-      let attack = false;
+      let totalEnergyCost = energyCost;
+      let alwaysRoll = false;
       let attackMod = '';
       let rollPrefix = '';
+      let rollSuffix = '';
       let successful = false;
+
+      //For complex enchantments - cast the component list, then proceed to the regular logic for the final roll
+      if (spell.type == 'Enchantment' && spell.system.enchantmentType == 'CE') {
+        const stepResults = await this.castComplexComponents(spell);
+        if (!stepResults.success) {
+          if (energyPool){
+            await energyPool.use(stepResults.energyUsed, new CharacterEnergyPool(this));
+          }
+          return false;
+        } else {
+          totalEnergyCost += stepResults.energyUsed;
+        }
+      }
       
       switch (spell.spellRollMode) {
-        case "ranged":
-          attack = true;
+        case "ranged": //The projectile keyword takes precedence over all other roll conditions
+          alwaysRoll = true;
           attackMod = '@skills.marksmanship.mod';
           rollPrefix = "Ranged Spell Attack -";
           break;
-        case "melee": 
-          attack = true;
+        case "melee": //This mode is not used as of S366 v1.3 but might be in the future
+          alwaysRoll = true;
           attackMod = spell.system.castType == 'G' ? '@skills.two-handed.mod' : '@skills.one-handed.mod';
           rollPrefix = spell.system.castType == 'G' ? "Two-Handed Spell Attack -" : "One-Handed Spell Attack -";
           break;
+        case "contested": //If the spell has a contested check/save, always roll (but don't set an attack mod)
+          alwaysRoll = true;
+          rollPrefix = "Cast";
+          rollSuffix = " (Contested) ";
+          attackMod = '0';
+          break;
+        case "wildMagic": //Same if the spell is crafted and is anything less than perfected, as there's a possibility of wild magic on a low roll
+          alwaysRoll = true;
+          rollPrefix = "Cast";
+          rollSuffix = ` (${NEWERA.spellcraftSuffixes[spell.system.refinementLevel]}) `;
+          attackMod = '0';
+          break;
         default:
         case "cast":
-          attack = false;
+          alwaysRoll = false;
           attackMod = '0';
           rollPrefix = "Cast";
           break;
@@ -1133,7 +1190,7 @@ export class NewEraActor extends Actor {
           flavor: `Cast ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""}`
         });
         successful = true;
-      } else if (!attack && difficulty == 0){
+      } else if (!alwaysRoll && difficulty == 0){
         this.actionMessage(this.img, `${NEWERA.images}/${spell.system.specialty}.png`, "{NAME} casts {0}!", `${spell.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`);
         successful = true;
       } else {
@@ -1142,7 +1199,7 @@ export class NewEraActor extends Actor {
         successful = (castRoll.total >= difficulty);
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
-          flavor: `${rollPrefix} ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""} ${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
+          flavor: `${rollPrefix} ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""}${rollSuffix}${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
         });
       } 
 
@@ -1171,6 +1228,20 @@ export class NewEraActor extends Actor {
           You stop sustaining the spell if your concentration is broken.</p>`,
           origin: spell._id
         }]);
+      } else if (spell.system.keywords.includes("Ephemeral") && successful) {
+        await this.update({
+          system: {
+            ephemeralEffectActive: true
+          }
+        });
+        await this.createEmbeddedDocuments("ActiveEffect", [{
+          label: `Casting: ${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`,
+          img: spell.img,
+          description: `<p>You're casting an Ephemeral spell.</p>
+          <p>You can end this effect at any time as a free action from the Actions tab.</p>
+          ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}`,
+          origin: spell._id
+        }]);
       }
 
       if (successful && this.type != 'Creature'){
@@ -1178,11 +1249,62 @@ export class NewEraActor extends Actor {
       }
 
       if (energyPool){
-        await energyPool.use(energyCost, new CharacterEnergyPool(this));
+        await energyPool.use(totalEnergyCost, new CharacterEnergyPool(this));
       }
       return successful;
   }
 
+  async castComplexComponents(enchantment, ampFactor = 1) {
+    let energyConsumed = 0;
+    for (const [stepNo, component] of Object.entries(enchantment.system.components)) {
+      energyConsumed += (component.energyCost * (component.scales ? ampFactor : 1));
+      const school = NEWERA.schoolOfMagicNames[component.check];
+      const form = NEWERA.schoolToFormMapping[component.check];
+      const spellSkillLevel = form == "genericCast" ? this.system.casterLevel : this.system.magic[form].level;
+      const level = component.level * (component.scales ? ampFactor : 1);
+      const difficulty = level <= spellSkillLevel ? 0 : 5 + ((level - spellSkillLevel) * 5);
+      if (difficulty > 0) {
+        const castRoll = new Roll(`d20 + ${form == "genericCast" ? `@casterLevel` : `@magic.${form}.mod`} + @specialty.partial.${school}`, this.getRollData());
+        await castRoll.evaluate();
+        const successful = (castRoll.total >= difficulty);
+        castRoll.toMessage({
+          speaker: ChatMessage.getSpeaker({actor: this}),
+          flavor: `Step ${parseInt(stepNo)+1}: ${component.name} (Difficulty ${difficulty})`
+        });
+        if (!successful) {
+          return {
+            energyUsed: energyConsumed,
+            success: false
+          };
+        }
+      } else {
+        console.log(`Skipped rolling for step ${parseInt(stepNo)+1} because difficulty is 0`);
+      }
+    }
+    return {
+      energyUsed: energyConsumed,
+      success: true
+    };
+  }
+
+  async stopAllSpells(){
+    await this.endSpell(true);
+    await this.stopSustaining();
+  }
+
+  async endSpell(message = true){
+    const spellEffect = this.effects.find(e => e.label.includes("Casting: "));
+    const spell = this.items.get(spellEffect.origin);
+    await spellEffect.delete();
+    await this.update({
+      system: {
+        ephemeralEffectActive: false
+      }
+    });
+    if (message) {
+      this.actionMessage(this.img, null, "{NAME} cancels {0}.", spell ? spell.name : "the spell");
+    }
+}
     async stopSustaining(){
         const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
         await sustainEffect.delete();
@@ -1466,6 +1588,10 @@ export class NewEraActor extends Actor {
     return output;
   }
 
+  /**
+   * Updates the data on all owned items that have a casperObjectId property with refreshed data from the latest compendiums.
+   * Some properties are preserved from the old items if they have been modified by the user.
+   */
   async updateItems(){
     ui.notifications.warn(`Update initiated. Please wait a few seconds before doing anything else with ${this.name}.`);
     console.log(`Initiating item update for ${this.name}`);
@@ -1480,13 +1606,15 @@ export class NewEraActor extends Actor {
 
     for (const item of this.items){
       console.log(`Checking for update: ${item.name} [${item.system.casperObjectId}]`);
-      const isStored = item.system.stored;
-      if (item.typeIs(NewEraItem.Types.MAGIC) && item.system.casperObjectId){
+      if (item.typeIs(NewEraItem.Types.MAGIC) && item.system.casperObjectId && item.system.rarity > 0){
         const fromComp = spellsEnchantments.find(i => i.type == item.type && i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp){
           await item.update({
             name: fromComp.name,
-            system: fromComp.system
+            system: {
+              ...fromComp.system,
+              ampFactor: item.system.ampFactor
+            }
           });
           console.log(`${item.name} Updated (spell/ench - ${fromComp.id})`);
         } else {
@@ -1499,6 +1627,7 @@ export class NewEraActor extends Actor {
             name: fromComp.name,
             system: {
               ...fromComp.system,
+              currentTier: item.system.currentTier,
               tiers: {
                 ...fromComp.system.tiers,
                 "-=base": null
@@ -1513,19 +1642,56 @@ export class NewEraActor extends Actor {
         const fromComp = weapons.find(i => i.system.casperObjectId == item.system.casperObjectId)
           || artifacts.find(i => i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp){
-          await item.update({
-            name: fromComp.name,
-            system: {
-              ...fromComp.system,
-              stored: isStored
-            }
-          });
+          if (item.typeIs(NewEraItem.Types.MELEE_WEAPON)) {
+            await item.update({
+              name: fromComp.name,
+              system: {
+                ...fromComp.system,
+                stored: item.system.stored,
+                customName: item.system.customName,
+                useCustomItemName: item.system.useCustomItemName,
+                condition: item.system.condition,
+                quality: item.system.quality,
+                //Preserve enchantment data
+                enchanted: item.system.enchanted,
+                arcane: item.system.arcane,
+                enchantmentDescriptor: item.system.enchantmentDescriptor,
+                enchantmentColor: item.system.enchantmentColor,
+                totalEnchantmentLevel: item.system.totalEnchantmentLevel,
+                useCharge: item.system.useCharge,
+                charges: item.system.charges,
+                recharge: item.system.recharge
+              }
+            });
+          } else if (item.typeIs(NewEraItem.Types.RANGED_WEAPON)) {
+            await item.update({
+              name: fromComp.name,
+              system: {
+                ...fromComp.system,
+                stored: item.system.stored,
+                condition: item.system.condition,
+                quality: item.system.quality,
+                ammo: {
+                  ...fromComp.system.ammo,
+                  loaded: item.system.ammo.loaded
+                },
+                //Preserve enchantment data
+                enchanted: item.system.enchanted,
+                arcane: item.system.arcane,
+                enchantmentDescriptor: item.system.enchantmentDescriptor,
+                enchantmentColor: item.system.enchantmentColor,
+                totalEnchantmentLevel: item.system.totalEnchantmentLevel,
+                useCharge: item.system.useCharge,
+                charges: item.system.charges,
+                recharge: item.system.recharge
+              }
+            });
+          }
           console.log(`${item.name} Updated (weapon - ${fromComp.id})`);
         } else {
           console.log(`${item.name} Not Updated - No Compendium Match`);
         }
       } else if (item.typeIs(NewEraItem.Types.BASIC_ITEM) && item.system.casperObjectId){
-        const existingQty = item.system.quantity;
         const fromComp = equipment.find(i => i.system.casperObjectId == item.system.casperObjectId)
           || consumables.find(i => i.system.casperObjectId == item.system.casperObjectId)
           || artifacts.find(i => i.system.casperObjectId == item.system.casperObjectId)
@@ -1535,8 +1701,17 @@ export class NewEraActor extends Actor {
           name: fromComp.name,
           system: {
             ...fromComp.system,
-            quantity: existingQty,
-            stored: isStored
+            quantity: item.system.quantity,
+            stored: item.system.stored,
+            //Preserve enchantment data
+            enchanted: item.system.enchanted,
+            arcane: item.system.arcane,
+            enchantmentDescriptor: item.system.enchantmentDescriptor,
+            enchantmentColor: item.system.enchantmentColor,
+            totalEnchantmentLevel: item.system.totalEnchantmentLevel,
+            useCharge: item.system.useCharge,
+            charges: item.system.charges,
+            recharge: item.system.recharge
           }
         });
         console.log(`${item.name} Updated (item - ${fromComp.id})`);
@@ -1552,7 +1727,18 @@ export class NewEraActor extends Actor {
               name: fromComp.name,
               system: {
                 ...fromComp.system,
-                stored: isStored
+                stored: item.system.stored,
+                condition: item.system.condition,
+                quality: item.system.quality,
+                //Preserve enchantment data
+                enchanted: item.system.enchanted,
+                arcane: item.system.arcane,
+                enchantmentDescriptor: item.system.enchantmentDescriptor,
+                enchantmentColor: item.system.enchantmentColor,
+                totalEnchantmentLevel: item.system.totalEnchantmentLevel,
+                useCharge: item.system.useCharge,
+                charges: item.system.charges,
+                recharge: item.system.recharge
               }
             });
             console.log(`${item.name} Updated (armor/shield - ${fromComp.id})`);
@@ -1560,15 +1746,14 @@ export class NewEraActor extends Actor {
             console.log(`${item.name} Not Updated - No Compendium Match (armor/shield)`);
           }
       } else if (item.typeIs(NewEraItem.Types.POTION) && item.system.casperObjectId){
-        const existingQty = item.system.quantity;
         const fromComp = artifacts.find(i => item.typeIs(NewEraItem.Types.POTION) && i.system.casperObjectId == item.system.casperObjectId);
         if (fromComp) {
           await item.update({
           name: fromComp.name,
           system: {
             ...fromComp.system,
-            quantity: existingQty,
-            stored: isStored
+            quantity: item.system.quantity,
+            stored: item.system.stored
           }
         });
         console.log(`${item.name} Updated (potion - ${fromComp.id})`);

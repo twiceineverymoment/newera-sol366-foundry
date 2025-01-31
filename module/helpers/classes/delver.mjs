@@ -1086,7 +1086,7 @@ export class Delver {
             archetype: "wind",
             name: "Lightning Charge",
             key: false,
-            description: "Whenever you would deal Shock damage to any target, you can choose to replace the damage with energy recovery for that creature. You must activate this ability before rolling.",
+            description: "Whenever a spell you cast would deal Shock damage to any target, you can choose to replace the damage with energy recovery for that creature. You must activate this ability before rolling.",
             actions: [
                 {
                     name: "Lightning Charge",
