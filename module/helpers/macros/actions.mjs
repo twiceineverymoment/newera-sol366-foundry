@@ -833,9 +833,9 @@ export class Actions {
       return new Promise((resolve) => {
         new Dialog({
           title: "Move Item",
-          content: `<p>How many?</p>
+          content: `<form class="spell-dialog">
+          <p>How many?</p>
           <div id="amplify-info">
-              <p>Quantity:</p>
               <div id="quantity-down">
                 <i class="fa-solid fa-chevron-left"></i>
               </div>
@@ -843,7 +843,8 @@ export class Actions {
               <div id="quantity-up">
                 <i class="fa-solid fa-chevron-right"></i>
               </div>
-          </div>`,
+            </div>
+          </form>`,
           buttons: {
             confirm: {
               icon: `<i class="fa-solid fa-check"></i>`,

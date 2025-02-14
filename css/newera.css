@@ -1142,12 +1142,14 @@ tr.effect-row td h3 {
 .spell-dialog {
   text-align: center;
 }
-#amplify-up, #amplify-down, #amplify-heading {
+#amplify-up, #amplify-down, #amplify-heading, #quantity-down, #quantity-up, #quantity-heading {
   display: inline-block;
   width: 30%;
   vertical-align: middle;
+  border: none;
+  outline: none;
 }
-#amplify-up, #amplify-down {
+#amplify-up, #amplify-down, #quantity-down, #quantity-up {
   cursor: pointer;
 }
 
