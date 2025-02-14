@@ -825,4 +825,58 @@ export class Actions {
       }
     }
 
+    static async getStackQuantity(item) {
+      if (!item.typeIs(NewEraItem.Types.STACKABLE) || item.system.quantity == 1){
+        return 1;
+      }
+      let quantity = 1;
+      return new Promise((resolve) => {
+        new Dialog({
+          title: "Move Item",
+          content: `<p>How many?</p>
+          <div id="amplify-info">
+              <p>Quantity:</p>
+              <div id="quantity-down">
+                <i class="fa-solid fa-chevron-left"></i>
+              </div>
+              <h2 id="quantity-heading">x<span id="quantity">${quantity}</span></h2>
+              <div id="quantity-up">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+          </div>`,
+          buttons: {
+            confirm: {
+              icon: `<i class="fa-solid fa-check"></i>`,
+              label: "Confirm",
+              callback: (html) => {
+                const qty = parseInt(html.find("#quantity").text());
+                resolve(qty);
+              }
+            },
+            all: {
+              icon: `<i class="fa-solid fa-boxes-stacked"></i>`,
+              label: "All",
+              callback: () => resolve(item.system.quantity)
+            },
+            cancel: {
+              icon: `<i class="fa-solid fa-x"></i>`,
+              label: "Cancel",
+              callback: () => resolve(0)
+            }
+          },
+          default: "cancel",
+          render: html => {
+            html.find("#quantity-down").click(() => {
+              quantity = Math.max(1, quantity - 1);
+              html.find("#quantity").text(quantity);
+            });
+            html.find("#quantity-up").click(() => {
+              quantity = Math.min(item.system.quantity, quantity + 1);
+              html.find("#quantity").text(quantity);
+            });
+          }
+        }).render(true);
+      });
+    }
+
 }

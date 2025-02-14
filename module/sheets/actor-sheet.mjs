@@ -1103,7 +1103,7 @@ export class NewEraActorSheet extends ActorSheet {
     html.find(".newera-equipment-dropzone").on("dragover", ev => {
       ev.preventDefault();
     });
-    html.find(".newera-equipment-dropzone").on("drop", ev => {
+    html.find(".newera-equipment-dropzone").on("drop", async ev => {
       const itemId = ev.originalEvent.dataTransfer.getData("itemId");
       const sourceSlot = ev.originalEvent.dataTransfer.getData("fromZone");
       const targetSlot = $(ev.currentTarget).data("dropZone");
@@ -1114,7 +1114,7 @@ export class NewEraActorSheet extends ActorSheet {
         return;
       }
       console.log(`INV DROP ${itemId} ${sourceActor}.${sourceSlot}->${targetActor}.${targetSlot}`);
-      //Moving items between slots on the same actor (existing behavior)
+      //Moving items between slots on the same actor
       if (sourceActor == targetActor){
         const movedItem = this.actor.items.get(itemId);
         if (sourceSlot == targetSlot || !sourceSlot){
@@ -1135,7 +1135,7 @@ export class NewEraActorSheet extends ActorSheet {
           this.submit();
         }
       }
-      //Moving an item to a different actor (new behavior)
+      //Moving an item to a different actor
       else {
         const origin = fromUuidSync(sourceActor);
         if (!origin){
@@ -1152,7 +1152,12 @@ export class NewEraActorSheet extends ActorSheet {
         } else if (sourceSlot == "backpack" && movedItem.system.stored == true){
           ui.notifications.error("That item is in storage. You must retrieve it before you can give it to someone else.");
         } else {
-          origin.transferItem(this.actor, movedItem, targetSlot);
+          let quantity = 1;
+          //If the item is stackable, prompt the user to specify how many to transfer
+          if (movedItem.typeIs(NewEraItem.Types.STACKABLE)){
+            quantity = await Actions.getStackQuantity(movedItem);
+          }
+          origin.transferItem(this.actor, movedItem, targetSlot, quantity);
         }
       }
     });

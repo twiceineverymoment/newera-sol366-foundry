@@ -642,11 +642,19 @@ export class NewEraActor extends Actor {
    * @param {NewEraActor} recipient The actor receiving the item
    * @param {NewEraItem} item The item being transferred
    * @param {string} targetSlot The inventory slot to place the transferred item in on the recipient
+   * @param {number} quantity The quantity of the item to transfer
    */
-  async transferItem(recipient, item, targetSlot){
-    console.log(`Entering transferItem ${this.id}->${recipient.id} item=${item.id}`);
+  async transferItem(recipient, item, targetSlot, quantity = 1){
+    console.log(`Entering transferItem ${this.id}->${recipient.id} item=${item.id} x${quantity}`);
+    if (quantity <= 0) return;
     const sourceSlot = this.findItemLocation(item);
-    const newItem = await Item.create(item, {parent: recipient});
+    const newItem = await Item.create({
+      ...item,
+      system: {
+        ...item.system,
+        quantity: quantity
+      }
+    }, {parent: recipient});
     if (targetSlot != "backpack"){
       let recUpdate = {
         system: {
@@ -665,12 +673,25 @@ export class NewEraActor extends Actor {
       srcUpdate.system.equipment[sourceSlot] = "";
       await this.update(srcUpdate);
     }
-    await item.delete();
+    const remainingQuantity = item.system.quantity - quantity;
+    if (remainingQuantity > 0){
+      await item.update({
+        system: {
+          quantity: remainingQuantity
+        }
+      });
+    } else {
+      await item.delete();
+    }
     if (recipient.typeIs(NewEraActor.Types.ANIMATE)){
       const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
       if (Formatting.sendEquipmentChangeMessages()){
         if (this.typeIs(NewEraActor.Types.CHARACTER) && !this.system.defeated){
-          this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
+          if (item.typeIs(NewEraItem.Types.STACKABLE)){
+            this.actionMessage(item.img, frameImg, "{NAME} gave {0} of {d} {1} to {2}.", quantity, item.name, recipient.name);
+          } else {
+            this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
+          }
         } else {
           recipient.actionMessage(item.img, this.img, "{NAME} takes the {0}.", item.name);
         }

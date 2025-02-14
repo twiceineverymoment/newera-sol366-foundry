@@ -27,7 +27,8 @@ export class NewEraItem extends Item {
     MAGIC: ["Spell", "Enchantment"],
     ENCHANTABLE: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
     INVENTORY: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Potion", "Phone"],
-    NON_INVENTORY: ["Spell", "Enchantment", "Class", "Feat", "Action"]
+    NON_INVENTORY: ["Spell", "Enchantment", "Class", "Feat", "Action"],
+    STACKABLE: ["Item", "Potion"]
   }
 
   typeIs(types){
