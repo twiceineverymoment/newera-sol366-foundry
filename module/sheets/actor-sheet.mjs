@@ -473,6 +473,9 @@ export class NewEraActorSheet extends ActorSheet {
     if (system.hitPoints.total > 0 || actor.type == "Creature"){ //If a PC or NPC's HP is 0, remove all actions and show only the death save
       /* Actions from inventory */
       for (const item of this.actor.items.contents){
+        if(item.system.stored){
+          continue;
+        }
         for (const itemAction of item.getActions()){
         /*
           Currently, creatures and inanimate actors do not use the equipment slot system - all inventory drop zones are 'backpack'.
