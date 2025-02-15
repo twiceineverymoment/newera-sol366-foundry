@@ -31,6 +31,27 @@ export class NewEraItem extends Item {
     STACKABLE: ["Item", "Potion"]
   }
 
+  static EquipmentSlots = {
+    LEFT_HAND: "leftHand",
+    RIGHT_HAND: "rightHand",
+    HEAD: "head",
+    NECK: "neck",
+    WAIST: "waist", 
+    BODY: "body",
+    FEET: "feet",
+    HANDS: "hands",
+    PHONE: "phone",
+    BACKPACK: "backpack"
+  };
+
+  static ActionConditions = {
+    ALWAYS: "always", //Action is available regardless of location
+    EQUIPPED: "equipped", //Available when in left or right hand
+    WORN_OR_EQUIPPED: "worn", //Available when on any item slot other than backpack
+    EQUIPPED_ONE_HANDED: "oneHanded", //For 1.5H only, available when held one-handed
+    EQUIPPED_TWO_HANDED: "twoHanded", //For 1.5H only, available when held two-handed
+  };
+
   typeIs(types){
     return types.includes(this.type);
   }

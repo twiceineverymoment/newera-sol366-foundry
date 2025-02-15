@@ -1463,12 +1463,13 @@ export class NewEraActor extends Actor {
 
     /* Determines whether an action should be shown based on the action's type and the location within the actor's equipment */
     isItemActionAvailable(action, item){
-      const showWhen = action.show;
-      const location = this.findItemLocation(item);
-      const equipment = this.system.equipment;
-      //console.log(`IIAA item=${item._id} show=${showWhen} location=${location}`);
-      //console.log(action);
-      //console.log(item);
+      if (game.settings.get("newera-sol366", "enforceActionConditions")){
+        const showWhen = action.show;
+        const location = this.findItemLocation(item);
+        const equipment = this.system.equipment;
+        //console.log(`IIAA item=${item._id} show=${showWhen} location=${location}`);
+        //console.log(action);
+        //console.log(item);
       let available = false;
       switch (showWhen){
         case "always":
@@ -1481,7 +1482,10 @@ export class NewEraActor extends Actor {
           available = (location && location!="backpack");
           break;
         case "oneHanded": //Only used for 1.5H equipment
-          available = (location == "leftHand" || (location == "rightHand" && (equipment.leftHand != "" || this.system.forceOneHanded)));
+          available = (location == "leftHand"
+            || (location == "rightHand" && equipment.leftHand != "")
+            || (location == "rightHand" && this.system.forceOneHanded)
+          );
           break;
         case "twoHanded": //Only used for 1.5H equipment
           available = (location == "rightHand" && (!equipment.leftHand || !this.system.forceOneHanded));
@@ -1489,9 +1493,12 @@ export class NewEraActor extends Actor {
         default:
           available = (showWhen == location);
           break;
+        }
+        //console.log(`available=${available}`);
+        return available;
+      } else {
+        return true;
       }
-      //console.log(`available=${available}`);
-      return available;
     }  
 
     /* Returns the current equipment slot location of the specified item. Returns "backpack" if the item is not equipped anywhere, and null if not owned by the actor at all. */

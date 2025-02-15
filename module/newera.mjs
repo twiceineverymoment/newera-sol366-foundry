@@ -307,14 +307,14 @@ function setupGameSettings(){
     type: Boolean,
     default: true,
   });
-  game.settings.register("newera-sol366", "enforceFreeHandsForSpells", {
-    name: "Enforce Free Hand Requirements for Spells",
-    hint: "When enabled, PCs and NPCs need at least one free hand to cast most spells, or both to cast Channeled spells, unless the spell has the Asomatic keyword",
+  game.settings.register("newera-sol366", "enforceActionConditions", {
+    name: "Enforce Action Conditions",
+    hint: "When enabled, actions for items will be grayed out if they aren't equipped in the appropriate slot, and spells will be unavailable if the actor doesn't have a free hand. Disable to ignore these rules.",
     scope: "client",
     config: true,
     requiresReload: false,
     type: Boolean,
-    default: false,
+    default: true,
   });
   game.settings.register("newera-sol366", "sendEquipMsgs", {
     name: "Send Equipment Action Messages in Chat",

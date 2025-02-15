@@ -721,9 +721,9 @@ export class HotbarActions {
                         <td>Minutes</td>
                     </tr>
                     <tr>
-                        <td><input type="number" id="days" value="0" /></td>
-                        <td><input type="number" id="hours" value="0" /></td>
-                        <td><input type="number" id="minutes" value="0" /></td>
+                        <td><input type="number" id="days" value="0" min="0" step="1" /></td>
+                        <td><input type="number" id="hours" value="0" min="0" step="1" /></td>
+                        <td><input type="number" id="minutes" value="0" min="0" step="1" /></td>
                     </tr>
                 </table>
                 <label for="weather-update">Alter Weather?</label>
