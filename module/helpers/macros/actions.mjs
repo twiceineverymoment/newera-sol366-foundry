@@ -839,7 +839,7 @@ export class Actions {
               <div id="quantity-down">
                 <i class="fa-solid fa-chevron-left"></i>
               </div>
-              <h2 id="quantity-heading">x<span id="quantity">${quantity}</span></h2>
+              <h2 id="quantity-heading"><span id="quantity">${quantity}</span></h2>
               <div id="quantity-up">
                 <i class="fa-solid fa-chevron-right"></i>
               </div>

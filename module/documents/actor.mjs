@@ -648,14 +648,47 @@ export class NewEraActor extends Actor {
     console.log(`Entering transferItem ${this.id}->${recipient.id} item=${item.id} x${quantity}`);
     if (quantity <= 0) return;
     const sourceSlot = this.findItemLocation(item);
-    const newItem = await Item.create({
-      ...item,
-      system: {
-        ...item.system,
-        quantity: quantity
+    let newItem = null;
+    let stacked = false;
+    //For stackable items
+    if (item.typeIs(NewEraItem.Types.STACKABLE)){
+      //Determine whether the recipient already has an item of the same object ID. If so, add the quantity to that item.
+      let existingItem = null;
+      if (item.system.casperObjectId){
+        if (targetSlot == "backpack"){
+          existingItem = recipient.items.find(i => i.system.casperObjectId == item.system.casperObjectId && recipient.findItemLocation(i) == "backpack"); //Items created manually by players don't have a casperObjectId and should not be stacked
+        } else {
+          const targetItem = recipient.system.equipment[targetSlot];
+          if (targetItem && targetItem.system.casperObjectId == item.system.casperObjectId){
+            existingItem = recipient.items.find(i => i._id == targetItem);
+          }
+        }
       }
-    }, {parent: recipient});
-    if (targetSlot != "backpack"){
+      if (existingItem){
+        console.log(`Found existing item ${existingItem.id} to stack ${quantity} of ${item.name} with.`);
+        await existingItem.update({
+          system: {
+            quantity: existingItem.system.quantity + quantity
+          }
+        });
+        newItem = existingItem;
+        stacked = true;
+      } else {
+        console.log(`No existing item found or casperObjectId is not set. Creating a new item.`);
+        newItem = await Item.create({
+          ...item,
+          system: {
+            ...item.system,
+            quantity: quantity
+          }
+        }, {parent: recipient});
+      }
+    } else {
+      console.log(`Item is not stackable. Creating a new item.`);
+      newItem = await Item.create(item, {parent: recipient});
+    }
+
+    if (targetSlot != "backpack" && !stacked){
       let recUpdate = {
         system: {
           equipment: {}
@@ -664,15 +697,7 @@ export class NewEraActor extends Actor {
       recUpdate.system.equipment[targetSlot] = newItem._id;
       await recipient.update(recUpdate);
     }
-    if (sourceSlot != "backpack"){
-      let srcUpdate = {
-        system: {
-          equipment: {}
-        }
-      };
-      srcUpdate.system.equipment[sourceSlot] = "";
-      await this.update(srcUpdate);
-    }
+      
     const remainingQuantity = item.system.quantity - quantity;
     if (remainingQuantity > 0){
       await item.update({
@@ -681,6 +706,16 @@ export class NewEraActor extends Actor {
         }
       });
     } else {
+      //If the remaining quantity is 0, delete the item and clear it from equipment
+      if (sourceSlot != "backpack"){
+        let srcUpdate = {
+          system: {
+            equipment: {}
+          }
+        };
+        srcUpdate.system.equipment[sourceSlot] = "";
+        await this.update(srcUpdate);
+      }
       await item.delete();
     }
     if (recipient.typeIs(NewEraActor.Types.ANIMATE)){
