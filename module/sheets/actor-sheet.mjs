@@ -329,6 +329,8 @@ export class NewEraActorSheet extends ActorSheet {
             break; //Break inside the if statement so actual potions will continue into the block below (equipment)
           }
         case "Item":
+          //Show merge stacks if there is another item with the same object ID in the inventory - This runs on non-recipe potions and basic items
+          i.showMergeStacks = (i.system.casperObjectId && !i.system.enchanted && context.items.some(j => j !== i && j.system.casperObjectId == i.system.casperObjectId && i.type == j.type && !j.system.enchanted))
         case "Melee Weapon":
         case "Ranged Weapon":
         case "Armor":
@@ -726,9 +728,18 @@ export class NewEraActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const item = this.actor.items.get(li.data("itemId"));
       await item.toggleStorage();
-      this.render(false);
     });
-
+    html.find('.item-split').click(async ev => {
+      const li = $(ev.currentTarget).parents(".inventory-entry");
+      const item = this.actor.items.get(li.data("itemId"));
+      const quantity = await Actions.getStackQuantity(item, false);
+      await this.actor.splitStack(item, quantity);
+    });
+    html.find('.item-merge').click(async ev => {
+      const li = $(ev.currentTarget).parents(".inventory-entry");
+      const item = this.actor.items.get(li.data("itemId"));
+      await this.actor.mergeStacks(item);
+    });
     html.find('.spell-cast').click(ev => {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const item = this.actor.items.get(li.data("itemId"));

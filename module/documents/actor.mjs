@@ -651,16 +651,19 @@ export class NewEraActor extends Actor {
     let newItem = null;
     let stacked = false;
     //For stackable items
-    if (item.typeIs(NewEraItem.Types.STACKABLE)){
-      //Determine whether the recipient already has an item of the same object ID. If so, add the quantity to that item.
+    if (item.typeIs(NewEraItem.Types.STACKABLE) && !item.system.enchanted){ //Enchanted items can differ even when they have the same object ID, so avoid stacking them
+      //Determine whether the recipient already has an item of the same type and object ID. If so, add the quantity to that item.
       let existingItem = null;
       if (item.system.casperObjectId){
         if (targetSlot == "backpack"){
-          existingItem = recipient.items.find(i => i.system.casperObjectId == item.system.casperObjectId && recipient.findItemLocation(i) == "backpack"); //Items created manually by players don't have a casperObjectId and should not be stacked
+          existingItem = recipient.items.find(i => i.type == item.type && i.system.casperObjectId == item.system.casperObjectId && recipient.findItemLocation(i) == "backpack"); //Items created manually by players don't have a casperObjectId and should not be stacked
         } else {
-          const targetItem = recipient.system.equipment[targetSlot];
-          if (targetItem && targetItem.system.casperObjectId == item.system.casperObjectId){
-            existingItem = recipient.items.find(i => i._id == targetItem);
+          const targetItemId = recipient.system.equipment[targetSlot];
+          if (targetItemId){
+            const targetItem = recipient.items.get(targetItemId);
+            if (targetItem && targetItem.type == item.type && targetItem.system.casperObjectId == item.system.casperObjectId){
+              existingItem = targetItem
+            }
           }
         }
       }
@@ -684,7 +687,7 @@ export class NewEraActor extends Actor {
         }, {parent: recipient});
       }
     } else {
-      console.log(`Item is not stackable. Creating a new item.`);
+      console.log(`Item is not stackable or is enchanted. Creating a new item.`);
       newItem = await Item.create(item, {parent: recipient});
     }
 
@@ -732,6 +735,46 @@ export class NewEraActor extends Actor {
         }
       }
     }
+  }
+
+  /**
+   * Split a stackable item into two new items of equivalent total quantity.
+   * @param {NewEraItem} item The item to split
+   * @param {number} quantity The quantity of the item to split off - must be at least 1 and less than the total quantity of the item
+   */
+  async splitStack(item, quantity){
+    if (!item.typeIs(NewEraItem.Types.STACKABLE) || item.system.quantity == 1 || quantity <= 0 || quantity >= item.system.quantity) return;
+
+    const remainingQuantity = item.system.quantity - quantity;
+    await item.update({
+      system: {
+        quantity: remainingQuantity
+      }
+    });
+    await Item.create({
+      ...item,
+      system: {
+        ...item.system,
+        quantity: quantity
+      }
+    }, {parent: this});
+  }
+
+  /** Look for all items in the inventory with the same object ID and merge them into a single item. */
+  async mergeStacks(item){
+    if (!item.typeIs(NewEraItem.Types.STACKABLE) || !item.system.casperObjectId || item.system.enchanted) return;
+    const sameStacks = this.items.filter(i => i !== item && i.type == item.type && i.system.casperObjectId == item.system.casperObjectId && !i.system.enchanted);
+    if (sameStacks.length == 0) return;
+    const totalQuantity = sameStacks.reduce((acc, i) => acc + i.system.quantity, 0) + item.system.quantity;
+    await item.update({
+      system: {
+        quantity: totalQuantity
+      }
+    });
+    for (const stack of sameStacks){
+      await stack.delete();
+    }
+    ui.notifications.info(`Stacked ${totalQuantity} total ${item.name}.`); 
   }
 
   actionMessage(baseImage, overlayImage, template, ...args){
