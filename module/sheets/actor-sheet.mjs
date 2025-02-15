@@ -475,7 +475,7 @@ export class NewEraActorSheet extends ActorSheet {
       for (const item of this.actor.items.contents){
         for (const itemAction of item.getActions()){
         /*
-          Currently, creatures do not use the equipment slot system.
+          Currently, creatures and inanimate actors do not use the equipment slot system - all inventory drop zones are 'backpack'.
           Actions should never be grayed out based on equipment location for creatures.
           This may change in a future version.
         */

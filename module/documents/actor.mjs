@@ -1481,10 +1481,10 @@ export class NewEraActor extends Actor {
           available = (location && location!="backpack");
           break;
         case "oneHanded": //Only used for 1.5H equipment
-          available = (location == "leftHand" || (location == "rightHand" && equipment.leftHand != ""));
+          available = (location == "leftHand" || (location == "rightHand" && (equipment.leftHand != "" || this.system.forceOneHanded)));
           break;
         case "twoHanded": //Only used for 1.5H equipment
-          available = (location == "rightHand" && !equipment.leftHand);
+          available = (location == "rightHand" && (!equipment.leftHand || !this.system.forceOneHanded));
           break;
         default:
           available = (showWhen == location);
