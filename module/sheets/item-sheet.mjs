@@ -234,7 +234,25 @@ export class NewEraItemSheet extends ItemSheet {
 
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
-
+    html.find("#clearCasperMetadata").click(() => {
+      new Dialog({
+        title: "Are you sure?",
+        content: `<p>This will remove the CASPER metadata from this item. It will be treated as a custom item, rather than one from the compendium, and cannot be updated by future compendium changes. The item will no longer be stackable with others of the same type.</p>
+        <p>You should only do this if you've made modifications to the item's core properties that you don't want to lose. Note that superficial changes like quantity, condition, and enchantments do not require this in order to be preserved.</p>
+        <p>You cannot undo this action!</p>`,
+        buttons: {
+          confirm: {
+            icon: `<i class="fa-solid fa-check"></i>`,
+            label: "I know what I'm doing",
+            callback: () => this.item.clearCasperMetadata()
+          },
+          cancel: {
+            icon: `<i class="fa-solid fa-x"></i>`,
+            label: "Cancel",
+          }
+        }
+      }).render(true);
+    });
     html.find("#addItemAction").click(() => {
       this.item.addAction();
       this.render(false);

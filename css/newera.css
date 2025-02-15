@@ -1466,3 +1466,11 @@ a.occupant-delete {
   color: limegreen !important;
   text-shadow: yellow 0px 0px 2px !important;
 }
+.srd-x-button {
+  font-size: 12px !important;
+  cursor: pointer;
+  margin: 2px;
+}
+.srd-x-button:hover {
+  color: red !important;
+}

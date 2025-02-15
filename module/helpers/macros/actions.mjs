@@ -825,14 +825,14 @@ export class Actions {
       }
     }
 
-    static async getStackQuantity(item) {
+    static async getStackQuantity(item, allowAll = true) {
       if (!item.typeIs(NewEraItem.Types.STACKABLE) || item.system.quantity == 1){
         return 1;
       }
       let quantity = 1;
       return new Promise((resolve) => {
         new Dialog({
-          title: `Move ${item.name}`,
+          title: item.name,
           content: `<form class="spell-dialog">
           <p>How many?</p>
           <div id="amplify-info">
@@ -854,11 +854,13 @@ export class Actions {
                 resolve(qty);
               }
             },
-            all: {
-              icon: `<i class="fa-solid fa-boxes-stacked"></i>`,
-              label: "All",
-              callback: () => resolve(item.system.quantity)
-            },
+            ...(allowAll ? {
+              all: {
+                icon: `<i class="fa-solid fa-boxes-stacked"></i>`,
+                label: "All",
+                callback: () => resolve(item.system.quantity)
+              }
+            } : {}),
             cancel: {
               icon: `<i class="fa-solid fa-x"></i>`,
               label: "Cancel",
@@ -872,7 +874,7 @@ export class Actions {
               html.find("#quantity").text(quantity);
             });
             html.find("#quantity-up").click(() => {
-              quantity = Math.min(item.system.quantity, quantity + 1);
+              quantity = Math.min(allowAll ? item.system.quantity : item.system.quantity - 1, quantity + 1);
               html.find("#quantity").text(quantity);
             });
           }

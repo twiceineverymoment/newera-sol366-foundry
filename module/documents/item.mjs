@@ -1727,5 +1727,13 @@ _preparePotionData(system){
     });
   }
 
+  async clearCasperMetadata(){
+    await this.update({
+      system: {
+        '-=casperObjectId': null,
+      }
+    });
+  }
+
 }
 

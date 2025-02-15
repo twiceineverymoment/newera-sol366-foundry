@@ -291,6 +291,12 @@
                 {{/if}}
             </td>
             <td style="text-align: right">
+                {{#if item.multiple}}
+                    <a class="item-split" data-tooltip="Split Stack" data-tooltip-direction="UP"><i class="fa-solid fa-layer-group"></i></a>
+                {{/if}}
+                {{#if item.showMergeStacks}}
+                    <a class="item-merge" data-tooltip="Stack Items" data-tooltip-direction="UP"><i class="fa-regular fa-layer-group"></i></a>
+                {{/if}}
                 {{#if item.system.stored}}
                     <a class="item-storage" data-tooltip="Retrieve from Storage" data-tooltip-direction="UP"><i class="fa-solid fa-box"></i></a>
                 {{else}}
