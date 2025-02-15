@@ -832,7 +832,7 @@ export class Actions {
       let quantity = 1;
       return new Promise((resolve) => {
         new Dialog({
-          title: "Move Item",
+          title: `Move ${item.name}`,
           content: `<form class="spell-dialog">
           <p>How many?</p>
           <div id="amplify-info">

@@ -1094,6 +1094,7 @@ export class NewEraActorSheet extends ActorSheet {
       const itemId = $(ev.currentTarget).data("itemId");
       const fromZone = $(ev.currentTarget).parents(".newera-equipment-dropzone");
       console.log(`INV DRAGSTART ${itemId}`);
+      ev.originalEvent.dataTransfer.setData("neweraItemTransfer", true);
       ev.originalEvent.dataTransfer.setData("objectType", "equipment");
       ev.originalEvent.dataTransfer.setData("itemId", itemId);
       ev.originalEvent.dataTransfer.setData("fromZone", fromZone.data("dropZone"));
@@ -1104,15 +1105,17 @@ export class NewEraActorSheet extends ActorSheet {
       ev.preventDefault();
     });
     html.find(".newera-equipment-dropzone").on("drop", async ev => {
+      //Prevent listener from running on drag-and-drop from other sources
+      if (!ev.originalEvent.dataTransfer.getData("neweraItemTransfer")){
+        return;
+      }
+      ev.preventDefault();
+      ev.stopPropagation(); //Prevent the drop from bubbling up to parent dropzones which causes duplicate drop events
       const itemId = ev.originalEvent.dataTransfer.getData("itemId");
       const sourceSlot = ev.originalEvent.dataTransfer.getData("fromZone");
       const targetSlot = $(ev.currentTarget).data("dropZone");
       const sourceActor = ev.originalEvent.dataTransfer.getData("fromActor");
       const targetActor = this.actor.uuid;
-      //Prevent listener from running on drops from unrelated stuff
-      if (!itemId){
-        return;
-      }
       console.log(`INV DROP ${itemId} ${sourceActor}.${sourceSlot}->${targetActor}.${targetSlot}`);
       //Moving items between slots on the same actor
       if (sourceActor == targetActor){
