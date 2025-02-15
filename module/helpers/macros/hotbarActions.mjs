@@ -708,4 +708,52 @@ export class HotbarActions {
         }
 
     }
+
+    static async advanceGameClock(){
+        if (game.user.isGM){
+        new Dialog({
+            title: "Advance Game Clock",
+            content: `
+                <table id="advance-game-clock-table">
+                    <tr>
+                        <td>Days</td>
+                        <td>Hours</td>
+                        <td>Minutes</td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" id="days" value="0" /></td>
+                        <td><input type="number" id="hours" value="0" /></td>
+                        <td><input type="number" id="minutes" value="0" /></td>
+                    </tr>
+                </table>
+                <label for="weather-update">Alter Weather?</label>
+                <select id="weather-update">
+                    <option value="0">No Change</option>
+                    <option value="1">Slight</option>
+                    <option value="2">Random</option>
+                </select>
+            `,
+            buttons: {
+                confirm: {
+                    icon: `<i class="fa-solid fa-arrows-rotate"></i>`,
+                    label: "Confirm",
+                    callback: async (html) => {
+                        const days = parseInt(html.find("#days").val());
+                        const hours = parseInt(html.find("#hours").val());
+                        const minutes = parseInt(html.find("#minutes").val());
+                        const weather = parseInt(html.find("#weather-update").val());
+                        await Actions.advanceGameClock({
+                            days: days,
+                            hours: hours,
+                            minutes: minutes
+                        });
+                        await Actions.randomizeWeather(weather);
+                    }
+                }
+            }
+        }).render(true);
+        } else {
+            ui.notifications.error("Only the GM can use this!");
+        }
+    }
 }

@@ -809,10 +809,19 @@ export class Actions {
       await game.settings.set("newera-sol366", "world.date.day", next.day);
       await game.settings.set("newera-sol366", "world.time.hour", next.hour);
       await game.settings.set("newera-sol366", "world.time.minute", next.minute);
+
+      const now = {
+        year: game.settings.get("newera-sol366", "world.date.year"),
+        month: game.settings.get("newera-sol366", "world.date.month"),
+        day: game.settings.get("newera-sol366", "world.date.day"),
+        hour: game.settings.get("newera-sol366", "world.time.hour"),
+        minute: game.settings.get("newera-sol366", "world.time.minute"),
+      }
+      ui.notifications.info(`The time is now ${now.year}-${now.month}-${now.day} ${now.hour}:${now.minute}.`);
     }
 
     static _is29DayMonth(year, month) {
-      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+      if (Actions._isLeapYear(year)) {
         return (month == 13 || month == 1);
       } else if (year % 2 == 0) {
         return (month == 7);
@@ -822,6 +831,27 @@ export class Actions {
         return (month == 10);
       } else { //bruh
         return false;
+      }
+    }
+
+    static _isLeapYear(year) {
+      return ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0);
+    }
+
+    static async randomizeWeather(weather) {
+      const currentWeather = await game.settings.get("newera-sol366", "world.weather.conditions");
+      const conditionSequence = ["clear", "pc1", "pc2", "pc3", "cloudy", "foggy", "precip1", "precip2", "precip3", "storm1", "storm2"];
+      if (weather == 0) {
+        return;
+      } else if (weather == 1) {
+        //Slight change - maximum of 2 steps away from current weather
+        const index = conditionSequence.indexOf(currentWeather);
+        const newIndex = Math.max(0, Math.min(conditionSequence.length - 1, index + (Math.random() < 0.5 ? 1 : -1)));
+        await game.settings.set("newera-sol366", "world.weather.conditions", conditionSequence[newIndex]);
+      } else if (weather == 2) {
+        //Random
+        const newWeather = conditionSequence[Math.floor(Math.random() * conditionSequence.length)];
+        await game.settings.set("newera-sol366", "world.weather.conditions", newWeather);
       }
     }
 
@@ -856,7 +886,7 @@ export class Actions {
             },
             ...(allowAll ? {
               all: {
-                icon: `<i class="fa-solid fa-boxes-stacked"></i>`,
+                icon: `<i class="fa-solid fa-layer-group"></i>`,
                 label: "All",
                 callback: () => resolve(item.system.quantity)
               }
