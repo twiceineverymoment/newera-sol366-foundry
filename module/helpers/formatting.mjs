@@ -49,6 +49,16 @@ export class Formatting {
         }
       }
 
+      static formatRollExpression(count, size, modifier){
+        if (modifier > 0){
+          return `${count}d${size}+${modifier}`;
+        } else if (modifier < 0){
+          return `${count}d${size}${modifier}`;
+        } else {
+          return `${count}d${size}`;
+        }
+      }
+
       static getSpellActionIcons(spell, cssClass = "skill-icon"){
         //console.log(spell);
           if (spell.type == "Enchantment"){

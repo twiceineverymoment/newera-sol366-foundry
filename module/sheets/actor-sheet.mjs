@@ -320,6 +320,7 @@ export class NewEraActorSheet extends ActorSheet {
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
+      console.log(i);
       i.img = i.img || DEFAULT_TOKEN;
       i.multiple = (i.system.quantity && i.system.quantity > 1);
       switch(i.type){
@@ -330,7 +331,7 @@ export class NewEraActorSheet extends ActorSheet {
           }
         case "Item":
           //Show merge stacks if there is another item with the same object ID in the inventory - This runs on non-recipe potions and basic items
-          i.showMergeStacks = (i.system.casperObjectId && !i.system.enchanted && context.items.some(j => j !== i && j.system.casperObjectId == i.system.casperObjectId && i.type == j.type && !j.system.enchanted))
+          i.showMergeStacks = (i.system.casperObjectId && !i.system.enchanted && context.items.some(j => NewEraItem.canStack(i, j)));
         case "Melee Weapon":
         case "Ranged Weapon":
         case "Armor":
@@ -1042,7 +1043,10 @@ export class NewEraActorSheet extends ActorSheet {
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
-      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteItem($(event.currentTarget).data("itemId")));
+      Formatting.confirm(this.actor, ev, (actor, event) => {
+        const li = $(event.currentTarget).parents(".inventory-entry");
+        actor.deleteItem(li.data("itemId"));
+      });
     });
 
     //Add Skills
@@ -1074,19 +1078,31 @@ export class NewEraActorSheet extends ActorSheet {
       this.showSkillImprovementDialog();
     });
 
+    html.find('.item-quantity-roll').click(ev => {
+      const itemId = $(ev.currentTarget).parents(".inventory-entry").data("itemId");
+      const item = this.actor.items.get(itemId);
+      item.rollQuantity();
+    });
+
     //Inventory drag-and-drop
     html.find(".newera-draggable-equipment").on("dragstart", ev => {
       //ev.preventDefault();
       //console.log(ev);
       const itemId = $(ev.currentTarget).data("itemId");
-      const fromZone = $(ev.currentTarget).parents(".newera-equipment-dropzone");
-      console.log(`INV DRAGSTART ${itemId}`);
-      ev.originalEvent.dataTransfer.setData("neweraItemTransfer", true);
-      ev.originalEvent.dataTransfer.setData("objectType", "equipment");
-      ev.originalEvent.dataTransfer.setData("itemId", itemId);
-      ev.originalEvent.dataTransfer.setData("fromZone", fromZone.data("dropZone"));
-      ev.originalEvent.dataTransfer.setData("fromActor", this.actor.uuid);
-      ev.originalEvent.dataTransfer.effectAllowed = "move";
+      const item = this.actor.items.get(itemId);
+      if (item.system.rollQuantity){
+        ui.notifications.warn("This item has a variable quantity. You must roll to determine the quantity before you can move it.");
+        ev.originalEvent.dataTransfer.effectAllowed = "none";
+      } else {
+        const fromZone = $(ev.currentTarget).parents(".newera-equipment-dropzone");
+        console.log(`INV DRAGSTART ${itemId}`);
+        ev.originalEvent.dataTransfer.setData("neweraItemTransfer", true);
+        ev.originalEvent.dataTransfer.setData("objectType", "equipment");
+        ev.originalEvent.dataTransfer.setData("itemId", itemId);
+        ev.originalEvent.dataTransfer.setData("fromZone", fromZone.data("dropZone"));
+        ev.originalEvent.dataTransfer.setData("fromActor", this.actor.uuid);
+        ev.originalEvent.dataTransfer.effectAllowed = "move";
+      }  
     });
     html.find(".newera-equipment-dropzone").on("dragover", ev => {
       ev.preventDefault();

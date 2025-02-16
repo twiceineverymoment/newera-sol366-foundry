@@ -712,13 +712,13 @@ export class NewEraActor extends Actor {
       //Determine whether the recipient already has an item of the same type and object ID. If so, add the quantity to that item.
       let existingItem = null;
       if (item.system.casperObjectId){
-        if (targetSlot == "backpack"){
-          existingItem = recipient.items.find(i => i.type == item.type && i.system.casperObjectId == item.system.casperObjectId && recipient.findItemLocation(i) == "backpack"); //Items created manually by players don't have a casperObjectId and should not be stacked
+        if (targetSlot == NewEraActor.EquipmentSlots.BACKPACK){
+          existingItem = recipient.items.find(i => i.canStackWith(item) && recipient.findItemLocation(i) == NewEraActor.EquipmentSlots.BACKPACK);
         } else {
           const targetItemId = recipient.system.equipment[targetSlot];
           if (targetItemId){
             const targetItem = recipient.items.get(targetItemId);
-            if (targetItem && targetItem.type == item.type && targetItem.system.casperObjectId == item.system.casperObjectId){
+            if (targetItem && targetItem.canStackWith(item)){
               existingItem = targetItem
             }
           }
@@ -820,7 +820,7 @@ export class NewEraActor extends Actor {
   /** Look for all items in the inventory with the same object ID and merge them into a single item. */
   async mergeStacks(item){
     if (!item.typeIs(NewEraItem.Types.STACKABLE) || !item.system.casperObjectId || item.system.enchanted) return;
-    const sameStacks = this.items.filter(i => i !== item && i.type == item.type && i.system.casperObjectId == item.system.casperObjectId && !i.system.enchanted);
+    const sameStacks = this.items.filter(i => i.canStackWith(item));
     if (sameStacks.length == 0) return;
     const totalQuantity = sameStacks.reduce((acc, i) => acc + i.system.quantity, 0) + item.system.quantity;
     await item.update({
@@ -1719,6 +1719,32 @@ export class NewEraActor extends Actor {
         default: defeated ? 3 : 0
       }
     });
+    if (defeated){
+      this.items.forEach(item => {
+        if (item.typeIs(NewEraItem.Types.STACKABLE) && item.system.rollQuantity){
+          item.rollQuantity();
+        }
+      });
+    }
+  }
+
+  async lockUnlockContainer(){
+    const ownership = (this.ownership.default == 3) ? 0 : 3;
+    await this.update({
+      ownership: {
+        default: ownership
+      }
+    });
+    if (ownership == 3){
+      ui.notifications.info(`${this.name} is now UNLOCKED. Players can open and change the token and take items.`);
+      this.items.forEach(item => {
+        if (item.typeIs(NewEraItem.Types.STACKABLE) && item.system.rollQuantity){
+          item.rollQuantity();
+        }
+      });
+    } else {
+      ui.notifications.info(`${this.name} is now LOCKED.`);
+    }
   }
 
   getLearningExperienceOptions(){

@@ -67,15 +67,27 @@
           </select>
         </div>
         <div class="resource newera-itemsheet-property-33">
-          <div class="scale-control" data-tooltip="Alchemy Recipe" style="color: burlywood !important">
+          <div class="scale-control" style="color: burlywood !important">
             <i class="fa-solid fa-scroll"></i>
             <input type="checkbox" name="system.isRecipe" {{checked system.isRecipe}} data-dtype="Boolean" />
+            {{#if showRollQuantity}}
+              {{#unless system.isRecipe}}
+                <i class="fa-light fa-dice" data-tooltip="Roll Quantity"></i>
+                <input type="checkbox" name="system.rollQuantity" {{checked system.rollQuantity}} data-dtype="Boolean" />
+              {{/unless}}
+            {{/if}}
           </div>
           <h4>Quantity</h4>
           {{#if system.isRecipe}}
             <input type="text" class="sheet-input" value="(Recipe)" disabled />
           {{else}}
-            <input type="text" class="sheet-input" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+            {{#if system.rollQuantity}}
+              <input type="text" class="sheet-input" name="system.variableQuantity.dieCount" value="{{system.variableQuantity.dieCount}}" data-dtype="Number" />
+              d <input type="text" class="sheet-input" name="system.variableQuantity.dieSize" value="{{system.variableQuantity.dieSize}}" data-dtype="Number" />
+              + <input type="text" class="sheet-input" name="system.variableQuantity.modifier" value="{{system.variableQuantity.modifier}}" data-dtype="Number" />
+            {{else}}
+              <input type="text" class="sheet-input" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+            {{/if}}
           {{/if}}
         </div>
         <div class="resource newera-itemsheet-property-33">

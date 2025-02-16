@@ -1,5 +1,6 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { NewEraItem } from "../documents/item.mjs";
+import { NewEraActor } from "../documents/actor.mjs";
 import {createEffect, editEffect, deleteEffect, toggleEffect} from "../helpers/effects.mjs";
 
 /**
@@ -75,6 +76,12 @@ export class NewEraItemSheet extends ItemSheet {
     if (this.item.type == 'Feat' && context.system.tiers.base){
       ui.notifications.warn(`This feat requires migration. Please run the v0.15 migration script.`);
       return {};
+    }
+
+    if(this.item.typeIs(NewEraItem.Types.STACKABLE)){
+      if (this.item.isEmbedded && this.item.parent instanceof Actor && !this.item.parent.typeIs(NewEraActor.Types.CHARACTER)) {
+        context.showRollQuantity = true;
+      }
     }
 
     if (this.item.typeIs(NewEraItem.Types.SPELL)) {

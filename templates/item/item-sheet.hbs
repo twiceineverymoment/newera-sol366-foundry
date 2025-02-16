@@ -67,8 +67,20 @@
           <input type="text" class="sheet-input" name="system.weight" value="{{system.weight}}" data-dtype="Number" />
         </div>
         <div class="resource newera-itemsheet-property-33">
+          {{#if showRollQuantity}}
+            <div class="scale-control" data-tooltip="Enable Rollable Quantity">
+              <i class="fa-light fa-dice"></i>
+              <input type="checkbox" name="system.rollQuantity" {{checked system.rollQuantity}} data-dtype="Boolean" />
+            </div>
+          {{/if}}
           <h4>Quantity{{#if system.units}} ({{system.units}}){{/if}}</h4>
-          <input type="text" class="sheet-input" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+          {{#if system.rollQuantity}}
+            <input type="text" class="sheet-input" style="width: 20%" name="system.variableQuantity.dieCount" value="{{system.variableQuantity.dieCount}}" data-dtype="Number" />
+            d <input type="text" class="sheet-input" style="width: 20%" name="system.variableQuantity.dieSize" value="{{system.variableQuantity.dieSize}}" data-dtype="Number" />
+            + <input type="text" class="sheet-input" style="width: 20%" name="system.variableQuantity.modifier" value="{{system.variableQuantity.modifier}}" data-dtype="Number" />
+          {{else}}
+            <input type="text" class="sheet-input" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+          {{/if}}
         </div>
         <div class="resource newera-itemsheet-property-33">
           <h4>Value <i>(Estimated)</i></h4>

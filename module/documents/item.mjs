@@ -88,10 +88,6 @@ export class NewEraItem extends Item {
       this._serializeActionData(system);
     }
 
-    if (system.variableQuantity && !system.quantity){
-      system.rollQuantity = true;
-    }
-
     //console.log(`[DEBUG] ${this.name} actions: ${typeof itemData.actions}`);
     if (typeof system.actions == "object"){
       this._prepareItemActionAndEffectData(system);
@@ -106,9 +102,15 @@ export class NewEraItem extends Item {
     }
 
     if (system.units){
-      system.listDisplayName = `${this.name} (${system.quantity} ${system.units})`;
+      if (system.rollQuantity){ 
+        system.listDisplayName = `${this.name} (${Formatting.formatRollExpression(system.variableQuantity.dieCount, system.variableQuantity.dieSize, system.variableQuantity.modifier)} ${system.units})`;
+      } else {
+        system.listDisplayName = `${this.name} (${system.quantity} ${system.units})`;
+      }
     } else {
-      if (system.quantity > 1){
+      if (system.rollQuantity){
+        system.listDisplayName = `${this.name} x${Formatting.formatRollExpression(system.variableQuantity.dieCount, system.variableQuantity.dieSize, system.variableQuantity.modifier)}`;
+      } else if (system.quantity > 1){
         system.listDisplayName = `${this.name} x${system.quantity}`;
       } else {
         system.listDisplayName = this.name;
@@ -1743,5 +1745,62 @@ _preparePotionData(system){
     });
   }
 
+  async rollQuantity(){
+    if (this.system.rollQuantity){
+      const roll = new Roll(`${this.system.variableQuantity.dieCount}d${this.system.variableQuantity.dieSize}+${this.system.variableQuantity.modifier}`, this.getRollData());
+      await roll.evaluate();
+      roll.toMessage({
+        speaker: ChatMessage.getSpeaker({actor: this.parent}),
+        flavor: this.name
+      });
+      if (roll.total > 0){
+        await this.update({
+          system: {
+            quantity: roll.total,
+            rollQuantity: false
+          }
+        });
+      } else {
+        await this.delete();
+      }
+    }
+  }
+
+  /**
+   * Determines whether the specified item can be stacked with this one.
+   * In order to stack, the items must have matching types and CASPER IDs, and must not be enchanted or have a variable quantity.
+   * @param {NewEraItem} candidate The item to check for stackability.
+   * @returns {boolean} True if the item can be stacked, false otherwise.
+   */
+  canStackWith(candidate){
+    return candidate !== this
+      && candidate.typeIs(NewEraItem.Types.STACKABLE)
+      && candidate.type == this.type
+      && candidate.system.casperObjectId
+      && candidate.system.casperObjectId == this.system.casperObjectId
+      && !candidate.system.rollQuantity
+      && !this.system.rollQuantity
+      && !candidate.system.enchanted
+      && !this.system.enchanted;
+  }
+
+  /**
+   * Static version of canStackWith that works for any two items.
+   * This has to work on plain objects because context.items strips the prototype chain for some reason - hence the manual type check
+   * @param {*} a 
+   * @param {*} b 
+   * @returns 
+   */
+  static canStack(a, b){
+    return a !== b
+      && ["Item", "Potion"].includes(a.type)
+      && a.type == b.type
+      && a.system.casperObjectId
+      && a.system.casperObjectId == b.system.casperObjectId
+      && !a.system.rollQuantity
+      && !b.system.rollQuantity
+      && !a.system.enchanted
+      && !b.system.enchanted;
+  }
 }
 

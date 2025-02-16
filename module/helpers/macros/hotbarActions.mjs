@@ -686,17 +686,7 @@ export class HotbarActions {
             ui.notifications.error("You can only use this action on Container and Vehicle tokens.");
             return;
         } else {
-            const ownership = (actor.ownership.default == 3) ? 0 : 3;
-            await actor.update({
-                ownership: {
-                    default: ownership
-                }
-            });
-            if (ownership == 3){
-                ui.notifications.info(`${actor.name} is now UNLOCKED. Players can open and change the token and take items.`);
-            } else {
-                ui.notifications.info(`${actor.name} is now LOCKED.`);
-            }
+            await actor.lockUnlockContainer();
         }
     }
 
