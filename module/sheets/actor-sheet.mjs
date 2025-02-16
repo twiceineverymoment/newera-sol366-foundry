@@ -1042,60 +1042,33 @@ export class NewEraActorSheet extends ActorSheet {
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".inventory-entry");
-      const item = this.actor.items.get(li.data("itemId"));
-      const isPhysicalItem = ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"].includes(item.type);
-      if (game.settings.get("newera-sol366", "confirmDelete")){
-        new Dialog({
-          title: "Confirm Delete",
-          content: `<p>Are you sure you want to delete this?</p>${isPhysicalItem ? `<p>If you'll need it later, use the <i class="fa-solid fa-box-open"></i> Store button to mark the item as not currently in your possession without deleting it entirely.</p>` : ""}`,
-          buttons: {
-            confirm: {
-              icon: '<i class="fas fa-trash"></i>',
-              label: "Yes",
-              callback: () => {
-                if (isPhysicalItem){
-                  this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
-                }
-                item.delete();
-                this.render(false);
-              }
-            },
-            cancel: {
-              icon: `<i class="fas fa-x"></i>`,
-              label: "No",
-            }
-          },
-          default: "cancel"
-        }).render(true);
-      } else {
-        if (isPhysicalItem){
-          this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
-        }
-        item.delete();
-        this.render(false);
-      }
+      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteItem($(event.currentTarget).data("itemId")));
     });
 
     //Add Skills
-    html.find('#addKnowledgeButton').click(ev => {
+    html.find('#addKnowledgeButton').click(() => {
       this.actor.addKnowledge();
-      this.render(false);
     }); 
-    html.find('#addSpecialtyButton').click(ev => {
+    html.find('#addSpecialtyButton').click(() => {
       this.actor.addSpecialty();
-      this.render(false);
-    }); 
-    html.find('#addResourceButton').click(ev => {
+    });
+    html.find('#addResourceButton').click(() => {
       this.actor.addResource();
-      this.render(false);
-    }); 
+    });
     html.find(".deleteResource").click(ev => {
       Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteResource($(event.currentTarget).data("resourceIndex")));
     });
-    html.find('#addSpecialModifierButton').click(ev => {
+    html.find(".deleteKnowledge").click(ev => {
+      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteKnowledge($(event.currentTarget).data("knowledgeIndex")));
+    });
+    html.find(".deleteSpecialty").click(ev => {
+      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteSpecialty($(event.currentTarget).data("specialtyIndex")));
+    });
+    html.find(".deleteSpecialModifier").click(ev => {
+      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteSpecialModifier($(event.currentTarget).data("specialModifierIndex")));
+    });
+    html.find('#addSpecialModifierButton').click(() => {
       this.actor.addSpecialModifier();
-      this.render(false);
     });
     html.find(`.improveSkillButton`).click(() => {
       this.showSkillImprovementDialog();

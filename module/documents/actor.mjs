@@ -25,6 +25,20 @@ export class NewEraActor extends Actor {
     return types.includes(this.type);
   }
 
+  static EquipmentSlots = {
+    LEFT_HAND: "leftHand",
+    RIGHT_HAND: "rightHand",
+    HEAD: "head",
+    NECK: "neck",
+    WAIST: "waist", 
+    BODY: "body",
+    FEET: "feet",
+    HANDS: "hands",
+    PHONE: "phone",
+    BACKPACK: "backpack"
+  };
+
+
   /** @override */
   prepareData() {
     // Prepare data for the actor. Calling the super version of this executes
@@ -518,34 +532,77 @@ export class NewEraActor extends Actor {
     }
   }
 
-  addKnowledge() {
-    const system = this.system;
-    system.knowledges[Object.keys(system.knowledges).length] = {
+  async addKnowledge() {
+    const update = structuredClone(this.system);
+    update.knowledges[Object.keys(this.system.knowledges).length] = {
       subject: "New Knowledge",
       level: 0,
       bonus: 0,
       natural: false,
       grandmaster: false
     };
+    await this.update({
+      system: update
+    });
   }
 
-  addSpecialty() {
-    const system = this.system;
-    system.specialties[Object.keys(system.specialties).length] = {
+  async addSpecialty() {
+    const update = structuredClone(this.system);
+    update.specialties[Object.keys(this.system.specialties).length] = {
       subject: "New Specialty",
       level: 0,
       bonus: 0,
       defaultParent: "other"
     };
+    await this.update({
+      system: update
+    });
   }
 
-  addSpecialModifier() {
-    const system = this.system;
-    system.specialModifiers[Object.keys(system.specialModifiers).length] = {
+  async addSpecialModifier() {
+    const update = structuredClone(this.system);
+    update.specialModifiers[Object.keys(this.system.specialModifiers).length] = {
       subject: "New Modifier",
       bonus: 0,
       parent: ""
     };
+    await this.update({
+      system: update
+    });
+  }
+
+  async deleteKnowledge(index){
+    await this.update({
+      system: {
+        knowledges: Formatting.spliceIndexedObject(this.system.knowledges, index)
+      }
+    });
+  }
+
+  async deleteSpecialty(index){
+    await this.update({
+      system: {
+        specialties: Formatting.spliceIndexedObject(this.system.specialties, index)
+      }
+    });
+  }
+
+  async deleteSpecialModifier(index){
+    await this.update({
+      system: {
+        specialModifiers: Formatting.spliceIndexedObject(this.system.specialModifiers, index)
+      }
+    });
+  }
+
+  async deleteItem(id){
+    const item = this.items.get(id);
+    if (item) {
+      if (item.typeIs(NewEraItem.Types.INVENTORY)) {
+        this.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
+      }
+      await item.delete();
+    }
   }
 
   getSkillModifier(skill) {

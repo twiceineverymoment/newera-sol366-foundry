@@ -31,19 +31,6 @@ export class NewEraItem extends Item {
     STACKABLE: ["Item", "Potion"]
   }
 
-  static EquipmentSlots = {
-    LEFT_HAND: "leftHand",
-    RIGHT_HAND: "rightHand",
-    HEAD: "head",
-    NECK: "neck",
-    WAIST: "waist", 
-    BODY: "body",
-    FEET: "feet",
-    HANDS: "hands",
-    PHONE: "phone",
-    BACKPACK: "backpack"
-  };
-
   static ActionConditions = {
     ALWAYS: "always", //Action is available regardless of location
     EQUIPPED: "equipped", //Available when in left or right hand

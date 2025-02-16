@@ -104,12 +104,13 @@
         {{numberFormat skill.mod decimals=0 sign=true}}
         <img class="die" src="systems/newera-sol366/resources/d20-orange.png" draggable="true"/>
       </span>
+      <a class="deleteKnowledge" data-knowledge-index="{{key}}" data-tooltip="Delete Knowledge" data-tooltip-direction="UP"><i class="fas fa-trash"></i></a>
     </td>
   </tr>
   {{/each}}
   <tr>
     <td colspan="5">
-      <a title="Create Knowledge" id="addKnowledgeButton"><i class="fas fa-plus"></i> ADD</a>
+      <a data-tooltip="Add Knowledge" data-tooltip-direction="UP" id="addKnowledgeButton"><i class="fas fa-plus"></i> ADD</a>
     </td>
   </tr>
 </table>
@@ -147,12 +148,13 @@
         {{numberFormat skill.mod decimals=0 sign=true}}
         <img class="die" src="systems/newera-sol366/resources/d20-orange.png" draggable="true" />
       </span>
+      <a class="deleteSpecialty" data-specialty-index="{{key}}" data-tooltip="Delete Specialty" data-tooltip-direction="UP"><i class="fas fa-trash"></i></a>
     </td>
   </tr>
   {{/each}}
   <tr>
     <td colspan="6">
-      <a title="Create Specialty" id="addSpecialtyButton"><i class="fas fa-plus"></i> ADD</a>
+      <a data-tooltip="Add Specialty" data-tooltip-direction="UP" id="addSpecialtyButton"><i class="fas fa-plus"></i> ADD</a>
     </td>
   </tr>
 </table>
