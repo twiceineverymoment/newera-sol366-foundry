@@ -94,10 +94,9 @@ export class Formatting {
             update[id] = res;
           } else if (id > index){
             update[id-1] = res;
-          } else {
-            update[`-=${id}`] = null;
           }
         });
+        update[`-=${Object.entries(obj).length-1}`] = null;
         console.log(update);
         return update;
       }
