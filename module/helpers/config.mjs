@@ -4301,3 +4301,14 @@ NEWERA.spellStudiesLists = {
 NEWERA.spellRarity = [
     "Inscribed", "Common", "Uncommon", "Rare", "Legendary", "Restricted", "Classified", "Mystery", "Innate"
 ]
+
+NEWERA.specialtyDefaultParents = {
+    "archery": "marksmanship",
+    "crossbow": "marksmanship",
+    "rifle": "marksmanship",
+    "crafting": "technology",
+    "cooking": "technology",
+    "alchemy": "technology",
+    "climbing": "athletics",
+    "swimming": "athletics"
+}

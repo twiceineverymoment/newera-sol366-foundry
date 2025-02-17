@@ -2180,11 +2180,12 @@ export class NewEraActor extends Actor {
           ui.notifications.warn(`Your ${subject} specialty is already at max level! Specialties can't exceed level 3.`);
         }
       } else {
+        const defaultParent = parentSkill || NEWERA.specialtyDefaultParents[subject];
         update.specialties[Object.keys(update.specialties).length] = {
           subject: subject,
           level: 1,
           bonus: 0,
-          defaultParent: parentSkill
+          defaultParent: defaultParent
         };
       }
     }
@@ -2237,5 +2238,18 @@ export class NewEraActor extends Actor {
     specialty.level++;
     await this.update({system: update});
     ui.notifications.info(`Your ${specialty.subject} specialty increased to ${specialty.level}!`);
+  }
+  /**
+   * Add a spell, enchantment, or potion recipe to the character by its compendium ID.
+   * @param {string} id The unique ID of the object in the Spells compendium, i.e. CASPERSP00000001
+   */
+  async addMagicById(id){
+    const entry = await game.packs.get("newera-sol366.spells").getDocument(id);
+    if (entry) {
+      await Item.create(entry, {parent: this});
+      ui.notifications.info(`You learned ${entry.name}!`);
+    } else {
+      ui.notifications.error(`Error: Unable to locate object with ID: ${id}`);
+    }
   }
 }
