@@ -1793,7 +1793,7 @@ export class NewEraActorSheet extends ActorSheet {
   }
 
   _onFeatureSelectionChange(ev){
-    if (game.settings.get("newera-sol366", "autoApplyFeatures")){
+    if (game.settings.get("newera-sol366", "autoLevelUp")){
       const element = $(ev.currentTarget);
       const dataField = element.attr("name");
       const oldValue = element.data("oldValue") || "";
@@ -1810,7 +1810,7 @@ export class NewEraActorSheet extends ActorSheet {
         console.warn(`Changed feature ${dataField} has no onChange function`);
       }
     } else {
-      console.log("Ignoring feature selection change because autoApplyFeatures is turned off");
+      console.log("Ignoring feature selection change because autoLevelUp is turned off");
     }
   }
 

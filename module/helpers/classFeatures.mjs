@@ -109,7 +109,8 @@ ClassInfo.features = {
                         intelligence: "Intelligence",
                         wisdom: "Wisdom",
                         charisma: "Charisma"
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => actor.setAbilityScoreImprovement(oldValue, newValue)
                 },
                 second: {
                     label: "Second Choice",
@@ -120,7 +121,8 @@ ClassInfo.features = {
                         intelligence: "Intelligence",
                         wisdom: "Wisdom",
                         charisma: "Charisma"
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => actor.setAbilityScoreImprovement(oldValue, newValue)
                 }
             }
         },

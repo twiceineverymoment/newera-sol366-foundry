@@ -572,18 +572,48 @@ export class NewEraActor extends Actor {
   }
 
   async deleteKnowledge(index){
-    await this.update({
-      system: {
-        knowledges: Formatting.spliceIndexedObject(this.system.knowledges, index)
+    const update = structuredClone(this.system);
+    update.knowledges = Formatting.spliceIndexedObject(this.system.knowledges, index);
+    //Update learning experience selections to reflect the deleted knowledge
+    if (this.system.classes){
+      for (const [className, classData] of Object.entries(this.system.classes)){
+        if (classData.learningExperience){
+          for (const [level, obj] of Object.entries(classData.learningExperience)){
+            const prevSelection = parseInt(obj.improvement);
+            if (prevSelection == index){
+              update.classes[className].learningExperience[level].improvement = "";
+            } else if (prevSelection > index){
+              update.classes[className].learningExperience[level].improvement = (prevSelection - 1).toString();
+            }
+          }
+        }
       }
+    }
+    await this.update({
+      system: update
     });
   }
 
   async deleteSpecialty(index){
-    await this.update({
-      system: {
-        specialties: Formatting.spliceIndexedObject(this.system.specialties, index)
+    const update = structuredClone(this.system);
+    update.specialties = Formatting.spliceIndexedObject(this.system.specialties, index);
+    //Update specialty improvement selections to reflect the deleted specialty
+    if (this.system.classes){
+      for (const [className, classData] of Object.entries(this.system.classes)){
+        if (classData.specialtyImprovement){
+          for (const [level, obj] of Object.entries(classData.specialtyImprovement)){
+            const prevSelection = parseInt(obj.improvement);
+            if (prevSelection == index){
+              update.classes[className].specialtyImprovement[level].improvement = "";
+            } else if (prevSelection > index){
+              update.classes[className].specialtyImprovement[level].improvement = (prevSelection - 1).toString();
+            }
+          }
+        }
       }
+    }
+    await this.update({
+      system: update
     });
   }
 
@@ -1736,7 +1766,8 @@ export class NewEraActor extends Actor {
     const output = {
       improvement: {
         label: "Make a Selection",
-        options: {}
+        options: {},
+        onChange: (actor, oldValue, newValue) => actor.setLearningExperience(oldValue, newValue)
       }
     };
     for (const [k, v] of Object.entries(this.system.knowledges)){
@@ -1751,7 +1782,8 @@ export class NewEraActor extends Actor {
     const output = {
       improvement: {
         label: "Choose a Specialty",
-        options: {}
+        options: {},
+        onChange: (actor, oldValue, newValue) => actor.setSpecialtyImprovement(oldValue, newValue)
       }
     };
     for (const [k, v] of Object.entries(this.system.specialties)){
@@ -2131,5 +2163,37 @@ export class NewEraActor extends Actor {
       }
     });
     ui.notifications.info(`Your caster level increased to ${newCasterLvl}!`);
+  }
+
+  async setAbilityScoreImprovement(from, to){
+    const update = structuredClone(this.system);
+    if (from){
+      update.abilities[from].score -= 1;
+    }
+    update.abilities[to].score += 1;
+    await this.update({system: update});
+    ui.notifications.info(`Your ${to} increased to ${update.abilities[to].score}!`);
+  }
+
+  async setLearningExperience(from, to){
+    const update = structuredClone(this.system);
+    if (from !== ""){
+      update.knowledges[parseInt(from)].level--;
+    }
+    const knowledge = update.knowledges[parseInt(to)];
+    knowledge.level++;
+    await this.update({system: update});
+    ui.notifications.info(`Your ${knowledge.subject} knowledge increased to ${knowledge.level}!`);
+  }
+
+  async setSpecialtyImprovement(from, to){
+    const update = structuredClone(this.system);
+    if (from !== ""){
+      update.specialties[parseInt(from)].level--;
+    }
+    const specialty = update.specialties[parseInt(to)];
+    specialty.level++;
+    await this.update({system: update});
+    ui.notifications.info(`Your ${specialty.subject} specialty increased to ${specialty.level}!`);
   }
 }
