@@ -2046,8 +2046,12 @@ export class NewEraActor extends Actor {
       }
       if (feature.tableValues) {
         feature.tableValues.forEach(async tv => {
-          if (typeof tv.onLevelUp == 'function'){
-            await tv.onLevelUp(actor, toLevel);
+          if (typeof tv.onUpdate == 'function'){
+            const fromVal = tv.values[fromLevel];
+            const toVal = tv.values[toLevel];
+            if (toVal > fromVal){
+              await tv.onUpdate(actor, fromVal, toVal);
+            }
           }
         });
       }
@@ -2147,22 +2151,18 @@ export class NewEraActor extends Actor {
     });
   }
 
-  async increaseCasterLevel() {
-    if (this.system.casterLevel == 10) {
-      return;
-    }
-    const newCasterLvl = this.system.casterLevel + 1;
-    const energyChange = NEWERA.baseEnergyMaximums[newCasterLvl] - NEWERA.baseEnergyMaximums[this.system.casterLevel];
+  async setCasterLevel(from, to, setMaxEnergy = true) {
+    const energyChange = setMaxEnergy ? NEWERA.baseEnergyMaximums[to] - NEWERA.baseEnergyMaximums[from] : 0;
     await this.update({
       system: {
-        casterLevel: newCasterLvl,
+        casterLevel: to,
         energy: {
           max: this.system.energy.max + energyChange,
           value: this.system.energy.value + energyChange
         }
       }
     });
-    ui.notifications.info(`Your caster level increased to ${newCasterLvl}!`);
+    ui.notifications.info(`Your caster level increased to ${to}!`);
   }
 
   async setAbilityScoreImprovement(from, to){
