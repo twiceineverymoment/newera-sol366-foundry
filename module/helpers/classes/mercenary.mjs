@@ -256,7 +256,10 @@ export class Mercenary {
                     field: "casterLevel.mercenary",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4]
+                    values: [null, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4],
+                    onUpdate: (actor, from, to) => {
+                        actor.setCasterLevel(from, to, true);
+                    }
                 }
             ]
         },
