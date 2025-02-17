@@ -24,7 +24,8 @@ export class Scholar {
                         "psionic-magic": "Psionic Magic",
                         "spectral-magic": "Spectral Magic",
                         "temporal-magic": "Temporal Magic"
-                    }
+                    },
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "2": {
                     label: "Second Choice",
@@ -38,7 +39,8 @@ export class Scholar {
                         "psionic-magic": "Psionic Magic",
                         "spectral-magic": "Spectral Magic",
                         "temporal-magic": "Temporal Magic"
-                    }
+                    },
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 }
             }
         },
@@ -46,7 +48,11 @@ export class Scholar {
             level: 1,
             name: "Scholar Specialties",
             key: false,
-            description: "Gain three new Knowledges of your choice, at the GM's discretion."
+            description: "Gain three new Knowledges of your choice, at the GM's discretion.",
+            onUnlock: (actor) => {
+                actor.addKnowledge("Scholarly Knowledge", 3);
+                ui.notifications.info(`You've gained three new Knowledges. Choose their subjects on the Abilities tab.`);
+            }
         },
         {
             level: 1,
@@ -70,7 +76,10 @@ export class Scholar {
                     field: "casterLevel.scholar",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7]
+                    values: [null, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7],
+                    onUpdate: (actor, from, to) => {
+                        actor.setCasterLevel(from, to, true);
+                    }
                 }
             ]
         },
@@ -116,7 +125,8 @@ export class Scholar {
                         "psionic-magic": "Psionic",
                         "spectral-magic": "Spectral",
                         "temporal-magic": "Temporal"
-                    }
+                    },
+                    onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 },
                 "1.2": {
                     label: "Second Choice",
@@ -127,7 +137,8 @@ export class Scholar {
                         "psionic-magic": "Psionic",
                         "spectral-magic": "Spectral",
                         "temporal-magic": "Temporal"
-                    }
+                    },
+                    onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 }
             }
         },
@@ -273,7 +284,15 @@ export class Scholar {
                     field: "spellcraft.scholar",
                     label: "Spellcraft Skill Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7]
+                    values: [null, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7],
+                    onUpdate: (actor, from, to) => {
+                        actor.update({
+                            system: {
+                                spellcraft: to
+                            }
+                        });
+                        ui.notifications.info(`Your Spellcraft skill increased to ${to}!`);
+                    }
                 }
             ]
         },
@@ -387,7 +406,8 @@ export class Scholar {
                         "psionic-magic": "Psionic",
                         "spectral-magic": "Spectral",
                         "temporal-magic": "Temporal"
-                    }
+                    },
+                    onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 },
                 "2.2": {
                     label: "Second Choice",
@@ -398,7 +418,8 @@ export class Scholar {
                         "psionic-magic": "Psionic",
                         "spectral-magic": "Spectral",
                         "temporal-magic": "Temporal"
-                    }
+                    },
+                    onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 }
             }
         },
@@ -477,7 +498,8 @@ export class Scholar {
                         "psionic-magic": "Psionic",
                         "spectral-magic": "Spectral",
                         "temporal-magic": "Temporal"
-                    }
+                    },
+                    onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 },
                 "3.2": {
                     label: "Second Choice",
@@ -488,7 +510,8 @@ export class Scholar {
                         "psionic-magic": "Psionic",
                         "spectral-magic": "Spectral",
                         "temporal-magic": "Temporal"
-                    }
+                    },
+                    onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 }
             }
         },
@@ -630,7 +653,8 @@ export class Scholar {
                         "psionic-magic": "Psionic Magic",
                         "spectral-magic": "Spectral Magic",
                         "temporal-magic": "Temporal Magic"
-                    }
+                    },
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
             }
         },
@@ -692,7 +716,8 @@ export class Scholar {
                         "psionic-magic": "Psionic",
                         "spectral-magic": "Spectral",
                         "temporal-magic": "Temporal"
-                    }
+                    },
+                    onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 },
                 "4.2": {
                     label: "Second Choice",
@@ -703,11 +728,11 @@ export class Scholar {
                         "psionic-magic": "Psionic",
                         "spectral-magic": "Spectral",
                         "temporal-magic": "Temporal"
-                    }
+                    },
+                    onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 }
             }
         },
-        //TODO Additional feature at lvl 18 or 19 in S366 v1.2.1
         {
             level: 19,
             common: "learningExperience"
@@ -720,6 +745,18 @@ export class Scholar {
             description: `<p>Your Level 1 spell slots aren't expended when you cast them at base level. (You can prepare up to 10 1st-level spells and cast those spells an unlimited number of times, but using Flexible Casting to amplify the spell will expend it.)</p>`
         }
     ]
+
+    static async bonus(actor, from, to){
+        const update = structuredClone(actor.system);
+        if (from) {
+            update.magic[from].bonus--;
+        }
+        if (to) {
+            update.magic[to].bonus++;
+            ui.notifications.info(`Your ${to} magic skill bonus increased to +${update.magic[to].bonus}.`);
+        }
+        await actor.update({system: update});
+    }
 
     /**
      * Initialize a Scholar character's spell slots by creating the appropriate number of empty slots based on the character's feature table.
