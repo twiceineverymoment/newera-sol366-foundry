@@ -326,10 +326,16 @@ input.custom-resource-name {
   height: 16px;
   margin-top: 2px;
   margin-bottom: 2px;
-  width: 80% !important;
+  width: 70% !important;
 }
-a.deleteResource {
-  width: 15%;
+a.toggleDailyResource {
+  opacity: 0.5;
+}
+a.toggleDailyResource.daily-enabled {
+  opacity: 1 !important;
+}
+a.deleteResource, a.toggleDailyResource {
+  width: 10%;
   display: inline;
   font-size: 16px;
 }

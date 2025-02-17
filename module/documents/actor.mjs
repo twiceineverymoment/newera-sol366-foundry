@@ -671,23 +671,38 @@ export class NewEraActor extends Actor {
     });
   }
 
-  async updateResource(name, update) {
+  async updateResourceByName(name, resourceUpdate) {
     const index = Object.keys(this.system.additionalResources).find(r => this.system.additionalResources[r].name.toLowerCase() == name.toLowerCase());
     if (index !== undefined){
-      await this.update({
+      const update = {
         system: {
-          additionalResources: update
+          additionalResources: {
+            [index]: resourceUpdate
+          }
         }
-      });
+      };
+      await this.update(update);
     }
   }
 
+  async updateResourceByIndex(index, resourceUpdate) {
+    const update = {
+      system: {
+        additionalResources: {
+          [index]: resourceUpdate
+        }
+      }
+    };
+    await this.update(update);
+  }
+
   async deleteResource(index){
-    await this.update({
+    const update = {
       system: {
         additionalResources: Formatting.spliceIndexedObject(this.system.additionalResources, index)
       }
-    });
+    };
+    await this.update(update);
   }
 
   getNarration(template, ...args){
@@ -1132,9 +1147,19 @@ export class NewEraActor extends Actor {
       Add exhaustion reduction by 1 to this in v0.10 after active effects are completed.
     */
     if (isLongRest) {
+      //Fully restore life points and energy
       gained.lifePoints = system.lifePoints.max - system.lifePoints.value;
       gained.energy = system.energy.max - system.energy.value;
-      //TODO Reduce exhaustion by 1 and clear other status effects
+      //Fully refresh any daily resources
+      const resUpdate = structuredClone(system.additionalResources);
+      resUpdate.forEach(r => {
+        if (r.daily){
+          r.value = r.max;
+        }
+      });
+      await this.update({
+        system: {additionalResources: resUpdate}
+      });
     } else {
       const recoverableEnergy = system.energy.max - system.energy.value;
       gained.energy = Math.min(recoverableEnergy, system.casterLevel * hours);
@@ -2054,27 +2079,42 @@ export class NewEraActor extends Actor {
   async levelUp(clazz) {
     const fromLevel = clazz.system.level;
     const toLevel = fromLevel + 1;
+    const className = clazz.system.selectedClass.toLowerCase();
+    console.log(`[ALU] Leveling up ${this.name}:${className} to ${toLevel}`);
     await clazz.update({
       system: {
         level: toLevel
       }
     });
-    const featuresToUnlock = ClassInfo.features[clazz.system.selectedClass.toLowerCase()].filter(feature => feature.level > fromLevel && feature.level <= toLevel);
-    for (const feature of featuresToUnlock){
-      if (typeof feature.onUnlock == 'function'){
-        await feature.onUnlock(actor);
+    if (game.settings.get("newera-sol366", "autoLevelUp")) {
+      console.log(`[ALU] Starting auto-level up for ${this.name}:${className} ${fromLevel} -> ${toLevel}`);
+      const featuresToUnlock = ClassInfo.features[className].filter(feature => feature.level > fromLevel && feature.level <= toLevel);
+      for (const feature of featuresToUnlock){
+          if (typeof feature.onUnlock == 'function'){
+            await feature.onUnlock(this);
+            console.log(`[ALU] Unlocked ${feature.name}`);
+          }
       }
-      if (feature.tableValues) {
+      const featuresToUpdate = ClassInfo.features[className].filter(feature => feature.level <= toLevel && feature.tableValues);
+      for (const feature of featuresToUpdate){
         feature.tableValues.forEach(async tv => {
           if (typeof tv.onUpdate == 'function'){
             const fromVal = tv.values[fromLevel];
             const toVal = tv.values[toLevel];
             if (toVal > fromVal){
-              await tv.onUpdate(actor, fromVal, toVal);
+              await tv.onUpdate(this, fromVal, toVal);
+              console.log(`[ALU] Updated Table value for ${feature.name}:${tv.label} from ${fromVal} to ${toVal}`);
+            } else {
+              console.log(`[ALU] Table value for ${feature.name}:${tv.label} is still ${fromVal}.`);
             }
+          } else {
+            console.log(`[ALU] Table value for ${feature.name}:${tv.label} has no onUpdate function.`);
           }
         });
       }
+      console.log(`[ALU] Auto-Level Up for ${this.name}:${className} ${fromLevel} -> ${toLevel} complete.`);
+    } else {
+      console.log(`[ALU] Auto-Level Up is disabled.`);
     }
   }
 

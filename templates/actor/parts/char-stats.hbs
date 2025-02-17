@@ -114,6 +114,7 @@
   <div id="newera-actorsheet-custom-resources">
     {{#each system.additionalResources as |resource id|}}
     <div class="resource newera-actorsheet-resource">
+      <a class="toggleDailyResource {{#if resource.daily}}daily-enabled{{/if}}" data-resource-index="{{id}}" data-tooltip="Refill on Rest" data-tooltip-direction="RIGHT"><i class="fas fa-solid fa-bed"></i></a>
       <input type="text" class="sheet-input custom-resource-name" name="system.additionalResources.{{id}}.name" value="{{resource.name}}" />
       <a class="deleteResource" data-resource-index="{{id}}" data-tooltip="Delete Custom Resource" data-tooltip-direction="RIGHT"><i class="fas fa-x"></i></a>
       <div class="resource-content">

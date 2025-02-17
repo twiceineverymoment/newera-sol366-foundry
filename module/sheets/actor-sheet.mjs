@@ -211,7 +211,7 @@ export class NewEraActorSheet extends ActorSheet {
               const path = `${feature.id}.${key}`;
               const keys = path.split(".");
               const currentValue = keys.reduce((acc, key) => acc[key], system.classes);
-              console.log(`[DEBUG] finding current value for ${path} = ${currentValue}`);
+              //console.log(`[DEBUG] finding current value for ${path} = ${currentValue}`);
               selection.currentValue = currentValue;
             });
           }
@@ -332,7 +332,7 @@ export class NewEraActorSheet extends ActorSheet {
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
-      console.log(i);
+      //console.log(i);
       i.img = i.img || DEFAULT_TOKEN;
       i.multiple = (i.system.quantity && i.system.quantity > 1);
       switch(i.type){
@@ -417,25 +417,11 @@ export class NewEraActorSheet extends ActorSheet {
       actions: actions
     }
 
-    if (game.settings.get("newera-sol366", "autoLevelUp")) {
-      _checkEnableLevelUp(this.actor.system.level, context.classes);
-    }
-
     //console.log(context.items);
     //console.log(equipment);
     //console.log(context.inventory);
 
     
-  }
-
-  _checkEnableLevelUp(overallLevel, classes){
-    let totalLevel = 0;
-    for (const clazz of classes) {
-      totalLevel += clazz.level;
-    }
-    if (totalLevel < overallLevel) {
-      context.enableLevelUp = true;
-    }
   }
 
   _prepareCreatureItems(context){
@@ -1007,15 +993,18 @@ export class NewEraActorSheet extends ActorSheet {
         const className = element.data("class");
         const featureSelectionId = element.data("selectionId");
         const selectionIndex = element.data("selectionIndex");
+        console.log(`[ALU] Triggered feature selection change ${className}.${featureSelectionId}.${selectionIndex} ${oldValue} -> ${newValue}`);
         try {
           const fromFeature = ClassInfo.features[className].find(feature => feature.id == featureSelectionId);
           const selection = fromFeature.selections[selectionIndex];
           if (typeof selection.onChange == 'function') {
             await selection.onChange(this.actor, oldValue, newValue);
+          } else {
+            console.log(`[ALU] No onChange function found!`);
           }
         } catch (err) {
           ui.notifications.error("Error: Couldn't update data for this selection. See the log for details.");
-          console.error(`Failed to locate selection change function! class=${className} id=${featureSelectionId} index=${selectionIndex}`);
+          console.error(`[ALU] Failed to locate selection change function! class=${className} id=${featureSelectionId} index=${selectionIndex}`);
         }
       });
     }
@@ -1121,6 +1110,12 @@ export class NewEraActorSheet extends ActorSheet {
     });
     html.find(`.improveSkillButton`).click(() => {
       this.showSkillImprovementDialog();
+    });
+    html.find(".toggleDailyResource").click(ev => {
+      const resourceIndex = $(ev.currentTarget).data("resourceIndex");
+      this.actor.updateResourceByIndex(resourceIndex, {
+        daily: !$(ev.currentTarget).hasClass("daily-enabled")
+      });
     });
 
     html.find('.item-quantity-roll').click(ev => {

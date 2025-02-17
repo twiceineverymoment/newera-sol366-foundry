@@ -88,7 +88,7 @@ export class Mercenary {
                     label: "Rage Uses Per Day",
                     sign: false,
                     values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5],
-                    onUpdate: (actor, from, to) => actor.updateResource("Rage", {
+                    onUpdate: (actor, from, to) => actor.updateResourceByName("Rage", {
                         value: to
                     })
                 }
@@ -98,7 +98,7 @@ export class Mercenary {
                     name: "Rage",
                     value: 1,
                     max: 1,
-                    refillOnFullRest: true
+                    daily: true
                 });
             }
         },
