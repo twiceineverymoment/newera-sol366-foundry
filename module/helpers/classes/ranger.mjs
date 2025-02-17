@@ -12,15 +12,18 @@ export class Ranger {
             selections: {
                 "1": {
                     label: "Specialty #1",
-                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"}
+                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"},
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 },
                 "2": {
                     label: "Specialty #2",
-                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"}
+                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"},
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 },
                 "3": {
                     label: "Specialty #3",
-                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"}
+                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"},
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 }
             }
         },
@@ -33,15 +36,18 @@ export class Ranger {
             selections: {
                 "1": {
                     label: "First Choice",
-                    options: {instinct: "Instinct", agility: "Agility", marksmanship: "Marksmanship", perception: "Perception", medicine: "Medicine", technology: "Technology", "two-handed": "Two-Handed", endurance: "Endurance"}
+                    options: {instinct: "Instinct", agility: "Agility", marksmanship: "Marksmanship", perception: "Perception", medicine: "Medicine", technology: "Technology", "two-handed": "Two-Handed", endurance: "Endurance"},
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "2": {
                     label: "Second Choice",
-                    options: {instinct: "Instinct", agility: "Agility", marksmanship: "Marksmanship", perception: "Perception", medicine: "Medicine", technology: "Technology", "two-handed": "Two-Handed", endurance: "Endurance"}
+                    options: {instinct: "Instinct", agility: "Agility", marksmanship: "Marksmanship", perception: "Perception", medicine: "Medicine", technology: "Technology", "two-handed": "Two-Handed", endurance: "Endurance"},
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "3": {
                     label: "Third Choice",
-                    options: {instinct: "Instinct", agility: "Agility", marksmanship: "Marksmanship", perception: "Perception", medicine: "Medicine", technology: "Technology", "two-handed": "Two-Handed", endurance: "Endurance"}
+                    options: {instinct: "Instinct", agility: "Agility", marksmanship: "Marksmanship", perception: "Perception", medicine: "Medicine", technology: "Technology", "two-handed": "Two-Handed", endurance: "Endurance"},
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 }
             }
         },
@@ -62,6 +68,7 @@ export class Ranger {
             level: 1,
             archetype: "mountaineer",
             key: true,
+            retroactiveUnlock: true,
             name: "Mountaineer",
             description: "The effects of High Winds on you and ranged attacks you attempt are reduced by one level."
         },
@@ -69,6 +76,7 @@ export class Ranger {
             level: 1,
             archetype: "polar",
             key: true,
+            retroactiveUnlock: true,
             name: "Polar Explorer",
             description: "You have Extreme Cold Resistance 1."
         },
@@ -76,6 +84,7 @@ export class Ranger {
             level: 1,
             archetype: "desert",
             key: true,
+            retroactiveUnlock: true,
             name: "Desert Explorer",
             description: "You have Extreme Heat Resistance 1."
         },
@@ -83,6 +92,7 @@ export class Ranger {
             level: 1,
             archetype: "rainforest",
             key: true,
+            retroactiveUnlock: true,
             name: "Rainforest Explorer",
             description: "Your sight isn't affected by rainfall, and you have advantage on saves against diseases."
         },
@@ -90,6 +100,7 @@ export class Ranger {
             level: 1,
             archetype: "hiker",
             key: true,
+            retroactiveUnlock: true,
             name: "Hiker",
             description: "You aren't affected by hazardous terrain."
         },
@@ -97,6 +108,7 @@ export class Ranger {
             level: 1,
             archetype: "diver",
             key: true,
+            retroactiveUnlock: true,
             name: "Diver",
             description: "The difficulty of your Hold Breath action starts at 5 instead of 10."
         },
@@ -104,6 +116,7 @@ export class Ranger {
             level: 1,
             archetype: "spelunker",
             key: true,
+            retroactiveUnlock: true,
             name: "Spelunker",
             description: "You have Dark Vision 1."
         },
@@ -111,6 +124,7 @@ export class Ranger {
             level: 1,
             archetype: "urbex",
             key: true,
+            retroactiveUnlock: true,
             name: "Urban Explorer",
             description: "You can Climb at your full speed."
         },
@@ -250,7 +264,7 @@ export class Ranger {
                     ability: null,
                     skill: null,
                     specialties: [],
-                    description: "You spend up to five frames Taking Aim at a target before a ranged attack. Each frame adds +2 to your attack roll and increases the attack damage by your Deadeye Damage.",
+                    description: "You spend up to five frames Taking Aim at a target before a ranged attack. Each frame adds +1 to your attack roll and increases the attack damage by your Deadeye Damage.",
                     difficulty: null,
                     actionType: "?",
                     rolls: [
@@ -272,7 +286,8 @@ export class Ranger {
             selections: {
                 "4": {
                     label: "Specialty #4",
-                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"}
+                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"},
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 }
             }
         },
@@ -297,7 +312,8 @@ export class Ranger {
                         "passivePerception": "+1 Passive Perception",
                         "carryWeight": "+1 Carry Weight",
                         "increase": "Increase Natural Skill, Knowledge, or Specialty"
-                    }
+                    },
+                    onChange: (actor, from, to) => Ranger.bonus(actor, from, to)
                 }
             }
         },
@@ -309,7 +325,7 @@ export class Ranger {
             level: 10,
             key: false,
             name: "Team Player",
-            description: `<p>Whenever you succeed on an Athletics or Agility check during  adventuring, your allies have advantage on the same check to attempt the same action for the next five minutes.</p>
+            description: `<p>Whenever you succeed on an Athletics or Agility check during adventuring, your allies have advantage on the same check to attempt the same action for the next five minutes.</p>
             <p>Whenever you assist an ally on an Athletics or Agility check, you can't roll lower than 10.</p>`
         },
         {
@@ -347,6 +363,7 @@ export class Ranger {
             archetype: "mountaineer",
             name: "Expert Climber",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>You climb at your full speed instead of half speed.</p><p>Gain 1 level in the Climbing (Athletics) specialty.</p>`
         },
         {
@@ -354,6 +371,7 @@ export class Ranger {
             archetype: "polar",
             name: "Cold Never Bothered Me",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>You have Resistance 1 to Freezing damage, and advantage on saves against Cryomancy spells.</p>`
         },
         {
@@ -361,6 +379,7 @@ export class Ranger {
             archetype: "desert",
             name: "Brave the Elements",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>Effects of Exhaustion on you are reduced by 1 level.</p>`
         },
         {
@@ -368,6 +387,7 @@ export class Ranger {
             archetype: "rainforest",
             name: "Wild Traveler",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>You aren't slowed down by slippery or hazardous terrain.</p>`
         },
         {
@@ -375,6 +395,7 @@ export class Ranger {
             archetype: "hiker",
             name: "Poison Resistance",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>You have Poison Resistance 1.</p>`
         },
         {
@@ -382,6 +403,7 @@ export class Ranger {
             archetype: "diver",
             name: "Swim Speed",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>You swim at your full speed instead of half speed.</p><p>Gain 1 level in the Swimming (Athletics) specialty.</p>`
         },
         {
@@ -389,6 +411,7 @@ export class Ranger {
             archetype: "spelunker",
             name: "Tight Fit",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>You can trivially enter any space large enough to fit a creature 2 sizes smaller than you.</p>`
         },
         {
@@ -396,6 +419,7 @@ export class Ranger {
             archetype: "urban",
             name: "Stealthy Exploration",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>Gain 1 level in the Climbing (Athletics), Stealth Actions (Stealth), and Lockpicking (Sleight of Hand) specialties.</p>`
         },
         {
@@ -415,7 +439,8 @@ export class Ranger {
             selections: {
                 "5": {
                     label: "Specialty #5",
-                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"}
+                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"},
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 }
             }
         },
@@ -424,7 +449,10 @@ export class Ranger {
             name: "Primal Magic",
             key: false,
             description: `<p>Whenever you attempt a check using any natural skill, knowledge, or specialty, you may spend up to 10 energy on your Primal Magic sense.</p>
-            <p>Every 2 energy spent adds a +1 magic bonus to the outcome.</p>`
+            <p>Every 2 energy spent adds a +1 magic bonus to the outcome.</p>`,
+            onUnlock: (actor) => {
+                actor.addMagicById("CASPERSP000000334");
+            }
         },
         {
             level: 15,
@@ -479,7 +507,8 @@ export class Ranger {
                         "passivePerception": "+1 Passive Perception",
                         "carryWeight": "+1 Carry Weight",
                         "increase": "Increase Natural Skill, Knowledge, or Specialty"
-                    }
+                    },
+                    onChange: (actor, from, to) => Ranger.bonus(actor, from, to)
                 }
             }
         },
@@ -492,7 +521,8 @@ export class Ranger {
             selections: {
                 "6": {
                     label: "Specialty #6",
-                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"}
+                    options: {navigation: "Navigation (Instinct)", tracking: "Tracking (Instinct)", "animal-handling": "Animal Handling (Instinct)", time: "Time (Instinct)", weather: "Weather (Instinct)", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)", rifle: "Rifles (Marksmanship)", crafting: "Crafting (Marksmanship)", cooking: "Cooking (Technology)", alchemy: "Alchemy (Technology)", climbing: "Climbing (Athletics)", swimming: "Swimming (Athletics)"},
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 }
             }
         },
@@ -517,7 +547,8 @@ export class Ranger {
                         "passivePerception": "+1 Passive Perception",
                         "carryWeight": "+1 Carry Weight",
                         "increase": "Increase Natural Skill, Knowledge, or Specialty"
-                    }
+                    },
+                    onChange: (actor, from, to) => Ranger.bonus(actor, from, to)
                 }
             }
         },
@@ -529,7 +560,18 @@ export class Ranger {
             level: 18,
             name: "Combat Expert",
             key: false,
-            description: "Your Turn Length increases by 1 frame."
+            description: "Your Turn Length increases by 1 frame.",
+            onUnlock: (actor) => {
+                actor.update({
+                    system: {
+                        turnLength: {
+                            actions: {
+                                bonus: actor.system.turnLength.actions.bonus + 1
+                            }
+                        }
+                    }
+                });
+            }
         },
         {
             level: 19,
@@ -573,6 +615,11 @@ export class Ranger {
 
     static archetypeSelectionLevels = {
         1: 1
+    }
+
+    static async bonus(actor, from, to){
+        //TODO Ranger bonus has an optional/variable specialty improvement - how do we handle that?
+        ui.notifications.error(`This feature is under construction! No changes were made to ${actor.name}.`);
     }
 
     static async markCurrentTargetAsPrey(ranger){
