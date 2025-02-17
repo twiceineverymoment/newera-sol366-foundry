@@ -246,7 +246,7 @@ Hooks.once("ready", async function() {
 function setupGameSettings(){
   game.settings.register("newera-sol366", "autoLevelUp", {
     name: "Auto Level Up (BETA)",
-    hint: "Click the Level Up button next to your class to automatically apply newly-unlocked class features to your character sheet. Changing the dropdown menus on the Class tab of your character sheet will apply changes automatically.",
+    hint: "Automatically update key values on your character sheet when you level up and when selecting options on class features. This functionality is EXPERIMENTAL - not all features are supported yet, and some may not update correctly. Use at your own risk.",
     scope: "client",
     config: true,
     requiresReload: false,

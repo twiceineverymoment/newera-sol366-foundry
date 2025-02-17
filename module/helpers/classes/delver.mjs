@@ -6,7 +6,11 @@ export class Delver {
             level: 1,
             name: "Delver Specialties",
             key: false,
-            description: "You gain 1 level in the Sight (Perception) and Climbing (Athletics) specialties."
+            description: "You gain 1 level in the Sight (Perception) and Climbing (Athletics) specialties.",
+            onUnlock: (actor) => {
+                actor.setSpecialtyFeature(null, "Sight", "perception");
+                actor.setSpecialtyFeature(null, "Climbing", "athletics");
+            }
         },
         {
             level: 1,
@@ -21,7 +25,7 @@ export class Delver {
                     options: {
                         agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", "elemental-magic": "Elemental Magic"
                     },
-                    onChange: (actor, from, to) => actor.updateNaturalSkill(from, to)
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "2": {
                     label: "Second Choice",
@@ -29,7 +33,7 @@ export class Delver {
                     options: {
                         agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", "elemental-magic": "Elemental Magic"
                     },
-                    onChange: (actor, from, to) => actor.updateNaturalSkill(from, to)
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 }
             }
         },

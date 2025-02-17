@@ -655,13 +655,27 @@ export class NewEraActor extends Actor {
     }
   }
 
-  addResource() {
-    const system = this.system;
-    system.additionalResources[Object.keys(system.additionalResources).length] = {
+  async addResource(resource = null) {
+    const update = structuredClone(this.system);
+    update.additionalResources[Object.keys(update.additionalResources).length] = resource || {
       name: "New Resource",
       value: 0,
       max: 0
     };
+    await this.update({
+      system: update
+    });
+  }
+
+  async updateResource(name, update) {
+    const index = Object.keys(this.system.additionalResources).find(r => this.system.additionalResources[r].name.toLowerCase() == name.toLowerCase());
+    if (index !== undefined){
+      await this.update({
+        system: {
+          additionalResources: update
+        }
+      });
+    }
   }
 
   async deleteResource(index){
@@ -2031,6 +2045,8 @@ export class NewEraActor extends Actor {
     }
   }
 
+  /* AUTO LEVEL UP FUNCTIONS */
+
   async levelUp(clazz) {
     const fromLevel = clazz.system.level;
     const toLevel = fromLevel + 1;
@@ -2058,6 +2074,9 @@ export class NewEraActor extends Actor {
     }
   }
 
+  /**
+   * Improve natural skills by 1 level each.
+   */
   async improveNaturalSkills(){
     const update = structuredClone(this.system);
     for (const [k, obj] of Object.entries(update.skills)){
@@ -2081,7 +2100,12 @@ export class NewEraActor extends Actor {
     ui.notifications.info("Your Natural Skills increased!");
   }
 
-  updateNaturalSkill(from, to){
+  /**
+   * Set a skill as natural based on selections in a class Natural Skills feature.
+   * @param {*} from The old skill to remove.
+   * @param {*} to The new skill to set.
+   */
+  async setNaturalSkill(from, to){
     if (this.type != "Player Character") return;
     const update = structuredClone(this.system);
     if (from){
@@ -2111,40 +2135,58 @@ export class NewEraActor extends Actor {
         update.magic[to].natural = true;
       } else {
         const knowledge = update.knowledges.find(k => k.subject == from);
-        
+        if (knowledge){
+          if (knowledge.natural) {
+            ui.notifications.warn(`You're already a natural in that skill!`);
+          }
+          knowledge.natural = true;
+        } else {
+          ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+        }
       }
     }
+    await this.update({
+      system: update
+    });
   }
 
   /**
-   * Gain a level in the specified specialty.
+   * Set a level in the specified specialty.
    * If the actor already has a specialty in that subject, increase its level by 1 unless it's already 3.
    * Otherwise, add a new specialty at level 1.
-   * @param {*} subject 
-   * @param {*} parentSkill 
+   * @param {*} fromSubject An optional old specialty to remove. This specialty will be lowered by 1 level, or deleted if it's already level 1.
+   * @param {*} subject The new specialty to set.
+   * @param {*} parentSkill The parent skill of the new specialty, if one is created.
    */
-  async gainSpecialtyLevel(subject, parentSkill = null) {
+  async setSpecialtyFeature(fromSubject, subject, parentSkill = "") {
     let existing = false;
     const update = structuredClone(this.system);
-    Object.entries(this.system.specialties).forEach((i, spec) => {
-      if (spec.subject.toLowerCase() == subject.toLowerCase()) {
-        existing = true;
-        if (spec.level == 3) {
-          ui.notifications.warn(`Your ${subject} specialty is already level 3. Specialties can't go higher than 3 levels.`);
-          return;
+    if (fromSubject){
+      const fromIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject.toLowerCase() == fromSubject.toLowerCase());
+      if (fromIndex !== undefined){
+        if (this.system.specialties[fromIndex].level > 1){
+          update.specialties[fromIndex].level -= 1;
+        } else {
+          await this.deleteSpecialty(fromIndex);
         }
-        update.specialties[i].level += 1;
-        ui.notifications.info(`Your ${subject} specialty increased to ${update.specialties[i].level}!`);
       }
-    });
-    if (!existing) {
-      update.specialties[Object.keys(update.specialties).length] = {
-        subject: subject,
-        level: 1,
-        bonus: 0,
-        defaultParent: parentSkill
-      };
-      ui.notifications.info(`You gained a specialty in ${subject}!`);
+    }
+    if (subject){
+      const toIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject.toLowerCase() == subject.toLowerCase());
+      if (toIndex !== undefined){
+        if (this.system.specialties[toIndex].level < 3){
+          update.specialties[toIndex].level += 1;
+        } else {
+          ui.notifications.warn(`Your ${subject} specialty is already at max level! Specialties can't exceed level 3.`);
+        }
+      } else {
+        update.specialties[Object.keys(update.specialties).length] = {
+          subject: subject,
+          level: 1,
+          bonus: 0,
+          defaultParent: parentSkill
+        };
+      }
     }
     await this.update({
       system: update
