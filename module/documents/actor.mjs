@@ -532,28 +532,32 @@ export class NewEraActor extends Actor {
     }
   }
 
-  async addKnowledge() {
+  async addKnowledge(subject = null, count = 1) {
     const update = structuredClone(this.system);
-    update.knowledges[Object.keys(this.system.knowledges).length] = {
-      subject: "New Knowledge",
-      level: 0,
-      bonus: 0,
-      natural: false,
-      grandmaster: false
-    };
+    for (let i = 0; i < count; i++){
+      update.knowledges[Object.keys(this.system.knowledges).length] = {
+        subject: subject || "New Knowledge",
+        level: 0,
+        bonus: 0,
+        natural: false,
+        grandmaster: false
+      };
+    }
     await this.update({
       system: update
     });
   }
 
-  async addSpecialty() {
+  async addSpecialty(subject = null, count = 1) {
     const update = structuredClone(this.system);
-    update.specialties[Object.keys(this.system.specialties).length] = {
-      subject: "New Specialty",
-      level: 0,
-      bonus: 0,
-      defaultParent: "other"
-    };
+    for (let i = 0; i < count; i++){
+      update.specialties[Object.keys(this.system.specialties).length] = {
+        subject: subject || "New Specialty",
+        level: 0,
+        bonus: 0,
+        defaultParent: NEWERA.specialtyDefaultParents[subject] || "other"
+      };
+    }
     await this.update({
       system: update
     });
