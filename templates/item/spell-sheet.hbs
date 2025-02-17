@@ -34,8 +34,7 @@
           <option value="8">Innate</option>
           <option value="0">Crafted</option>
         </select>
-        {{#if system.standard}}
-        {{else}}
+        {{#unless system.standard}}
         <select name="system.refinementLevel" class="sheet-input" id="refinement-{{item.id}}" data-dtype="Number">
           <option value="0">Experimental (-5)</option>
           <option value="1">Alpha (-3)</option>
@@ -43,7 +42,7 @@
           <option value="3">Revised (0)</option>
           <option value="4">Perfected</option>
         </select>
-        {{/if}}
+        {{/unless}}
       </div>
       {{#unless system.standard}}
       <div class="resource">
@@ -64,6 +63,9 @@
         <a class="item newera-section-header" data-tab="materials">Materials</a>
       {{/if}}
       <a class="item newera-section-header" data-tab="effects">Effects</a>
+      {{#if gm}}
+        <a class="item newera-section-header" data-tab="secrets"><i class="fa-solid fa-lock"></i> Secrets</a>
+      {{/if}}
     </nav>
   </div>
 
@@ -73,7 +75,9 @@
       <div class="newera-itemsheet-properties">
         <div class="resource newera-itemsheet-property-33">
           <h4>Level</h4>
-          {{#if system.amplified}}
+          {{#if system.secret.3}}
+
+          {{else if system.amplified}}
             <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.level}}" disabled />
           {{else}}
             <input type="text" class="sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled system.standard}}/>
@@ -204,6 +208,12 @@
     <div class="tab" data-group="primary" data-tab="effects">
       {{> systems/newera-sol366/templates/item/parts/item-effects.hbs}}
     </div>
+
+    {{#if gm}}
+    <div class="tab" data-group="primary" data-tab="secrets">
+      {{> systems/newera-sol366/templates/item/parts/secret.hbs}}
+    </div>
+    {{/if}}
 
   </section>
 </form>

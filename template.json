@@ -543,6 +543,11 @@
 					"basis": ""
 				},
 				"materialCosts": {}
+			},
+			"secret": {
+				"secretLevel": 0,
+				"secretName": "",
+				"hideEnchantments": false
 			}
 		},
 		"Item": {
@@ -591,7 +596,7 @@
 			"material": ""
 		},
 		"Spell": {
-			"templates": ["base", "magic"],
+			"templates": ["base", "magic", "secret"],
 			"castType": "S",
 			"castTime": "",
 			"damage": {
@@ -608,7 +613,7 @@
 			"materialCosts": {}
 		},
 		"Enchantment": {
-			"templates": ["base", "magic"],
+			"templates": ["base", "magic", "secret"],
 			"enchantedItemDescriptor": "",
 			"effectColor": "",
 			"validTargets": {

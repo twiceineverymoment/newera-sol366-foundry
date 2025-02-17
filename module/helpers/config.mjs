@@ -93,6 +93,10 @@ NEWERA.pronouns = {
   }
 }
 
+NEWERA.baseEnergyMaximums = [
+    0, 20, 30, 50, 70, 100, 130, 170, 220, 280, 350
+]
+
 NEWERA.schoolOfMagicNames = {
   "PY": "pyromancy",
   "HM": "cryomancy",

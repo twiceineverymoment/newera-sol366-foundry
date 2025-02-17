@@ -1617,21 +1617,6 @@ export class NewEraActor extends Actor {
     }
   }
 
-  updateNaturalSkill(from, to){
-    if (this.type != "Player Character") return;
-    const update = structuredClone(this.system);
-    if (from){
-      if (update.skills[from]){
-        update.skills[from].natural = false;
-      } else if (update.magic[from]){
-        update.magic[from].natural = false;
-      } else {
-        const knowledge = update.knowledges.find(k => k.subject == from);
-        
-      }
-    }
-  }
-
   /**
    * Returns an object with information about all the different energy pool options (i.e. Focus Energy, Dark Energy) available to this actor when casting spells.
    */
@@ -2012,5 +1997,139 @@ export class NewEraActor extends Actor {
         }
       });
     }
+  }
+
+  async levelUp(clazz) {
+    const fromLevel = clazz.system.level;
+    const toLevel = fromLevel + 1;
+    await clazz.update({
+      system: {
+        level: toLevel
+      }
+    });
+    const featuresToUnlock = ClassInfo.features[clazz.system.selectedClass.toLowerCase()].filter(feature => feature.level > fromLevel && feature.level <= toLevel);
+    for (const feature of featuresToUnlock){
+      if (typeof feature.onUnlock == 'function'){
+        await feature.onUnlock(actor);
+      }
+      if (feature.tableValues) {
+        feature.tableValues.forEach(async tv => {
+          if (typeof tv.onLevelUp == 'function'){
+            await tv.onLevelUp(actor, toLevel);
+          }
+        });
+      }
+    }
+  }
+
+  async improveNaturalSkills(){
+    const update = structuredClone(this.system);
+    for (const [k, obj] of Object.entries(update.skills)){
+      if (obj.natural && obj.level < 10) {
+        update.skills[k].level += 1;
+      }
+    }
+    for (const [k, obj] of Object.entries(update.magic)){
+      if (obj.natural && obj.level < 10) {
+        update.magic[k].level += 1;
+      }
+    }
+    for (const [k, obj] of Object.entries(update.knowledges)){
+      if (obj.natural && obj.level < 10) {
+        update.knowledges[k].level += 1;
+      }
+    }
+    await this.update({
+      system: update
+    });
+    ui.notifications.info("Your Natural Skills increased!");
+  }
+
+  updateNaturalSkill(from, to){
+    if (this.type != "Player Character") return;
+    const update = structuredClone(this.system);
+    if (from){
+      if (update.skills[from]){
+        update.skills[from].natural = false;
+      } else if (update.magic[from]){
+        update.magic[from].natural = false;
+      } else {
+        const knowledge = update.knowledges.find(k => k.subject == from);
+        if (knowledge) {
+          knowledge.natural = false;
+        } else {
+          ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+        }
+      }
+    }
+    if (to) {
+      if (update.skills[to]){
+        if (update.skills[to].natural) {
+          ui.notifications.warn(`You're already a natural in that skill!`);
+        }
+        update.skills[to].natural = true;
+      } else if (update.magic[to]){
+        if (update.magic[to].natural) {
+          ui.notifications.warn(`You're already a natural in that skill!`);
+        }
+        update.magic[to].natural = true;
+      } else {
+        const knowledge = update.knowledges.find(k => k.subject == from);
+        
+      }
+    }
+  }
+
+  /**
+   * Gain a level in the specified specialty.
+   * If the actor already has a specialty in that subject, increase its level by 1 unless it's already 3.
+   * Otherwise, add a new specialty at level 1.
+   * @param {*} subject 
+   * @param {*} parentSkill 
+   */
+  async gainSpecialtyLevel(subject, parentSkill = null) {
+    let existing = false;
+    const update = structuredClone(this.system);
+    Object.entries(this.system.specialties).forEach((i, spec) => {
+      if (spec.subject.toLowerCase() == subject.toLowerCase()) {
+        existing = true;
+        if (spec.level == 3) {
+          ui.notifications.warn(`Your ${subject} specialty is already level 3. Specialties can't go higher than 3 levels.`);
+          return;
+        }
+        update.specialties[i].level += 1;
+        ui.notifications.info(`Your ${subject} specialty increased to ${update.specialties[i].level}!`);
+      }
+    });
+    if (!existing) {
+      update.specialties[Object.keys(update.specialties).length] = {
+        subject: subject,
+        level: 1,
+        bonus: 0,
+        defaultParent: parentSkill
+      };
+      ui.notifications.info(`You gained a specialty in ${subject}!`);
+    }
+    await this.update({
+      system: update
+    });
+  }
+
+  async increaseCasterLevel() {
+    if (this.system.casterLevel == 10) {
+      return;
+    }
+    const newCasterLvl = this.system.casterLevel + 1;
+    const energyChange = NEWERA.baseEnergyMaximums[newCasterLvl] - NEWERA.baseEnergyMaximums[this.system.casterLevel];
+    await this.update({
+      system: {
+        casterLevel: newCasterLvl,
+        energy: {
+          max: this.system.energy.max + energyChange,
+          value: this.system.energy.value + energyChange
+        }
+      }
+    });
+    ui.notifications.info(`Your caster level increased to ${newCasterLvl}!`);
   }
 }

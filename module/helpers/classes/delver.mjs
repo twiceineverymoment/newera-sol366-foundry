@@ -1420,4 +1420,32 @@ export class Delver {
         });
         actor.actionMessage(`${NEWERA.images}/embraced-energy.png`, null, `<b>Wild Fury: </b>{0}`, NEWERA.wildFuryTable[table][r.total - 1]);
     }
+
+    static async bonus(actor, from, to){
+        const update = structuredClone(actor.system);
+        if (from == "speed"){
+            update.system.speed.bonus -= 1;
+        }
+        if (to == "speed"){
+            update.system.speed.bonus += 1;
+            ui.notifications.info(`You increased your Speed!`);
+        }
+        if (from == "passivePerception"){
+            update.system.passivePerception.bonus -= 1;
+        }
+        if (to == "passivePerception"){
+            update.system.passivePerception.bonus += 1;
+            ui.notifications.info(`You increased your Passive Perception!`);
+        }
+        if (from == "carryWeight"){
+            update.system.carryWeight.bonus -= 1;
+        }
+        if (to == "carryWeight"){
+            update.system.carryWeight.bonus += 1;
+            ui.notifications.info(`You increased your Carry Weight!`);
+        }
+        await actor.update({
+            system: update
+        });
+    }
 }

@@ -405,11 +405,25 @@ export class NewEraActorSheet extends ActorSheet {
       actions: actions
     }
 
+    if (game.settings.get("newera-sol366", "autoLevelUp")) {
+      _checkEnableLevelUp(this.actor.system.level, context.classes);
+    }
+
     //console.log(context.items);
     //console.log(equipment);
     //console.log(context.inventory);
 
     
+  }
+
+  _checkEnableLevelUp(overallLevel, classes){
+    let totalLevel = 0;
+    for (const clazz of classes) {
+      totalLevel += clazz.level;
+    }
+    if (totalLevel < overallLevel) {
+      context.enableLevelUp = true;
+    }
   }
 
   _prepareCreatureItems(context){
@@ -971,9 +985,34 @@ export class NewEraActorSheet extends ActorSheet {
           system: {
             level: item.system.level + 1
           }
-        })
+        });
+        if (game.settings.get("newera-sol366", "autoLevelUp")){
+          const className = item.system.selectedClass.toLowerCase();
+          this.actor.levelUp(className, item.system.level, item.system.level + 1);
+        }
       }
     });
+    //Auto level up functions
+    if (game.settings.get("newera-sol366", "autoLevelUp")) {
+      html.find(".feature-select").change(async ev => {
+        const element = $(ev.currentTarget);
+        const newValue = element.val();
+        const oldValue = element.data("oldValue");
+        const className = element.data("class");
+        const featureSelectionId = element.data("selectionId");
+        const selectionIndex = element.data("selectionIndex");
+        try {
+          const fromFeature = ClassInfo.features[className].find(feature => feature.id == featureSelectionId);
+          const selection = fromFeature.selections[selectionIndex];
+          if (typeof selection.onChange == 'function') {
+            await selection.onChange(this.actor, oldValue, newValue);
+          }
+        } catch (err) {
+          ui.notifications.error("Error: Couldn't update data for this selection. See the log for details.");
+          console.error(`Failed to locate selection change function! class=${className} id=${featureSelectionId} index=${selectionIndex}`);
+        }
+      });
+    }
 
     //Store All buttons
     html.find("#putAwayAll").click(() => this.actor.putAwayAll(false));

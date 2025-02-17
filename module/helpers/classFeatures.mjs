@@ -100,6 +100,7 @@ ClassInfo.features = {
             name: "Natural Skill Improvement",
             key: false,
             description: "Your Natural Skills each increase in level by 1.",
+            onUnlock: actor => actor.improveNaturalSkills()
         },
         learningExperience: {
             name: "Learning Experience",

@@ -1035,6 +1035,39 @@ _preparePotionData(system){
     return actions;
   }
 
+  _prepareSecretData(system) {
+    if (this.typeIs(NewEraItem.Types.MAGIC)) {
+      switch (system.secretLevel) {
+        case 1:
+        case 2:
+          system.secretName = `Unknown Level ${system.level} ${system.specialty} ${this.type}`;
+          break;
+        case 3:
+          system.secretName = `Unknown ${system.form} ${this.type}`;
+          this.img = `$q{NEWERA.images}/${system.form.toLowerCase()}.png`;
+          break;
+        case 4:
+          system.secretName = `Unknown ${this.type}`;
+          this.img = `${NEWERA.images}/unknown.png`;
+          break;
+        case 0:
+        default: 
+          system.secretName = this.name;
+      }
+    }
+    const gm = (game.user.role >= 2);
+    /*This object is used to control rendering of secret data points in sheets.
+    {{#if system.secret.2}} means "Hide this piece of info if the secret level is 2 or higher"
+    These are always false if the user is a GM or Assistant GM
+    */
+    system.secret = {
+      "1": (!gm && system.secretLevel >= 1),
+      "2": (!gm && system.secretLevel >= 2),
+      "3": (!gm && system.secretLevel >= 3),
+      "4": (!gm && system.secretLevel == 4)
+    }
+  }
+
   static damageExpression(numDice, dieSize, modifier){
     let damageStr = `${numDice}d${dieSize}`;
     return displayModifier(damageStr, modifier);
