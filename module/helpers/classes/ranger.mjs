@@ -571,6 +571,10 @@ export class Ranger {
         }
     ]
 
+    static archetypeSelectionLevels = {
+        1: 1
+    }
+
     static async markCurrentTargetAsPrey(ranger){
         //Get the targeted token
 

@@ -572,6 +572,10 @@ export class Mercenary {
         }
     ]
 
+    static archetypeSelectionLevels = {
+        1: 4
+    }
+
     static async rage(actor){
         const rageResource = Object.entries(actor.system.additionalResources).find(r => r[1].name == "Rage");
         const isSavageFighter = actor.getClassLevel("mercenary") >= 16;

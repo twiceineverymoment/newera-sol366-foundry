@@ -320,4 +320,8 @@ export class Investigator {
             description: "You've mastered the art of casting spells subtly and silently. You can cast Stealthy spells while sneaking without suffering the circumstance penalty for stealth actions."
         }
     ]
+
+    static archetypeSelectionLevels = {
+        1: 8
+    }
 }

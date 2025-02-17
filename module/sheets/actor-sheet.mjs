@@ -138,22 +138,24 @@ export class NewEraActorSheet extends ActorSheet {
     const features = [];
     const keys = [];
     const system = this.actor.system;
+    const archetypes = ClassInfo.getArchetypeData(this.actor);
     for (const clazz of classes){
       //Get selected archetype id if it exists
       const className = clazz.system.selectedClass.toLowerCase();
-      let archetypes = [];
-      try {
-        archetypes = Object.values(system.classes[className].archetype);
-      } catch (err) {
-        console.log("Caught ReferenceError when looking up archetype. Must not have one!");
-      }
       for (const feature of ClassInfo.features[className]){
-        if (feature.archetype) {
-          if (!archetypes.includes(feature.archetype)){
-            continue;
-          }
-        }
         if (feature.level <= clazz.system.level){
+          if (feature.archetype) {
+            //Determine whether to show the archetype-specific feature
+            let unlockThreshold = archetypes[feature.archetype];
+            let showFeature = (
+              //If unlockThreshold is undefined, the actor doesn't have that archetype
+              //'retroactiveUnlock' means the feature is unlocked if its respective archetype is chosen at a later level than the feature, i.e. if a character picks a second archetype and unlocks features that they would have gotten if they picked it as their first
+              unlockThreshold && (unlockThreshold <= feature.level || feature.retroactiveUnlock)
+            );
+            if (!showFeature){
+              continue;
+            }
+          }
           feature.className = feature.archetype ? NEWERA.classes[clazz.system.selectedClass].archetypes[feature.archetype] : clazz.system.selectedClass;
           feature.classImg = feature.archetype ? `${NEWERA.images}/${className == "researcher" ? "" : className+"_"}${feature.archetype}.png` : clazz.img;
           feature.clazz = clazz.system.selectedClass;
@@ -202,6 +204,16 @@ export class NewEraActorSheet extends ActorSheet {
                 feature.spellStudies[i].remaining = feature.spellStudies[i].choose;
               }
             }
+          }
+          //Load the current value of each selection into the Handlebars context - This is so we know the previous value when a selection is changed
+          if (feature.selections){
+            Object.entries(feature.selections).forEach(([key, selection]) => {
+              const path = `${feature.id}.${key}`;
+              const keys = path.split(".");
+              const currentValue = keys.reduce((acc, key) => acc[key], system.classes);
+              console.log(`[DEBUG] finding current value for ${path} = ${currentValue}`);
+              selection.currentValue = currentValue;
+            });
           }
           if (feature.key){
             keys.push(feature);
@@ -981,14 +993,8 @@ export class NewEraActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const item = this.actor.items.get(li.data("itemId"));
       if (item.typeIs(NewEraItem.Types.CLASS)) {
-        await item.update({
-          system: {
-            level: item.system.level + 1
-          }
-        });
         if (game.settings.get("newera-sol366", "autoLevelUp")){
-          const className = item.system.selectedClass.toLowerCase();
-          this.actor.levelUp(className, item.system.level, item.system.level + 1);
+          this.actor.levelUp(item);
         }
       }
     });

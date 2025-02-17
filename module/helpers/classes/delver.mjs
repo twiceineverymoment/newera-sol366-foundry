@@ -1353,6 +1353,12 @@ export class Delver {
         }
     ]
 
+
+    static archetypeSelectionLevels = {
+        1: 3,
+        2: 20
+    }
+
     static async elementalChanneling(actor, pType){
         if (actor.system.energy.value <= 0){
             ui.notifications.warn(`${actor.name}'s energy is depleted.`);

@@ -30,6 +30,34 @@ ClassInfo.findFeatureSelectionByLabel = function(label) {
     return null;
 }
 
+ClassInfo.getArchetypeData = function(actor) {
+    const output = {};
+    if (!actor.system.classes){
+        return output;
+    }
+    for (const [className, classData] of Object.entries(actor.system.classes)){
+        if (ClassInfo.archetypeSelectionLevels[className]){
+            const selectedArchetypes = classData.archetype;
+            if (selectedArchetypes){
+                for (const [order, selection] of Object.entries(selectedArchetypes)){
+                const levelThreshold = ClassInfo.archetypeSelectionLevels[className][order];
+                    output[selection] = levelThreshold;
+                }
+            }
+        }
+    }
+    return output;
+}
+
+// Describes the levels at which a class selects an archetype. Used to determine which features are unlocked retroactively when a new archetype is selected. Only the classes that have archetypes are included here.
+ClassInfo.archetypeSelectionLevels = {
+    delver: Delver.archetypeSelectionLevels,
+    mercenary: Mercenary.archetypeSelectionLevels,
+    ranger: Ranger.archetypeSelectionLevels,
+    researcher: Researcher.archetypeSelectionLevels,
+    investigator: Investigator.archetypeSelectionLevels
+}
+
 ClassInfo.features = {
     delver: Delver.classFeatures,
     mercenary: Mercenary.classFeatures,
