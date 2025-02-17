@@ -73,7 +73,7 @@
                 {{#each feature.selections as |selection index2|}}
                     <div class="feature-selection">
                         <label>{{selection.label}}</label>
-                        <select name="system.classes.{{../id}}.{{index2}}" class="sheet-input feature-select" data-class="{{../className}}" data-selection-id="{{../id}}" data-selection-number="{{index2}}" data-old-value="{{system.classes.(../id).(index2)}}">
+                        <select name="system.classes.{{../id}}.{{index2}}" class="sheet-input feature-select" data-class="{{../className}}" data-selection-id="{{../id}}" data-selection-number="{{index2}}" data-old-value="{{selection.currentValue}}">
                             <option value=""><i>Choose...</i></option>
                             {{#each selection.options as |label index3|}}
                                 <option value="{{index3}}">{{label}}</option>
@@ -118,7 +118,7 @@
                 {{#each feature.selections as |selection index2|}}
                     <div class="feature-selection">
                         <label>{{selection.label}}</label>
-                        <select name="system.classes.{{../id}}.{{index2}}" class="sheet-input feature-select" data-class="{{../className}}" data-selection-id="{{../id}}" data-selection-number="{{index2}}" data-old-value="{{system.classes.(../id).(index2)}}">
+                        <select name="system.classes.{{../id}}.{{index2}}" class="sheet-input feature-select" data-class="{{../className}}" data-selection-id="{{../id}}" data-selection-number="{{index2}}" data-old-value="{{selection.currentValue}}">
                             <option value=""><i>Choose...</i></option>
                             {{#each selection.options as |label index3|}}
                                 <option value="{{index3}}">{{{label}}}</option>
