@@ -210,9 +210,16 @@ export class NewEraActorSheet extends ActorSheet {
             Object.entries(feature.selections).forEach(([key, selection]) => {
               const path = `${feature.id}.${key}`;
               const keys = path.split(".");
-              const currentValue = keys.reduce((acc, key) => acc[key], system.classes);
-              //console.log(`[DEBUG] finding current value for ${path} = ${currentValue}`);
-              selection.currentValue = currentValue;
+              //console.log(`[DEBUG] Finding current value for ${path}`);
+              try {
+                const currentValue = keys.reduce((acc, key) => acc[key], system.classes);
+                selection.currentValue = currentValue;
+                //console.log(`[DEBUG] ${path} = ${currentValue}`);
+              } catch (err) {
+                //During level-up, the new selection values will not exist yet, which will cause a ReferenceError. This is expected behavior - set the new feature's current value to an empty string.
+                //console.log(`[DEBUG] Finding current value for ${path} returned an error - setting to empty`);
+                selection.currentValue = "";
+              }
             });
           }
           if (feature.key){
@@ -979,9 +986,7 @@ export class NewEraActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const item = this.actor.items.get(li.data("itemId"));
       if (item.typeIs(NewEraItem.Types.CLASS)) {
-        if (game.settings.get("newera-sol366", "autoLevelUp")){
-          this.actor.levelUp(item);
-        }
+        this.actor.levelUp(item);
       }
     });
     //Auto level up functions
