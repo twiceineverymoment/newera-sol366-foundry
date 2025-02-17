@@ -229,7 +229,7 @@ export class Actions {
             </div>
           </div>
           <div id="energySelect">
-            Energy Source: <select id="energyPools">${this._renderPoolOptions(actor)}</select>
+            Energy Source: <select id="energyPools">${Actions._renderPoolOptions(actor)}</select>
           </div>
           <p>
             <button class="spell-dialog-button" id="cast"><i class="fa-solid ${castButton.icon}"></i> ${castButton.label}</button>

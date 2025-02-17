@@ -882,13 +882,13 @@ export class Artificer {
         return total;
     }
 
-    static async castAndStoreSpell(actor, spell, ampFactor){
+    static async castAndStoreSpell(actor, spell, ampFactor, energyPool = undefined){
         const availableEnergy = actor.system.focusEnergy.max - Artificer.getTotalStoredEnergy(actor);
         if (spell.system.energyCost * ampFactor > availableEnergy){
             ui.notifications.error(`${spell.name} wasn't stored because your focus doesn't have enough capacity.`);
             return;
         }
-        if (await actor.cast(spell, ampFactor)){
+        if (await actor.cast(spell, ampFactor, false, energyPool)){
             await actor.update({
                 system: {
                     focus: actor.system.focus.concat({
@@ -944,6 +944,9 @@ export class Artificer {
                 <div id="amplify-up">
                   <i class="fa-solid fa-chevron-right"></i>
                 </div>
+                <div id="energySelect">
+                    Energy Source: <select id="energyPools">${Actions._renderPoolOptions(actor)}</select>
+                </div>
               </div>
             </form>
             `,
@@ -966,6 +969,10 @@ export class Artificer {
                     Actions._renderSpellDetails(html, spell, actor, amp - 1, false);
                     Artificer._renderFocusStorageError(html, spell, actor, amp - 1);
                 });
+                html.find("#energyPools").change(async () => {
+                    const amp = parseInt(html.find("#ampFactor").html());
+                    Actions._renderSpellDetails(html, spell, actor, amp, false);
+                });
             },
             buttons: {
                 cast: {
@@ -973,7 +980,8 @@ export class Artificer {
                     label: "Cast and Store",
                     callback: html => {
                         const ampFactor = html.find("#ampFactor").html();
-                        Artificer.castAndStoreSpell(actor, spell, ampFactor);
+                        const pool = Actions._getPool(actor, html, false);
+                        Artificer.castAndStoreSpell(actor, spell, ampFactor, pool);
                     }
                 },
                 cancel: {
