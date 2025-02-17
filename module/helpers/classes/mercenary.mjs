@@ -15,11 +15,13 @@ export class Mercenary {
             selections: {
                 "1": {
                     label: "Specialty #1",
-                    options: {blocking: "Blocking (Defense)", protection: "Protection (Defense)", swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", bluntWeapons: "Blunt Weapons"}
+                    options: {blocking: "Blocking (Defense)", protection: "Protection (Defense)", swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", bluntWeapons: "Blunt Weapons"},
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 },
                 "2": {
                     label: "Specialty #2",
-                    options: {blocking: "Blocking (Defense)", protection: "Protection (Defense)", swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", bluntWeapons: "Blunt Weapons"}
+                    options: {blocking: "Blocking (Defense)", protection: "Protection (Defense)", swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", bluntWeapons: "Blunt Weapons"},
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 }
             }
         },
@@ -32,15 +34,18 @@ export class Mercenary {
             selections: {
                 "1": {
                     label: "First Choice",
-                    options: {defense: "Defense", "two-handed": "Two-Handed", athletics: "Athletics", "one-handed": "One-Handed", intimidation: "Intimidation", instinct: "Instinct", endurance: "Endurance", determination: "Determination"}
+                    options: {defense: "Defense", "two-handed": "Two-Handed", athletics: "Athletics", "one-handed": "One-Handed", intimidation: "Intimidation", instinct: "Instinct", endurance: "Endurance", determination: "Determination"},
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "2": {
                     label: "Second Choice",
-                    options: {defense: "Defense", "two-handed": "Two-Handed", athletics: "Athletics", "one-handed": "One-Handed", intimidation: "Intimidation", instinct: "Instinct", endurance: "Endurance", determination: "Determination"}
+                    options: {defense: "Defense", "two-handed": "Two-Handed", athletics: "Athletics", "one-handed": "One-Handed", intimidation: "Intimidation", instinct: "Instinct", endurance: "Endurance", determination: "Determination"},
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "3": {
                     label: "Third Choice",
-                    options: {defense: "Defense", "two-handed": "Two-Handed", athletics: "Athletics", "one-handed": "One-Handed", intimidation: "Intimidation", instinct: "Instinct", endurance: "Endurance", determination: "Determination"}
+                    options: {defense: "Defense", "two-handed": "Two-Handed", athletics: "Athletics", "one-handed": "One-Handed", intimidation: "Intimidation", instinct: "Instinct", endurance: "Endurance", determination: "Determination"},
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 }
             }
         },
@@ -82,9 +87,20 @@ export class Mercenary {
                     field: "rage",
                     label: "Rage Uses Per Day",
                     sign: false,
-                    values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
+                    values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5],
+                    onUpdate: (actor, from, to) => actor.updateResource("Rage", {
+                        value: to
+                    })
                 }
-            ]
+            ],
+            onUnlock: (actor) => {
+                actor.addResource({
+                    name: "Rage",
+                    value: 1,
+                    max: 1,
+                    refillOnFullRest: true
+                });
+            }
         },
         {
             level: 2,
@@ -96,9 +112,7 @@ export class Mercenary {
         },
         {
             level: 3,
-            name: "Specialty Improvement",
-            key: false,
-            description: "Choose one of your specialties and increase its level by 1. If you don't have any specialties that can be increased, you may gain a new specialty of your choice at the GM's discretion.",
+            common: "specialtyImprovement"
         },
         {
             level: 4,
@@ -118,6 +132,7 @@ export class Mercenary {
             archetype: "raider",
             name: "Raider Archetype",
             key: true,
+            retroactiveUnlock: true,
             description: "Add your proficiency bonus to one-handed attack checks with swords, and to Block and Protect Ally checks using shields. One-handed sword attacks deal additional damage equal to your Proficiency Damage Bonus.",
             tableValues: [
                 {
@@ -139,6 +154,7 @@ export class Mercenary {
             archetype: "enforcer",
             name: "Enforcer Archetype",
             key: true,
+            retroactiveUnlock: true,
             description: "Add your proficiency bonus to attack rolls with a Baton, Club, Crowbar, Hammer, Sledgehammer, or improvised blunt weapon. These weapons deal additional damage equal to your Proficiency Damage Bonus.",
             tableValues: [
                 {
@@ -160,6 +176,7 @@ export class Mercenary {
             archetype: "woodsman",
             name: "Woodsman Archetype",
             key: true,
+            retroactiveUnlock: true,
             description: "Add your proficiency bonus to one-handed attack checks with Hatchets, Axes, and Battle Axes. These attacks deal additional damage equal to your Proficiency Damage Bonus.",
             tableValues: [
                 {
@@ -181,6 +198,7 @@ export class Mercenary {
             archetype: "warrior",
             name: "Warrior Archetype",
             key: true,
+            retroactiveUnlock: true,
             description: "Add your proficiency bonus to two-handed attack checks with any weapon. Two-handed attacks deal additional damage equal to your Proficiency Damage Bonus.",
             tableValues: [
                 {
@@ -210,7 +228,8 @@ export class Mercenary {
             selections: {
                 "1": {
                     label: "Choose a Bonus",
-                    options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"}
+                    options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"},
+                    onChange: (actor, from, to) => Mercenary.bonus(actor, from, to)
                 }
             }
         },
@@ -270,6 +289,7 @@ export class Mercenary {
             level: 8,
             archetype: "raider",
             key: false,
+            retroactiveUnlock: true,
             name: "Protector",
             description: "Shields you use gain a +3 bonus to their Shield Rating."
         },
@@ -277,6 +297,7 @@ export class Mercenary {
             level: 8,
             archetype: "enforcer",
             key: false,
+            retroactiveUnlock: true,
             name: "Reckless Attack",
             description: "When you make your first attack during your turn, you can choose to attack recklessly. Doing so gives you advantage on all attacks during your turn, but causes your Passive Agility to be reduced to 0 until the start of your next turn. (Any attacks against you automatically hit unless you use a reaction to Dodge or Block.)",
             actions: [
@@ -308,6 +329,7 @@ export class Mercenary {
             level: 8,
             archetype: "woodsman",
             key: false,
+            retroactiveUnlock: true,
             name: "Danger Sense",
             description: `<p>While adventuring, you and all companions travelling with you have advantage on  Reflex saves and  Instinct skill checks. In  combat, you have advantage on initiative rolls.`
         },
@@ -315,6 +337,7 @@ export class Mercenary {
             level: 8,
             archetype: "warrior",
             key: false,
+            retroactiveUnlock: true,
             name: "Armor Proficiency",
             description: "Add your proficiency bonus to the armor rating of equipped armor items you're wearing."
         },
@@ -361,7 +384,19 @@ export class Mercenary {
             level: 12,
             name: "Combat Expert",
             key: false,
-            description: "Your Turn Length increases by 1 frame and 1 reaction frame."
+            description: "Your Turn Length increases by 1 frame and 1 reaction frame.",
+            onUnlock: (actor) => actor.update({
+                system: {
+                    turnLength: {
+                        actions: {
+                            bonus: actor.system.turnLength.actions.bonus + 1
+                        },
+                        reactions: {
+                            bonus: actor.system.turnLength.reactions.bonus + 1
+                        }
+                    }
+                }
+            })
         },
         {
             level: 13,
@@ -380,7 +415,8 @@ export class Mercenary {
             selections: {
                 "2": {
                     label: "Choose a Bonus",
-                    options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"}
+                    options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"},
+                    onChange: (actor, from, to) => Mercenary.bonus(actor, from, to)
                 }
             }
         },
@@ -389,6 +425,7 @@ export class Mercenary {
             archetype: "raider",
             name: "Flanking",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>You and an ally can flank enemies to gain advantage on your attacks.</p>
             <p>An enemy is flanked whenever you and an ally are positioned within reach of it on opposite sides. Attacks against flanked enemies have advantage.</p>`
         },
@@ -397,6 +434,7 @@ export class Mercenary {
             archetype: "enforcer",
             name: "Juggernaut",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>While Raging, you have Resistance 2 against physical damage (Piercing, Bludgeoning, and Slashing.)`
         },
         {
@@ -404,6 +442,7 @@ export class Mercenary {
             archetype: "woodsman",
             name: "Shield-Breaker",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>Your two-handed attacks with axes or battle-axes always cause armor to take a durability check.</p>
             <p>If these attacks hit a shield, excess damage is dealt to the target and the shield always takes a durability check.</p>`
         },
@@ -412,6 +451,7 @@ export class Mercenary {
             archetype: "warrior",
             name: "Focused Attack",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>On a hit, the target makes an Endurance save with difficulty equal to your current Mercenary level. On a failure, all attacks against that target have advantage until your next turn.</p>`
         },
         {
@@ -452,7 +492,7 @@ export class Mercenary {
         {
             level: 16,
             archetype: "raider",
-            retroactive: true,
+            retroactiveUnlock: true,
             name: "Savage Raider",
             key: false,
             modifies: "Rage",
@@ -461,7 +501,7 @@ export class Mercenary {
         {
             level: 16,
             archetype: "enforcer",
-            retroactive: true,
+            retroactiveUnlock: true,
             name: "Savage Enforcer",
             key: false,
             modifies: "Rage",
@@ -470,7 +510,7 @@ export class Mercenary {
         {
             level: 16,
             archetype: "woodsman",
-            retroactive: true,
+            retroactiveUnlock: true,
             name: "Savage Woodsman",
             key: false,
             modifies: "Rage",
@@ -479,7 +519,7 @@ export class Mercenary {
         {
             level: 16,
             archetype: "warrior",
-            retroactive: true,
+            retroactiveUnlock: true,
             name: "Savage Warrior",
             key: false,
             modifies: "Rage",
@@ -568,12 +608,26 @@ export class Mercenary {
                       }
                     ]
                 }
-            ]
+            ],
+            onUnlock: (actor) => actor.update({
+                system: {
+                    turnLength: {
+                        actions: {
+                            bonus: actor.system.turnLength.actions.bonus + 1
+                        }
+                    }
+                }
+            })
         }
     ]
 
     static archetypeSelectionLevels = {
         1: 4
+    }
+
+    static async bonus(actor, from, to){
+        //TODO Mercenary bonus has an optional/variable specialty improvement - how do we handle that?
+        ui.notifications.error(`This feature is under construction! No changes were made to ${actor.name}.`);
     }
 
     static async rage(actor){
