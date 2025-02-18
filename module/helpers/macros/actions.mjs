@@ -32,6 +32,29 @@ export class Actions {
       });
     }
 
+    static showHpIncreaseDialog(actor, clazz, increment){
+      const conMod = actor.system.abilities.constitution.mod;
+      const dieSize = increment.roll.split("d")[1];
+      const roll = Formatting.formatRollExpression(1, dieSize, conMod);
+      new Dialog({
+        title: `Increase Maximum HP (${clazz.system.selectedClass})`,
+        content: "Choose whether to roll for your hit point increase, or take the average.<br/><b>If you earned any ability score increases this level, select those first!</b>",
+        buttons: {
+          roll: {
+            icon: `<i class="fa-solid fa-dice"></i>`,
+            label: `Roll (${roll})`,
+            callback: () => actor.increaseMaxHp(clazz, true)
+          },
+          average: {
+            icon: `<i class="fa-solid fa-arrow-trend-up"></i>`,
+            label: `Average (${Math.max(increment.average + conMod, 1)})`,
+            callback: () => actor.increaseMaxHp(clazz, false)
+          }
+        },
+        default: "average"
+      }).render(true);
+    }
+
     /* Displays the dialog to rest for a number of hours. */
     static restForTheNight(actor){
         new Dialog({

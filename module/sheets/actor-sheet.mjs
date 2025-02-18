@@ -1320,9 +1320,6 @@ export class NewEraActorSheet extends ActorSheet {
     html.find("#sleepButton").click(() => {
       Actions.restForTheNight(this.actor);
     });
-    html.find("#increaseHpButton").click(() => {
-      this.showHpIncreaseDialog();
-    });
 
     //Browser drop listener
     html.on("drop", ev => this._onActorSheetDrop(ev));
@@ -1604,47 +1601,6 @@ export class NewEraActorSheet extends ActorSheet {
   }
 
   //isItemActionAvailable and findItemLocation moved to Actor
-
-  showHpIncreaseDialog(){
-    new Dialog({
-      title: "Increase Maximum HP",
-      content: "This will increase your maximum hit points by your hit point increment.<br/>If you earned any ability score increases this level, apply those first!",
-      buttons: {
-        roll: {
-          icon: `<i class="fa-solid fa-dice"></i>`,
-          label: "Roll",
-          callback: async () => {
-            await this.actor.increaseMaxHp(true);
-            $(this.form).find("#hp-true-max").val(this.actor.system.hitPointTrueMax);
-            $(this.form).find("#resourceValHp").val(this.actor.system.hitPoints.value);
-            $(this.form).find("#resourceMaxHp").val(this.actor.system.hitPoints.max);
-            $(this.form).find("#resourceValLp").val(this.actor.system.lifePoints.value);
-            $(this.form).find("#resourceMaxLp").val(this.actor.system.lifePoints.max);
-            this.submit();
-          }
-        },
-        average: {
-          icon: `<i class="fa-solid fa-arrow-trend-up"></i>`,
-          label: "Average",
-          callback: async () => {
-            await this.actor.increaseMaxHp(false);
-            $(this.form).find("#hp-true-max").val(this.actor.system.hitPointTrueMax);
-            $(this.form).find("#resourceValHp").val(this.actor.system.hitPoints.value);
-            $(this.form).find("#resourceMaxHp").val(this.actor.system.hitPoints.max);
-            $(this.form).find("#resourceValLp").val(this.actor.system.lifePoints.value);
-            $(this.form).find("#resourceMaxLp").val(this.actor.system.lifePoints.max);
-            //console.log($(this.form).find("#hp-true-max"));
-            this.submit();
-          }
-        },
-        cancel: {
-          icon: `<i class="fas fa-x"></i>`,
-          label: "Cancel"
-        }
-      },
-      default: "cancel"
-    }).render(true);
-  }
 
   showSkillImprovementDialog(){
     new Dialog({

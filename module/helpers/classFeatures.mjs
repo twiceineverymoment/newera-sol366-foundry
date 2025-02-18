@@ -10,7 +10,7 @@ import { Researcher } from "./classes/researcher.mjs";
 import { Magus } from "./classes/magus.mjs";
 import { Investigator } from "./classes/investigator.mjs";
 import { Scholar } from "./classes/scholar.mjs";
-
+import { Adventurer } from "./classes/adventurer.mjs";
 export const ClassInfo = {};
 
 ClassInfo.findFeatureSelectionByLabel = function(label) {
@@ -58,6 +58,22 @@ ClassInfo.archetypeSelectionLevels = {
     investigator: Investigator.archetypeSelectionLevels
 }
 
+ClassInfo.hitPointIncrements = {
+    delver: Delver.hitPointIncrement,
+    mercenary: Mercenary.hitPointIncrement,
+    ranger: Ranger.hitPointIncrement,
+    researcher: Researcher.hitPointIncrement,
+    investigator: Investigator.hitPointIncrement,
+    scholar: Scholar.hitPointIncrement,
+    artificer: Artificer.hitPointIncrement,
+    sage: Sage.hitPointIncrement,
+    witch: Witch.hitPointIncrement,
+    adventurer: Adventurer.hitPointIncrement,
+    magus: Magus.hitPointIncrement,
+    chanter: Chanter.hitPointIncrement,
+    guardian: Guardian.hitPointIncrement
+}
+
 ClassInfo.features = {
     delver: Delver.classFeatures,
     mercenary: Mercenary.classFeatures,
@@ -71,29 +87,7 @@ ClassInfo.features = {
     artificer: Artificer.classFeatures,
     sage: Sage.classFeatures,
     witch: Witch.classFeatures,
-    adventurer: [
-        {
-            level: 1,
-            id: "adventurer.brainsVsBrawn1",
-            name: "Brains vs. Brawn",
-            key: false,
-            description: "<p>Choose Brains or Brawn.</p><p><b>Brains:</b> Gain a +1 class bonus to your Passive Perception, gain an additional knowledge of your choice, or increase one of your existing knowledge skills by 1 (but not higher than 5.)</p><p><b>Brawn:</b> Choose a combat-related stat and receive a +1 class bonus to it.</p>",
-            selections: {
-                mode: {
-                    label: "Choose a Bonus",
-                    options: {newKnowledge: "Brains - New Knowledge", lvlKnowledge: "Brains - Increase Existing Knowledge", perception: "Brains - Passive Perception +1", speed: "Brawn - Speed +1", initiative: "Brawn - Initiative +1", armor: "Brawn - Natural Armor +1", agility: "Brawn - Passive Agility +1"}
-                }
-            }
-        },
-        {
-            level: 2,
-            common: "naturalSkillImprovement"
-        },
-        {
-            level: 3,
-            common: "abilityScoreImprovement"
-        }
-    ],
+    adventurer: Adventurer.classFeatures,
     common: {
         abilityScoreImprovement: {
             name: "Ability Score Improvement",

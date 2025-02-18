@@ -31,18 +31,9 @@
 {{/if}}
 
 <div class="newera-itemsheet-properties">
-    <div class="newera-itemsheet-property-50">
-        <h4>HP Increment</h4>
-        <input type="text" id="hp-increment" class="sheet-input" value="1d{{system.hitPointIncrement}}" disabled />
-    </div>
-    <div class="newera-itemsheet-property-50">
-        <h4>Max. HP (Uninjured)</h4>
+    <div class="newera-itemsheet-property-50" data-tooltip="This is your maximum HP when you are not injured." data-tooltip-direction="UP">
+        <h4>Full Maximum HP</h4>
         <input type="text" name="system.hitPointTrueMax" id="hp-true-max" class="sheet-input" style="width: 75%" value="{{system.hitPointTrueMax}}" data-dtype="Number" />
-        {{#if system.hpIncreaseAvailable}}
-            <button class="sheet-input" id="increaseHpButton" style="width: 20%" data-tooltip="Increase Maximum Hit Points" data-tooltip-direction="UP"><i class="fa-solid fa-arrow-up" style="color: rgb(240, 157, 41)"></i></button>
-        {{else}}
-            <button class="sheet-input" style="width: 20%" data-tooltip="Your Max HP is increased for this level." data-tooltip-direction="UP" disabled><i class="fas fa-check"></i></button>
-        {{/if}}
     </div>
 </div>
 

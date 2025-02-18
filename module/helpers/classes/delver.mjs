@@ -1,6 +1,11 @@
 import { NEWERA } from "../config.mjs";
 export class Delver {
 
+    static hitPointIncrement = {
+        roll: `1d8`,
+        average: 5
+    }
+
     static classFeatures = [
         {
             level: 1,

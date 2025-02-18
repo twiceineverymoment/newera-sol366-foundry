@@ -4,6 +4,12 @@ import { Actions } from "../macros/actions.mjs";
 
 
 export class Magus {
+
+    static hitPointIncrement = {
+        roll: `1d10`,
+        average: 6
+    }
+
     static classFeatures = [
         {
             level: 1,

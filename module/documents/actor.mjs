@@ -4,6 +4,7 @@ import { Witch } from "../helpers/classes/witch.mjs";
 import { CharacterEnergyPool } from "../schemas/char-energy-pool.mjs";
 import { ClassInfo } from "../helpers/classFeatures.mjs";
 import { NewEraItem } from "./item.mjs";
+import { Actions } from "../helpers/macros/actions.mjs";
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -1053,8 +1054,9 @@ export class NewEraActor extends Actor {
     await this.update(update);
   }
 
-  async increaseMaxHp(roll){
+  async increaseMaxHp(clazz, roll){
     const system = this.system;
+    const className = clazz.system.classId;
     const update = {
       system: {
         lifePoints: {},
@@ -1062,19 +1064,19 @@ export class NewEraActor extends Actor {
       }
     };
     if (roll){
-      const r = new Roll(`1d${system.hitPointIncrement}+@abilities.constitution.mod`, this.getRollData());
+      const r = new Roll(`${ClassInfo.hitPointIncrements[className].roll}+@abilities.constitution.mod`, this.getRollData());
       await r.evaluate();
       r.toMessage({
         speaker: ChatMessage.getSpeaker({actor: this}),
-        flavor: `Max HP Increase - Level ${system.level}`
+        flavor: `Max HP Increase - ${clazz.system.selectedClass} Level ${system.level}`
       })
-      const gained = r.total;
+      const gained = Math.max(r.total, 1); //Characters with low CON modifiers could get a negative result - guarantee at least 1 HP per level
       update.system.hitPointTrueMax = system.hitPointTrueMax + gained;
       update.system.hitPoints.max = system.hitPoints.max + gained;
       update.system.hitPoints.value = system.hitPoints.value + gained;
     } else {
-      const average = Math.round((1 + system.hitPointIncrement) / 2);
-      const gained = average + system.abilities.constitution.mod;
+      const average = ClassInfo.hitPointIncrements[className].average;
+      const gained = Math.max(average + system.abilities.constitution.mod, 1);
       update.system.hitPointTrueMax = system.hitPointTrueMax + gained;
       update.system.hitPoints.max = system.hitPoints.max + gained;
       update.system.hitPoints.value = system.hitPoints.value + gained;
@@ -2135,6 +2137,7 @@ export class NewEraActor extends Actor {
     } else {
       console.log(`[ALU] Auto-Level Up is disabled.`);
     }
+    Actions.showHpIncreaseDialog(this, clazz, ClassInfo.hitPointIncrements[className]); //Passing the HP increment here because importing ClassInfo in Actions creates a circular dependency
   }
 
   async unlockArchetypeFeatures(className, archetype, level){

@@ -3,6 +3,11 @@ import { ChantSheet } from "../../sheets/chants.mjs";
 
 export class Chanter {
 
+    static hitPointIncrement = {
+        roll: `1d6`,
+        average: 4
+    }
+
     static classFeatures = [
             {
                 level: 1,

@@ -4,6 +4,11 @@ import { NEWERA } from "../config.mjs";
 import { HotbarActions } from "../macros/hotbarActions.mjs";
 export class Witch {
 
+    static hitPointIncrement = {
+        roll: `1d6`,
+        average: 4
+    }
+
     static classFeatures = [
         {
             level: 1,

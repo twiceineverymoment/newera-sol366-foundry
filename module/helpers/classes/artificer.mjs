@@ -4,6 +4,11 @@ import { SpellFocus } from "../../sheets/spell-focus.mjs";
 
 export class Artificer {
 
+    static hitPointIncrement = {
+        roll: `1d8`,
+        average: 5
+    }
+
     static classFeatures = [
         {
             level: 1,

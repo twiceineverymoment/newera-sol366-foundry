@@ -4,6 +4,11 @@ import { Actions } from "../macros/actions.mjs";
 
 export class Scholar {
 
+    static hitPointIncrement = {
+        roll: `1d4`,
+        average: 3
+    }
+
     static BONUS_OPTIONS = {
         elemental: "Elemental",
         divine: "Divine",

@@ -3,6 +3,11 @@ import { Formatting } from "../formatting.mjs";
 import { Actions } from "../macros/actions.mjs";
 export class Guardian {
 
+    static hitPointIncrement = {
+        roll: `1d12`,
+        average: 7
+    }
+
     static classFeatures = [
         {
             level: 1,

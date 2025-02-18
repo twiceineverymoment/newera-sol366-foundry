@@ -1,6 +1,12 @@
 import { NEWERA } from "../config.mjs";
 
 export class Investigator {
+
+    static hitPointIncrement = {
+        roll: `1d4`,
+        average: 3
+    }
+
     static classFeatures = [
         {
             level: 1,

@@ -1,6 +1,12 @@
 import { NEWERA } from "../config.mjs";
 
 export class Sage {
+
+    static hitPointIncrement = {
+        roll: `1d6`,
+        average: 4
+    }
+    
     static classFeatures = [
         {
             level: 1,
