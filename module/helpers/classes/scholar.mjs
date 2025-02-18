@@ -4,6 +4,27 @@ import { Actions } from "../macros/actions.mjs";
 
 export class Scholar {
 
+    static BONUS_OPTIONS = {
+        elemental: "Elemental",
+        divine: "Divine",
+        physical: "Physical",
+        psionic: "Psionic",
+        spectral: "Spectral",
+        temporal: "Temporal"
+    }
+
+    static NATURAL_SKILLS = {
+        diplomacy: "Diplomacy",
+        logic: "Logic",
+        insight: "Insight",
+        elemental: "Elemental Magic",
+        divine: "Divine Magic",
+        physical: "Physical Magic",
+        psionic: "Psionic Magic",
+        spectral: "Spectral Magic",
+        temporal: "Temporal Magic"
+    }
+
     static classFeatures = [
         {
             level: 1,
@@ -14,32 +35,12 @@ export class Scholar {
             selections: {
                 "1": {
                     label: "First Choice",
-                    options: {
-                        "diplomacy": "Diplomacy",
-                        "logic": "Logic",
-                        "insight": "Insight",
-                        "elemental-magic": "Elemental Magic",
-                        "divine-magic": "Divine Magic",
-                        "physical-magic": "Physical Magic",
-                        "psionic-magic": "Psionic Magic",
-                        "spectral-magic": "Spectral Magic",
-                        "temporal-magic": "Temporal Magic"
-                    },
+                    options: Scholar.NATURAL_SKILLS,
                     onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "2": {
                     label: "Second Choice",
-                    options: {
-                        "diplomacy": "Diplomacy",
-                        "logic": "Logic",
-                        "insight": "Insight",
-                        "elemental-magic": "Elemental Magic",
-                        "divine-magic": "Divine Magic",
-                        "physical-magic": "Physical Magic",
-                        "psionic-magic": "Psionic Magic",
-                        "spectral-magic": "Spectral Magic",
-                        "temporal-magic": "Temporal Magic"
-                    },
+                    options: Scholar.NATURAL_SKILLS,
                     onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 }
             }
@@ -601,17 +602,7 @@ export class Scholar {
             choices: {
                 "3": {
                     label: "Third Choice",
-                    options: {
-                        "diplomacy": "Diplomacy",
-                        "logic": "Logic",
-                        "insight": "Insight",
-                        "elemental-magic": "Elemental Magic",
-                        "divine-magic": "Divine Magic",
-                        "physical-magic": "Physical Magic",
-                        "psionic-magic": "Psionic Magic",
-                        "spectral-magic": "Spectral Magic",
-                        "temporal-magic": "Temporal Magic"
-                    },
+                    options: Scholar.NATURAL_SKILLS,
                     onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
             }
@@ -689,15 +680,6 @@ export class Scholar {
             description: `<p>Your Level 1 spell slots aren't expended when you cast them at base level. (You can prepare up to 10 1st-level spells and cast those spells an unlimited number of times, but using Flexible Casting to amplify the spell will expend it.)</p>`
         }
     ]
-
-    static BONUS_OPTIONS = {
-        elemental: "Elemental",
-        divine: "Divine",
-        physical: "Physical",
-        psionic: "Psionic",
-        spectral: "Spectral",
-        temporal: "Temporal"
-    }
 
     static async bonus(actor, from, to){
         const update = structuredClone(actor.system);
