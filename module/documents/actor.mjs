@@ -535,7 +535,7 @@ export class NewEraActor extends Actor {
   async addKnowledge(subject = null, count = 1) {
     const update = structuredClone(this.system);
     for (let i = 0; i < count; i++){
-      update.knowledges[Object.keys(this.system.knowledges).length] = {
+      update.knowledges[Object.keys(update.knowledges).length] = {
         subject: subject || "New Knowledge",
         level: 0,
         bonus: 0,
@@ -551,7 +551,7 @@ export class NewEraActor extends Actor {
   async addSpecialty(subject = null, count = 1) {
     const update = structuredClone(this.system);
     for (let i = 0; i < count; i++){
-      update.specialties[Object.keys(this.system.specialties).length] = {
+      update.specialties[Object.keys(update.specialties).length] = {
         subject: subject || "New Specialty",
         level: 0,
         bonus: 0,
@@ -2088,7 +2088,12 @@ export class NewEraActor extends Actor {
     });
     if (game.settings.get("newera-sol366", "autoLevelUp")) {
       console.log(`[ALU] Starting auto-level up for ${this.name}:${className} ${fromLevel} -> ${toLevel}`);
-      const featuresToUnlock = ClassInfo.features[className].filter(feature => feature.level > fromLevel && feature.level <= toLevel);
+      const archetypeData = ClassInfo.getArchetypeData(this);
+      const featuresToUnlock = ClassInfo.features[className].filter(feature => 
+        feature.level > fromLevel
+        && feature.level <= toLevel
+        && (!feature.archetype || archetypeData.hasOwnProperty(feature.archetype)) //This will not catch retroactive archetype features or those that unlock at the same time as the archetype selection, but unlockArchetypeFeatures will
+      );
       for (const feature of featuresToUnlock){
           if (typeof feature.onUnlock == 'function'){
             await feature.onUnlock(this);
@@ -2105,7 +2110,11 @@ export class NewEraActor extends Actor {
             ui.notifications.info(`You can learn new spells at this level! Access the Spell Study Guide from the Class tab.`);
           }
       }
-      const featuresToUpdate = ClassInfo.features[className].filter(feature => feature.level <= toLevel && feature.tableValues);
+      const featuresToUpdate = ClassInfo.features[className].filter(feature => 
+        feature.level <= toLevel
+        && feature.tableValues
+        && (!feature.archetype || archetypeData.hasOwnProperty(feature.archetype)) //This will not catch retroactive archetype features or those that unlock at the same time as the archetype selection, but unlockArchetypeFeatures will
+      );
       for (const feature of featuresToUpdate){
         feature.tableValues.forEach(async tv => {
           if (typeof tv.onUpdate == 'function'){
@@ -2125,6 +2134,20 @@ export class NewEraActor extends Actor {
       console.log(`[ALU] Auto-Level Up for ${this.name}:${className} ${fromLevel} -> ${toLevel} complete.`);
     } else {
       console.log(`[ALU] Auto-Level Up is disabled.`);
+    }
+  }
+
+  async unlockArchetypeFeatures(className, archetype, level){
+    console.log(`[ALU] Unlocking archetype features for ${this.name} ${className}:${archetype} level ${level}`);
+    const archetypeFeatures = ClassInfo.features[className].filter(feature => 
+      feature.archetype == archetype
+      && feature.level <= this.getClassLevel(className)
+      && (feature.level >= level || feature.retroactiveUnlock));
+    for (const feature of archetypeFeatures){
+      if (typeof feature.onUnlock == 'function'){
+        await feature.onUnlock(this);
+        console.log(`[ALU] Unlocked archetype feature ${feature.name}`);
+      }
     }
   }
 
@@ -2182,14 +2205,14 @@ export class NewEraActor extends Actor {
           ui.notifications.warn(`You're already a natural in that skill!`);
         } else {
           update.skills[to].natural = true;
-          ui.notifications.info(`You're now a natural in ${to}!`);
+          ui.notifications.info(`You're now a natural in ${Formatting.keyToTitle(to)}!`);
         }
       } else if (update.magic[to]){
         if (update.magic[to].natural) {
           ui.notifications.warn(`You're already a natural in that skill!`);
         } else {
           update.magic[to].natural = true;
-          ui.notifications.info(`You're now a natural in ${to} magic!`);
+          ui.notifications.info(`You're now a natural in ${Formatting.keyToTitle(to)} magic!`);
         }
       } else {
         const knowledge = update.knowledges.find(k => k.subject == from);
@@ -2219,10 +2242,9 @@ export class NewEraActor extends Actor {
    * @param {*} parentSkill The parent skill of the new specialty, if one is created.
    */
   async setSpecialtyFeature(fromSubject, subject, parentSkill = "") {
-    let existing = false;
     const update = structuredClone(this.system);
     if (fromSubject){
-      const fromIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject.toLowerCase() == fromSubject.toLowerCase());
+      const fromIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == Formatting.keyToTitle(fromSubject));
       if (fromIndex !== undefined){
         if (this.system.specialties[fromIndex].level > 1){
           update.specialties[fromIndex].level -= 1;
@@ -2232,23 +2254,24 @@ export class NewEraActor extends Actor {
       }
     }
     if (subject){
-      const toIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject.toLowerCase() == subject.toLowerCase());
+      const title = Formatting.keyToTitle(subject);
+      const toIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == title);
       if (toIndex !== undefined){
         if (this.system.specialties[toIndex].level < 3){
           update.specialties[toIndex].level += 1;
-          ui.notifications.info(`Your ${subject} specialty increased to ${update.specialties[toIndex].level}!`);
+          ui.notifications.info(`Your ${title} specialty increased to ${update.specialties[toIndex].level}!`);
         } else {
-          ui.notifications.warn(`Your ${subject} specialty is already at max level! Specialties can't exceed level 3.`);
+          ui.notifications.warn(`Your ${title} specialty is already at max level! Specialties can't exceed level 3.`);
         }
       } else {
         const defaultParent = parentSkill || NEWERA.specialtyDefaultParents[subject];
         update.specialties[Object.keys(update.specialties).length] = {
-          subject: subject,
+          subject: title,
           level: 1,
           bonus: 0,
           defaultParent: defaultParent
         };
-        ui.notifications.info(`You've gained a specialty in ${subject}!`);
+        ui.notifications.info(`You've gained a specialty in ${title}!`);
       }
     }
     await this.update({
@@ -2257,7 +2280,7 @@ export class NewEraActor extends Actor {
   }
 
   async setCasterLevel(from, to, setMaxEnergy = true) {
-    const energyChange = setMaxEnergy ? NEWERA.baseEnergyMaximums[to] - NEWERA.baseEnergyMaximums[from] : 0;
+    const energyChange = setMaxEnergy ? NEWERA.baseEnergyMaximums[to] - NEWERA.baseEnergyMaximums[from || 0] : 0;
     await this.update({
       system: {
         casterLevel: to,

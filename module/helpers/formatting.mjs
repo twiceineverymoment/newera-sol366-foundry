@@ -155,4 +155,12 @@ export class Formatting {
         return `${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`;
       }
 
+      static keyToTitle(key){
+        return key.replace(/-/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+      }
+
+      static titleToKey(title){
+        return title.toLowerCase().replace(/\s+/g, "-");
+      }
+
 }

@@ -118,26 +118,12 @@ export class Scholar {
             selections: {
                 "1.1": {
                     label: "First Choice",
-                    options: {
-                        "elemental-magic": "Elemental",
-                        "divine-magic": "Divine",
-                        "physical-magic": "Physical",
-                        "psionic-magic": "Psionic",
-                        "spectral-magic": "Spectral",
-                        "temporal-magic": "Temporal"
-                    },
+                    options: Scholar.BONUS_OPTIONS,
                     onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 },
                 "1.2": {
                     label: "Second Choice",
-                    options: {
-                        "elemental-magic": "Elemental",
-                        "divine-magic": "Divine",
-                        "physical-magic": "Physical",
-                        "psionic-magic": "Psionic",
-                        "spectral-magic": "Spectral",
-                        "temporal-magic": "Temporal"
-                    },
+                    options: Scholar.BONUS_OPTIONS,
                     onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 }
             }
@@ -399,26 +385,12 @@ export class Scholar {
             selections: {
                 "2.1": {
                     label: "First Choice",
-                    options: {
-                        "elemental-magic": "Elemental",
-                        "divine-magic": "Divine",
-                        "physical-magic": "Physical",
-                        "psionic-magic": "Psionic",
-                        "spectral-magic": "Spectral",
-                        "temporal-magic": "Temporal"
-                    },
+                    options: Scholar.BONUS_OPTIONS,
                     onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 },
                 "2.2": {
                     label: "Second Choice",
-                    options: {
-                        "elemental-magic": "Elemental",
-                        "divine-magic": "Divine",
-                        "physical-magic": "Physical",
-                        "psionic-magic": "Psionic",
-                        "spectral-magic": "Spectral",
-                        "temporal-magic": "Temporal"
-                    },
+                    options: Scholar.BONUS_OPTIONS,
                     onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 }
             }
@@ -491,26 +463,12 @@ export class Scholar {
             selections: {
                 "3.1": {
                     label: "First Choice",
-                    options: {
-                        "elemental-magic": "Elemental",
-                        "divine-magic": "Divine",
-                        "physical-magic": "Physical",
-                        "psionic-magic": "Psionic",
-                        "spectral-magic": "Spectral",
-                        "temporal-magic": "Temporal"
-                    },
+                    options: Scholar.BONUS_OPTIONS,
                     onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 },
                 "3.2": {
                     label: "Second Choice",
-                    options: {
-                        "elemental-magic": "Elemental",
-                        "divine-magic": "Divine",
-                        "physical-magic": "Physical",
-                        "psionic-magic": "Psionic",
-                        "spectral-magic": "Spectral",
-                        "temporal-magic": "Temporal"
-                    },
+                    options: Scholar.BONUS_OPTIONS,
                     onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 }
             }
@@ -709,26 +667,12 @@ export class Scholar {
             selections: {
                 "4.1": {
                     label: "First Choice",
-                    options: {
-                        "elemental-magic": "Elemental",
-                        "divine-magic": "Divine",
-                        "physical-magic": "Physical",
-                        "psionic-magic": "Psionic",
-                        "spectral-magic": "Spectral",
-                        "temporal-magic": "Temporal"
-                    },
+                    options: Scholar.BONUS_OPTIONS,
                     onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 },
                 "4.2": {
                     label: "Second Choice",
-                    options: {
-                        "elemental-magic": "Elemental",
-                        "divine-magic": "Divine",
-                        "physical-magic": "Physical",
-                        "psionic-magic": "Psionic",
-                        "spectral-magic": "Spectral",
-                        "temporal-magic": "Temporal"
-                    },
+                    options: Scholar.BONUS_OPTIONS,
                     onChange: (actor, from, to) => Scholar.bonus(actor, from, to)
                 }
             }
@@ -745,6 +689,15 @@ export class Scholar {
             description: `<p>Your Level 1 spell slots aren't expended when you cast them at base level. (You can prepare up to 10 1st-level spells and cast those spells an unlimited number of times, but using Flexible Casting to amplify the spell will expend it.)</p>`
         }
     ]
+
+    static BONUS_OPTIONS = {
+        elemental: "Elemental",
+        divine: "Divine",
+        physical: "Physical",
+        psionic: "Psionic",
+        spectral: "Spectral",
+        temporal: "Temporal"
+    }
 
     static async bonus(actor, from, to){
         const update = structuredClone(actor.system);

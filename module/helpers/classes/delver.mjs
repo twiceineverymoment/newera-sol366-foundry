@@ -7,9 +7,9 @@ export class Delver {
             name: "Delver Specialties",
             key: false,
             description: "You gain 1 level in the Sight (Perception) and Climbing (Athletics) specialties.",
-            onUnlock: (actor) => {
-                actor.setSpecialtyFeature(null, "Sight", "perception");
-                actor.setSpecialtyFeature(null, "Climbing", "athletics");
+            onUnlock: async (actor) => { //async to avoid race condition, otherwise one specialty overwrites the other
+                await actor.setSpecialtyFeature(null, "Sight", "perception");
+                await actor.setSpecialtyFeature(null, "Climbing", "athletics");
             }
         },
         {
@@ -135,7 +135,8 @@ export class Delver {
                         water: `Path of Water`,
                         earth: `Path of Earth`,
                         wind: `Path of Wind`,
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => actor.unlockArchetypeFeatures("delver", newValue, 3)
                 }
             }
         },

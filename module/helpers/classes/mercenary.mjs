@@ -123,7 +123,8 @@ export class Mercenary {
             selections: {
                 "1": {
                     label: "Choose an Archetype",
-                    options: {raider: "Raider", enforcer: "Enforcer", woodsman: "Woodsman", warrior: "Warrior"}
+                    options: {raider: "Raider", enforcer: "Enforcer", woodsman: "Woodsman", warrior: "Warrior"},
+                    onChange: (actor, oldValue, newValue) => actor.unlockArchetypeFeatures("mercenary", newValue, 4)
                 }
             }
         },

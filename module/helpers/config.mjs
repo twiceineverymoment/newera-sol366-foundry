@@ -1983,7 +1983,7 @@ NEWERA.shieldTypes = {
 
 NEWERA.classes = {
     "Adventurer": {
-        "description": "",
+        "description": "<p>Want to level up, but not ready to choose a class? You can gain Classless levels in the meantime. The Adventurer is mRPG 3.0's default class with a basic table of abilities.</p><p>Any character can choose to level up in Classless at any point.</p>",
         "hitPointIncrement": {
             "roll": "1d8",
             "average": 5
@@ -2132,7 +2132,7 @@ NEWERA.classes = {
         archetypes: {pyromancy: "Pyromancer", cryomancy: "Cryomancer", lithomancy: "Lithomancer", evocation: "Evoker", restoration: "Healer", abjuration: "Abjurer", banishment: "Banisher", physiomancy: "Physiomancer", conjuration: "Conjurer", transmutation: "Transmuter", illusion: "Illusionist", hypnotism: "Hypnotist", divination: "Diviner", sangromancy: "Sangromancer", summoning: "Summoner", necromancy: "Necromancer", apparition: "Apparator", chronomancy: "Chronomancer"}
     },
     "Chanter": {
-        "description": "<p>The Chanter is a spellcaster whose magical  energy expresses itself more verbally than somatically. This somewhat uncommon ability gives the Chanter access to an aspect of magic that most mages are unable to tap into.</p><p>Chanters are able to compose and use a variety of special verbal spells called Chants. These can have effects on the minds and bodies of their teammates, and their enemies.</p>",
+        "description": "<p>The Chanter is a spellcaster whose magical energy expresses itself more verbally than somatically. This somewhat uncommon ability gives the Chanter access to an aspect of magic that most mages are unable to tap into.</p><p>Chanters are able to compose and use a variety of special verbal spells called Chants. These can have effects on the minds and bodies of their teammates, and their enemies.</p>",
         "hitPointIncrement": {
             "roll": 6,
             "average": 4

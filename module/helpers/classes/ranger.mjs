@@ -60,7 +60,8 @@ export class Ranger {
             selections: {
                 "1": {
                     label: "Choose an Archetype",
-                    options: {mountaineer: "Mountaineer", polar: "Polar Explorer", desert: "Desert Explorer", rainforest: "Rainforest Explorer", hiker: "Hiker", diver: "Diver", spelunker: "Spelunker", urbex: "Urban Explorer"}
+                    options: {mountaineer: "Mountaineer", polar: "Polar Explorer", desert: "Desert Explorer", rainforest: "Rainforest Explorer", hiker: "Hiker", diver: "Diver", spelunker: "Spelunker", urbex: "Urban Explorer"},
+                    onChange: (actor, oldValue, newValue) => actor.unlockArchetypeFeatures("ranger", newValue, 1)
                 }
             }
         },
@@ -136,9 +137,7 @@ export class Ranger {
         },
         {
             level: 2,
-            name: "Specialty Improvement",
-            key: false,
-            description: "Choose one of your specialties and increase its level by 1. If you don't have any specialties that can be increased, you may gain a new specialty of your choice at the GM's discretion.",
+            common: "specialtyImprovement"
         },
         {
             level: 3,
