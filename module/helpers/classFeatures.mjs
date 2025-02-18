@@ -131,14 +131,26 @@ ClassInfo.features = {
             key: false,
             description: `Gain 1 level in one of your Knowledge skills, or a new one of your choice.
             <br /><i>(To gain a new knowledge, add it to your character sheet and then choose it here.)</i>`,
-            dynamicSelections: actor => actor.getLearningExperienceOptions()
+            selections: {
+                improvement: {
+                    label: "Make a Selection",
+                    dynamicOptions: actor => actor.getLearningExperienceOptions(),
+                    onChange: (actor, oldValue, newValue) => actor.setLearningExperience(oldValue, newValue)
+                }
+            }
         },
         specialtyImprovement: {
             name: "Specialty Improvement",
             key: false,
             description: `Choose one of your specialties and increase its level by 1. If you don't have any specialties that can be increased, you may gain a new specialty of your choice at the GM's discretion.
             <br /><i>(To gain a new specialty, add it to your character sheet and then choose it here.)</i>`,
-            dynamicSelections: actor => actor.getSpecialtyImprovementOptions()
+            selections: {
+                improvement: {
+                    label: "Choose a Specialty",
+                    dynamicOptions: actor => actor.getSpecialtyImprovementOptions(),
+                    onChange: (actor, oldValue, newValue) => actor.setSpecialtyImprovement(oldValue, newValue)
+                }
+            }
         }
     },
 }

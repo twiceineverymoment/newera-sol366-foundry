@@ -159,24 +159,25 @@ export class NewEraActorSheet extends ActorSheet {
           feature.className = feature.archetype ? NEWERA.classes[clazz.system.selectedClass].archetypes[feature.archetype] : clazz.system.selectedClass;
           feature.classImg = feature.archetype ? `${NEWERA.images}/${className == "researcher" ? "" : className+"_"}${feature.archetype}.png` : clazz.img;
           feature.clazz = clazz.system.selectedClass;
+
+          //Copy the data from common features to the feature to be rendered
           if (feature.common){
             const commonFeature = ClassInfo.features.common[feature.common];
             feature.name = commonFeature.name;
             feature.description = commonFeature.description;
             feature.selections = commonFeature.selections;
             feature.key = commonFeature.key; //Common features are never going to be key=true, but whatever, this'll probably confuse the hell out of me in 2 years if I hard code it to false
-            if (typeof commonFeature.dynamicSelections == "function"){
-              feature.selections = commonFeature.dynamicSelections(this.actor);
-            }
             if (feature.selections){
-              feature.id = `${feature.className.toLowerCase()}.${feature.common}.${feature.level}`;
+              feature.id = `${feature.className.toLowerCase()}.${feature.common}.${feature.level}`; //Give common features a unique id so their selections can persist in the data model
             }
           }
+          //Load the current value of each table value into the Handlebars context
           if (feature.tableValues){
             for (const tv of feature.tableValues){
               tv.current = tv.values[clazz.system.level];
             }
           }
+          //Load the status of Spell Studies features into the Handlebars context
           if (feature.spellStudies){
             for (let i=0; i<feature.spellStudies.length; i++){
               if (feature.spellStudies[i].onOtherFeature){
@@ -205,9 +206,20 @@ export class NewEraActorSheet extends ActorSheet {
               }
             }
           }
-          //Load the current value of each selection into the Handlebars context - This is so we know the previous value when a selection is changed
+          //Prepare the selections for rendering
           if (feature.selections){
             Object.entries(feature.selections).forEach(([key, selection]) => {
+              //Populate the options for dynamic selections
+              if (typeof selection.dynamicOptions == "function"){
+                selection.options = selection.dynamicOptions(this.actor);
+              }
+              //Determine whether to show the selection
+              if (typeof selection.showWhen == "function"){
+                selection.show = selection.showWhen(this.actor);
+              } else {
+                selection.show = true;
+              }
+              //Load the current value of the selection into the Handlebars context - This is so we know the previous value when a selection is changed
               const path = `${feature.id}.${key}`;
               const keys = path.split(".");
               //console.log(`[DEBUG] Finding current value for ${path}`);

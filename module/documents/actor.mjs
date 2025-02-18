@@ -1808,32 +1808,20 @@ export class NewEraActor extends Actor {
   }
 
   getLearningExperienceOptions(){
-    const output = {
-      improvement: {
-        label: "Make a Selection",
-        options: {},
-        onChange: (actor, oldValue, newValue) => actor.setLearningExperience(oldValue, newValue)
-      }
-    };
+    const output = {};
     for (const [k, v] of Object.entries(this.system.knowledges)){
       if (v.level < 10){
-        output.improvement.options[k] = v.subject;
+        output[k] = v.subject;
       }
     }
     return output;
   }
 
   getSpecialtyImprovementOptions(){
-    const output = {
-      improvement: {
-        label: "Choose a Specialty",
-        options: {},
-        onChange: (actor, oldValue, newValue) => actor.setSpecialtyImprovement(oldValue, newValue)
-      }
-    };
+    const output = {};
     for (const [k, v] of Object.entries(this.system.specialties)){
       if (v.level < 3){
-        output.improvement.options[k] = v.subject;
+        output[k] = v.subject;
       }
     }
     return output;
