@@ -1811,6 +1811,8 @@ export class NewEraActor extends Actor {
     const output = {};
     for (const [k, v] of Object.entries(this.system.knowledges)){
       if (v.level < 10){
+        output[k] = v.subject + "(Max Level)";
+      } else {
         output[k] = v.subject;
       }
     }
@@ -1821,6 +1823,8 @@ export class NewEraActor extends Actor {
     const output = {};
     for (const [k, v] of Object.entries(this.system.specialties)){
       if (v.level < 3){
+        output[k] = v.subject + "(Max Level)";
+      } else {
         output[k] = v.subject;
       }
     }
