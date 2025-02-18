@@ -215,7 +215,11 @@ export class NewEraActorSheet extends ActorSheet {
               }
               //Determine whether to show the selection
               if (typeof selection.showWhen == "function"){
-                selection.show = selection.showWhen(this.actor);
+                try {
+                  selection.show = selection.showWhen(this.actor);
+                } catch (err) {
+                  selection.show = false; //Assume that if the showWhen function throws an error, it's because the data isn't there yet as the feature just got unlocked. In virtually all cases, these selections should be hidden until a prior option is chosen.
+                }
               } else {
                 selection.show = true;
               }

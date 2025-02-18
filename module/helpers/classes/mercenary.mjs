@@ -665,7 +665,10 @@ export class Mercenary {
     }
 
     static async bonus(actor, from, to){
-        const update = {};
+        const update = {
+            speed: {},
+            initiative: {}
+        };
         if (from == "speed"){
             update.speed.bonus = actor.system.speed.bonus - 1;
         } else if (from == "initiative"){
