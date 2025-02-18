@@ -231,11 +231,26 @@ export class Mercenary {
             name: "Mercenary Bonus",
             key: false,
             description: "You gain a +1 class bonus to your Natural Armor. Choose one of the following bonuses.",
+            onUnlock: (actor) => {
+                actor.update({
+                    system: {
+                        armor: {
+                            bonus: actor.system.armor.bonus + 1
+                        }
+                    }
+                });
+            },
             selections: {
-                "1": {
+                "1.bonus": {
                     label: "Choose a Bonus",
                     options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"},
                     onChange: (actor, from, to) => Mercenary.bonus(actor, from, to)
+                },
+                "1.specialty": {
+                    label: "Choose a Specialty",
+                    showWhen: (actor) => actor.system.classes.mercenary.bonus["1"].bonus == "specialty",
+                    dynamicOptions: actor => actor.getSpecialtyImprovementOptions(),
+                    onChange: (actor, from, to) => actor.setSpecialtyImprovement(from, to)
                 }
             }
         },
@@ -421,11 +436,26 @@ export class Mercenary {
             name: "Mercenary Bonus",
             key: false,
             description: "You gain a +1 class bonus to your Natural Armor. Choose one of the following bonuses.",
+            onUnlock: (actor) => {
+                actor.update({
+                    system: {
+                        armor: {
+                            bonus: actor.system.armor.bonus + 1
+                        }
+                    }
+                });
+            },
             selections: {
-                "2": {
+                "2.bonus": {
                     label: "Choose a Bonus",
                     options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"},
                     onChange: (actor, from, to) => Mercenary.bonus(actor, from, to)
+                },
+                "2.specialty": {
+                    label: "Choose a Specialty",
+                    showWhen: (actor) => actor.system.classes.mercenary.bonus["2"].bonus == "specialty",
+                    dynamicOptions: actor => actor.getSpecialtyImprovementOptions(),
+                    onChange: (actor, from, to) => actor.setSpecialtyImprovement(from, to)
                 }
             }
         },
@@ -635,8 +665,23 @@ export class Mercenary {
     }
 
     static async bonus(actor, from, to){
-        //TODO Mercenary bonus has an optional/variable specialty improvement - how do we handle that?
-        ui.notifications.error(`This feature is under construction! No changes were made to ${actor.name}.`);
+        const update = {};
+        if (from == "speed"){
+            update.speed.bonus = actor.system.speed.bonus - 1;
+        } else if (from == "initiative"){
+            update.initiative.bonus = actor.system.initiative.bonus - 1;
+        }
+
+        if (to == "speed"){
+            update.speed.bonus = actor.system.speed.bonus + 1;
+            ui.notifications.info(`${actor.name} has gained a +1 Speed bonus.`);
+        } else if (to == "initiative"){
+            update.initiative.bonus = actor.system.initiative.bonus + 1;
+            ui.notifications.info(`${actor.name} has gained a +1 Initiative bonus.`);
+        } else if (to == "specialty"){
+            ui.notifications.info(`Choose a Specialty to improve.`);
+        }
+        await actor.update({system: update});
     }
 
     static async rage(actor){
