@@ -897,7 +897,6 @@ export class NewEraActorSheet extends ActorSheet {
     }
 
     this._setClassFeatureDropdowns(html);
-    html.find(".feature-select").change(ev => this._onFeatureSelectionChange(ev));
  
     //Spellbook cast DC's
     if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
@@ -995,13 +994,13 @@ export class NewEraActorSheet extends ActorSheet {
         const element = $(ev.currentTarget);
         const newValue = element.val();
         const oldValue = element.data("oldValue");
-        const className = element.data("class");
+        const className = element.data("class").toLowerCase();
         const featureSelectionId = element.data("selectionId");
-        const selectionIndex = element.data("selectionIndex");
-        console.log(`[ALU] Triggered feature selection change ${className}.${featureSelectionId}.${selectionIndex} ${oldValue} -> ${newValue}`);
+        const selectionIndex = element.data("selectionNumber");
+        console.log(`[ALU] Triggered feature selection change ${className}:${featureSelectionId}.${selectionIndex} ${oldValue} -> ${newValue}`);
         try {
-          const fromFeature = ClassInfo.features[className].find(feature => feature.id == featureSelectionId);
-          const selection = fromFeature.selections[selectionIndex];
+          const feature = ClassInfo.features[className].find(feature => feature.id == featureSelectionId && feature.selections && feature.selections[selectionIndex]);
+          const selection = feature.selections[selectionIndex];
           if (typeof selection.onChange == 'function') {
             await selection.onChange(this.actor, oldValue, newValue);
           } else {
@@ -1010,6 +1009,7 @@ export class NewEraActorSheet extends ActorSheet {
         } catch (err) {
           ui.notifications.error("Error: Couldn't update data for this selection. See the log for details.");
           console.error(`[ALU] Failed to locate selection change function! class=${className} id=${featureSelectionId} index=${selectionIndex}`);
+          console.error(err);
         }
       });
     }
@@ -1785,33 +1785,6 @@ export class NewEraActorSheet extends ActorSheet {
       }
       return retVal;
     });
-
-    //Set the "oldValue" data property to the current value so that when the selection changes, we can pull the old value that way
-    html.find(".feature-select").data("oldValue", function(){
-      return $(this).val();
-    });
-  }
-
-  _onFeatureSelectionChange(ev){
-    if (game.settings.get("newera-sol366", "autoLevelUp")){
-      const element = $(ev.currentTarget);
-      const dataField = element.attr("name");
-      const oldValue = element.data("oldValue") || "";
-      const newValue = element.val() || "";
-      const selection = ClassInfo.findFeatureSelectionByLabel(dataField);
-      if (!selection){
-        console.warn(`Couldn't find feature selection for ${dataField}`);
-        return;
-      }
-      if (typeof selection.onChange == "function"){
-        selection.onChange(this.actor, oldValue, newValue);
-        console.log(`Executed feature selection change ${dataField} ${oldValue}->${newValue}`);
-      } else {
-        console.warn(`Changed feature ${dataField} has no onChange function`);
-      }
-    } else {
-      console.log("Ignoring feature selection change because autoLevelUp is turned off");
-    }
   }
 
   _prepareInspiration(context){

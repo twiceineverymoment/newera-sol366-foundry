@@ -2094,6 +2094,16 @@ export class NewEraActor extends Actor {
             await feature.onUnlock(this);
             console.log(`[ALU] Unlocked ${feature.name}`);
           }
+          if (feature.common) {
+            const commonFeature = ClassInfo.features.common[feature.common];
+            if (typeof commonFeature.onUnlock == 'function'){
+              await commonFeature.onUnlock(this);
+              console.log(`[ALU] Unlocked common feature ${commonFeature.name}`);
+            }
+          }
+          if (feature.spellStudies) {
+            ui.notifications.info(`You can learn new spells at this level! Access the Spell Study Guide from the Class tab.`);
+          }
       }
       const featuresToUpdate = ClassInfo.features[className].filter(feature => feature.level <= toLevel && feature.tableValues);
       for (const feature of featuresToUpdate){
@@ -2170,20 +2180,26 @@ export class NewEraActor extends Actor {
       if (update.skills[to]){
         if (update.skills[to].natural) {
           ui.notifications.warn(`You're already a natural in that skill!`);
+        } else {
+          update.skills[to].natural = true;
+          ui.notifications.info(`You're now a natural in ${to}!`);
         }
-        update.skills[to].natural = true;
       } else if (update.magic[to]){
         if (update.magic[to].natural) {
           ui.notifications.warn(`You're already a natural in that skill!`);
+        } else {
+          update.magic[to].natural = true;
+          ui.notifications.info(`You're now a natural in ${to} magic!`);
         }
-        update.magic[to].natural = true;
       } else {
         const knowledge = update.knowledges.find(k => k.subject == from);
         if (knowledge){
           if (knowledge.natural) {
             ui.notifications.warn(`You're already a natural in that skill!`);
+          } else {
+            knowledge.natural = true;
+            ui.notifications.info(`You're now a natural in ${to} knowledge!`);
           }
-          knowledge.natural = true;
         } else {
           ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
         }
@@ -2220,6 +2236,7 @@ export class NewEraActor extends Actor {
       if (toIndex !== undefined){
         if (this.system.specialties[toIndex].level < 3){
           update.specialties[toIndex].level += 1;
+          ui.notifications.info(`Your ${subject} specialty increased to ${update.specialties[toIndex].level}!`);
         } else {
           ui.notifications.warn(`Your ${subject} specialty is already at max level! Specialties can't exceed level 3.`);
         }
@@ -2231,6 +2248,7 @@ export class NewEraActor extends Actor {
           bonus: 0,
           defaultParent: defaultParent
         };
+        ui.notifications.info(`You've gained a specialty in ${subject}!`);
       }
     }
     await this.update({

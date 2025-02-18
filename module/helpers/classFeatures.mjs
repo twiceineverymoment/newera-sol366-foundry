@@ -15,9 +15,9 @@ export const ClassInfo = {};
 
 ClassInfo.findFeatureSelectionByLabel = function(label) {
     for (const [i, clazz] of Object.entries(ClassInfo.features)){
-        if (label.contains(i)){ //Skips iterating on the other classes
+        if (label.includes(i)){ //Skips iterating on the other classes
             for (const feature of clazz){
-                if (feature.id && feature.selections && label.contains(feature.id)){
+                if (feature.id && feature.selections && label.includes(feature.id)){
                     for (const [j, selection] of Object.entries(feature.selections)){
                         if (label == `system.classes.${feature.id}.${j}`){
                             return selection;
