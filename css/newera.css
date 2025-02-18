@@ -37,6 +37,14 @@ div.actor section.window-content, div.item section.window-content {
   text-align: center;
   margin: 0 auto;
 }
+.container-subtitle {
+  font-family: "Cinzel", serif;
+  color: #8DB1C9 !important;
+  font-size: 1.5em;
+  border-bottom: none;
+  text-align: center;
+  margin: 0 auto;
+}
 .spell-table-nav {
   display: flex;
   flex-direction: row;
@@ -1479,4 +1487,44 @@ a.occupant-delete {
 }
 .srd-x-button:hover {
   color: red !important;
+}
+
+/* Class Select */
+.class-already-selected {
+  opacity: 0.5;
+}
+.class-icon {
+  cursor: pointer;
+  display: inline-block;
+}
+.class-icon img {
+  width: 32px;
+  height: 32px;
+  border: none;
+  outline: none;
+}
+.class-hero-img {
+  float: right;
+  width: auto;
+  max-height: 360px;
+  border: none;
+  outline: none;
+}
+.class-select-confirm {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+button.class-confirm {
+  width: 75%;
+  font-family: "Cinzel", serif !important;
+  font-size: 1.5em !important;
+}
+.class-srd-link {
+  color: #f88d28 !important;
+  text-decoration: underline;
+  font-size: 1.25em;
+  display: block;
+  margin-top: 10px;
+  text-align: center;
 }

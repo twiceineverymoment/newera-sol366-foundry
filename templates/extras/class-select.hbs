@@ -1,0 +1,131 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Myeongjo" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aboreto" />
+
+<form class="{{cssClass}} {{actor.type}} newera-actorsheet-body" autocomplete="off">
+
+  <div class="newera-actorsheet-top">
+    <h1 class="container-title">Choose a Class</h1>
+  </div>
+
+  <div class="newera-actorsheet-tabs">
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="{{#if alreadySelected.adventurer}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/adventurer.png" data-tooltip="Adventurer" data-tab="adventurer" /></a>
+      <a class="{{#if alreadySelected.delver}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/delver.png" data-tooltip="Delver" data-tab="delver" /></a>
+      <a class="{{#if alreadySelected.mercenary}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/mercenary.png" data-tooltip="Mercenary" data-tab="mercenary" /></a>
+      <a class="{{#if alreadySelected.ranger}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/ranger.png" data-tooltip="Ranger" data-tab="ranger" /></a>
+      <a class="{{#if alreadySelected.researcher}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/researcher.png" data-tooltip="Researcher" data-tab="researcher" /></a>
+      <a class="{{#if alreadySelected.chanter}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/chanter.png" data-tooltip="Chanter" data-tab="chanter" /></a>
+      <a class="{{#if alreadySelected.guardian}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/guardian.png" data-tooltip="Guardian" data-tab="guardian" /></a>
+      <a class="{{#if alreadySelected.magus}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/magus.png" data-tooltip="Magus" data-tab="magus" /></a>
+      <a class="{{#if alreadySelected.investigator}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/investigator.png" data-tooltip="Investigator" data-tab="investigator" /></a>
+      <a class="{{#if alreadySelected.scholar}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/scholar.png" data-tooltip="Scholar" data-tab="scholar" /></a>
+      <a class="{{#if alreadySelected.artificer}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/artificer.png" data-tooltip="Artificer" data-tab="artificer" /></a>
+      <a class="{{#if alreadySelected.sage}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/sage.png" data-tooltip="Sage" data-tab="sage" /></a>
+      <a class="{{#if alreadySelected.witch}}class-already-selected{{else}}item{{/if}} class-icon"><img src="systems/newera-sol366/resources/witch.png" data-tooltip="Witch" data-tab="witch" /></a>
+    </nav>
+  </div>
+
+    <section class="sheet-body">
+    <div class="tab" data-group="primary" data-tab="adventurer" data-selected-class="Adventurer">
+      <h2 class="container-subtitle">Adventurer</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_adventurer.png" />
+      <p>Want to level up, but not ready to choose a class? You can gain Classless levels in the meantime. The Adventurer is mRPG 3.0's default class with a basic table of abilities.</p>
+      <p>Any character can choose to level up in Classless at any point.</p>
+    </div>
+    <div class="tab" data-group="primary" data-tab="delver" data-selected-class="Delver">
+      <h2 class="container-subtitle">Delver</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_delver.png" />
+      <p>The Delver is an agile explorer and powerful offensive spellcaster. They are the masters of Elemental Magic, with a strong attunement to the forces of nature and a high level of magical energy.</p>
+      <p>In the Torchlight Society, Delvers are responsible for venturing into the perilous ancient ruin sites in search of valuable treasures and artifacts for research. They are trained in self-defense and know how to navigate dangerous areas.</p>
+      <p>While they are very powerful spellcasters, Delvers generally don't concern themselves with the theoretical aspects of magic, as long as they can use it to get what they're after. Some can become so well attuned with the elements that they can evoke certain elemental powers without casting a complete spell- a power known as Elemental Channeling.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/delver" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="mercenary" data-selected-class="Mercenary">
+      <h2 class="container-subtitle">Mercenary</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_mercenary.png" />
+      <p>A Mercenary is a soldier-for-hire. They are undisputed masters of combat, using a variety of weapons and fighting techniques.</p>
+      <p>The Torchlight Society trains mercenaries as protectors for those exploring dangerous ancient ruins. There, they are usually the muscles of the adventuring party, and the ones responsible for protecting their companions from the many dangers that lurk in the ruins.</p>
+      <p>Mercenaries fight mainly with conventional melee weapons, though they do receive basic training in defensive spells.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/mercenary" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="ranger" data-selected-class="Ranger">
+      <h2 class="container-subtitle">Ranger</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_ranger.png" />
+      <p>Rangers are top-notch survivalists. The Aetherian wilderness is an unforgiving landscape with wet summers and dangerously cold winters, so those looking to explore off the beaten path must be ready to survive in the most extreme conditions. The Ranger is an excellent marksman, hunter, and agile explorer.</p>
+      <p>As employees of the Torchlight Society, Rangers are often stationed in towns near dangerous ancient ruins or at remote posts outside the ruins themselves, to guard against unauthorized entry. Many have backgrounds in the local military.</p>
+      <p>Rangers are trained in defensive spells, and are adept at using a variety of weapons.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/ranger" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="researcher" data-selected-class="Researcher">
+      <h2 class="container-subtitle">Researcher</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_researcher.png" />
+      <p>The Researcher is a focused spellcaster. They devote their studies to a single school of magic, with the goal of learning and refining its many spells and enchantments and looking for ways to use their magic to advance society.</p>
+      <p>The role of a Researcher in an adventuring party is highly variable depending on the school of magic they focus on. Those with an Elemental focus are more suited to combat encounters, while those looking to fill a social role might choose Hypnotism to get what they need or Divination to see through falsehoods. Researchers looking for a more utilitarian approach might consider Physiomancy for its many practical uses, and a researcher of Restoration can be an effective healer.</p>
+      <p>Advanced Researchers can begin to scribe entirely new spells of their own creation.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/researcher" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="chanter" data-selected-class="Chanter">
+      <h2 class="container-subtitle">Chanter</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_chanter.png" />
+      <p>The Chanter is a spellcaster whose magical energy expresses itself more verbally than somatically. This somewhat uncommon ability gives the Chanter access to an aspect of magic that most mages are unable to tap into.</p>
+      <p>Chanters are able to compose and use a variety of special verbal spells called Chants. These can have effects on the minds and bodies of their teammates, and their enemies.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/chanter" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="guardian" data-selected-class="Guardian">
+      <h2 class="container-subtitle">Guardian</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_guardian.png" />
+      <p>Guardians are highly trained, disciplined magical fighters. They specialize in defensive combat magic, using  Abjuration and other protective magic to drive enemies back. They fight with a combination of martial arts and spells.</p>
+      <p>For a guardian, the safety of their allies is their top priority. In the Torchlight Society, Guardians accompany adventuring parties into ruins to keep them safe using their powerful defensive magic.</p>
+      <p>Guardians are trained in defensive spells, and are adept at using a variety of weapons.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/guardian" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="magus" data-selected-class="Magus">
+      <h2 class="container-subtitle">Magus</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_magus.png" />
+      <p>The Magus is a fearsome fighter who combines the power of magic with weaponry. As masters of both martial and magical arts, they specialize in fine-tuning their arsenal of weapons with enchantments to be as effective as possible against any foe they might encounter.</p>
+      <p>To a Magus, the simplest solution to a problem is usually the best. They're not as concerned with the intricacies or theory of magic as they are maximizing their power. They work well with the  Scholar and  Artificer who can contribute their vast knowledge of magical theory to the Magus's pursuit of the most effective enchantments.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/magus" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="investigator" data-selected-class="Investigator">
+      <h2 class="container-subtitle">Investigator</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_investigator.png" />
+      <p>The Investigator is an intellectual and highly-skilled explorer. They solve the toughest mysteries using a mixture of magic, martial skills, and modern technology.</p>
+      <p>Investigators in the Torchlight Society work as special agents, investigating magical crimes and working undercover to keep a close eye on Rogue mages. They train in  Hypnotism to modify the memories of anyone who suspects them, or who simply knows too much. Some also work as paranormal investigators, researching reported hauntings and other anomalous activity while telling a convincing story to the general populace.</p>
+      <p>With a wide array of martial skills, investigators are opportunistic and quick. They prefer to get what they need covertly, either by stealth or by simply blending into their surroundings.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/investigator" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="scholar" data-selected-class="Scholar">
+      <h2 class="container-subtitle">Scholar</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_scholar.png" />
+      <p>Scholars are the world's top magical minds. In their careers, they learn a wide variety of spells, enchantments, and complex rituals.</p>
+      <p>Unlike  Researchers, who dive deeply into the secrets of a single school of magic, Scholars take a more generalist approach to the mysterious art. They believe that true mastery of magic requires a diverse understanding of all of its forms, and that they must be used in conjunction with one another in order for mankind to achieve the most value from them.</p>
+      <p>Scholars prepare themselves to cast specific spells each day by meditating and focusing on the spells they predict they will need the most during that day's challenges. By preparing spells in advance, the scholar can cast them more easily and without using energy.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/scholar" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="artificer" data-selected-class="Artificer">
+      <h2 class="container-subtitle">Artificer</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_artificer.png" />
+      <p>Artificers are masters of invention. Their studies deal with  metamagic, the &quot;seventh form&quot; of magic that consists of the intricacies of magical theory and the building blocks by which all other spells are formed. Using this knowledge they can create complex magical artifacts to solve almost any problem.</p>
+      <p>To an Artificer, nothing is more fascinating than uncovering the secrets of magic and how it relates to modern science. In the Torchlight Society, artificers study both complex enchantments and alchemy. They are constantly working on the idea for their next great creation.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/artificer" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="sage" data-selected-class="Sage">
+      <h2 class="container-subtitle">Sage</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_sage.png" />
+      <p>Sages are mysterious spellcasters that have a deep connection to the world of good and evil spirits. They practice magic that heals and repels evil, both through conventional spells and the practice of Alchemy. They are excellent  Diviners and can use their connections to other planes to communicate across great distances.</p>
+      <p>Sages are practicioners of Soulbonding, a rare form of advanced magic that allows them to induce magical effects on those they have a strong relationship with. In the Torchlight Society they use this magic along with their alchemy and fortune telling abilities to act as healers and protectors.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/sage" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="tab" data-group="primary" data-tab="witch" data-selected-class="Witch">
+      <h2 class="container-subtitle">Witch</h2>
+      <img class="class-hero-img" src="systems/newera-sol366/resources/hf_witch.png" />
+      <p>The Witch studies magic on the very bleeding edge of modern knowledge. Using a mysterious connection with other planes of existence, they gain the ability to summon and command ghostly companions known as Familiars. Each Familiar is different and unique to the Witch who summons it, and they act as both a focus for their magic and as an adventuring companion.</p>
+      <p>Witches are specialists in spectral magic, a form which is generally frowned upon by other mages such as those in the Torchlight Society. As a result, they often become social outcasts and tend to associate with others of their own discipline.</p>
+      <a class="class-srd-link" href="https://www.newerarpg.com/srd/newera-sol366/witch" target="_blank">Learn More on the SRD</a>
+    </div>
+    <div class="class-select-confirm">
+      <button class="sheet-input class-confirm" id="confirm">Confirm</button>
+    </div>
+    </section>
+</form>

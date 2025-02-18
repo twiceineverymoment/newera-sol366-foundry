@@ -9,7 +9,7 @@ import { NewEraActor } from "../documents/actor.mjs";
 import { NewEraItem } from "../documents/item.mjs";
 import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
 import { SpellBrowser } from "./spell-browser.mjs";
-
+import { ClassSelect } from "./class-select.mjs";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -1097,6 +1097,9 @@ export class NewEraActorSheet extends ActorSheet {
     });
     html.find('#addResourceButton').click(() => {
       this.actor.addResource();
+    });
+    html.find("#chooseClass").click(() => {
+      new ClassSelect(this.actor).render(true);
     });
     html.find(".deleteResource").click(ev => {
       Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteResource($(event.currentTarget).data("resourceIndex")));
