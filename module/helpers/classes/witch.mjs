@@ -758,7 +758,9 @@ export class Witch {
             name: "Rapid Strike",
             description: "Your familiar can use its Strike attack twice in a "
         }
-    ];
+    ]
+
+    static classFeats = {}
 
     static async initializeDarkEnergy(actor, reset){
         const max = actor.system.tableValues.darkEnergy;

@@ -413,18 +413,7 @@ export class Mercenary {
             name: "Combat Expert",
             key: false,
             description: "Your Turn Length increases by 1 frame and 1 reaction frame.",
-            onUnlock: (actor) => actor.update({
-                system: {
-                    turnLength: {
-                        actions: {
-                            bonus: actor.system.turnLength.actions.bonus + 1
-                        },
-                        reactions: {
-                            bonus: actor.system.turnLength.reactions.bonus + 1
-                        }
-                    }
-                }
-            })
+            onUnlock: (actor) => actor.increaseBaseTurnLength(1, 1)
         },
         {
             level: 13,
@@ -652,17 +641,11 @@ export class Mercenary {
                     ]
                 }
             ],
-            onUnlock: (actor) => actor.update({
-                system: {
-                    turnLength: {
-                        actions: {
-                            bonus: actor.system.turnLength.actions.bonus + 1
-                        }
-                    }
-                }
-            })
+            onUnlock: (actor) => actor.increaseBaseTurnLength(1, 0)
         }
     ]
+    
+    static classFeats = {}
 
     static archetypeSelectionLevels = {
         1: 4

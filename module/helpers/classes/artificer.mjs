@@ -892,6 +892,18 @@ export class Artificer {
         }
     ]
 
+    static classFeats = {
+        "369": { //Alchemist
+            "1": {
+                features: [
+                    {
+                        onUnlock: actor => actor.setSpecialtyFeature(null, "Alchemy", "technology")
+                    }
+                ]
+            }
+        }
+    }
+
     static async bonus(actor, from, to){
         ui.notifications.error(`This feature is under construction! No changes have been made to ${actor.name}.`);
     }

@@ -327,6 +327,8 @@ export class Investigator {
         }
     ]
 
+    static classFeats = {}
+
     static archetypeSelectionLevels = {
         1: 8
     }

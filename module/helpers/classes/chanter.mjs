@@ -410,6 +410,8 @@ export class Chanter {
             }
     ]
 
+    static classFeats = {}
+
     static async resetChants(actor){
         const chantSlotCount = {
             basic: actor.system.tableValues.chantSlots.basic, 

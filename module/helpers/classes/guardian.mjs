@@ -874,6 +874,8 @@ export class Guardian {
         }
     ]
 
+    static classFeats = {}
+
     static async activateFightingStance(actor, name){
         const stance = Guardian.stanceEffects[name];
         if (!stance){

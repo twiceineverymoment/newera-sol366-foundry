@@ -1,10 +1,22 @@
+import { Artificer } from "./classes/artificer.mjs";
+import { Chanter } from "./classes/chanter.mjs";
+import { Delver } from "./classes/delver.mjs";
+import { Guardian } from "./classes/guardian.mjs";
+import { Investigator } from "./classes/investigator.mjs";
+import { Magus } from "./classes/magus.mjs";
+import { Mercenary } from "./classes/mercenary.mjs";
+import { Ranger } from "./classes/ranger.mjs";
+import { Researcher } from "./classes/researcher.mjs";
+import { Scholar } from "./classes/scholar.mjs";
+import { Sage } from "./classes/sage.mjs";
+import { Witch } from "./classes/witch.mjs";
 
 /**
  * This file contains custom logic for feats.
  * Although each tier has a unique ID in CASPER, only the first tier is exported to Foundry by its number.
  * Selection keys must be unique to the entire feat/tier
  */
-export const FeatData = {
+const generalFeats = {
     "148": {
         "1": {
             prerequisite: {
@@ -243,3 +255,23 @@ export const FeatData = {
         }
     }
 };
+
+const skillFeats = {}
+
+export const FeatData = {
+    ...generalFeats,
+    ...skillFeats,
+    ...Artificer.classFeats,
+    ...Chanter.classFeats,
+    ...Delver.classFeats,
+    ...Guardian.classFeats,
+    ...Investigator.classFeats,
+    ...Magus.classFeats,
+    ...Mercenary.classFeats,
+    ...Ranger.classFeats,
+    ...Researcher.classFeats,
+    ...Scholar.classFeats,
+    ...Sage.classFeats,
+    ...Scholar.classFeats,
+    ...Witch.classFeats
+}

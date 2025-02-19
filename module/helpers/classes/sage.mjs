@@ -6,7 +6,7 @@ export class Sage {
         roll: `1d6`,
         average: 4
     }
-    
+
     static classFeatures = [
         {
             level: 1,
@@ -443,4 +443,6 @@ export class Sage {
             ]
         }
     ]
+
+    static classFeats = {}
 }

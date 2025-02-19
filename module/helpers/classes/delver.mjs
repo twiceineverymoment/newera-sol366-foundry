@@ -1416,6 +1416,7 @@ export class Delver {
         }
     ]
 
+    static classFeats = {}
 
     static archetypeSelectionLevels = {
         1: 3,

@@ -686,6 +686,8 @@ export class Scholar {
         }
     ]
 
+    static classFeats = {}
+
     static async bonus(actor, from, to){
         const update = structuredClone(actor.system);
         if (from) {

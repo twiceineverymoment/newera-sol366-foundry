@@ -619,6 +619,8 @@ export class Ranger {
             <p>If your Prey is immobilized, incapacitated, or didn't move during its most recent turn, you have a +10 bonus to hit.</p>`
         }
     ]
+    
+    static classFeats = {}
 
     static archetypeSelectionLevels = {
         1: 1

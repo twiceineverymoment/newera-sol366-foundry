@@ -745,6 +745,8 @@ export class Magus {
         }
     ]
 
+    static classFeats = {}
+
     static spellstrikeSlotNames = ["spellstrike", "spellstrikes", "spellstrike slots"];
 
     static async initializeSpellstrike(actor) {

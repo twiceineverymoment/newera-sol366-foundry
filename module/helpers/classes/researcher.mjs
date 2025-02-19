@@ -3273,6 +3273,8 @@ export class Researcher {
         /* END GENERATED SECTION L10 */
     ]
 
+    static classFeats = {}
+
     static archetypeSelectionLevels = {
       1: 2
     }
