@@ -709,7 +709,7 @@ export class Mercenary {
         if (rageResource && rageResource[1].value > 0){
             actor.actionMessage(actor.img, null, "{NAME} is becoming enraged!");
             actor.createEmbeddedDocuments('ActiveEffect', [{
-                label: "Rage" + (isSavageFighter && "(Savage)"),
+                label: "Rage" + (isSavageFighter ? " (Savage)" : ""),
                 img: `${NEWERA.images}/fire-dash.png`,
                 description: `<p>Your physical abilities are enhanced at the cost of reduced presence of mind. Your Rage ends at the end of combat, or at the end of your turn if you did not attempt an attack during that turn.</p>
                 <ul>
