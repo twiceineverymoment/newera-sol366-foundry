@@ -94,7 +94,7 @@ export class Mercenary {
                     sign: false,
                     values: [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5],
                     onUpdate: (actor, from, to) => actor.updateResourceByName("Rage", {
-                        value: to
+                        max: to
                     })
                 }
             ],
@@ -244,7 +244,7 @@ export class Mercenary {
                 "1.bonus": {
                     label: "Choose a Bonus",
                     options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"},
-                    onChange: (actor, from, to) => Mercenary.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Mercenary.bonus(actor, "1", from, to)
                 },
                 "1.specialty": {
                     label: "Choose a Specialty",
@@ -366,6 +366,10 @@ export class Mercenary {
             description: "Add your proficiency bonus to the armor rating of equipped armor items you're wearing."
         },
         {
+            level: 8,
+            common: "specialtyImprovement"
+        },
+        {
             level: 9,
             common: "naturalSkillImprovement"
         },
@@ -449,7 +453,7 @@ export class Mercenary {
                 "2.bonus": {
                     label: "Choose a Bonus",
                     options: {speed: "+1 Speed", initiative: "+1 Initiative Modifier", specialty: "Specialty Improvement"},
-                    onChange: (actor, from, to) => Mercenary.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Mercenary.bonus(actor, "2", from, to)
                 },
                 "2.specialty": {
                     label: "Choose a Specialty",
@@ -664,7 +668,7 @@ export class Mercenary {
         1: 4
     }
 
-    static async bonus(actor, from, to){
+    static async bonus(actor, bonusNumber, from, to){
         const update = {
             speed: {},
             initiative: {}
@@ -673,6 +677,13 @@ export class Mercenary {
             update.speed.bonus = actor.system.speed.bonus - 1;
         } else if (from == "initiative"){
             update.initiative.bonus = actor.system.initiative.bonus - 1;
+        } else if (from == "specialty"){ //Try to clear the specialty improvement when the bonus is removed
+            try {
+                const specialty = actor.system.classes.mercenary.bonus[bonusNumber].specialty;
+                if (specialty !== undefined){
+                    await actor.setSpecialtyImprovement(specialty, "");
+                }
+            } catch (err) {}
         }
 
         if (to == "speed"){
@@ -681,8 +692,13 @@ export class Mercenary {
         } else if (to == "initiative"){
             update.initiative.bonus = actor.system.initiative.bonus + 1;
             ui.notifications.info(`${actor.name} has gained a +1 Initiative bonus.`);
-        } else if (to == "specialty"){
-            ui.notifications.info(`Choose a Specialty to improve.`);
+        } else if (to == "specialty"){ //Re-activate the specialty improvement if already chosen (This is a serious edge case, but it can happen)
+            try {
+                const specialty = actor.system.classes.mercenary.bonus[bonusNumber].specialty;
+                if (specialty !== undefined){
+                    await actor.setSpecialtyImprovement("", specialty);
+                }
+            } catch (err) {}
         }
         await actor.update({system: update});
     }
