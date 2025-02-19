@@ -53,7 +53,30 @@ export const FeatData = {
             }  
         }
     },
-    "103": {
+    "94": { //Combat Adept
+        "1": {
+            features: [
+                {
+                    onUnlock: (actor) => actor.increaseBaseTurnLength()
+                }
+            ]
+        },
+        "2": {
+            features: [
+                {
+                    onUnlock: (actor) => actor.increaseBaseTurnLength() 
+                }
+            ]
+        },
+        "3": {
+            features: [
+                {
+                    onUnlock: (actor) => actor.increaseBaseTurnLength()
+                }
+            ]
+        }
+    },
+    "103": { //Extra Natural Skill
         "1": {
             features: [
                 {
@@ -68,7 +91,7 @@ export const FeatData = {
             ]
         }
     },
-    "100": {
+    "100": { //Working Out
         "1": {
             features: [
                 {
@@ -106,7 +129,7 @@ export const FeatData = {
             ]
         }
     },
-    "135": {
+    "135": { //Heavy Lifter
         "1": {
             features: [
                 {
@@ -119,6 +142,101 @@ export const FeatData = {
                             }
                         });
                         ui.notifications.info(`Your carry weight has been increased.`);
+                    }
+                }
+            ]
+        }
+    },
+    "101": { //Alert 
+        "1": {
+            features: [
+                {
+                    onUnlock: (actor) => {
+                        actor.update({
+                            system: {
+                                passivePerception: {
+                                    bonus: actor.system.passivePerception.bonus + 1
+                                }
+                            }
+                        });
+                        ui.notifications.info(`Your Passive Perception has been increased.`);
+                    }
+                }
+            ]
+        }
+    },
+    "259": { //Tough 
+        "1": {
+            features: [
+                {
+                    onUnlock: (actor) => {
+                        if (actor.system.armor.bonus >= 6){
+                            ui.notifications.warn(`${actor.name} Your armor bonus can't be increased beyond 6 via this feat.`);
+                            return;
+                        }
+                        actor.update({
+                            system: {
+                                armor: {
+                                    bonus: actor.system.armor.bonus + 1
+                                }
+                            }
+                        });
+                        ui.notifications.info(`Your Natural Armor bonus has been increased.`);
+                    }
+                }
+            ]
+        }
+    },
+    "260": { //Fast Fighter 
+        "1": {
+            features: [
+                {
+                    onUnlock: (actor) => {
+                        actor.update({
+                            system: {
+                                initiative: {
+                                    bonus: actor.system.initiative.bonus + 1
+                                }
+                            }
+                        });
+                        ui.notifications.info(`Your Initiative bonus has been increased.`);
+                    }
+                }
+            ]
+        }
+    },
+    "261": { //Runner 
+        "1": {
+            features: [
+                {
+                    onUnlock: (actor) => {
+                        if (actor.system.speed.base >= 12){
+                            ui.notifications.warn(`${actor.name} Your speed can't be increased beyond 12 via this feat.`);
+                            return;
+                        }
+                        actor.update({
+                            system: {
+                                speed: {
+                                    base: actor.system.speed.base + 1
+                                }
+                            }
+                        });
+                        ui.notifications.info(`Your Speed has been increased.`);
+                    }
+                }
+            ]
+        }
+    },
+    "148": { //Grand Master
+        "1": {
+            features: [
+                {
+                    selections: {
+                        "skill": {
+                            label: "Select a Skill",
+                            dynamicOptions: actor => actor.getSkillOptions(),
+                            onChange: (actor, from, to) => actor.setGrandMaster(from, to)
+                        }
                     }
                 }
             ]

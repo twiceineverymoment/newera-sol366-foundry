@@ -2418,4 +2418,62 @@ export class NewEraActor extends Actor {
       ui.notifications.error(`Error: Unable to locate object with ID: ${id}`);
     }
   }
+
+  async increaseBaseTurnLength(actions = 1, reactions = 0){
+    await this.update({
+      system: {
+        turnLength: {
+          actions: {
+            base: this.system.turnLength.actions.base + actions
+          },
+          reactions: {
+            base: this.system.turnLength.reactions.base + reactions
+          }
+        }
+      }
+    });
+    ui.notifications.info(`Your Turn Length has been increased!`);
+  }
+
+  async setGrandMaster(from, to){
+    const update = {
+      system: {
+        skills: {},
+        magic: {},
+      }
+    };
+    if (from){
+      if (this.system.skills[from]){
+        update.skills[from] = {
+          grandMaster: false
+        }
+      } else if (this.system.magic[from]){
+        update.magic[from] = {
+          grandMaster: false
+        }
+      }
+    }
+    if (to){
+      if (this.system.skills[to]){
+        if (this.system.skills[to].level < 10){
+          ui.notifications.warn(`You must reach skill level 10 before you can become a grand master!`);
+        } else {
+          update.skills[to] = {
+            grandMaster: true
+          }
+          ui.notifications.info(`${this.name} is now a grand master in ${Formatting.keyToTitle(to)}!`);
+        }
+      } else if (this.system.magic[to]){
+        if (this.system.magic[to].level < 10){
+          ui.notifications.warn(`You must reach magic level 10 before you can become a grand master!`);
+        } else {
+          update.magic[to] = {
+            grandMaster: true
+          }
+          ui.notifications.info(`${this.name} is now a grand master in ${Formatting.keyToTitle(to)} magic!`);
+        }
+      }
+    }
+    await this.update(update);
+  }
 }
