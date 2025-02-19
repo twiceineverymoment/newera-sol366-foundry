@@ -10,6 +10,7 @@ import { NewEraItem } from "../documents/item.mjs";
 import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
 import { SpellBrowser } from "./spell-browser.mjs";
 import { ClassSelect } from "./class-select.mjs";
+import { FeatData } from "../helpers/feats.mjs";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -75,6 +76,7 @@ export class NewEraActorSheet extends ActorSheet {
     }
     if (this.actor.typeIs(NewEraActor.Types.PC)) {
       this._prepareClassFeatures(context, context.inventory.classes);
+      this._prepareFeatOptions(context, context.inventory.feats);
       this._prepareInspiration(context);
     }
     if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
@@ -140,7 +142,6 @@ export class NewEraActorSheet extends ActorSheet {
     const system = this.actor.system;
     const archetypes = ClassInfo.getArchetypeData(this.actor);
     for (const clazz of classes){
-      //Get selected archetype id if it exists
       const className = clazz.system.selectedClass.toLowerCase();
       for (const feature of ClassInfo.features[className]){
         if (feature.level <= clazz.system.level){
@@ -287,6 +288,71 @@ export class NewEraActorSheet extends ActorSheet {
         }
       }),
     };
+  }
+
+  _prepareFeatOptions(context, feats){
+    context.features.feats = [];
+    for (const feat of feats){
+      if (feat.system.casperObjectId && FeatData[feat.system.casperObjectId]) {
+        for (let tier = 1; tier <= feat.system.currentTier; tier++){
+          if (FeatData[feat.system.casperObjectId][tier] && FeatData[feat.system.casperObjectId][tier].features) {
+            for (const feature of FeatData[feat.system.casperObjectId][tier].features){
+              feature.name = feat.name;
+              feature.description = feat.system.base.description;
+              feature.featType = NEWERA.featTypeMapping[feat.system.featType];
+              feature.img = feat.img;
+              feature.id = feat.system.casperObjectId;
+              feature.tier = tier;
+              
+              if (feature.selections) {
+                //If the feat is an upgrade, create copies of the selections for each tier
+                if (feature.selections["0"] && feat.system.maximumTier == -1) {
+                  feature.selections["0"].show = false;
+                  for (let t = 1; t <= feat.system.currentTier; t++) {
+                    feature.selections[t.toString()] = {
+                      label: feature.selections["0"].label + ` #${t}`,
+                      options: feature.selections["0"].options,
+                      repeated: true //This flag tells the UI event listener to run the onChange function from the original selection, since structuredClone doesn't copy functions
+                    }
+                  }
+                }
+                Object.entries(feature.selections).forEach(([key, selection]) => {
+                  //Populate the options for dynamic selections
+                  if (typeof selection.dynamicOptions == "function"){
+                    selection.options = selection.dynamicOptions(this.actor);
+                  }
+                  //Determine whether to show the selection
+                  if (typeof selection.showWhen == "function"){
+                    try {
+                      selection.show = selection.showWhen(this.actor);
+                    } catch (err) {
+                      selection.show = false; //Assume that if the showWhen function throws an error, it's because the data isn't there yet as the feature just got unlocked. In virtually all cases, these selections should be hidden until a prior option is chosen.
+                    }
+                  } else if (selection.show !== false) {
+                    selection.show = true;
+                  }
+                  //Load the current value of the selection into the Handlebars context - This is so we know the previous value when a selection is changed
+                  const keys = [feature.id, feature.tier, key];
+                  console.log(`[DEBUG] Finding current value for ${keys.join(".")}`);
+                  try {
+                    const currentValue = keys.reduce((acc, key) => acc[key], this.actor.system.featSelections);
+                    selection.currentValue = currentValue;
+                    console.log(`[DEBUG] ${keys.join(".")} = ${currentValue}`);
+                  } catch (err) {
+                    //During level-up, the new selection values will not exist yet, which will cause a ReferenceError. This is expected behavior - set the new feature's current value to an empty string.
+                    console.log(`[DEBUG] Finding current value for ${keys.join(".")} returned an error - setting to empty`);
+                    console.error(err);
+                    selection.currentValue = "";
+                  }
+                });
+              }
+
+              context.features.feats.push(feature);
+            }
+          }
+        }
+      }
+    }
   }
 
   _prepareActiveEffects(effects){
@@ -1042,6 +1108,24 @@ export class NewEraActorSheet extends ActorSheet {
           console.error(err);
         }
       });
+      html.find(".feat-select").change(async ev => {
+        const element = $(ev.currentTarget);
+        const newValue = element.val();
+        const oldValue = element.data("oldValue");
+        const featId = element.data("featId");
+        const tier = element.data("tier");
+        const selectionIndex = element.data("selectionKey");
+        console.log(`[ALU] Triggered feat selection change ${featId}.${tier}.${selectionIndex} ${oldValue} -> ${newValue}`);
+        try {
+          const featData = FeatData[featId][tier].features;
+          const selection = featData.find(f => f.selections[selectionIndex]).selections[selectionIndex];
+          if (typeof selection.onChange == 'function') {
+            await selection.onChange(this.actor, oldValue, newValue);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
     }
 
     //Store All buttons
@@ -1774,6 +1858,15 @@ export class NewEraActorSheet extends ActorSheet {
       }
       return retVal;
     });
+    html.find(".feat-select").val(function() {
+      const dataField = $(this).attr("name");
+      const paths = dataField.split(".");
+      let retVal = system;
+      for (let i=1; i<paths.length; i++){
+        retVal = retVal[paths[i]];
+      }
+      return retVal;
+    });
   }
 
   _prepareInspiration(context){
@@ -1843,9 +1936,11 @@ export class NewEraActorSheet extends ActorSheet {
         const compendium = await game.packs.get("newera-sol366.feats").getDocuments();
         const featFromCompendium = compendium.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
         const featFromActor = this.actor.items.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+        let tierUnlocked = null;
         if (featFromCompendium){
           if (featFromActor){ //Increase tier
             if (featFromActor.system.maximumTier == -1){
+              tierUnlocked = 1;
               await featFromActor.update({
                 system: {
                   currentTier: featFromActor.system.currentTier + 1
@@ -1859,9 +1954,10 @@ export class NewEraActorSheet extends ActorSheet {
                 ui.notifications.error(`${this.actor.name} already has the highest available tier of ${featFromCompendium.name}.`);
               } else {
                 if (featFromActor.characterMeetsFeatPrerequisites(this.actor, featFromActor.system.currentTier + 1)){
+                  tierUnlocked = featFromActor.system.currentTier + 1;
                   await featFromActor.update({
                     system: {
-                      currentTier: featFromActor.system.currentTier + 1
+                      currentTier: tierUnlocked
                     }
                   });
                   ui.notifications.info(`You upgraded ${this.actor.name}'s ${featFromCompendium.name} feat to tier ${featFromActor.system.currentTier} for ${featFromActor.system.tiers[featFromActor.system.currentTier].cost} character points.`);
@@ -1874,9 +1970,24 @@ export class NewEraActorSheet extends ActorSheet {
             if (featFromCompendium.characterMeetsFeatPrerequisites(this.actor, 1)){
               const featData = structuredClone(featFromCompendium);
               await Item.create(featData, { parent: this.actor });
+              tierUnlocked = 1;
               ui.notifications.info(`You took ${featFromCompendium.name} for ${featFromCompendium.system.base.cost} character points.`);
             } else {
               ui.notifications.warn(`${this.actor.name} doesn't meet the prerequisites for ${featFromCompendium.name}.`);
+            }
+          }
+          //Check for onUnlock function 
+          if (tierUnlocked && game.settings.get("newera-sol366", "autoLevelUp")) {
+            console.log(`[ALU] Processing unlock triggers for ${featFromCompendium.name} tier ${tierUnlocked}`);
+            try {
+              const features = FeatData[dropData.casperObjectId][tierUnlocked.toString()].features;
+              for (const feature of features){
+                if (typeof feature.onUnlock == "function"){
+                  await feature.onUnlock(this.actor);
+                }
+              }
+            } catch (err) {
+              console.log(`[ALU] No logic found or error encountered.`);
             }
           }
         } else {

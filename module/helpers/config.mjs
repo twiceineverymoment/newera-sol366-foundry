@@ -4189,6 +4189,25 @@ NEWERA.prerequisiteActorStatTextMatching = {
     "temporal": actor => actor.system.magic.temporal.level,
 }
 
+NEWERA.featTypeMapping = {
+    "GF": "General Feat",
+    "SF": "Skill Feat",
+    "CF": "Class Feat",
+    "AF": "Archetype Feat",
+    "CB": "Career Background",
+    "BG": "Background",
+    "FL": "Flaw",
+    "GU": "General Feat",
+    "SU": "Skill Feat",
+    "CU": "Class Feat",
+    "AU": "Archetype Feat",
+}
+
+//These types denote feats that can be taken any number of times.
+NEWERA.repeatableFeatTypes = [
+    "GU", "SU", "CU", "AU"
+];
+
 NEWERA.spellStudiesLists = {
     delver: {
         label: "Delver Spells",
