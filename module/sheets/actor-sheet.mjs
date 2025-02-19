@@ -333,15 +333,15 @@ export class NewEraActorSheet extends ActorSheet {
                   }
                   //Load the current value of the selection into the Handlebars context - This is so we know the previous value when a selection is changed
                   const keys = [feature.id, feature.tier, key];
-                  console.log(`[DEBUG] Finding current value for ${keys.join(".")}`);
+                  //console.log(`[DEBUG] Finding current value for ${keys.join(".")}`);
                   try {
                     const currentValue = keys.reduce((acc, key) => acc[key], this.actor.system.featSelections);
                     selection.currentValue = currentValue;
-                    console.log(`[DEBUG] ${keys.join(".")} = ${currentValue}`);
+                    //console.log(`[DEBUG] ${keys.join(".")} = ${currentValue}`);
                   } catch (err) {
                     //During level-up, the new selection values will not exist yet, which will cause a ReferenceError. This is expected behavior - set the new feature's current value to an empty string.
-                    console.log(`[DEBUG] Finding current value for ${keys.join(".")} returned an error - setting to empty`);
-                    console.error(err);
+                    //console.log(`[DEBUG] Finding current value for ${keys.join(".")} returned an error - setting to empty`);
+                    //console.error(err);
                     selection.currentValue = "";
                   }
                 });
@@ -1113,8 +1113,9 @@ export class NewEraActorSheet extends ActorSheet {
         const newValue = element.val();
         const oldValue = element.data("oldValue");
         const featId = element.data("featId");
-        const tier = element.data("tier");
-        const selectionIndex = element.data("selectionKey");
+        const repeated = element.data("repeated");
+        const tier = repeated ? "1" : element.data("tier");
+        const selectionIndex = repeated ? "0" : element.data("selectionKey");
         console.log(`[ALU] Triggered feat selection change ${featId}.${tier}.${selectionIndex} ${oldValue} -> ${newValue}`);
         try {
           const featData = FeatData[featId][tier].features;
