@@ -2178,49 +2178,108 @@ export class NewEraActor extends Actor {
    * @param {*} to The new skill to set.
    */
   async setNaturalSkill(from, to){
+    if (from == to) return;
     if (this.type != "Player Character") return;
-    const update = structuredClone(this.system);
+    const update = {
+      skills: {},
+      magic: {}
+    };
     if (from){
-      if (update.skills[from]){
-        update.skills[from].natural = false;
-      } else if (update.magic[from]){
-        update.magic[from].natural = false;
-      } else {
-        const knowledge = update.knowledges.find(k => k.subject == from);
-        if (knowledge) {
-          knowledge.natural = false;
-        } else {
-          ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+      if (this.system.skills[from]){
+        update.skills[from] = {
+          natural: false
         }
+      } else if (this.system.magic[from]){
+        update.magic[from] = {
+          natural: false
+        }
+      } else {
+        ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
       }
     }
     if (to) {
-      if (update.skills[to]){
-        if (update.skills[to].natural) {
+      if (this.system.skills[to]){
+        if (this.system.skills[to].natural) {
           ui.notifications.warn(`You're already a natural in that skill!`);
         } else {
-          update.skills[to].natural = true;
+          update.skills[to] = {
+            natural: true
+          }
           ui.notifications.info(`You're now a natural in ${Formatting.keyToTitle(to)}!`);
         }
-      } else if (update.magic[to]){
-        if (update.magic[to].natural) {
+      } else if (this.system.magic[to]){
+        if (this.system.magic[to].natural) {
           ui.notifications.warn(`You're already a natural in that skill!`);
         } else {
-          update.magic[to].natural = true;
+          update.magic[to] = {
+            natural: true
+          }
           ui.notifications.info(`You're now a natural in ${Formatting.keyToTitle(to)} magic!`);
         }
       } else {
-        const knowledge = update.knowledges.find(k => k.subject == from);
-        if (knowledge){
-          if (knowledge.natural) {
-            ui.notifications.warn(`You're already a natural in that skill!`);
-          } else {
-            knowledge.natural = true;
-            ui.notifications.info(`You're now a natural in ${to} knowledge!`);
-          }
-        } else {
           ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+      }
+    }
+    await this.update({
+      system: update
+    });
+  }
+
+  /**
+   * Boost a skill through a class feature.
+   * @param {*} from The old skill to remove.
+   * @param {*} to The new skill to set.
+   * @param {boolean} levelIncrease If true, the skill's level is increased. Otherwise, the boost applies to the modifier bonus.
+   */
+  async setSkillBoost(from, to, levelIncrease = false){
+    if (this.type != "Player Character") return;
+    const field = levelIncrease ? "level" : "bonus";
+    const update = {
+      skills: {},
+      magic: {}
+    };
+    if (from){
+      if (this.system.skills[from]){
+        update.skills[from] = {
+          [field]: this.system.skills[from][field] - 1
         }
+      } else if (this.system.magic[from]){
+        update.magic[from] = {
+          [field]: this.system.magic[from][field] - 1
+        }
+      } else { //This function and setNaturalSkill might need to support knowledges but there is no need yet.
+        ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+      }
+    }
+    if (to) {
+      if (this.system.skills[to]){
+        if (levelIncrease && this.system.skills[to].level == 10) {
+          ui.notifications.warn(`Your ${Formatting.keyToTitle(to)} skill is already at max level!`);
+        } else {
+          update.skills[to] = {
+            [field]: this.system.skills[to][field] + 1
+          }
+          if (levelIncrease){
+            ui.notifications.info(`Your ${Formatting.keyToTitle(to)} skill increased to ${update.skills[to][field]}!`);
+          } else {
+            ui.notifications.info(`Your ${Formatting.keyToTitle(to)} skill bonus is now ${update.skills[to][field]}.`);
+          }
+        }
+      } else if (this.system.magic[to]){
+        if (levelIncrease && this.system.magic[to].level == 10) {
+          ui.notifications.warn(`Your ${Formatting.keyToTitle(to)} magic skill is already at max level!`);
+        } else {
+          update.magic[to] = {
+            [field]: this.system.magic[to][field] + 1
+          }
+          if (levelIncrease){
+            ui.notifications.info(`Your ${Formatting.keyToTitle(to)} magic skill increased to ${update.magic[to][field]}!`);
+          } else {
+            ui.notifications.info(`Your ${Formatting.keyToTitle(to)} magic skill bonus is now ${update.magic[to][field]}.`);
+          }
+        }
+      } else {
+        ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
       }
     }
     await this.update({
@@ -2237,12 +2296,16 @@ export class NewEraActor extends Actor {
    * @param {*} parentSkill The parent skill of the new specialty, if one is created.
    */
   async setSpecialtyFeature(fromSubject, subject, parentSkill = "") {
-    const update = structuredClone(this.system);
+    const update = {
+      specialties: {}
+    };
     if (fromSubject){
       const fromIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == Formatting.keyToTitle(fromSubject));
       if (fromIndex !== undefined){
         if (this.system.specialties[fromIndex].level > 1){
-          update.specialties[fromIndex].level -= 1;
+          update.specialties[fromIndex] = {
+            level: this.system.specialties[fromIndex].level - 1
+          }
         } else {
           await this.deleteSpecialty(fromIndex);
         }
@@ -2253,14 +2316,16 @@ export class NewEraActor extends Actor {
       const toIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == title);
       if (toIndex !== undefined){
         if (this.system.specialties[toIndex].level < 3){
-          update.specialties[toIndex].level += 1;
+          update.specialties[toIndex] = {
+            level: this.system.specialties[toIndex].level + 1
+          }
           ui.notifications.info(`Your ${title} specialty increased to ${update.specialties[toIndex].level}!`);
         } else {
           ui.notifications.warn(`Your ${title} specialty is already at max level! Specialties can't exceed level 3.`);
         }
       } else {
         const defaultParent = parentSkill || NEWERA.specialtyDefaultParents[subject];
-        update.specialties[Object.keys(update.specialties).length] = {
+        update.specialties[Object.keys(this.system.specialties).length] = {
           subject: title,
           level: 1,
           bonus: 0,

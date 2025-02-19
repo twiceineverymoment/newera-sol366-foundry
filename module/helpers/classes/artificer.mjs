@@ -258,7 +258,7 @@ export class Artificer {
                         temporal: "Temporal"
                     },
                     showWhen: (actor) => actor.system.classes.artificer.bonus["1"].bonus == "magicSkill",
-                    onChange: (actor, from, to) => actor.setSkillBonus(from, to)
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
             },
             spellStudies: [
