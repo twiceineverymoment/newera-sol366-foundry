@@ -1810,8 +1810,8 @@ export class NewEraActor extends Actor {
   getLearningExperienceOptions(){
     const output = {};
     for (const [k, v] of Object.entries(this.system.knowledges)){
-      if (v.level < 10){
-        output[k] = v.subject + "(Max Level)";
+      if (v.level == 10){
+        output[k] = v.subject + " (Max Level)";
       } else {
         output[k] = v.subject;
       }
@@ -1822,8 +1822,8 @@ export class NewEraActor extends Actor {
   getSpecialtyImprovementOptions(){
     const output = {};
     for (const [k, v] of Object.entries(this.system.specialties)){
-      if (v.level < 3){
-        output[k] = v.subject + "(Max Level)";
+      if (v.level == 3){
+        output[k] = v.subject + " (Max Level)";
       } else {
         output[k] = v.subject;
       }
@@ -2293,9 +2293,17 @@ export class NewEraActor extends Actor {
     if (from){
       update.abilities[from].score -= 1;
     }
-    update.abilities[to].score += 1;
+    if (to){
+      if (update.abilities[to].score >= 20 && this.system.level < 15){
+        ui.notifications.warn(`You can't increase an ability score beyond 20 until you reach level 15.`);
+      } else if (update.abilities[to].score >= 30){
+        ui.notifications.warn(`You can't increase an ability score beyond 30.`);
+      } else {
+        update.abilities[to].score += 1;
+        ui.notifications.info(`Your ${to} increased to ${update.abilities[to].score}!`);
+      }
+    }
     await this.update({system: update});
-    ui.notifications.info(`Your ${to} increased to ${update.abilities[to].score}!`);
   }
 
   async setLearningExperience(from, to){
