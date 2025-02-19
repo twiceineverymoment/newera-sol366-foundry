@@ -2,6 +2,8 @@ import { DarkEnergyPool } from "../../schemas/dark-energy-pool.mjs";
 import { DarkEnergySheet } from "../../sheets/dark-energy.mjs";
 import { NEWERA } from "../config.mjs";
 import { HotbarActions } from "../macros/hotbarActions.mjs";
+import { SpellFocus } from "../../sheets/spell-focus.mjs";
+
 export class Witch {
 
     static hitPointIncrement = {
@@ -760,7 +762,36 @@ export class Witch {
         }
     ]
 
-    static classFeats = {}
+    static classFeats = {
+        "634": { //Magical Focus
+            "1": {
+                unlocksCoreFeature: "magicalFocus",
+                actions: [
+                    {
+                        name: "Spell Storage",
+                        images: {
+                            base: `${NEWERA.images}/crystal-shine.png`,
+                            left: `${NEWERA.images}/witch.png`,
+                        },
+                        ability: null,
+                        skill: null,
+                        specialties: [],
+                        description: `You utilize your Magical Focus to store spells ahead of time. You can cast your stored spells by releasing them from your focus.`,
+                        difficulty: null,
+                        actionType: "E",
+                        overrideMacroCommand: `game.newera.HotbarActions.openSpellStorage()`,
+                        rolls: [
+                          {
+                            label: "Focus",
+                            die: "crystal-shine",
+                            callback: actor => new SpellFocus(actor).render(true)
+                          }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
 
     static async initializeDarkEnergy(actor, reset){
         const max = actor.system.tableValues.darkEnergy;

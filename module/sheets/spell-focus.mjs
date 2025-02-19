@@ -1,4 +1,3 @@
-import { NEWERA } from "../helpers/config.mjs";
 import { Artificer } from "../helpers/classes/artificer.mjs";
 import { Actions } from "../helpers/macros/actions.mjs";
 import { Formatting } from "../helpers/formatting.mjs";

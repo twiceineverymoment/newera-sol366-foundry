@@ -258,20 +258,80 @@ const generalFeats = {
 
 const skillFeats = {}
 
-export const FeatData = {
-    ...generalFeats,
-    ...skillFeats,
-    ...Artificer.classFeats,
-    ...Chanter.classFeats,
-    ...Delver.classFeats,
-    ...Guardian.classFeats,
-    ...Investigator.classFeats,
-    ...Magus.classFeats,
-    ...Mercenary.classFeats,
-    ...Ranger.classFeats,
-    ...Researcher.classFeats,
-    ...Scholar.classFeats,
-    ...Sage.classFeats,
-    ...Scholar.classFeats,
-    ...Witch.classFeats
+export class ExtendedFeatData {
+
+    static _featData = null;
+
+    static getFeatData = function() {
+        if (!ExtendedFeatData._featData) {
+            ExtendedFeatData._featData = {
+                ...generalFeats,
+                ...skillFeats,
+                ...Artificer.classFeats,
+                ...Chanter.classFeats,
+                ...Delver.classFeats,
+                ...Guardian.classFeats,
+                ...Investigator.classFeats,
+                ...Magus.classFeats,
+                ...Mercenary.classFeats,
+                ...Ranger.classFeats,
+                ...Researcher.classFeats,
+                ...Scholar.classFeats,
+                ...Sage.classFeats,
+                ...Scholar.classFeats,
+                ...Witch.classFeats
+            }
+        }
+        return ExtendedFeatData._featData;
+    }
+
+    static getFeatDataById = function(id, tier = 1) {
+        const featData = ExtendedFeatData.getFeatData();
+        try {
+            return featData[id.toString()][tier.toString()];
+        } catch (err) {
+            return undefined;
+        }
+    }
+
+    static getFeatures(id, tier = 1) {
+        const featData = ExtendedFeatData.getFeatDataById(id, tier);
+        if (!featData) {
+            return [];
+        }
+        return featData.features || [];
+    }
+
+    static getCustomPrerequisiteData(id, tier = 1) {
+        const featData = ExtendedFeatData.getFeatDataById(id, tier);
+        if (!featData) {
+            return null;
+        }
+        return featData.prerequisite || null;
+    }
+
+    static getActions(id, tier = 1) {
+        const globalData = ExtendedFeatData.getFeatData();
+        const featData = globalData[feat.system.casperObjectId];
+        if (!featData) {
+            return [];
+        }
+        const actions = [];
+        for (let tier = 1; tier <= feat.system.currentTier; tier++) {
+            if (featData[tier.toString()] && featData[tier.toString()].actions) {
+                actions.push(...featData[tier.toString()].actions);
+            }
+        }
+        return actions;
+    }
+
+    static getFeatActions(feat) {
+        if (feat.type != "Feat") {
+            return undefined;
+        }
+        if (!feat.system.casperObjectId) {
+            return [];
+        }
+        return ExtendedFeatData.getActions(feat.system.casperObjectId, feat.system.currentTier);
+    }
 }

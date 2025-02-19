@@ -10,7 +10,8 @@ import { NewEraItem } from "../documents/item.mjs";
 import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
 import { SpellBrowser } from "./spell-browser.mjs";
 import { ClassSelect } from "./class-select.mjs";
-import { FeatData } from "../helpers/feats.mjs";
+import { ExtendedFeatData } from "../helpers/feats.mjs";
+import { DefaultActions } from "../helpers/defaultActions.mjs";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -292,11 +293,12 @@ export class NewEraActorSheet extends ActorSheet {
 
   _prepareFeatOptions(context, feats){
     context.features.feats = [];
+    const globalFeatData = ExtendedFeatData.getFeatData();
     for (const feat of feats){
-      if (feat.system.casperObjectId && FeatData[feat.system.casperObjectId]) {
+      if (feat.system.casperObjectId && globalFeatData[feat.system.casperObjectId]) {
         for (let tier = 1; tier <= feat.system.currentTier; tier++){
-          if (FeatData[feat.system.casperObjectId][tier] && FeatData[feat.system.casperObjectId][tier].features) {
-            for (const feature of FeatData[feat.system.casperObjectId][tier].features){
+          if (globalFeatData[feat.system.casperObjectId][tier] && globalFeatData[feat.system.casperObjectId][tier].features) {
+            for (const feature of globalFeatData[feat.system.casperObjectId][tier].features){
               feature.name = feat.name;
               feature.description = feat.system.base.description;
               feature.featType = NEWERA.featTypeMapping[feat.system.featType];
@@ -664,13 +666,11 @@ export class NewEraActorSheet extends ActorSheet {
     /* Feat Actions from extended data class */
     if (actor.type == "Player Character"){
       for (const feat of this.actor.items.filter(i => i.type == "Feat")){
-        const extendedFeatData = FeatActions.find(f => f.casperObjectId == feat.system.casperObjectId);
-        if (extendedFeatData){
-          for (const a of extendedFeatData.actions){
-            this._prepareActionContextInfo(a, false);
-            a.macroClass = "action-macro-basic";
-            actions.feats.push(a);
-          }
+        const featActions = ExtendedFeatData.getFeatActions(feat);
+        for (const a of featActions){
+          this._prepareActionContextInfo(a, false);
+          a.macroClass = "action-macro-basic";
+          actions.feats.push(a);
         }
       }
     }
@@ -682,13 +682,10 @@ export class NewEraActorSheet extends ActorSheet {
 
     /* General actions from config for characters and humanoid creatures */
     if (actor.type == "Player Character" || actor.type == "Non-Player Character" || system.hasStandardActions){
-      actions.general = [...NEWERA.pcGeneralActions];
+      Object.assign(actions, DefaultActions); //Copy the default actions into the actions object
       actions.general.forEach((a) => this._prepareActionContextInfo(a, false));
-      actions.exploration = [...NEWERA.explorationActions];
       actions.exploration.forEach((a) => this._prepareActionContextInfo(a, false));
-      actions.social = [...NEWERA.generalSocialActions];
       actions.social.forEach((a) => this._prepareActionContextInfo(a, false));
-      actions.magic = [...NEWERA.generalMagicActions];
       actions.magic.forEach((a) => this._prepareActionContextInfo(a, false));
       system.customActionSection = true;
     }
@@ -1118,7 +1115,7 @@ export class NewEraActorSheet extends ActorSheet {
         const selectionIndex = repeated ? "0" : element.data("selectionKey");
         console.log(`[ALU] Triggered feat selection change ${featId}.${tier}.${selectionIndex} ${oldValue} -> ${newValue}`);
         try {
-          const featData = FeatData[featId][tier].features;
+          const featData = ExtendedFeatData.getFeatures(featId, tier);
           const selection = featData.find(f => f.selections[selectionIndex]).selections[selectionIndex];
           if (typeof selection.onChange == 'function') {
             await selection.onChange(this.actor, oldValue, newValue);
@@ -1981,7 +1978,7 @@ export class NewEraActorSheet extends ActorSheet {
           if (tierUnlocked && game.settings.get("newera-sol366", "autoLevelUp")) {
             console.log(`[ALU] Processing unlock triggers for ${featFromCompendium.name} tier ${tierUnlocked}`);
             try {
-              const features = FeatData[dropData.casperObjectId][tierUnlocked.toString()].features;
+              const features = ExtendedFeatData.getFeatures(dropData.casperObjectId, tierUnlocked);
               for (const feature of features){
                 if (typeof feature.onUnlock == "function"){
                   await feature.onUnlock(this.actor);
