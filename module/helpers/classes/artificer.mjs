@@ -237,7 +237,7 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "1": {
+                "1.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
@@ -246,8 +246,38 @@ export class Artificer {
                         carryWeight: "+1 Carry Weight bonus",
                     },
                     onChange: (actor, from, to) => Artificer.bonus(actor, from, to)
+                },
+                "1.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["1"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBonus(from, to)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    onOtherFeature: true
+                },
+                {
+                    onOtherFeature: true
+                },
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["1"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 5,
