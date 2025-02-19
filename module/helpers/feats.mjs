@@ -1,3 +1,4 @@
+
 /**
  * This file contains custom logic for feats.
  * Although each tier has a unique ID in CASPER, only the first tier is exported to Foundry by its number.
@@ -59,34 +60,7 @@ export const FeatData = {
                     selections: {
                         "skill": {
                             label: "Select a Skill",
-                            options: {
-                                agility: "Agility",
-                                athletics: "Athletics",
-                                deception: "Deception",
-                                defense: "Defense",
-                                determination: "Determination",
-                                diplomacy: "Diplomacy",
-                                endurance: "Endurance",
-                                intimidation: "Intimidation",
-                                logic: "Logic",
-                                marksmanship: "Marksmanship",
-                                medicine: "Medicine",
-                                "one-handed": "One-Handed",
-                                perception: "Perception",
-                                performance: "Performance",
-                                reflex: "Reflex",
-                                persuasion: "Persuasion",
-                                "sleight-of-hand": "Sleight of Hand",
-                                stealth: "Stealth",
-                                technology: "Technology",
-                                "two-handed": "Two-Handed",
-                                elemental: "Elemental Magic",
-                                divine: "Divine Magic",
-                                physical: "Physical Magic",
-                                psionic: "Psionic Magic",
-                                spectral: "Spectral Magic",
-                                temporal: "Temporal Magic"
-                            },
+                            dynamicOptions: actor => actor.getSkillOptions(),
                             onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                         }
                     }
