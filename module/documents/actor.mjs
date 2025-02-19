@@ -2354,17 +2354,23 @@ export class NewEraActor extends Actor {
   }
 
   async setAbilityScoreImprovement(from, to){
-    const update = structuredClone(this.system);
+    const update = {
+      abilities: {}
+    };
     if (from){
-      update.abilities[from].score -= 1;
+      update.abilities[from] = {
+        score: this.system.abilities[from].score - 1
+      }
     }
     if (to){
-      if (update.abilities[to].score >= 20 && this.system.level < 15){
+      if (this.system.abilities[to].score >= 20 && this.system.level < 15){
         ui.notifications.warn(`You can't increase an ability score beyond 20 until you reach level 15.`);
-      } else if (update.abilities[to].score >= 30){
+      } else if (this.system.abilities[to].score >= 30){
         ui.notifications.warn(`You can't increase an ability score beyond 30.`);
       } else {
-        update.abilities[to].score += 1;
+        update.abilities[to] = {
+          score: this.system.abilities[to].score + 1
+        }
         ui.notifications.info(`Your ${to} increased to ${update.abilities[to].score}!`);
       }
     }

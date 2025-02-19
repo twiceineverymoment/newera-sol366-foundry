@@ -1,4 +1,5 @@
 import { NEWERA } from "../helpers/config.mjs";
+import { FeatData } from "../helpers/feats.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
 import { Actions } from "../helpers/macros/actions.mjs";
 
@@ -1569,7 +1570,7 @@ _preparePotionData(system){
     //console.log(`[DEBUG] TP name=${this.name} T=${tier}`);
     if (this.type == "Feat"){
       try {
-        const customCondition = NEWERA.customFeatPrerequisites[this.system.casperObjectId][tier];
+        const customCondition = FeatData[this.system.casperObjectId][tier].prerequisite;
         if (customCondition){
           return [
             [ customCondition ]
