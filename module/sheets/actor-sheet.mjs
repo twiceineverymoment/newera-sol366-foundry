@@ -180,13 +180,27 @@ export class NewEraActorSheet extends ActorSheet {
           //Load the status of Spell Studies features into the Handlebars context
           if (feature.spellStudies){
             for (let i=0; i<feature.spellStudies.length; i++){
+              //Determine whether to show the study guide butto
+              feature.spellStudies[i].show = true;
+              if (typeof feature.spellStudies[i].showWhen == "function"){
+                try {
+                  feature.spellStudies[i].show = feature.spellStudies[i].showWhen(this.actor);
+                } catch (err) {
+                  feature.spellStudies[i].show = false;
+                }
+              }
               if (feature.spellStudies[i].onOtherFeature){
                 /*
                 Spell studies blocks with this property set are used to offset their index position for that level in the rare case of a class having multiple study-guide-enabled features at the same level.
                 They are not rendered in the sheet and should be skipped here too.
+                UPDATE 2025 - This is less rare than originally thought
                 */
+                feature.spellStudies[i].show = false;
+              }
+              if (!feature.spellStudies[i].show){
                 continue;
               }
+
               //Mark the spell studies features as complete if the remaining selection counter is EXPLICITLY zero (undefined means none chosen yet)
               feature.spellStudies[i].status = feature.spellStudies.length > 1 ? `(${i+1}/${feature.spellStudies.length})` : "";
               feature.spellStudies[i].index = i;
