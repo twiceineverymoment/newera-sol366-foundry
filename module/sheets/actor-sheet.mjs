@@ -4,7 +4,6 @@ import { ClassInfo } from "../helpers/classFeatures.mjs";
 import { Actions } from "../helpers/macros/actions.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
 import { FeatBrowser } from "./feat-browser.mjs";
-import { FeatActions } from "../helpers/macros/featActions.mjs";
 import { NewEraActor } from "../documents/actor.mjs";
 import { NewEraItem } from "../documents/item.mjs";
 import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
@@ -349,7 +348,13 @@ export class NewEraActorSheet extends ActorSheet {
                 });
               }
 
-              context.features.feats.push(feature);
+              if (feature.spellStudies) {
+                //TODO
+              }
+
+              if (feature.selections || feature.spellStudies) { //Features which have data defined purely for unlock triggers or prerequisites have no need to be rendered on the sheet
+                context.features.feats.push(feature);
+              }
             }
           }
         }

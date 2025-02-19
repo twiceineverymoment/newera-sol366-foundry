@@ -312,14 +312,14 @@ export class ExtendedFeatData {
 
     static getActions(id, tier = 1) {
         const globalData = ExtendedFeatData.getFeatData();
-        const featData = globalData[feat.system.casperObjectId];
+        const featData = globalData[id.toString()];
         if (!featData) {
             return [];
         }
         const actions = [];
-        for (let tier = 1; tier <= feat.system.currentTier; tier++) {
-            if (featData[tier.toString()] && featData[tier.toString()].actions) {
-                actions.push(...featData[tier.toString()].actions);
+        for (let t = 1; t <= tier; t++) {
+            if (featData[t.toString()] && featData[t.toString()].actions) {
+                actions.push(...featData[t.toString()].actions);
             }
         }
         return actions;
