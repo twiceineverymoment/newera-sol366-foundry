@@ -541,6 +541,25 @@ export class NewEraActor extends Actor {
     }
   }
 
+  async setPronouns(set, pronouns) {
+    const update = {
+      system: {}
+    };
+    if (set != 5) {
+      const selectedSet = NEWERA.pronouns[set];
+      update.system.pronouns = {
+        index: set,
+        ...selectedSet
+      }
+    } else {
+      update.system.pronouns = {
+        index: 5,
+        ...pronouns
+      }
+    }
+    await this.update(update);
+  }
+
   async addKnowledge(subject = null, count = 1) {
     const update = structuredClone(this.system);
     for (let i = 0; i < count; i++){
@@ -745,15 +764,20 @@ export class NewEraActor extends Actor {
     return output;
   }
 
-  moveItem(id, source, destination){
+  async moveItem(id, source, destination){
     console.log(`Moving item ${id} from ${source} to ${destination}`);
     const system = this.system;
+    const update = {
+      system: {
+        equipment: {}
+      }
+    };
     const item = this.items.get(id);
     if (source != "backpack"){
-      system.equipment[source] = "";
+      update.system.equipment[source] = "";
     }
     if (destination != "backpack"){
-      system.equipment[destination] = id;
+      update.system.equipment[destination] = id;
     }
     //Handle two-handed items.
     //For "2H", force the item to the right hand and clear the left.
@@ -762,10 +786,11 @@ export class NewEraActor extends Actor {
       console.log("Checking for a two-handed item...");
       if (item.system.handedness == "2H" || (item.system.handedness == "1.5H" && destination == "rightHand" && !system.forceOneHanded)){
         console.log("Moved to right hand and cleared left");
-        system.equipment.rightHand = id;
-        system.equipment.leftHand = "";
+        update.system.equipment.rightHand = id;
+        update.system.equipment.leftHand = "";
       }
     }
+    await this.update(update);
   }
 
   /**

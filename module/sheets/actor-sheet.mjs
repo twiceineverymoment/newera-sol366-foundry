@@ -131,6 +131,7 @@ export class NewEraActorSheet extends ActorSheet {
     for (let [key, obj] of Object.entries(context.system.specialties)) {
       obj.label = obj.subject + " (" + game.i18n.localize("newera.skill."+obj.defaultParent+".abbr") + ")";
     }
+    context.useCustomPronouns = context.system.pronouns.index == 5;
   }
 
   _prepareCreatureData(context) {
@@ -818,7 +819,12 @@ export class NewEraActorSheet extends ActorSheet {
     super.activateListeners(html);
     const system = this.actor.system;
 
-    // Render the item sheet for viewing/editing prior to the editable check.
+    //Set values of select elements 
+    html.find('select.auto-value').val(function() {
+      const dataField = $(this).attr("name");
+      return Formatting.getSelectValue(dataField, this.actor);
+    });
+
     html.find('.item-edit').click(ev => {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       //console.log(li);
@@ -930,26 +936,9 @@ export class NewEraActorSheet extends ActorSheet {
 
     //Pronoun field update
     if (system.pronouns) {
-      //console.log("[NEWERA] Stored pronoun data "+JSON.stringify(system.pronouns));
-      if (system.pronouns.index == 5) {
-        html.find('#profile-pronouns').show();
-      }
-      html.find('#pronoun-select-'+this.actor.id).val(system.pronouns.index);
-      html.find('#pronoun-select-'+this.actor.id).change(event => {
+      html.find('#pronoun-select').change(async event => {
         let selection = event.target.value;
-        let data = this.actor.system;
-        if (selection != 5) {
-          html.find('#section-pronouns').hide();
-          const selectedSet = NEWERA.pronouns[selection];
-          html.find('#pronoun-subjective').val(selectedSet.subjective);
-          html.find('#pronoun-objective').val(selectedSet.objective);
-          html.find('#pronoun-possessiveDependent').val(selectedSet.possessiveDependent);
-          html.find('#pronoun-possessiveIndependent').val(selectedSet.possessiveIndependent);
-          html.find('#pronoun-reflexive').val(selectedSet.reflexive);
-          html.find('#pronoun-contraction').val(selectedSet.contraction);
-          html.find('#pronoun-pluralize').val(selectedSet.pluralize);
-        }
-        this.submit();
+        await this.actor.setPronouns(selection, {});
       });
     }
 
@@ -1024,15 +1013,20 @@ export class NewEraActorSheet extends ActorSheet {
       if (system.totalWeight > system.carryWeight){
         html.find("#cw-wrapper").addClass("cw-full");
       }
-    }
+    } 
 
     //Actions tab
-    html.find(".action-icon").click(ev => {
+    html.find(".action-icon").click(async ev => {
       if ($(ev.currentTarget).data("actionCategory")){ //This check prevents the listener from triggering on click of the 'new custom action' button
-        html.find("#selectedActionCategory").val($(ev.currentTarget).data("actionCategory"));
-        html.find("#selectedActionIndex").val($(ev.currentTarget).data("actionId"));
+        await this.actor.update({
+          system: {
+            lastAction: {
+              category: $(ev.currentTarget).data("actionCategory"),
+              index: $(ev.currentTarget).data("actionId")
+            }
+          }
+        });
         html.find(".newera-actorsheet-scroll").scrollTop(0);
-        this.submit();
       }
     });
     html.find(".newera-roll-button").click(async ev => {
@@ -1281,10 +1275,7 @@ export class NewEraActorSheet extends ActorSheet {
           if (Formatting.sendEquipmentChangeMessages()){
             this.actor.actionMessage(movedItem.img, frameImg, "{NAME} {0} {d} {1}!", this._getItemActionVerb(sourceSlot, targetSlot), (movedItem.type == "Phone" ? "phone" : movedItem.name));
           }
-          this.actor.moveItem(itemId, sourceSlot, targetSlot);
-          html.find(`#newera-equipment-${this.actor.id}-${targetSlot}-input`).val(itemId);
-          html.find(`#newera-equipment-${this.actor.id}-${sourceSlot}-input`).val("");
-          this.submit();
+          await this.actor.moveItem(itemId, sourceSlot, targetSlot);
         }
       }
       //Moving an item to a different actor
@@ -1392,11 +1383,8 @@ export class NewEraActorSheet extends ActorSheet {
     });
 
     //Initial HP for creatures
-    html.find("#init-hp-roll").click(async () => {
-      await this.actor.rollInitialHP();
-      html.find("#resourceValHp").val(this.actor.system.hitPoints.value);
-      html.find("#resourceMaxHp").val(this.actor.system.hitPoints.max);
-      this.submit();
+    html.find("#init-hp-roll").click(() => {
+      this.actor.rollInitialHP();
     });
 
     //Macro/action button listeners

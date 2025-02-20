@@ -49,6 +49,12 @@ export class Formatting {
         }
       }
 
+      static getSelectValue(name, document) {
+        let tokens = name.split(".");
+        let value = tokens.reduce((acc, token) => acc[token], document);
+        return value;
+      }
+
       static formatRollExpression(count, size, modifier){
         if (modifier > 0){
           return `${count}d${size}+${modifier}`;
