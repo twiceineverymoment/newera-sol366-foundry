@@ -8,7 +8,7 @@ import { PhoneUI } from "./sheets/phone-ui.mjs";
 import { HotbarManager } from "./helpers/macros/hotbarManager.mjs";
 import { HotbarActions } from "./helpers/macros/hotbarActions.mjs";
 import { Formatting } from "./helpers/formatting.mjs";
-
+import { TextMessaging } from "./helpers/textMessaging.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { NEWERA } from "./helpers/config.mjs";
@@ -28,6 +28,8 @@ Hooks.once('init', async function() {
   };
 
   setupGameSettings();
+
+  registerSocketHandlers();
 
   // Add custom constants for configuration.
   CONFIG.NEWERA = NEWERA;
@@ -433,7 +435,7 @@ function setupGameSettings(){
       step: 1
     },
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.time.minute", {
     name: "Game Time - Minute",
@@ -447,7 +449,7 @@ function setupGameSettings(){
       step: 1
     },
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.time.daylight", {
     name: "Game Time - Day/Night",
@@ -462,7 +464,7 @@ function setupGameSettings(){
       "auto": "Auto"
     },
     default: "auto",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.date.day", {
     name: "Game Time - Day",
@@ -471,7 +473,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: Number,
     default: 1,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.date.month", {
     name: "Game Time - Month",
@@ -495,7 +497,7 @@ function setupGameSettings(){
       "13": "Sol"
     },
     default: "1",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.date.year", {
     name: "Game Time - Year",
@@ -504,7 +506,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: Number,
     default: 366,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.conditions", {
     name: "Game World - Current Weather",
@@ -527,7 +529,7 @@ function setupGameSettings(){
       "storm2": "Strong Thunderstorms"
     },
     default: "clear",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.temp", {
     name: "Game World - Temperature (°C)",
@@ -541,7 +543,7 @@ function setupGameSettings(){
       step: 1
     },
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.wind", {
     name: "Game World - Winds",
@@ -556,7 +558,7 @@ function setupGameSettings(){
       "3": "High Winds 3 / >150 km/h"
     },
     default: "0",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.precip", {
     name: "Game World - Chance of Rain/Snow (%)",
@@ -570,7 +572,7 @@ function setupGameSettings(){
       step: 10
     },
     default: 20,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.forecast", {
     name: "Game World - Weather Forecast Message",
@@ -579,7 +581,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: String,
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.location", {
     name: "Game World - Current Location",
@@ -589,7 +591,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: String,
     default: "Highgate, KL",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.signal", {
     name: "Game World - Cellular Service",
@@ -607,7 +609,7 @@ function setupGameSettings(){
       "none": "No Service"
     },
     default: "normal",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.alert", {
     name: "Game World - Emergency Alert Message",
@@ -616,7 +618,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: String,
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.scrambleTime", {
     name: "Game World - Alternate Dimension Mode",
@@ -626,28 +628,21 @@ function setupGameSettings(){
     requiresReload: false,
     type: Boolean,
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
 }
 
-async function refreshPhones(){
-  console.log("Pushing current condition changes to characters' phones");
-  for (const actor of game.actors.values()){
-    for (const item of actor.items.values()){
-      if (item.type == "Phone"){
-        console.log(`Found ${item.name} in ${actor.name}'s inventory`);
-        if (item.sheet){
-          item.sheet.render(false);
-        }
-      }
+function registerSocketHandlers(){
+  game.socket.on("system.newera-sol366", (payload) => {
+    switch (payload.event){
+      case "SMS_REFRESH":
+        TextMessaging.renderPhones(payload.data.number);
+        break;
+      case "SMS_REFRESH_ALL":
+        TextMessaging.renderPhones();
+        break;
+      case "DARK_ENERGY_USE":
+        //TODO
     }
-  }
-  for (const item of game.items.values()){
-    if (item.type == "Phone"){
-      console.log(`Found ${item.name} in game.items`);
-      if (item.sheet){
-        item.sheet.render(false);
-      }
-    }
-  }
+  });
 }

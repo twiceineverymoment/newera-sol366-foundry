@@ -68,8 +68,47 @@ export class TextMessaging {
         </div>`
         });
         //Re-render the recipient phone's sheet on all clients
-
+        TextMessaging.refreshPhone(recipientNumber);
         return true;
     }
+
+    static refreshPhones() {
+        game.socket.emit("system.newera-sol366", {
+            event: "SMS_REFRESH_ALL"
+        });
+        TextMessaging.renderPhones();
+    }
+
+    static refreshPhone(number) {
+        game.socket.emit("system.newera-sol366", {
+            event: "SMS_REFRESH",
+            data: {
+                number: number
+            }
+        });
+        TextMessaging.renderPhones(number);
+    }
+
+    static async renderPhones(number = null){
+        console.log(`Updating phones n=${number}`);
+        for (const actor of game.actors.values()){
+          for (const item of actor.items.values()){
+            if (item.type == "Phone" && (number == null || item.system.phoneNumber == number)){
+              console.log(`Found ${item.name} in ${actor.name}'s inventory`);
+              if (item.sheet){
+                item.sheet.render(false);
+              }
+            }
+          }
+        }
+        for (const item of game.items.values()){
+          if (item.type == "Phone" && (number == null || item.system.phoneNumber == number)){
+            console.log(`Found ${item.name} in game.items`);
+            if (item.sheet){
+              item.sheet.render(false);
+            }
+          }
+        }
+      }
 
 }
