@@ -78,6 +78,12 @@ export class NewEraActorSheet extends ActorSheet {
       this._prepareClassFeatures(context, context.inventory.classes);
       this._prepareFeatOptions(context, context.inventory.feats);
       this._prepareInspiration(context);
+      //Split out custom resources
+      const [custom, standard] = Formatting.splitIndexedObject(context.system.additionalResources, r => r.custom);
+      context.resources = {
+        standard,
+        custom
+      }
     }
     if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
       this._prepareCreatureData(context);

@@ -673,7 +673,9 @@ export class NewEraActor extends Actor {
     update.additionalResources[Object.keys(update.additionalResources).length] = resource || {
       name: "New Resource",
       value: 0,
-      max: 0
+      max: 0,
+      daily: false,
+      custom: true
     };
     await this.update({
       system: update

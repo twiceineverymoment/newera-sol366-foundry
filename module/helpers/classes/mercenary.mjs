@@ -100,7 +100,8 @@ export class Mercenary {
                     name: "Rage",
                     value: 1,
                     max: 1,
-                    daily: true
+                    daily: true,
+                    custom: false
                 });
             }
         },

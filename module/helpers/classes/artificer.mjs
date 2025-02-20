@@ -151,7 +151,8 @@ export class Artificer {
                 name: "Alchemist's Pouch",
                 value: 1,
                 max: 1,
-                daily: true
+                daily: true,
+                custom: false
             })
         },
         {

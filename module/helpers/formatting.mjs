@@ -163,4 +163,22 @@ export class Formatting {
         return title.toLowerCase().replace(/\s+/g, "-");
       }
 
+      /**
+       * Splits an indexed object into two based on a predicate function.
+       * Returns an array with two objects, the first containing the entries for which the predicate returns true, the second containing the rest.
+       * @param {*} obj 
+       * @param {*} pred 
+       * @returns 
+       */
+      static splitIndexedObject(obj, pred){
+        const result = [{}, {}];
+        for (const [key, value] of Object.entries(obj)){
+          if (pred(value)){
+            result[0][key] = value;
+          } else {
+            result[1][key] = value;
+          }
+        }
+        return result;
+      }
 }

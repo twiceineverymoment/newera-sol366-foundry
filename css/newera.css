@@ -222,7 +222,7 @@ div.summary-stat-wrapper {
   width: 100%;
   text-align: center;
 }
-.summary-stat-wrapper h4 {
+.summary-stat-wrapper h4, .newera-actorsheet-resource h4 {
   font-family: "Cinzel", serif;
 }
 div.summary-stat-bonus {
