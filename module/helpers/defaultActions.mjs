@@ -167,6 +167,36 @@ export const DefaultActions = {
                     difficulty: null,
                 }
             ]
+        },
+        {
+            name: "Unarmed Attack",
+            images: {
+                base: `${NEWERA.images}/unarmed_attack.png`,
+                right: `${NEWERA.images}/ac_1frame.png`
+            },
+            ability: null,
+            skill: "athletics",
+            specialties: ["Brawl"],
+            description: "When you haven't got your weapons ready, attack with your fists!",
+            difficulty: "The difficulty of an attack is the target's passive agility, unless they react.",
+            disable: actor => actor.type != "Creature" && actor.system.equipment.leftHand && actor.system.equipment.rightHand && game.settings.get("newera-sol366", "enforceActionConditions") ? "You must have a hand free to perform unarmed attacks." : false,
+            type: "1",
+            rolls: [
+                {
+                    label: "Attack",
+                    caption: "Unarmed Attack",
+                    die: "d20",
+                    formula: "1d20+@skills.athletics.mod+@specialty.partial.brawl",
+                    message: "{NAME} attacks with {d} fists!",
+                    difficulty: null,
+                },
+                {
+                    label: "Damage",
+                    caption: "Damage (Unarmed Attack)",
+                    die: "unarmed_attack",
+                    formula: "1+@abilities.strength.mod"
+                }
+            ]
         }
     ],
     magic: [
@@ -263,7 +293,7 @@ export const DefaultActions = {
             difficulty: "0",
             overrideMacroCommand: "game.newera.HotbarActions.stopAllSpells()",
             actionType: "0",
-            disallow: actor => (!actor.system.ephemeralEffectActive && !actor.system.sustaining.id) ? "You aren't casting any spells right now." : false,
+            disable: actor => (!actor.system.ephemeralEffectActive && !actor.system.sustaining.id) ? "You aren't casting any spells right now." : false,
             rolls: [
                 {
                     label: "End Spell",

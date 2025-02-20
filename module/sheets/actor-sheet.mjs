@@ -605,7 +605,7 @@ export class NewEraActorSheet extends ActorSheet {
           Actions should never be grayed out based on equipment location for creatures.
           This may change in a future version.
         */
-        itemAction.disabled = (!this.actor.isItemActionAvailable(itemAction, item)) && (actor.type != 'Creature');
+        itemAction.itemNotEquipped = (!this.actor.isItemActionAvailable(itemAction, item)) && (actor.type != 'Creature');
         //console.log(`action ${itemAction.name} disabled=${itemAction.disabled}`);
         itemAction.itemName = item.name;
         itemAction.itemId = item.id;
@@ -730,35 +730,7 @@ export class NewEraActorSheet extends ActorSheet {
 
     /* Unarmed attack */
     if (((!system.equipment.leftHand || !system.equipment.rightHand) && actor.type != 'Creature') || system.hasStandardActions){
-      actions.general.push({
-        name: "Unarmed Attack",
-        images: {
-          base: `${NEWERA.images}/unarmed_attack.png`,
-          right: `${NEWERA.images}/ac_1frame.png`
-        },
-        ability: null,
-        skill: "athletics",
-        specialties: ["Brawl"],
-        description: "When you haven't got your weapons ready, attack with your fists!",
-        difficulty: "The difficulty of an attack is the target's passive agility, unless they react.",
-        type: "1",
-        rolls: [
-          {
-            label: "Attack",
-            caption: "Unarmed Attack",
-            die: "d20",
-            formula: "1d20+@skills.athletics.mod+@specialty.partial.brawl",
-            message: "{NAME} attacks with {d} fists!",
-            difficulty: null,
-          },
-          {
-            label: "Damage",
-            caption: "Damage (Unarmed Attack)",
-            die: "unarmed_attack",
-            formula: "1+@abilities.strength.mod"
-          }
-        ]
-      });
+      actions.general.push();
     }
     if (system.lastAction){
       actions.selected = actions[system.lastAction.category][system.lastAction.index] || false;
@@ -814,10 +786,13 @@ export class NewEraActorSheet extends ActorSheet {
     const skillInfo = isCustom ? "" : (action.ability ? ` - ${action.ability.charAt(0).toUpperCase()}${action.ability.slice(1)} check` : (action.skill ? ` - ${action.skill.charAt(0).toUpperCase()}${action.skill.slice(1)} check` : '')); 
     action.typeDescription = `${actionTypes[action.actionType] || "Generic Action"}${skillInfo}`;
 
-    if (typeof action.disallow == 'function') {
-      action.disallowed = action.disallow(this.actor);
+    //The 'disabled' property is false when enabled. When disabled, it should be a string explaining why it's disabled, which will be shown on the sheet.
+    if (action.itemNotEquipped) {
+      action.disabled = `Equip your ${action.itemName} to use this action.`;
+    } else if (typeof action.disable == 'function') {
+      action.disabled = action.disable(this.actor);
     } else {
-      action.disallowed = ["E", "S", "D"].includes(action.actionType) && game.combat && game.combat.active && game.combat.round > 0 ? "You can't do this during combat." : false;
+      action.disabled = ["E", "S", "D"].includes(action.actionType) && game.combat && game.combat.active && game.combat.round > 0 ? "You can't do this during combat." : false;
     }
 
     const rolls = action.rolls ? (typeof action.rolls == "Array" ? action.rolls : Object.values(action.rolls)) : [];

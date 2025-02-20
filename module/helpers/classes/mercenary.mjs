@@ -73,10 +73,7 @@ export class Mercenary {
                     description: "<p>You enter Rage, a state of heightened physical and reduced mental abilities.</p>",
                     difficulty: null,
                     actionType: "1",
-                    allowed: (actor) => {
-
-                    },
-                    disallowMessage: "You have no more Rage uses left. Get some rest to replenish them.",
+                    disable: actor => actor.hasResource("Rage") ? false : "You have no more Rage uses left. Get some rest to replenish them.",
                     overrideMacroCommand: "game.newera.HotbarActions.rage()",
                     rolls: [
                       {

@@ -55,12 +55,9 @@
       <p><b>Difficulty: </b>{{actions.selected.difficulty}}</p>
     {{/if}}
     <p class="action-alt-instruction">{{actions.selected.altInstructions}}</p>
-    {{#if actions.selected.disallowed}}
-      <div class="not-right-now">{{actions.selected.disallowed}}</div>
+    {{#if actions.selected.disabled}}
+      <div class="not-right-now">{{actions.selected.disabled}}</div>
     {{else}}
-      {{#if actions.selected.disabled}}
-        <div class="not-right-now">Equip your {{actions.selected.itemName}} to use this action.</div>
-      {{else}}
         <div class="action-roll-buttons">
           {{#each actions.selected.rolls as |roll index|}}
             {{#if roll.isFunctionButton}}
@@ -76,8 +73,7 @@
             {{/if}}
           {{/each}}
         </div>
-      {{/if}}
-      {{/if}}
+    {{/if}}
     </div>
   {{else}}
     <div id="noActionSelected">
@@ -109,7 +105,7 @@
   {{#each actions.equipped as |action index|}}
   <div class="action-icon action-macro-item" data-action-category="equipped" data-action-id="{{index}}" draggable="true">
     <div class="action-data">{{json action}}</div>
-    <div {{#if action.disabled}}class="action-icon-container disabled-action"{{else}}class="action-icon-container"{{/if}} data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+    <div class="action-icon-container {{#if action.disabled}}disabled-action{{/if}}" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
       <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
       {{#if action.images.left}}
         <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
@@ -129,7 +125,7 @@
   {{#each actions.spells as |action index|}}
   <div class="action-icon spell-macro" data-action-category="spells" data-item-id="{{action.itemId}}" data-action-id="{{index}}" draggable="true">
     <div class="action-data">{{json action}}</div>
-    <div {{#if action.disabled}}class="action-icon-container disabled-action"{{else}}class="action-icon-container"{{/if}} data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+    <div class="action-icon-container {{#if action.disabled}}disabled-action{{/if}}" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
       <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
       <div class="action-spell-level-overlay">{{action.spellLevel}}</div>
     </div>
@@ -144,7 +140,7 @@
   {{#each actions.feats as |action index|}}
   <div class="action-icon {{action.macroClass}}" data-action-category="feats" data-action-id="{{index}}" draggable="true">
     <div class="action-data">{{json action}}</div>
-    <div {{#if action.disabled}}class="action-icon-container disabled-action"{{else}}class="action-icon-container"{{/if}} data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+    <div class="action-icon-container {{#if action.disabled}}disabled-action{{/if}}" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
       <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
       {{#if action.images.left}}
         <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
@@ -164,7 +160,7 @@
   {{#each actions.general as |action index|}}
   <div class="action-icon action-macro-basic" data-action-category="general" data-action-id="{{index}}" draggable="true">
     <div class="action-data">{{json action}}</div>
-    <div class="action-icon-container"  data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+    <div class="action-icon-container {{#if action.disabled}}disabled-action{{/if}}" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
       <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
       {{#if action.images.left}}
         <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
@@ -184,7 +180,7 @@
   {{#each actions.exploration as |action index|}}
   <div class="action-icon action-macro-basic" data-action-category="exploration" data-action-id="{{index}}" draggable="true">
     <div class="action-data">{{json action}}</div>
-    <div class="action-icon-container" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+    <div class="action-icon-container {{#if action.disabled}}disabled-action{{/if}}" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
       <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
       {{#if action.images.left}}
         <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />
@@ -204,7 +200,7 @@
   {{#each actions.social as |action index|}}
   <div class="action-icon action-macro-basic" data-action-category="social" data-action-id="{{index}}" draggable="true">
     <div class="action-data">{{json action}}</div>
-    <div class="action-icon-container" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+    <div class="action-icon-container {{#if action.disabled}}disabled-action{{/if}}" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
       <img class="action-image-base" src="{{action.images.base}}" draggable="true"/>
       {{#if action.images.left}}
         <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true"/>
@@ -224,7 +220,7 @@
   {{#each actions.magic as |action index|}}
   <div class="action-icon action-macro-basic" data-action-category="magic" data-action-id="{{index}}" draggable="true">
     <div class="action-data">{{json action}}</div>
-    <div class="action-icon-container" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
+    <div class="action-icon-container {{#if action.disabled}}disabled-action{{/if}}" data-tooltip="{{action.name}}" data-tooltip-direction="DOWN" draggable="true">
       <img class="action-image-base" src="{{action.images.base}}" draggable="true" />
       {{#if action.images.left}}
         <img class="action-image-overlay-left" src="{{action.images.left}}" draggable="true" />

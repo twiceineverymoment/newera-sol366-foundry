@@ -369,8 +369,7 @@ export class Delver {
                     overrideMacroCommand: "game.newera.HotbarActions.elementalChanneling(null)",
                     difficulty: null,
                     actionType: "0",
-                    allowed: (actor) => actor.system.energy.value > 0,
-                    disallowMessage: "You're out of energy!",
+                    disable: (actor) => actor.hasEnergyAvailable() ? false : "You don't have enough energy!",
                     rolls: [
                       {
                         label: "Damage",
@@ -610,8 +609,7 @@ export class Delver {
                     description: "<p>You enter Rage, a state of heightened physical and reduced mental abilities.</p><p>Your Rage consumes 10 energy upon activation, and 2 energy per frame you remain in Rage. You may end Rage any time as a free action.</p>",
                     difficulty: null,
                     actionType: "1",
-                    allowed: (actor) => actor.system.energy.value >= 10,
-                    disallowMessage: "You don't have enough energy to enter Rage!",
+                    disable: actor => actor.hasEnergyAvailable(10) ? false : "You don't have enough energy to enter Rage!",
                     overrideMacroCommand: 'game.newera.HotbarActions.rage()',
                     rolls: [
                       {

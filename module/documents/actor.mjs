@@ -477,7 +477,15 @@ export class NewEraActor extends Actor {
   }
 
   findResource(name){
-    return Object.entries(this.system.additionalResources).find(r => r[1].name.toLowerCase() == name.toLowerCase());
+    return Object.values(this.system.additionalResources).find(r => r.name.toLowerCase() == name.toLowerCase());
+  }
+
+  hasResource(name, amount = 1){
+    const resource = this.findResource(name);
+    if (resource){
+      return resource.value >= amount;
+    }
+    return false;
   }
 
   getClassLevel(clazz) {
@@ -1708,6 +1716,15 @@ export class NewEraActor extends Actor {
       return [];
     }
     
+  }
+
+  hasEnergyAvailable(amount = 1){
+    for (const pool of this.energyPools){
+      if (pool.available >= amount){
+        return true;
+      }
+    }
+    return false;
   }
 
   hasFeatOrFeature(text){
