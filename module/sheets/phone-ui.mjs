@@ -1,5 +1,6 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { Formatting } from "../helpers/formatting.mjs";
+import { TextMessaging } from "../helpers/textMessaging.mjs";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -82,28 +83,60 @@ export class PhoneUI extends ItemSheet {
       context.advancedFeatures = (system.featureLevel == 2);
 
     // Prepare conversation data for messages display
+
     console.log(`reading ${Object.entries(system.contacts).length} conversations`);
-    for (const [i, convo] of Object.entries(system.contacts)){
-      console.log(`preparing conversation [${i}]`);
-      console.log(convo.messages);
-      if (!convo.messages){
-        convo.messages = {};
+
+    context.contacts = structuredClone(system.contacts);
+    const incomingMessages = TextMessaging.getIncomingMessages(system.phoneNumber);
+    console.log(incomingMessages);
+
+    //Handle messages for contacts in this phone
+    for (const [i, contact] of Object.entries(context.contacts)){
+      console.log(`preparing local conversation [${i}]`);
+      console.log(contact.messages);
+      //Merge the outgoing messages stored on this phone with the incoming messages from other phones, and sort by real time sent
+      const incoming = incomingMessages[contact.number] ? Object.values(incomingMessages[contact.number]) : [];
+      contact.conversation = [
+        ...Object.values(contact.messages), 
+        ...incoming
+      ].sort((a, b) => {
+        if (a.timestamp < b.timestamp) return -1;
+        else if (a.timestamp > b.timestamp) return 1;
+        else if (!a?.realTime) return -1;  // if a.realTime is null/undefined, a comes first
+        else if (!b?.realTime) return 1;   // if b.realTime is null/undefined, b comes first
+        else return a.realTime - b.realTime;
+      });
+    }
+
+    //Handle incoming messages from contacts not in this phone 
+    for (const [num, messages] of Object.entries(incomingMessages)){
+      if (!Object.values(system.contacts).some(c => c.number == num)){
+        console.log(`[DEBUG] Found unknown contact: ${num}`);
+        context.contacts[Object.keys(context.contacts).length] = {
+          name: num,
+          number: num,
+          notInContacts: true,
+          messages: messages,
+          conversation: Object.values(messages),
+          unread: true
+        };
       }
-      if (convo.unread){
+    }
+
+    //Prepare additional contact data 
+    for (const [i, contact] of Object.entries(context.contacts)){
+      if (contact.unread){
         context.unread = true;
       }
-      if (Object.keys(convo.messages).length > 0){
-        convo.lastMessage = convo.messages[Object.keys(convo.messages).length - 1];
-      } else {
-        convo.lastMessage = "(no messages)";
+      if (contact.conversation.length > 0){
+        contact.lastMessage = contact.conversation[contact.conversation.length - 1];
       }
-      if (system.openApp == "chat" && convo.name == system.callee){
-        context.conversation = convo;
+      if (system.openApp == "chat" && contact.name == system.callee){
+        context.activeConversation = contact;
         context.calleeIndex = i;
       }
     }
 
-    // Add the actor's data to context.data for easier access, as well as flags.
     context.system = system;
     context.flags = this.item.system.flags;
 
@@ -167,8 +200,49 @@ export class PhoneUI extends ItemSheet {
 
     html.find("#createContact").click(() => {
       this.item.createContact();
-      this.render(false);
     });
+
+    html.find("#compose").click(() => {
+      new Dialog({
+        title: "Compose New Message",
+        content: `
+          <form>
+            <p>Enter phone number</p>
+            <input type="text" name="number" placeholder="Number" />
+          </form>
+        `,
+        buttons: {
+          confirm: {
+            icon: '<i class="fa-solid fa-pen-to-square"></i>',
+            label: "Compose",
+            callback: async html => {
+              const number = html.find("input[name='number']").val();
+              if (!number){
+                ui.notifications.error("You must enter a phone number.");
+                return;
+              }
+              const newIndex = await this.item.addContact("New Conversation", number);
+              await this.item.update({
+                system: {
+                  callee: newIndex,
+                  openApp: "chat"
+                }
+              });
+            }
+          },
+          cancel: {
+            icon: '<i class="fa-solid fa-x"></i>',
+            label: "Cancel"
+          }
+        }
+      }).render(true);
+    });
+
+    html.find("#addToContacts").click(ev => {
+      const number = $(ev.currentTarget).data("number");
+      this.item.addContact("New Contact", number);
+    });
+
     html.find("a.call").click(ev => {
       const callee = $(ev.currentTarget).data("name");
       if (this.item.actor){
@@ -236,12 +310,12 @@ export class PhoneUI extends ItemSheet {
     });
     html.find("#sendMessage").click(async ev => {
       const content = html.find("#messageContent").val();
-      const convoId = $(ev.currentTarget).data("convoId");
+      const number = $(ev.currentTarget).data("number");
       if (!content){
         ui.notifications.error("You must type a message.");
         return;
       }
-      this.item.addMessage(true, convoId, content);
+      await TextMessaging.sendMessage(this.item, number, content);
     });
     html.find("#receiveMessage").click(async ev => {
       const content = html.find("#messageContent").val();
@@ -270,7 +344,7 @@ export class PhoneUI extends ItemSheet {
     const month = timeDoesntWork ? Formatting.randomInt(1, 13) : settings.get("newera-sol366", "world.date.month");
     const year = timeDoesntWork ? Formatting.randomInt(1, 999) : settings.get("newera-sol366", "world.date.year");
 
-    console.log(Object.entries(NEWERA.daysOfWeek));
+    //console.log(Object.entries(NEWERA.daysOfWeek));
     const weekday = Object.entries(NEWERA.daysOfWeek).find(ent => ent[1].includes(day))[0];
     return `${weekday}, ${day} ${NEWERA.months[month].name} ${year}`;
   }

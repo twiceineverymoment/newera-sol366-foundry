@@ -1115,31 +1115,39 @@ _preparePotionData(system){
     };
   }
 
-  createContact() {
+  async createContact() {
     if (this.type !== "Phone") return;
     const system = this.system;
-    system.contacts[Object.keys(system.contacts).length] = {
-      name: "New Contact",
-      number: "+29 (000) 000 000",
-      unread: false,
-      messages: {}
-    };
+    await this.update({
+      system: {
+        contacts: {
+          [Object.keys(system.contacts).length]: {
+            name: "New Contact",
+            number: "+29 (000) 000 000",
+            unread: false,
+            messages: {}
+          }
+        }
+      }
+    });
   }
 
-  addContact(name, number){
+  async addContact(name, number){
     if (this.type !== "Phone") return;
     const contacts = structuredClone(this.system.contacts);
-    contacts[Object.keys(contacts).length] = {
+    const newIndex = Object.keys(contacts).length;
+    contacts[newIndex] = {
       name: name,
       number: number,
       unread: false,
       messages: {}
     };
-    this.update({
+    await this.update({
       system: {
         contacts: contacts
       }
     });
+    return newIndex;
   }
 
   addPhoto() {
@@ -1157,7 +1165,7 @@ _preparePotionData(system){
     return id;
   }
 
-  addMessage(sent, index, content){
+  async addMessage(sent, index, content){
     if (this.type !== "Phone") return;
     const system = this.system;
     const newMessageIndex = Object.keys(system.contacts[index].messages).length;
@@ -1166,128 +1174,15 @@ _preparePotionData(system){
       sent: sent,
       content: content,
       timestamp: this.timestamp,
+      realTime: Date.now()
     };
-    this.update({
+    await this.update({
       system: {
         contacts: contacts
       }
     });
-    if (!sent) {
-      system.contacts[index].unread = true;
-    }
-
-    const name1 = system.contacts[index].name;
-    const name2 = (this.actor ? this.actor.name : this.name);
-
-    const sender = sent ? name2 : name1;
-    const recipient = sent ? name1 : name2;
-
-    ChatMessage.create({
-      content: `<div class="chat-action-container"><img class="action-image-base" src="${NEWERA.images}/phone-ui/app-messages.png" /></div>
-      <div class="text-message">
-        <h4>${sender} <i class="fa-solid fa-arrow-right"></i> ${recipient}</h4>
-        <p>${content}</p>
-      </div>`
-    });
-
     return newMessageIndex;
   }
-
-  /*
-  async receiveTextMessage(sender, number, content){
-    if (this.type !== "Phone") return;
-    const system = this.system;
-    console.log(`${this.name} receiving message from ${sender}`);
-    let contactIndex = null;
-    for (const [i, c] of Object.entries(system.contacts)){
-      if (c.name == sender){
-        console.log(`found existing contact [${i}] ${c.name}`);
-        contactIndex = i;
-        break;
-      }
-    }
-    if (contactIndex === null){
-      contactIndex = Object.entries(system.contacts).length;
-      console.log(`creating a new contact [${contactIndex}]`);
-      system.contacts[contactIndex] = {
-        name: sender,
-        number: number,
-        unread: true,
-        messages: {}
-      };
-    }
-
-    system.contacts[contactIndex].messages[Object.keys(system.contacts[contactIndex].messages).length] = {
-      sent: false,
-      content: content,
-      timestamp: this.timestamp,
-    };
-    system.contacts[contactIndex].unread = true;
-
-    console.log(`finished receiving`);
-    console.log(system.contacts);
-
-    if (this.sheet){
-      this.sheet.render(false);
-      this.sheet.submit();
-    }
-    
-  }
-  
-  async sendTextMessage(senderConvoId, recipient, number, content){
-    if (this.type !== "Phone") return;
-    const system = this.system;
-
-    const sender = this.actor ? this.actor.name : this.name;
-
-    console.log(`sending message from ${sender} to ${recipient}`);
-
-    //Add the message to the convo on the sender side
-    system.contacts[senderConvoId].messages[Object.keys(system.contacts[senderConvoId].messages).length] = {
-      sent: true,
-      content: content,
-      timestamp: this.timestamp
-    };
-    if (this.sheet){
-      this.sheet.render(false);
-      this.sheet.submit();
-    }
-
-    let foundRecipients = 0;
-
-    //Look for a recipient actor
-    for (const actor of game.actors.values()){
-      if (actor.name == recipient){
-        for (const item of actor.items.values()){
-          if (item.type == "Phone"){
-            console.log(`found target phone ${item.id}:${actor.name}/${item.name}`);
-            foundRecipients++;
-            item.receiveTextMessage(sender, number, content);
-          }
-        }
-      }
-    }
-
-    //Look for recipient phones in the GM's item set
-    for (const item of game.items.values()){
-      if (item.type == "Phone" && item.name == recipient){
-        console.log(`found target phone ${item.id}:${item.name}`);
-        foundRecipients++;
-        item.receiveTextMessage(sender, number, content);
-      }
-    }
-
-    if (foundRecipients == 0){
-      ui.notifications.warn("Message not delivered: No actors or GM phones were found matching the recipient's name.");
-    }
-
-    ChatMessage.create({
-      content: `<div class="text-message">
-        <h4>${sender} <i class="fa-solid fa-arrow-right"></i> ${recipient}</h4>
-        <p>${content}</p>
-      </div>`
-    });
-  } */
 
   get timestamp(){
     const year = game.settings.get("newera-sol366", "world.date.year");
