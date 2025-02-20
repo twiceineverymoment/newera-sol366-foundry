@@ -356,7 +356,7 @@ _preparePotionData(system){
       system.rarity = Math.max(weaponStats.rarity, materialStats.rarity);
       system.weight = Math.max(weaponStats.weight + materialStats.adjustWeight, 0);
       system.durability = materialStats.durability + weaponStats.adjustDurability;
-      system.value = NewEraItem.getEstimatedValue(weaponStats.value, materialStats.valueMultiplier, system.condition, system.quality);
+      system.value = NewEraUtils.getEstimatedValue(weaponStats.value, materialStats.valueMultiplier, system.condition, system.quality);
       system.handedness = weaponStats.handedness;
 
       let oneHandedHitSkill = system.weaponType.includes("Knuckleduster") ? "athletics" : "one-handed"; 
@@ -463,7 +463,7 @@ _preparePotionData(system){
       system.rarity = Math.max(armorStats.rarity, materialStats.rarity);
       system.weight = Math.max(armorStats.weight + materialStats.adjustWeight, 0);
       system.durability = materialStats.durability + armorStats.adjustDurability;
-      system.value = NewEraItem.getEstimatedValue(armorStats.value, materialStats.valueMultiplier, system.condition, system.quality);
+      system.value = NewEraUtils.getEstimatedValue(armorStats.value, materialStats.valueMultiplier, system.condition, system.quality);
       system.armorRating = armorStats.armorRating + materialStats.modifiers.armor;
 
     } else {
@@ -492,7 +492,7 @@ _preparePotionData(system){
       system.rarity = Math.max(shieldStats.rarity, materialStats.rarity);
       system.weight = Math.max(shieldStats.weight + materialStats.adjustWeight, 0);
       system.durability = materialStats.durability + shieldStats.adjustDurability;
-      system.value = NewEraItem.getEstimatedValue(shieldStats.value, materialStats.valueMultiplier, system.condition, system.quality);
+      system.value = NewEraUtils.getEstimatedValue(shieldStats.value, materialStats.valueMultiplier, system.condition, system.quality);
       system.shieldRating = shieldStats.shieldRating + materialStats.modifiers.shield;
 
     } else {
@@ -662,7 +662,7 @@ _preparePotionData(system){
           images: {
             base: this.type == "Feat" ? `${NEWERA.images}/${action.icon}.png` : this.img,
             left: this.type == "Feat" ? this.img : undefined,
-            right: NewEraItem._getActionImageByType(action.actionType)
+            right: NEWERA.actionImages[action.actionType]
           },
           ability: null,
           skill: null,
@@ -1070,50 +1070,23 @@ _preparePotionData(system){
     }
   }
 
-  static damageExpression(numDice, dieSize, modifier){
-    let damageStr = `${numDice}d${dieSize}`;
-    return displayModifier(damageStr, modifier);
-  }
-
-  static displayModifier(damageStr, modifier){
-    if (modifier == 0){
-      return damageStr;
-    } else if (modifier > 0){
-      return `${damageStr}+${modifier}`;
-    } else {
-      return `${damageStr}${modifier}`;
-    }
-  }
-
-  static getEstimatedValue(vBase, vMaterial, condition, quality){
-    let v1 = vBase * vMaterial * NEWERA.conditions[condition].valueMultiplier;
-    let v2 = v1 * (1.0 + (0.05 * quality));
-    return Math.ceil(v2 / 5) * 5;
-  }
-
-  //Rolls the quantity for the item in variable-quantity mode in a creature's inventory using the owning actor's roll data
-  async rollQuantity(actor){
-    const system = this.system;
-    if (!system.variableQuantity) return;
-    let r = new Roll(`${system.variableQuantity.dieCount}d${system.variableQuantity.dieSize}+${system.variableQuantity.modifier}`, actor.getRollData());
-    await r.evaluate();
-    system.quantity = r.total;
-    r.toMessage({
-      speaker: ChatMessage.getSpeaker({actor: actor}),
-      flavor: `${this.name} quantity`
-    });
-  }
-
-  addRoll(){
+  async addRoll(){
     if (this.type !== "Action") return;
     const system = this.system;
-    system.rolls[Object.keys(system.rolls).length] = {
-      label: "New Roll",
-      dieCount: 1,
-      dieSize: 20,
-      modifier: 0,
-      stat: ""
+    const update = {
+      system: {
+        rolls: {
+          [Object.keys(system.rolls).length]: {
+            label: "New Roll",
+            dieCount: 1,
+            dieSize: 20,
+            modifier: 0,
+            stat: ""
+          }
+        }
+      }
     };
+    await this.update(update);
   }
 
   async createContact() {
@@ -1151,19 +1124,25 @@ _preparePotionData(system){
     return newIndex;
   }
 
-  addPhoto() {
+  async addPhoto() {
     if (this.type !== "Phone") return false;
     const system = this.system;
-    const id = Object.keys(system.photos).length;
-    system.photos[id] = {
-      title: "New Photo",
-      description: "Describe what you took a photo of",
-      timestamp: this.timestamp,
-      img: `${NEWERA.images}/phone-ui/photo.png`
+    const newIndex = Object.keys(system.photos).length;
+    const update = {
+      system: {
+        photos: {
+          [newIndex]: {
+            title: "New Photo",
+            description: "Describe what you took a photo of",
+            timestamp: this.timestamp,
+            img: `${NEWERA.images}/phone-ui/photo.png`
+          }
+        },
+        selectedPhoto: newIndex
+      }
     };
-    console.log(`added photo ${id}`);
-    system.selectedPhoto = id;
-    return id;
+    await this.update(update);
+    return newIndex;
   }
 
   async addMessage(sent, index, content){
@@ -1209,50 +1188,45 @@ _preparePotionData(system){
     }
   }
 
-  addAction() {
+  async addAction() {
     const system = this.system;
-    system.actions[Object.keys(system.actions).length] = {
-      name: "New Action",
-      icon: "unknown",
-      actionType: "E",
-      description: "Enter a description...",
-      show: "equipped",
-      decrement: false,
-      rolls: {}
-    }
+    const update = {
+      system: {
+        actions: {
+          [Object.keys(system.actions).length]: {
+            name: "New Action",
+            icon: "unknown",
+            actionType: "E",
+            description: "Enter a description...",
+            show: "equipped",
+            decrement: false,
+            rolls: {}
+          }
+        }
+      }
+    };
+    await this.update(update);
   }
 
-  addActionRoll(index) {
+  async addActionRoll(index) {
     const system = this.system;
-    const action = system.actions[index];
-    if (action.rolls == undefined){
-      action.rolls = {};
-    }
-    action.rolls[Object.keys(action.rolls).length] = {
-      die: "d20",
-      label: "New Roll",
-      formula: "1d20"
-    }
-  }
-
-  static _getActionImageByType(type){
-    switch(type){
-      case "0":
-        return `${NEWERA.images}/ac_0frame.png`;
-      case "1":
-        return `${NEWERA.images}/ac_1frame.png`;
-      case "2":
-        return `${NEWERA.images}/ac_2frame.png`;
-      case "3":
-        return `${NEWERA.images}/ac_3frame.png`;
-      case "S":
-        return `${NEWERA.images}/ac_social.png`;
-      case "E":
-        return `${NEWERA.images}/ac_adventuring.png`;
-      case "D":
-        return `${NEWERA.images}/ac_restful.png`;
-      
-    }
+    const newIndex = system.actions[index].rolls ? Object.keys(system.actions[index].rolls).length : 0;
+    const update = {
+      system: {
+        actions: {
+          [index]: {
+            rolls: {
+              [newIndex]: {
+                die: "d20",
+                label: "New Roll",
+                formula: "1d20"
+              }
+            }
+          }
+        }
+      }
+    };
+    await this.update(update);
   }
 
   async enchant(enchantment, ampFactor = 1, caster = undefined, noSkillCheck = false, energyPool = undefined){

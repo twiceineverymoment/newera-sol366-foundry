@@ -3705,3 +3705,14 @@ NEWERA.specialtyDefaultParents = {
     "climbing": "athletics",
     "swimming": "athletics"
 }
+
+NEWERA.actionImages ={
+    "0": `${NEWERA.images}/ac_0frame.png`,
+    "1": `${NEWERA.images}/ac_1frame.png`,
+    "2": `${NEWERA.images}/ac_2frame.png`,
+    "3": `${NEWERA.images}/ac_3frame.png`,
+    "S": `${NEWERA.images}/ac_social.png`,
+    "E": `${NEWERA.images}/ac_adventuring.png`,
+    "D": `${NEWERA.images}/ac_restful.png`,
+    "R": `${NEWERA.images}/ac_reaction.png`
+}

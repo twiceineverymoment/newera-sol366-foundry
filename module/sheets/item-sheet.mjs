@@ -221,7 +221,6 @@ export class NewEraItemSheet extends ItemSheet {
       if (this.isEditable){
         html.find("#addRollButton-"+this.item.id).click(ev => {
           this.item.addRoll();
-          this.render(false);
         });
         html.find(".roll-switch").click(ev => {
           const element = $(ev.currentTarget);

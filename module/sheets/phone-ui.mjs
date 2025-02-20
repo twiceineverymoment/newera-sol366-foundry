@@ -279,8 +279,7 @@ export class PhoneUI extends ItemSheet {
       }
     });
     html.find("#takePhoto").click(() => {
-      html.find("#selectedPhoto").val(this.item.addPhoto());
-      this.render(false);
+      this.item.addPhoto();
     });
     html.find(".photo-roll-trigger").click(async (ev) => {
       if (this.item.actor){

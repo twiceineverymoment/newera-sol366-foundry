@@ -197,4 +197,11 @@ export class NewEraUtils {
         }
         return result;
       }
+    
+      static getEstimatedValue(vBase, vMaterial, condition, quality){
+        let v1 = vBase * vMaterial * NEWERA.conditions[condition].valueMultiplier;
+        let v2 = v1 * (1.0 + (0.05 * quality));
+        return Math.ceil(v2 / 5) * 5;
+      }
+
 }
