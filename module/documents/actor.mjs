@@ -1,10 +1,10 @@
 import { NEWERA } from "../helpers/config.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 import { Witch } from "../helpers/classes/witch.mjs";
 import { CharacterEnergyPool } from "../schemas/char-energy-pool.mjs";
 import { ClassInfo } from "../helpers/classFeatures.mjs";
 import { NewEraItem } from "./item.mjs";
-import { Actions } from "../helpers/macros/actions.mjs";
+import { Actions } from "../helpers/actions/actions.mjs";
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -605,7 +605,7 @@ export class NewEraActor extends Actor {
 
   async deleteKnowledge(index){
     const update = structuredClone(this.system);
-    update.knowledges = Formatting.spliceIndexedObject(this.system.knowledges, index);
+    update.knowledges = NewEraUtils.spliceIndexedObject(this.system.knowledges, index);
     //Update learning experience selections to reflect the deleted knowledge
     if (this.system.classes){
       for (const [className, classData] of Object.entries(this.system.classes)){
@@ -628,7 +628,7 @@ export class NewEraActor extends Actor {
 
   async deleteSpecialty(index){
     const update = structuredClone(this.system);
-    update.specialties = Formatting.spliceIndexedObject(this.system.specialties, index);
+    update.specialties = NewEraUtils.spliceIndexedObject(this.system.specialties, index);
     //Update specialty improvement selections to reflect the deleted specialty
     if (this.system.classes){
       for (const [className, classData] of Object.entries(this.system.classes)){
@@ -652,7 +652,7 @@ export class NewEraActor extends Actor {
   async deleteSpecialModifier(index){
     await this.update({
       system: {
-        specialModifiers: Formatting.spliceIndexedObject(this.system.specialModifiers, index)
+        specialModifiers: NewEraUtils.spliceIndexedObject(this.system.specialModifiers, index)
       }
     });
   }
@@ -729,7 +729,7 @@ export class NewEraActor extends Actor {
   async deleteResource(index){
     const update = {
       system: {
-        additionalResources: Formatting.spliceIndexedObject(this.system.additionalResources, index)
+        additionalResources: NewEraUtils.spliceIndexedObject(this.system.additionalResources, index)
       }
     };
     await this.update(update);
@@ -879,7 +879,7 @@ export class NewEraActor extends Actor {
     }
     if (recipient.typeIs(NewEraActor.Types.ANIMATE)){
       const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
-      if (Formatting.sendEquipmentChangeMessages()){
+      if (NewEraUtils.sendEquipmentChangeMessages()){
         if (this.typeIs(NewEraActor.Types.CHARACTER) && !this.system.defeated){
           if (item.typeIs(NewEraItem.Types.STACKABLE)){
             this.actionMessage(item.img, frameImg, "{NAME} gave {0} of {d} {1} to {2}.", quantity, item.name, recipient.name);
@@ -1489,7 +1489,7 @@ export class NewEraActor extends Actor {
           label: `Sustaining: ${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`,
           img: spell.img,
           description: `<p>You're sustaining a spell.</p>
-          ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}
+          ${NewEraUtils.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}
           <p>You can use any number of frames on your turn to sustain the spell. You can continue sustaining it as long as you spend at least one frame doing so during your turn.
           You stop sustaining the spell if your concentration is broken.</p>`,
           origin: spell._id
@@ -1505,7 +1505,7 @@ export class NewEraActor extends Actor {
           img: spell.img,
           description: `<p>You're casting an Ephemeral spell.</p>
           <p>You can end this effect at any time as a free action from the Actions tab.</p>
-          ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}`,
+          ${NewEraUtils.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}`,
           origin: spell._id
         }]);
       }
@@ -2256,7 +2256,7 @@ export class NewEraActor extends Actor {
           update.skills[to] = {
             natural: true
           }
-          ui.notifications.info(`You're now a natural in ${Formatting.keyToTitle(to)}!`);
+          ui.notifications.info(`You're now a natural in ${NewEraUtils.keyToTitle(to)}!`);
         }
       } else if (this.system.magic[to]){
         if (this.system.magic[to].natural) {
@@ -2265,7 +2265,7 @@ export class NewEraActor extends Actor {
           update.magic[to] = {
             natural: true
           }
-          ui.notifications.info(`You're now a natural in ${Formatting.keyToTitle(to)} magic!`);
+          ui.notifications.info(`You're now a natural in ${NewEraUtils.keyToTitle(to)} magic!`);
         }
       } else {
           ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
@@ -2305,28 +2305,28 @@ export class NewEraActor extends Actor {
     if (to) {
       if (this.system.skills[to]){
         if (levelIncrease && this.system.skills[to].level == 10) {
-          ui.notifications.warn(`Your ${Formatting.keyToTitle(to)} skill is already at max level!`);
+          ui.notifications.warn(`Your ${NewEraUtils.keyToTitle(to)} skill is already at max level!`);
         } else {
           update.skills[to] = {
             [field]: this.system.skills[to][field] + 1
           }
           if (levelIncrease){
-            ui.notifications.info(`Your ${Formatting.keyToTitle(to)} skill increased to ${update.skills[to][field]}!`);
+            ui.notifications.info(`Your ${NewEraUtils.keyToTitle(to)} skill increased to ${update.skills[to][field]}!`);
           } else {
-            ui.notifications.info(`Your ${Formatting.keyToTitle(to)} skill bonus is now ${update.skills[to][field]}.`);
+            ui.notifications.info(`Your ${NewEraUtils.keyToTitle(to)} skill bonus is now ${update.skills[to][field]}.`);
           }
         }
       } else if (this.system.magic[to]){
         if (levelIncrease && this.system.magic[to].level == 10) {
-          ui.notifications.warn(`Your ${Formatting.keyToTitle(to)} magic skill is already at max level!`);
+          ui.notifications.warn(`Your ${NewEraUtils.keyToTitle(to)} magic skill is already at max level!`);
         } else {
           update.magic[to] = {
             [field]: this.system.magic[to][field] + 1
           }
           if (levelIncrease){
-            ui.notifications.info(`Your ${Formatting.keyToTitle(to)} magic skill increased to ${update.magic[to][field]}!`);
+            ui.notifications.info(`Your ${NewEraUtils.keyToTitle(to)} magic skill increased to ${update.magic[to][field]}!`);
           } else {
-            ui.notifications.info(`Your ${Formatting.keyToTitle(to)} magic skill bonus is now ${update.magic[to][field]}.`);
+            ui.notifications.info(`Your ${NewEraUtils.keyToTitle(to)} magic skill bonus is now ${update.magic[to][field]}.`);
           }
         }
       } else {
@@ -2351,7 +2351,7 @@ export class NewEraActor extends Actor {
       specialties: {}
     };
     if (fromSubject){
-      const fromIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == Formatting.keyToTitle(fromSubject));
+      const fromIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == NewEraUtils.keyToTitle(fromSubject));
       if (fromIndex !== undefined){
         if (this.system.specialties[fromIndex].level > 1){
           update.specialties[fromIndex] = {
@@ -2363,7 +2363,7 @@ export class NewEraActor extends Actor {
       }
     }
     if (subject){
-      const title = Formatting.keyToTitle(subject);
+      const title = NewEraUtils.keyToTitle(subject);
       const toIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == title);
       if (toIndex !== undefined){
         if (this.system.specialties[toIndex].level < 3){
@@ -2505,7 +2505,7 @@ export class NewEraActor extends Actor {
           update.skills[to] = {
             grandMaster: true
           }
-          ui.notifications.info(`${this.name} is now a grand master in ${Formatting.keyToTitle(to)}!`);
+          ui.notifications.info(`${this.name} is now a grand master in ${NewEraUtils.keyToTitle(to)}!`);
         }
       } else if (this.system.magic[to]){
         if (this.system.magic[to].level < 10){
@@ -2514,7 +2514,7 @@ export class NewEraActor extends Actor {
           update.magic[to] = {
             grandMaster: true
           }
-          ui.notifications.info(`${this.name} is now a grand master in ${Formatting.keyToTitle(to)} magic!`);
+          ui.notifications.info(`${this.name} is now a grand master in ${NewEraUtils.keyToTitle(to)} magic!`);
         }
       }
     }

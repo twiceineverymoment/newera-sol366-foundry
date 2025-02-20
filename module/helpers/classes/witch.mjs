@@ -1,7 +1,7 @@
 import { DarkEnergyPool } from "../../schemas/dark-energy-pool.mjs";
 import { DarkEnergySheet } from "../../sheets/dark-energy.mjs";
 import { NEWERA } from "../config.mjs";
-import { HotbarActions } from "../macros/hotbarActions.mjs";
+import { HotbarActions } from "../actions/hotbarActions.mjs";
 import { SpellFocus } from "../../sheets/spell-focus.mjs";
 
 export class Witch {

@@ -1,5 +1,5 @@
 import { NEWERA } from "../helpers/config.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 import { TextMessaging } from "../helpers/textMessaging.mjs";
 
 /**
@@ -340,9 +340,9 @@ export class PhoneUI extends ItemSheet {
 
   _formatInGameDate(settings){
     const timeDoesntWork = settings.get("newera-sol366", "world.scrambleTime");
-    const day = timeDoesntWork ? Formatting.randomInt(1, 29) : settings.get("newera-sol366", "world.date.day");
-    const month = timeDoesntWork ? Formatting.randomInt(1, 13) : settings.get("newera-sol366", "world.date.month");
-    const year = timeDoesntWork ? Formatting.randomInt(1, 999) : settings.get("newera-sol366", "world.date.year");
+    const day = timeDoesntWork ? NewEraUtils.randomInt(1, 29) : settings.get("newera-sol366", "world.date.day");
+    const month = timeDoesntWork ? NewEraUtils.randomInt(1, 13) : settings.get("newera-sol366", "world.date.month");
+    const year = timeDoesntWork ? NewEraUtils.randomInt(1, 999) : settings.get("newera-sol366", "world.date.year");
 
     //console.log(Object.entries(NEWERA.daysOfWeek));
     const weekday = Object.entries(NEWERA.daysOfWeek).find(ent => ent[1].includes(day))[0];
@@ -351,8 +351,8 @@ export class PhoneUI extends ItemSheet {
 
   _formatInGameTime(settings, militaryTime){
     const timeDoesntWork = settings.get("newera-sol366", "world.scrambleTime");
-    let hour = timeDoesntWork ? Formatting.randomInt(0, 59) : settings.get("newera-sol366", "world.time.hour");
-    let minute = timeDoesntWork ? Formatting.randomInt(0, 99) : settings.get("newera-sol366", "world.time.minute");
+    let hour = timeDoesntWork ? NewEraUtils.randomInt(0, 59) : settings.get("newera-sol366", "world.time.hour");
+    let minute = timeDoesntWork ? NewEraUtils.randomInt(0, 99) : settings.get("newera-sol366", "world.time.minute");
     let suffix = "";
     if (!militaryTime){
       if (hour > 12){

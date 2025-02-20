@@ -1,7 +1,7 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { Magus } from "../helpers/classes/magus.mjs";
-import { Actions } from "../helpers/macros/actions.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { Actions } from "../helpers/actions/actions.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 
 export class SpellstrikeSheet extends ActorSheet {
 

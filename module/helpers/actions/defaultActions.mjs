@@ -1,5 +1,5 @@
-import { Actions } from "./macros/actions.mjs";
-import { NEWERA } from "./config.mjs";
+import { Actions } from "./actions.mjs";
+import { NEWERA } from "../config.mjs";
 
 export const DefaultActions = {
     general: [

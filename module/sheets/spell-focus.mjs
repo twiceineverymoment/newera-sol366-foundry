@@ -1,6 +1,6 @@
 import { Artificer } from "../helpers/classes/artificer.mjs";
-import { Actions } from "../helpers/macros/actions.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { Actions } from "../helpers/actions/actions.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 
 export class SpellFocus extends ActorSheet {
 
@@ -55,7 +55,7 @@ export class SpellFocus extends ActorSheet {
 
         html.find(".spell-action-icons").each((i, element) => {
             const spellId = $(element).data("spell");
-            $(element).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
+            $(element).html(NewEraUtils.getSpellActionIcons(this.actor.items.get(spellId)));
         });
 
         html.find("#resetFocus").click(() => {

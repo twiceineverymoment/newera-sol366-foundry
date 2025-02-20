@@ -4,7 +4,7 @@ These actions assume the relevant Actor can perform them if they were invoked fr
 For invoking these functions via global macros, use HotBarActions.mjs for validations.
  */
 
-import { Formatting } from "../formatting.mjs";
+import { NewEraUtils } from "../utils.mjs";
 import { NEWERA } from "../config.mjs";
 import { ResourcePool } from "../../schemas/resource-pool.mjs";
 import { NewEraItem } from "../../documents/item.mjs";
@@ -33,7 +33,7 @@ export class Actions {
     static showHpIncreaseDialog(actor, clazz, increment){
       const conMod = actor.system.abilities.constitution.mod;
       const dieSize = increment.roll.split("d")[1];
-      const roll = Formatting.formatRollExpression(1, dieSize, conMod);
+      const roll = NewEraUtils.formatRollExpression(1, dieSize, conMod);
       new Dialog({
         title: `Increase Maximum HP (${clazz.system.selectedClass})`,
         content: "Choose whether to roll for your hit point increase, or take the average.<br/><b>If you earned any ability score increases this level, select those first!</b>",
@@ -139,7 +139,7 @@ export class Actions {
           });
           html.find("#damage").click(async () => {
             const amp = actor.system.sustaining.ampFactor;
-            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : Formatting.amplifyValue(spell.system.damage.amount, amp);
+            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : NewEraUtils.amplifyValue(spell.system.damage.amount, amp);
             const dmgRoll = new Roll(formula);
             await dmgRoll.evaluate();
             dmgRoll.toMessage({
@@ -300,7 +300,7 @@ export class Actions {
           });
           html.find("#damage").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : (spell.system.damage.scales ? Formatting.amplifyValue(spell.system.damage.amount, amp) : spell.system.damage.amount);
+            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : (spell.system.damage.scales ? NewEraUtils.amplifyValue(spell.system.damage.amount, amp) : spell.system.damage.amount);
             const dmgRoll = new Roll(formula);
             await dmgRoll.evaluate();
             dmgRoll.toMessage({

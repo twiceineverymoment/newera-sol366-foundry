@@ -1,8 +1,8 @@
 import {createEffect, editEffect, deleteEffect, toggleEffect, getEffectDuration, findStandardActiveEffectByName} from "../helpers/effects.mjs";
 import { NEWERA } from "../helpers/config.mjs";
 import { ClassInfo } from "../helpers/classFeatures.mjs";
-import { Actions } from "../helpers/macros/actions.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { Actions } from "../helpers/actions/actions.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 import { FeatBrowser } from "./feat-browser.mjs";
 import { NewEraActor } from "../documents/actor.mjs";
 import { NewEraItem } from "../documents/item.mjs";
@@ -10,7 +10,7 @@ import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
 import { SpellBrowser } from "./spell-browser.mjs";
 import { ClassSelect } from "./class-select.mjs";
 import { ExtendedFeatData } from "../helpers/feats.mjs";
-import { DefaultActions } from "../helpers/defaultActions.mjs";
+import { DefaultActions } from "../helpers/actions/defaultActions.mjs";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -79,7 +79,7 @@ export class NewEraActorSheet extends ActorSheet {
       this._prepareFeatOptions(context, context.inventory.feats);
       this._prepareInspiration(context);
       //Split out custom resources
-      const [custom, standard] = Formatting.splitIndexedObject(context.system.additionalResources, r => r.custom);
+      const [custom, standard] = NewEraUtils.splitIndexedObject(context.system.additionalResources, r => r.custom);
       context.resources = {
         standard,
         custom
@@ -717,7 +717,7 @@ export class NewEraActorSheet extends ActorSheet {
           ability: `${spell.system.form} Spell`,
           skill: null,
           specialties: [],
-          description: Formatting.amplifyAndFormatDescription(spell.system.description, 1),
+          description: NewEraUtils.amplifyAndFormatDescription(spell.system.description, 1),
           overrideMacroCommand: `game.newera.HotbarActions.castSpell(${spell.name})`,
           difficulty: null,
           actionType: "",
@@ -822,7 +822,7 @@ export class NewEraActorSheet extends ActorSheet {
     //Set values of select elements 
     html.find('select.auto-value').each((i, element) => {
       const dataField = $(element).attr("name") || $(element).data("indirectName"); // Using data-indirect-name prevents the select from being picked up by Foundry's built-in updates, in cases where the manual listener performs an update (to avoid updating twice)
-      const value = Formatting.getSelectValue(dataField, this.actor);
+      const value = NewEraUtils.getSelectValue(dataField, this.actor);
       if (value !== null){
         $(element).val(value);
       }
@@ -944,8 +944,6 @@ export class NewEraActorSheet extends ActorSheet {
         await this.actor.setPronouns(selection, {});
       });
     }
-
-    this._setClassFeatureDropdowns(html);
  
     //Spellbook cast DC's
     if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
@@ -953,7 +951,7 @@ export class NewEraActorSheet extends ActorSheet {
         const id = $(val).data("itemId");
         const item = this.actor.items.get(id);
         if (item.typeIs(NewEraItem.Types.MAGIC)) {
-          html.find(`.spell-action-icons.${id}`).html(Formatting.getSpellActionIcons(item));
+          html.find(`.spell-action-icons.${id}`).html(NewEraUtils.getSpellActionIcons(item));
         }
       });
     //Monster magic stuff
@@ -963,7 +961,7 @@ export class NewEraActorSheet extends ActorSheet {
         const ampFactor = this.actor.items.get(spellId).system.ampFactor;
         const ampLevel = this.actor.items.get(spellId).system.level * ampFactor;
         html.find(`#spell-level-${spellId}`).html(ampLevel);
-        html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
+        html.find(`.spell-action-icons.${spellId}`).html(NewEraUtils.getSpellActionIcons(this.actor.items.get(spellId)));
         if (ampFactor == 1){
           html.find(`#spell-level-${spellId}`).removeClass("ampText-hot");
         } else {
@@ -1155,7 +1153,7 @@ export class NewEraActorSheet extends ActorSheet {
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
-      Formatting.confirm(this.actor, ev, (actor, event) => {
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => {
         const li = $(event.currentTarget).parents(".inventory-entry");
         actor.deleteItem(li.data("itemId"));
       });
@@ -1175,16 +1173,16 @@ export class NewEraActorSheet extends ActorSheet {
       new ClassSelect(this.actor).render(true);
     });
     html.find(".deleteResource").click(ev => {
-      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteResource($(event.currentTarget).data("resourceIndex")));
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => actor.deleteResource($(event.currentTarget).data("resourceIndex")));
     });
     html.find(".deleteKnowledge").click(ev => {
-      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteKnowledge($(event.currentTarget).data("knowledgeIndex")));
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => actor.deleteKnowledge($(event.currentTarget).data("knowledgeIndex")));
     });
     html.find(".deleteSpecialty").click(ev => {
-      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteSpecialty($(event.currentTarget).data("specialtyIndex")));
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => actor.deleteSpecialty($(event.currentTarget).data("specialtyIndex")));
     });
     html.find(".deleteSpecialModifier").click(ev => {
-      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteSpecialModifier($(event.currentTarget).data("specialModifierIndex")));
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => actor.deleteSpecialModifier($(event.currentTarget).data("specialModifierIndex")));
     });
     html.find('#addSpecialModifierButton').click(() => {
       this.actor.addSpecialModifier();
@@ -1253,7 +1251,7 @@ export class NewEraActorSheet extends ActorSheet {
           ui.notifications.error("That item is in storage. You must retrieve it before you can equip it.");
         } else {
           const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
-          if (Formatting.sendEquipmentChangeMessages()){
+          if (NewEraUtils.sendEquipmentChangeMessages()){
             this.actor.actionMessage(movedItem.img, frameImg, "{NAME} {0} {d} {1}!", this._getItemActionVerb(sourceSlot, targetSlot), (movedItem.type == "Phone" ? "phone" : movedItem.name));
           }
           await this.actor.moveItem(itemId, sourceSlot, targetSlot);

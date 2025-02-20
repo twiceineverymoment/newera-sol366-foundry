@@ -1,6 +1,6 @@
 import { NEWERA } from "../config.mjs";
-import { Formatting } from "../formatting.mjs";
-import { Actions } from "../macros/actions.mjs";
+import { NewEraUtils } from "../utils.mjs";
+import { Actions } from "../actions/actions.mjs";
 export class Guardian {
 
     static hitPointIncrement = {

@@ -1,7 +1,7 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { ExtendedFeatData } from "../helpers/feats.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
-import { Actions } from "../helpers/macros/actions.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
+import { Actions } from "../helpers/actions/actions.mjs";
 
 /**
  * Extend the basic Item with some very simple modifications.
@@ -104,13 +104,13 @@ export class NewEraItem extends Item {
 
     if (system.units){
       if (system.rollQuantity){ 
-        system.listDisplayName = `${this.name} (${Formatting.formatRollExpression(system.variableQuantity.dieCount, system.variableQuantity.dieSize, system.variableQuantity.modifier)} ${system.units})`;
+        system.listDisplayName = `${this.name} (${NewEraUtils.formatRollExpression(system.variableQuantity.dieCount, system.variableQuantity.dieSize, system.variableQuantity.modifier)} ${system.units})`;
       } else {
         system.listDisplayName = `${this.name} (${system.quantity} ${system.units})`;
       }
     } else {
       if (system.rollQuantity){
-        system.listDisplayName = `${this.name} x${Formatting.formatRollExpression(system.variableQuantity.dieCount, system.variableQuantity.dieSize, system.variableQuantity.modifier)}`;
+        system.listDisplayName = `${this.name} x${NewEraUtils.formatRollExpression(system.variableQuantity.dieCount, system.variableQuantity.dieSize, system.variableQuantity.modifier)}`;
       } else if (system.quantity > 1){
         system.listDisplayName = `${this.name} x${system.quantity}`;
       } else {
@@ -200,7 +200,7 @@ export class NewEraItem extends Item {
     if (typeof system.ampFactor == "undefined"){
       system.ampFactor = 1;
     }
-    system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
+    system.formattedDescription = NewEraUtils.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
     system.amplified = (system.ampFactor > 1);
 
     if (this.type == "Spell"){
@@ -221,7 +221,7 @@ export class NewEraItem extends Item {
         system.amplifiedData = {
           level: system.level * system.ampFactor,
           energyCost: system.energyCost * system.ampFactor,
-          damage: Formatting.amplifyValue(system.damage.amount, system.ampFactor),
+          damage: NewEraUtils.amplifyValue(system.damage.amount, system.ampFactor),
           range: system.range.value * system.ampFactor,
         };
       }
@@ -244,7 +244,7 @@ _preparePotionData(system){
   if (typeof system.doses == "undefined"){
     system.doses = 1;
   }
-  system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.doses, system.stackingBehavior);
+  system.formattedDescription = NewEraUtils.amplifyAndFormatDescription(system.description, system.doses, system.stackingBehavior);
   system.amplified = (system.doses > 1);
   if (system.isRecipe) {
     system.listDisplayName = this.name + " Recipe";
@@ -577,10 +577,9 @@ _preparePotionData(system){
     if (this.system.rolls){
       const update = {
         system: {
-          rolls: {}
+          rolls: NewEraUtils.spliceIndexedObject(this.system.rolls, index)
         }
       }
-      update.system.rolls[`-=${index}`] = null;
       await this.update(update);
     }
   }
@@ -594,6 +593,8 @@ _preparePotionData(system){
     if ( !this.actor ) return null;
     const rollData = this.actor.getRollData();
     rollData.item = foundry.utils.deepClone(this.system);
+
+    rollData.durability = this.system.durability;
 
     return rollData;
   }
@@ -1370,7 +1371,7 @@ _preparePotionData(system){
           stored: !prevState
         }
       });
-      if (this.actor && Formatting.sendEquipmentChangeMessages()){
+      if (this.actor && NewEraUtils.sendEquipmentChangeMessages()){
         if (prevState){
           this.actor.actionMessage(this.img, `${NEWERA.images}/ac_adventuring.png`, "{NAME} retrieves {d} {0} from storage.", this.name);
         } else {
@@ -1550,8 +1551,8 @@ _preparePotionData(system){
   async printDetails(speaker, ampFactor = 1){
     let template = "";
     if (this.typeIs(NewEraItem.Types.SPELL)){
-      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
-      const title = Formatting.spellTitle(this, ampFactor);
+      const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor);
+      const title = NewEraUtils.spellTitle(this, ampFactor);
       const range = `${this.system.range.value * (this.system.range.scales ? ampFactor : 1)} ft ${this.system.range.description}`;
       const castingTime = NEWERA.spellCastingTimes[this.system.castType] || this.system.castTime;
       template = `
@@ -1565,8 +1566,8 @@ _preparePotionData(system){
         </div>
       `;
     } else if (this.typeIs(NewEraItem.Types.ENCHANTMENT)){
-      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
-      const title = Formatting.spellTitle(this, ampFactor);
+      const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor);
+      const title = NewEraUtils.spellTitle(this, ampFactor);
       template = `
         <div class="chat-item-details">
           <img src="${this.img}" />
@@ -1576,7 +1577,7 @@ _preparePotionData(system){
         </div>
       `;
     } else if (this.typeIs(NewEraItem.Types.POTION)){
-      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor, this.system.stackingBehavior);
+      const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor, this.system.stackingBehavior);
       template = `
         <div class="chat-item-details">
           <img src="${this.img}" />
@@ -1635,7 +1636,7 @@ _preparePotionData(system){
   async deleteMaterialCost(index){
     await this.update({
       system: {
-        materialCosts: Formatting.spliceIndexedObject(this.system.materialCosts, index)
+        materialCosts: NewEraUtils.spliceIndexedObject(this.system.materialCosts, index)
       }
     });
   }
@@ -1661,7 +1662,7 @@ _preparePotionData(system){
   async deleteComponent(index){
     await this.update({
       system: {
-        components: Formatting.spliceIndexedObject(this.system.components, index)
+        components: NewEraUtils.spliceIndexedObject(this.system.components, index)
       }
     });
   }

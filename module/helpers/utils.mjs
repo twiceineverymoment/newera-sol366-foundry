@@ -1,6 +1,6 @@
 import { NEWERA } from "./config.mjs";
 
-export class Formatting {
+export class NewEraUtils {
 
     static amplifyAndFormatDescription(text, multiplier, stackingBehavior = "S"){
         let tokens = text.split(/\[|\]/g);
@@ -22,7 +22,7 @@ export class Formatting {
               highlightClass = "ampText";
               highlightClassAmplified = "ampText-hot";
             }
-            let ampVal = amplify ? Formatting.amplifyValue(token, multiplier) : token;
+            let ampVal = amplify ? NewEraUtils.amplifyValue(token, multiplier) : token;
             markup.push(`<span class="${amplify ? highlightClassAmplified : highlightClass}">`);
             markup.push(ampVal);
             markup.push("</span>");

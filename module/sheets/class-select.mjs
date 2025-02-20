@@ -1,7 +1,7 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
 import { NewEraItem } from "../documents/item.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 
 export class ClassSelect extends ActorSheet {
 

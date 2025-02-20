@@ -1,6 +1,6 @@
 import { SpellstrikeSheet } from "../../sheets/spellstrike.mjs";
 import { NEWERA } from "../config.mjs";
-import { Actions } from "../macros/actions.mjs";
+import { Actions } from "../actions/actions.mjs";
 
 
 export class Magus {

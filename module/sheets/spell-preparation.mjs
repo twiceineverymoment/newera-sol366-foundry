@@ -1,7 +1,7 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { Scholar } from "../helpers/classes/scholar.mjs";
-import { Actions } from "../helpers/macros/actions.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { Actions } from "../helpers/actions/actions.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 
 export class SpellPreparation extends ActorSheet {
 
@@ -65,7 +65,7 @@ export class SpellPreparation extends ActorSheet {
 
         html.find(".spell-action-icons").each((i, element) => {
             const spellId = $(element).data("spell");
-            $(element).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
+            $(element).html(NewEraUtils.getSpellActionIcons(this.actor.items.get(spellId)));
         });
 
         html.find(".cast-prepared").click(ev => {

@@ -5,9 +5,9 @@ import { NewEraItem } from "./documents/item.mjs";
 import { NewEraActorSheet } from "./sheets/actor-sheet.mjs";
 import { NewEraItemSheet } from "./sheets/item-sheet.mjs";
 import { PhoneUI } from "./sheets/phone-ui.mjs";
-import { HotbarManager } from "./helpers/macros/hotbarManager.mjs";
-import { HotbarActions } from "./helpers/macros/hotbarActions.mjs";
-import { Formatting } from "./helpers/formatting.mjs";
+import { HotbarManager } from "./helpers/actions/hotbarManager.mjs";
+import { HotbarActions } from "./helpers/actions/hotbarActions.mjs";
+import { NewEraUtils } from "./helpers/utils.mjs";
 import { TextMessaging } from "./helpers/textMessaging.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
@@ -156,7 +156,7 @@ Handlebars.registerHelper('romanNumeral', function(num, showOne) {
 });
 
 Handlebars.registerHelper('amplify', function(value, multiplier){
-  return Formatting.amplifyValue(value, multiplier);
+  return NewEraUtils.amplifyValue(value, multiplier);
 });
 
 Handlebars.registerHelper('truncate', function(str, maxlength){
