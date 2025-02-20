@@ -12,7 +12,7 @@
         </a>
       {{/if}}
       <div class="resource">
-        <select name="system.actionType" class="sheet-input" style="margin-left: 8px" id="action-type-{{item.id}}">
+        <select name="system.actionType" class="sheet-input auto-value" style="margin-left: 8px">
           <option value="1">1 Frame</option>
           <option value="2">2 Frames</option>
           <option value="3">3 Frames</option>
@@ -70,7 +70,7 @@
             <td style="width: 45%">
               <input type="text" class="sheet-input" name="system.rolls.{{index}}.dieCount" value="{{roll.dieCount}}" data-dtype="Number" style="width: 40%" />
               d
-              <select name="system.rolls.{{index}}.dieSize" id="die-size-{{../item.id}}-{{index}}" class="sheet-input" style="width: 40%">
+              <select name="system.rolls.{{index}}.dieSize" class="sheet-input auto-value" style="width: 40%">
                 <option value="3">3*</option>
                 <option value="4">4</option>
                 <option value="6">6</option>
@@ -101,7 +101,7 @@
         {{/each}}
         <tr>
           <td colspan="4">
-            <a title="Add Roll" id="addRollButton-{{item.id}}">
+            <a title="Add Roll" id="addRoll">
               <i class="fas fa-plus"></i> ADD ROLL
             </a>
           </td>

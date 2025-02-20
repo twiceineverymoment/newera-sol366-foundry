@@ -13,7 +13,7 @@
         </a>
         {{/if}}
         <div class="resource">
-          <select name="system.rarity" class="sheet-input" style="margin-left: 8px" id="rarity-{{item.id}}" data-dtype="Number" {{disabled system.standard}}>
+          <select name="system.rarity" class="sheet-input auto-value" style="margin-left: 8px" data-dtype="Number" {{disabled system.standard}}>
             <option value="1">Common</option>
             <option value="2">Uncommon</option>
             <option value="3">Rare</option>
@@ -21,7 +21,7 @@
             <option value="5">Unique</option>
             <option value="0">Rarity Unknown</option>
           </select>
-          <select name="system.weaponType" class="sheet-input" id="ranged-type-{{item.id}}">
+          <select name="system.weaponType" class="sheet-input auto-value">
             <option value="CF">Custom (Firearm)</option>
             <option value="CS">Custom (Shotgun)</option>
             <option value="CB">Custom (Bow)</option>
@@ -91,7 +91,7 @@
         <div class="newera-itemsheet-properties">
           <div class="newera-itemsheet-property-33">
             <h4>Handedness</h4>
-            <select name="system.handedness" class="sheet-input" id="handedness-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.handedness" class="sheet-input auto-value" {{disabled system.standard}}>
               <option value="1H">One-Handed</option>
               <option value="2H">Two-Handed</option>
             </select>
@@ -104,7 +104,7 @@
           </div>
           <div class="newera-itemsheet-property-33">
             <h4>Ammunition</h4>
-            <select name="system.ammo.itemName" class="sheet-input" id="ammo-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.ammo.itemName" class="sheet-input auto-value" {{disabled system.standard}}>
               <option value="">Other</option>
               <option value="Small Firearm Ammunition">Small Rounds</option>
               <option value="Medium Firearm Ammunition">Medium Rounds</option>
@@ -117,7 +117,7 @@
         <div class="newera-itemsheet-properties">
           <div class="newera-itemsheet-property-50">
             <h4>Firing Action</h4>
-            <select name="system.firingAction" class="sheet-input" id="action-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.firingAction" class="sheet-input auto-value" {{disabled system.standard}}>
               <option value="B">Bow</option>
               <option value="M">Manual</option>
               <option value="SA">Semi-Automatic</option>
@@ -129,7 +129,7 @@
           </div>
           <div class="newera-itemsheet-property-50">
             <h4>Legality</h4>
-            <select name="system.licenseLevel" class="sheet-input" id="license-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.licenseLevel" class="sheet-input auto-value" {{disabled system.standard}}>
               <option value="0">Unrestricted</option>
               <option value="1">Class I</option>
               <option value="2">Class II</option>

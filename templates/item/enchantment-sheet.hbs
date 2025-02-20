@@ -22,7 +22,7 @@
         </a>
       {{/if}}
       <div class="resource">
-        <select name="system.rarity" class="sheet-input" id="rarity-{{item.id}}" data-dtype="Number">
+        <select name="system.rarity" class="sheet-input auto-value" data-dtype="Number">
           <option value="1">Common</option>
           <option value="2">Uncommon</option>
           <option value="3">Rare</option>
@@ -33,14 +33,14 @@
           <option value="8">Innate</option>
           <option value="0">Crafted</option>
         </select>
-        <select name="system.enchantmentType" class="sheet-input" id="ench-type-{{item.id}}" {{disabled system.standard}}>
+        <select name="system.enchantmentType" class="sheet-input auto-value" {{disabled system.standard}}>
           <option value="E">Enchantment</option>
           <option value="CE">Complex Enchantment</option>
           <option value="C">Component</option>
         </select>
         {{#if system.standard}}
         {{else}}
-        <select name="system.refinementLevel" class="sheet-input" id="refinement-{{item.id}}">
+        <select name="system.refinementLevel" class="sheet-input auto-value">
           <option value="0">Hypothetical (-5)</option>
           <option value="1">Theoretical (-3)</option>
           <option value="2">Revised (-1)</option>
@@ -86,7 +86,7 @@
       </div>
       <div class="resource newera-itemsheet-property-33">
         <h4>School of Magic</h4>
-        <select name="system.school" class="sheet-input" id="school-{{item.id}}" {{disabled system.standard}}>
+        <select name="system.school" class="sheet-input auto-value" {{disabled system.standard}}>
           <option value="??">Unknown School</option>
           <option value="PY">Pyromancy</option>
           <option value="HM">Cryomancy</option>

@@ -1,6 +1,7 @@
 import { NEWERA } from "../helpers/config.mjs";
 import { NewEraItem } from "../documents/item.mjs";
 import { NewEraActor } from "../documents/actor.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 import {createEffect, editEffect, deleteEffect, toggleEffect} from "../helpers/effects.mjs";
 
 /**
@@ -120,106 +121,27 @@ export class NewEraItemSheet extends ItemSheet {
 
     //Handlers to set up UI for various sheets
 
-    //auto-value select dropdowns
-    html.find("select.auto-value").val(function() {
-      const dataField = $(this).attr("name");
-      const paths = dataField.split(".");
-      //console.log(paths);
-      let retVal = system;
-      for (let i=1; i<paths.length; i++){
-        //console.log(paths[i]);
-        if (retVal === undefined){ //If we come across undefined in the data model, assume it's for a new selection that hasn't been set yet and return the default value (an empty string)
-          return "";
-        }
-        retVal = retVal[paths[i]];
-        //console.log(retVal);
+    //Set values of select elements 
+    html.find('select.auto-value').each((i, element) => {
+      const dataField = $(element).attr("name") || $(element).data("indirectName"); // Using data-indirect-name prevents the select from being picked up by Foundry's built-in updates, in cases where the manual listener performs an update (to avoid updating twice)
+      const value = NewEraUtils.getSelectValue(dataField, this.item);
+      if (value !== null){
+        $(element).val(value);
       }
-      return retVal;
     });
-
-    if (this.item.type == "Item"){
-      html.find("#rarity-"+this.item.id).val(system.rarity);
-      html.find("#slot-"+this.item.id).val(system.equipSlot);
-      html.find("#outfit-"+this.item.id).val(system.outfitType);
-    }
-    else if (this.item.type == "Spell"){
-
-      html.find("#rarity-"+this.item.id).val(system.rarity);
-      html.find("#cast-type-"+this.item.id).val(system.castType);
-      html.find("#range-desc-"+this.item.id).val(system.range.description);
-      html.find("#damage-type-"+this.item.id).val(system.damage.type);
-      html.find("#school-"+this.item.id).val(system.school);
-      html.find("#refinement-"+this.item.id).val(system.refinementLevel);
-
+    if (this.item.typeIs(NewEraItem.Types.AMPLIFIABLE)){
+      /*
+      * This logic hides the normal text content field and replaces it with one that shows the formatted text.
+      * Clicking on the editor will open it normally.
+      * Made transparent instead of hidden so it is still clickable.
+      */
       html.find(".editor-content").css("color", "rgba(0, 0, 0, 0.0)"); //I reject your HTML and substitute my own
       html.find("#amplified-description").html(system.formattedDescription);
-    }
-    else if (this.item.type == "Feat"){
-      html.find("#feat-type-"+this.item.id).val(system.featType);
-      html.find("#feat-max-"+this.item.id).val(system.maximumTier);
-      if(system.hasSubType){
-        html.find("#feat-subtype-"+this.item.id).show();
-      } else {
-        html.find("#feat-subtype-"+this.item.id).hide();
-      }
-    } else if (this.item.type == "Melee Weapon"){
-      html.find("#rarity-"+this.item.id).val(system.rarity);
-      html.find("#melee-type-"+this.item.id).val(system.weaponType);
-      html.find("#handedness-"+this.item.id).val(system.handedness);
-      html.find("#material-"+this.item.id).val(system.material);
-      html.find("#condition-"+this.item.id).val(system.condition);
-      html.find("#damage-type-"+this.item.id).val(system.customDamage.type);
-    } else if (this.item.type == "Ranged Weapon"){
-      html.find("#rarity-"+this.item.id).val(system.rarity);
-      html.find("#ranged-type-"+this.item.id).val(system.weaponType);
-      html.find("#handedness-"+this.item.id).val(system.handedness);
-      html.find("#ammo-"+this.item.id).val(system.ammo.itemName);
-      html.find("#action-"+this.item.id).val(system.firingAction);
-      html.find("#license-"+this.item.id).val(system.licenseLevel);
-    } else if (this.item.type == "Armor"){
-      html.find("#armor-type-"+this.item.id).val(system.armorType);
-      html.find("#rarity-"+this.item.id).val(system.rarity);
-      html.find("#material-"+this.item.id).val(system.material);
-      html.find("#condition-"+this.item.id).val(system.condition);
-    } else if (this.item.type == "Shield"){
-      html.find("#shield-type-"+this.item.id).val(system.shieldType);
-      html.find("#rarity-"+this.item.id).val(system.rarity);
-      html.find("#material-"+this.item.id).val(system.material);
-      html.find("#condition-"+this.item.id).val(system.condition);
-    } else if (this.item.type == "Enchantment"){
-      html.find("#rarity-"+this.item.id).val(system.rarity);
-      html.find("#ench-type-"+this.item.id).val(system.enchantmentType);
-      html.find("#school-"+this.item.id).val(system.school);
-      html.find("#refinement-"+this.item.id).val(system.refinementLevel);
-      html.find(".editor-content").css("color", "rgba(0, 0, 0, 0.0)");
-      html.find("#amplified-description").html(system.formattedDescription);
-    } else if (this.item.type == "Class"){
-      html.find("#class-"+this.item.id).val(system.selectedClass);
-      html.find('#class-desc-'+this.item.id).html(system.description);
-    } else if (this.item.type == "Potion"){
-      html.find("#rarity-"+this.item.id).val(system.rarity);
-      html.find("#potion-type-"+this.item.id).val(system.potionType);
-      html.find("#recipe-level-"+this.item.id).val(system.recipeLevel);
-      html.find("#behavior-"+this.item.id).val(system.stackingBehavior);
-
-      html.find(".editor-content").css("color", "rgba(0, 0, 0, 0.0)");
-      html.find("#amplified-description").html(system.formattedDescription);
-    } else if (this.item.type == "Phone"){
-      html.find("#weather-"+this.item.id).val(system.weather.conditions);
-      html.find("#service-"+this.item.id).val(system.service);
-      html.find("#month-"+this.item.id).val(system.time.month);
-      html.find("#apply-game-state").click(ev => {
-        this.updateLinkedItems();
-      });
-    } else if (this.item.type == "Action"){
-      html.find("#action-type-"+this.item.id).val(system.actionType);
-      for (const [i, roll] of Object.entries(system.rolls)){
-        html.find(`#die-size-${this.item.id}-${i}`).val(roll.dieSize);
-        console.log(`#die-size-${this.item.id}-${i} ${roll.dieSize}`);
-        html.find(`#mod-stat-${this.item.id}-${i}`).val(roll.stat); //Shouldn't do anything if this dropdown is hidden
-      }
+    } else if (this.item.typeIs(NewEraItem.Types.CLASS)){
+      html.find('#class-desc').html(system.description);
+    } else if (this.item.typeIs(NewEraItem.Types.ACTION)){
       if (this.isEditable){
-        html.find("#addRollButton-"+this.item.id).click(ev => {
+        html.find("#addRoll").click(ev => {
           this.item.addRoll();
         });
         html.find(".roll-switch").click(ev => {

@@ -13,7 +13,7 @@
         </a>
       {{/if}}
       <div class="resource">
-        <select name="system.rarity" class="sheet-input" style="margin-left: 8px" id="rarity-{{item.id}}" data-dtype="Number" {{disabled system.standard}}>
+        <select name="system.rarity" class="sheet-input auto-value" style="margin-left: 8px" data-dtype="Number" {{disabled system.standard}}>
           <option value="1">Common</option>
           <option value="2">Uncommon</option>
           <option value="3">Rare</option>
@@ -21,7 +21,7 @@
           <option value="5">Unique</option>
           <option value="0">Rarity Unknown</option>
         </select>
-        <select name="system.weaponType" class="sheet-input" id="melee-type-{{item.id}}">
+        <select name="system.weaponType" class="sheet-input auto-value">
           <option value="">Custom Weapon</option>
           <option value="" disabled>[ Light ]</option>
           <option value="Knife">Knife</option>
@@ -93,7 +93,7 @@
     <div class="newera-itemsheet-properties">
       <div class="newera-itemsheet-property-50">
         <h4>Handedness</h4>
-        <select name="system.handedness" class="sheet-input" id="handedness-{{item.id}}" {{disabled system.standard}}>
+        <select name="system.handedness" class="sheet-input auto-value" {{disabled system.standard}}>
           <option value="1H">One-Handed</option>
           <option value="1.5H">Hand-and-a-Half</option>
           <option value="2H">Two-Handed</option>
@@ -103,7 +103,7 @@
       </div>
       <div class="newera-itemsheet-property-50">
         <h4>Material</h4>
-        <select name="system.material" class="sheet-input" id="material-{{item.id}}">
+        <select name="system.material" class="sheet-input auto-value">
           <option value="" {{disabled system.standard}}>Other</option>
           {{#if system.selectableMaterials.ethereal}}<option value="Ethereal">Ethereal*</option>{{/if}}
           {{#if system.selectableMaterials.wooden}}<option value="Wooden">Wood</option>{{/if}}
@@ -130,7 +130,7 @@
     <div class="newera-itemsheet-properties">
       <div class="newera-itemsheet-property-50">
         <h4>Condition</h4>
-        <select name="system.condition" class="sheet-input" id="condition-{{item.id}}" data-dtype="Number">
+        <select name="system.condition" class="sheet-input auto-value" data-dtype="Number">
           <option value="5">Flawless (5)</option>
           <option value="4">Pristine (4)</option>
           <option value="3">Good (3)</option>
@@ -151,7 +151,7 @@
       <div class="newera-itemsheet-properties">
         <div class="newera-itemsheet-property-33">
           <input type="text" name="system.customDamage.amount" value="{{system.customDamage.amount}}" />
-          <select name="system.customDamage.type" id="damage-type-{{item.id}}">
+          <select name="system.customDamage.type" class="sheet-input auto-value">
             <option value="bludgeoning">Bludgeoning</option>
             <option value="slashing">Slashing</option>
             <option value="piercing">Piercing</option>

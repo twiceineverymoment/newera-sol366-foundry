@@ -28,7 +28,8 @@ export class NewEraItem extends Item {
     ENCHANTABLE: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
     INVENTORY: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Potion", "Phone"],
     NON_INVENTORY: ["Spell", "Enchantment", "Class", "Feat", "Action"],
-    STACKABLE: ["Item", "Potion"]
+    STACKABLE: ["Item", "Potion"],
+    AMPLIFIABLE: ["Spell", "Enchantment", "Potion"]
   }
 
   static ActionConditions = {

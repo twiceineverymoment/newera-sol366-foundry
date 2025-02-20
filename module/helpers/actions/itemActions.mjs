@@ -24,6 +24,7 @@ export class ItemActions {
     static _getMeleeWeaponActions(item){
       const attacks = item.system.attacks || [];
       const actions = [];
+      const system = item.system;
       for (const attack of attacks){
         actions.push({
           name: attack.name,
@@ -55,7 +56,7 @@ export class ItemActions {
           ]
         });
       }
-      if (item.system.handedness == "2H"){
+      if (system.handedness == "2H"){
         actions.push({
           name: "Parry",
           images: {
@@ -80,6 +81,7 @@ export class ItemActions {
           ]
         });
       }
+      return actions;
     }
 
     static _getRangedWeaponActions(item){
@@ -314,6 +316,7 @@ export class ItemActions {
           ]
         });
       }
+      return actions;
     }
 
     static _getShieldActions(item){

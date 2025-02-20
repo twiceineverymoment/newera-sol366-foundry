@@ -8,7 +8,7 @@
       <div class="resource">
         Level 
         <input type="text" class="sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" style="display: inline; width: 20%" />&nbsp;
-        <select name="system.selectedClass" class="sheet-input" id="class-{{item.id}}">
+        <select name="system.selectedClass" class="sheet-input auto-value">
           <option value="Adventurer">Adventurer (Classless)</option>
           <option value="Delver">Delver</option>
           <option value="Mercenary">Mercenary</option>
@@ -30,7 +30,7 @@
   <section class="sheet-body">
 
     <h2 class="table-header">{{system.selectedClass}}</h2>
-    <p id="class-desc-{{item.id}}"></p>
+    <p id="class-desc"></p>
 
     <h3 class="table-header">Notes</h3>
     <div class="newera-itemsheet-editor-container">
