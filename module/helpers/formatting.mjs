@@ -50,9 +50,19 @@ export class Formatting {
       }
 
       static getSelectValue(name, document) {
+        if (!name) {
+          console.warn(`You have a broken select field : auto-value with no name`);
+          return null;
+        }
         let tokens = name.split(".");
-        let value = tokens.reduce((acc, token) => acc[token], document);
-        return value;
+        try {
+          let value = tokens.reduce((acc, token) => acc[token], document);
+          console.log(`[DEBUG] auto-value ${name} = ${value}`);
+          return value;
+        } catch (err) {
+          console.warn(`[DEBUG] auto-value ${name} = undefined`);
+          return null;
+        }
       }
 
       static formatRollExpression(count, size, modifier){

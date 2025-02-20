@@ -820,9 +820,12 @@ export class NewEraActorSheet extends ActorSheet {
     const system = this.actor.system;
 
     //Set values of select elements 
-    html.find('select.auto-value').val(function() {
-      const dataField = $(this).attr("name");
-      return Formatting.getSelectValue(dataField, this.actor);
+    html.find('select.auto-value').each((i, element) => {
+      const dataField = $(element).attr("name") || $(element).data("indirectName"); // Using data-indirect-name prevents the select from being picked up by Foundry's built-in updates, in cases where the manual listener performs an update (to avoid updating twice)
+      const value = Formatting.getSelectValue(dataField, this.actor);
+      if (value !== null){
+        $(element).val(value);
+      }
     });
 
     html.find('.item-edit').click(ev => {
@@ -940,28 +943,6 @@ export class NewEraActorSheet extends ActorSheet {
         let selection = event.target.value;
         await this.actor.setPronouns(selection, {});
       });
-    }
-
-    //Bio field update
-    if (this.actor.typeIs(NewEraActor.Types.ANIMATE)){
-      html.find('#alignment-moral').val(system.alignment.moral);
-      html.find('#alignment-ethical').val(system.alignment.ethical);
-    }
-
-    //Other dropdown updates
-    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
-      html.find('#skillmode-select').val(system.advancedSkills.toString());
-      html.find('#wornSlotSelect').val(system.wornItemSlots);
-    }
-    if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
-      html.find('#creature-rarity').val(system.rarity);
-    }
-
-    //Vehicle dropdowns
-    if (this.actor.typeIs(NewEraActor.Types.VEHICLE)){
-      html.find('#fuel-type').val(system.fuelType);
-      html.find('#vehicle-type').val(system.vehicleType);
-      html.find('#color').val(system.color);
     }
 
     this._setClassFeatureDropdowns(html);
@@ -1806,39 +1787,6 @@ export class NewEraActorSheet extends ActorSheet {
       },
       default: "cancel"
     }).render(true);
-  }
-
-  /*
-    Set the existing values of the dropdowns in class feature selections.
-    For each selection dropdown, this has to step through the DataModel using the input field's name until it arrives at the value for each one.
-  */
-  _setClassFeatureDropdowns(html){
-    const system = this.actor.system;
-    if (this.actor.type != "Player Character") return;
-    html.find(".feature-select").val(function() {
-      const dataField = $(this).attr("name");
-      const paths = dataField.split(".");
-      //console.log(paths);
-      let retVal = system;
-      for (let i=1; i<paths.length; i++){
-        //console.log(paths[i]);
-        if (retVal === undefined){ //If we come across undefined in the data model, assume it's for a new selection that hasn't been set yet and return the default value (an empty string)
-          return "";
-        }
-        retVal = retVal[paths[i]];
-        //console.log(retVal);
-      }
-      return retVal;
-    });
-    html.find(".feat-select").val(function() {
-      const dataField = $(this).attr("name");
-      const paths = dataField.split(".");
-      let retVal = system;
-      for (let i=1; i<paths.length; i++){
-        retVal = retVal[paths[i]];
-      }
-      return retVal;
-    });
   }
 
   _prepareInspiration(context){
