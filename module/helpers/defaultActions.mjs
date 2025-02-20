@@ -211,6 +211,7 @@ export const DefaultActions = {
             description: "You cast a spell or enchantment that you've memorized. The time it takes to cast the spell varies depending on the type of spell.",
             difficulty: "The difficulty depends on your skill level in the spell's form of magic. Casting a spell at or below your current level doesn't require a check. For spells above your level, the difficulty is 10 for one level higher, plus 5 for each additional level.",
             altInstructions: "Cast spells and enchantments from the Magic tab.",
+            disable: actor => actor.hasEnergyAvailable() ? false : "You don't have any energy!",
             actionType: "?",
             rolls: []
         },
@@ -225,6 +226,15 @@ export const DefaultActions = {
             specialties: [],
             description: "You continue to concentrate on a sustained spell you're already casting. You may spend any number of frames on your turn sustaining a spell. If your turn ends without having used at least one frame to sustain a spell, the spell ends.",
             difficulty: "0",
+            disable: actor => {
+                if (!actor.hasEnergyAvailable()){
+                    return "You don't have any energy!";
+                }
+                if (!actor.system.sustaining.id){
+                    return "You aren't sustaining a spell right now. Cast one from the Magic tab.";
+                }
+                return false;
+            },
             overrideMacroCommand: "game.newera.HotbarActions.sustainCurrentSpell()",
             actionType: "1",
             rolls: [
