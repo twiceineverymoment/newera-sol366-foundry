@@ -353,7 +353,10 @@ export class Guardian {
                     field: "secondWind.count",
                     label: "Dice per Day",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 8, 9, 10, 10, 11, 12, 13, 14, 15]
+                    values: [null, 0, 0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 8, 9, 10, 10, 11, 12, 13, 14, 15],
+                    onUpdate: (actor, from, to) => actor.updateResourceByName("Second Wind Dice", {
+                        max: to
+                    })
                 }
             ],
             actions: [
@@ -379,7 +382,16 @@ export class Guardian {
                       }
                     ]
                 }
-            ]
+            ],
+            onUnlock: actor => {
+                actor.addResource({
+                    name: "Second Wind Dice",
+                    value: 3,
+                    max: 3,
+                    custom: false,
+                    daily: true
+                });
+            }
         },
         {
             level: 7,
@@ -1121,7 +1133,7 @@ export class Guardian {
             ui.notifications.info(`${actor.name} is already at full health!`);
             return;
         }
-        const resource = Object.entries(actor.system.additionalResources).find(r => r[1].name.toLowerCase().includes("second wind"));
+        const resource = Object.entries(actor.system.additionalResources).find(r => r[1].name == "Second Wind Dice");
         if (resource && resource[1].value > 0){
             let roll = new Roll(`${actor.system.tableValues.secondWind.roll}`, actor.getRollData());
             await roll.evaluate();
@@ -1170,7 +1182,7 @@ export class Guardian {
     }
 
     static async hotBloodedBoost(actor, amount) {
-        const resource = Object.entries(actor.system.additionalResources).find(r => r[1].name.toLowerCase().includes("second wind"));
+        const resource = Object.entries(actor.system.additionalResources).find(r => r[1].name == "Second Wind Dice");
         if (resource && resource[1].value >= amount){
             const die = actor.system.tableValues.secondWind.roll;
             const formula = `${amount}${die}`;
