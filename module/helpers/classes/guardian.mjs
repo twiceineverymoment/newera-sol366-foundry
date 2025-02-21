@@ -26,7 +26,8 @@ export class Guardian {
                         "disarm": "Disarm (Defense)",
                         "counter": "Counter (Defense)",
                         "pull-to-safety": "Pull to Safety (Reflex)"
-                    }
+                    },
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 },
                 "2": {
                     label: "Specialty #2",
@@ -38,7 +39,8 @@ export class Guardian {
                         "disarm": "Disarm (Defense)",
                         "counter": "Counter (Defense)",
                         "pull-to-safety": "Pull to Safety (Reflex)"
-                    }
+                    },
+                    onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 }
             }
         },
@@ -58,8 +60,9 @@ export class Guardian {
                         "endurance": "Endurance",
                         "reflex": "Reflex",
                         "determination": "Determination",
-                        "divine-magic": "Divine Magic"
-                    }
+                        "divine": "Divine Magic"
+                    },
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "2": {
                     label: "Second Choice",
@@ -70,8 +73,9 @@ export class Guardian {
                         "endurance": "Endurance",
                         "reflex": "Reflex",
                         "determination": "Determination",
-                        "divine-magic": "Divine Magic"
-                    }
+                        "divine": "Divine Magic"
+                    },
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "3": {
                     label: "Third Choice",
@@ -82,8 +86,9 @@ export class Guardian {
                         "endurance": "Endurance",
                         "reflex": "Reflex",
                         "determination": "Determination",
-                        "divine-magic": "Divine Magic"
-                    }
+                        "divine": "Divine Magic"
+                    },
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 }
             }
         },
@@ -299,7 +304,8 @@ export class Guardian {
                     field: "casterLevel.guardian",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5]
+                    values: [null, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5],
+                    onUpdate: (actor, from, to) => actor.setCasterLevel(from, to)
                 }
             ]
         },
@@ -440,7 +446,8 @@ export class Guardian {
                         speed: "Speed",
                         carryWeight: "Carry Weight",
                         naturalArmor: "Natural Armor"
-                    }
+                    },
+                    onChange: (actor, from, to) => Guardian.bonus(actor, from, to)
                 }
             }
         },
@@ -634,7 +641,8 @@ export class Guardian {
             level: 13,
             name: "Qi Rush",
             key: false,
-            description: "You learn the Qi Rush cantrip."
+            description: "You learn the Qi Rush cantrip.",
+            onUnlock: actor => actor.addMagicById("CASPERSP00000336")
         },
         {
             level: 13,
@@ -649,7 +657,8 @@ export class Guardian {
                         speed: "Speed",
                         carryWeight: "Carry Weight",
                         naturalArmor: "Natural Armor"
-                    }
+                    },
+                    onChange: (actor, from, to) => Guardian.bonus(actor, from, to)
                 }
             }
         },
@@ -714,7 +723,8 @@ export class Guardian {
             level: 15,
             name: "Combat Expert",
             key: false,
-            description: "Your turn length increases by one action frame and one reaction frame."
+            description: "Your turn length increases by one action frame and one reaction frame.",
+            onUnlock: actor => actor.increaseTurnLength(1, 1)
         },
         {
             level: 16,
@@ -802,7 +812,8 @@ export class Guardian {
                         speed: "Speed",
                         carryWeight: "Carry Weight",
                         naturalArmor: "Natural Armor"
-                    }
+                    },
+                    onChange: (actor, from, to) => Guardian.bonus(actor, from, to)
                 }
             }
         },
@@ -1087,6 +1098,42 @@ export class Guardian {
                 ]
             }
         }
+    }
+
+    static async bonus(actor, from, to) {
+        const update = {
+            system: {}
+        }
+        if (from == "speed"){
+            update.system.speed = {
+                bonus: actor.system.speed.bonus - 1
+            }
+        } else if (from == "carryWeight"){
+            update.system.carryWeight = {
+                bonus: actor.system.carryWeight.bonus - 1
+            }
+        } else if (from == "naturalArmor"){
+            update.system.armor = {
+                bonus: actor.system.armor.bonus - 1
+            }
+        }
+        if (to == "speed"){
+            update.system.speed = {
+                bonus: actor.system.speed.bonus + 1
+            }
+            ui.notifications.info(`${actor.name}'s Speed was increased.`)
+        } else if (to == "carryWeight"){
+            update.system.carryWeight = {
+                bonus: actor.system.carryWeight.bonus + 1
+            }
+            ui.notifications.info(`${actor.name}'s carry weight was increased.`)
+        } else if (to == "naturalArmor"){
+            update.system.armor = {
+                bonus: actor.system.armor.bonus + 1
+            }
+            ui.notifications.info(`${actor.name}'s natural armor was increased.`)
+        }
+        await actor.update(update);
     }
 
     static async activateFightingStance(actor, name){
