@@ -213,6 +213,11 @@ div.newera-itemsheet-property-66 {
   width: 30%;
   text-align: right;
 }
+.ammo-count {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: bold;
+}
 /* Content styling */
 div.tab {
   width: 100%;
