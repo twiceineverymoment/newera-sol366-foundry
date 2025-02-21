@@ -69,6 +69,9 @@
       {{#if thingsAreComplex}}
         <a class="item newera-section-header" data-tab="components">Components</a>
       {{/if}}
+      {{#if gm}}
+        <a class="item newera-section-header" data-tab="secrets"><i class="fa-solid fa-lock"></i>Secrets</a>
+      {{/if}}
     </nav>
   </div>
 
@@ -194,6 +197,12 @@
   <div class="tab components" data-group="primary" data-tab="components">
     {{> systems/newera-sol366/templates/item/parts/components.hbs}}
   </div>
+
+  {{#if gm}}
+    <div class="tab" data-group="primary" data-tab="secrets">
+      {{> systems/newera-sol366/templates/item/parts/secret.hbs}}
+    </div>
+    {{/if}}
 
   </section>
 </form>

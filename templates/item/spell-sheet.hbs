@@ -75,9 +75,7 @@
       <div class="newera-itemsheet-properties">
         <div class="resource newera-itemsheet-property-33">
           <h4>Level</h4>
-          {{#if system.secret.3}}
-
-          {{else if system.amplified}}
+          {{#if system.amplified}}
             <input type="text" class="sheet-input amplified" value="{{system.amplifiedData.level}}" disabled />
           {{else}}
             <input type="text" class="sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled system.standard}}/>
