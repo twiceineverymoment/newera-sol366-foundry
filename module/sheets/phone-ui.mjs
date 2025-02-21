@@ -78,13 +78,16 @@ export class PhoneUI extends ItemSheet {
         worldSetting.location = NEWERA.alternateDimensionLocations[Math.floor(Math.random() * NEWERA.alternateDimensionLocations.length)];
       }
 
-      context.enableReceiveMsg = (game.user.role >= 3);
       context.standardFeatures = (system.featureLevel > 0);
       context.advancedFeatures = (system.featureLevel == 2);
 
     // Prepare conversation data for messages display
 
     //console.log(`reading ${Object.entries(system.contacts).length} conversations`);
+
+    if (system.openApp == "photo-view"){
+      context.photo = system.photos[system.selectedPhoto];
+    }
 
     if (["chat", "messages"].includes(system.openApp)){
       context.contacts = structuredClone(system.contacts);
@@ -170,9 +173,6 @@ export class PhoneUI extends ItemSheet {
       html.find(`#app-${system.openApp}`).show();
       html.find("#phoneui-clock-top").show();
       html.find("#phoneui-home").hide();
-    }
-    if (system.openApp == "photos" && system.selectedPhoto){
-      html.find(`#photo-details-${this.item.id}-${system.selectedPhoto}`).show();
     }
 
     //Set values of select elements 
@@ -295,7 +295,7 @@ export class PhoneUI extends ItemSheet {
     });
     html.find("div.photo-thumbnail").click(ev => {
       const index = $(ev.currentTarget).data("photoId");
-      this.item.setSelectedPhoto(index);
+      this.item.openPhotoView(index);
     });
     html.find(".photo-close").click(() => {
       if (system.selectedPhoto) {
@@ -331,6 +331,8 @@ export class PhoneUI extends ItemSheet {
           speaker: ChatMessage.getSpeaker({actor: this.item.actor}),
           flavor: "Photography (Technology) Check"
         });
+      } else {
+        ui.notifications.error("This phone isn't owned by anyone!");
       }
     });
     html.find(".open-convo").click(ev => {

@@ -9,17 +9,6 @@
             <div class="photo-thumbnail" data-tooltip="{{photo.title}}" data-tooltip-direction="UP" data-photo-id="{{index}}">
                 <img src="{{photo.img}}" />
             </div>
-            <div class="photo-details" id="photo-details-{{../item.id}}-{{index}}">
-                <img class="photo-full" src="{{photo.img}}" data-edit="system.photos.{{index}}.img" />
-                {{#if photo.roll}}
-                    <a class="photo-roll">{{photo.roll}}</a>
-                {{else}}
-                    <a class="photo-roll photo-roll-trigger" data-photo-id="{{index}}"><i class="fa-solid fa-dice-d20"></i></a>
-                {{/if}}
-                <input type="text" name="system.photos.{{index}}.title" value="{{photo.title}}" id="photo-input-name" />
-                <input type="text" name="system.photos.{{index}}.description" value="{{photo.description}}" id="photo-input-desc" />
-                <input type="text" name="system.photos.{{index}}.timestamp" value="{{photo.timestamp}}" id="photo-input-timestamp" disabled />
-            </div>
         {{/each}}
     </div>
 </div>

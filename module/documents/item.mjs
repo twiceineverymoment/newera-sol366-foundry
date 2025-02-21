@@ -1351,20 +1351,15 @@ _preparePotionData(system){
     }
   }
 
-  async setSelectedPhoto(index){
+  async openPhotoView(index){
     if (this.typeIs(NewEraItem.Types.PHONE)){
       if (index !== null){
          await this.update({
           system: {
-            selectedPhoto: index
+            selectedPhoto: index,
+            openApp: "photo-view"
           }
       });
-      } else {
-        await this.update({
-          system: {
-            selectedPhoto: ""
-          }
-        });
       }
     }
   }

@@ -58,6 +58,7 @@
     "systems/newera-sol366/templates/item/phone/phone-browser.hbs",
     "systems/newera-sol366/templates/item/phone/phone-photos.hbs",
     "systems/newera-sol366/templates/item/phone/phone-chat.hbs",
+    "systems/newera-sol366/templates/item/phone/phone-photo-view.hbs",
 
     //Extras templates
     "systems/newera-sol366/templates/extras/parts/feat-filters.hbs",
