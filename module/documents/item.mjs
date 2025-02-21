@@ -540,7 +540,7 @@ _preparePotionData(system){
     if (system.openApp == "call"){
       system.callImg = `${NEWERA.images}/phone-ui/contact-placeholder.png`;
       for (const actor of game.actors.values()){
-        if (actor.type.includes("Character") && actor.name.toLowerCase() == system.callee.toLowerCase()){
+        if (actor.type.includes("Character") && actor.name.toLowerCase() == this.system.contacts[system.currentContact].name.toLowerCase()){
           system.callImg = actor.img;
           break;
         }
@@ -738,8 +738,8 @@ _preparePotionData(system){
           [Object.keys(system.contacts).length]: {
             name: "New Contact",
             number: "+29 (000) 000 000",
-            unread: false,
-            messages: {}
+            messages: {},
+            lastCheckedTime: Date.now()
           }
         }
       }
@@ -753,8 +753,8 @@ _preparePotionData(system){
     contacts[newIndex] = {
       name: name,
       number: number,
-      unread: false,
-      messages: {}
+      messages: {},
+      lastCheckedTime: Date.now()
     };
     await this.update({
       system: {
@@ -1307,6 +1307,81 @@ _preparePotionData(system){
       } else {
         await this.delete();
       }
+    }
+  }
+
+  async setOpenApp(appId){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          openApp: appId == "home" ? "" : appId
+        }
+      });
+    }
+  }
+
+  async call(index){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          currentContact: index,
+          openApp: "call"
+        }
+      });
+    }
+  }
+
+  async openChat(index){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          currentContact: index,
+          openApp: "chat",
+          contacts: this.system.contacts[index] ? {
+            [index]: {
+              lastCheckedTime: Date.now()
+            }
+          } : {}
+        }
+      });
+    }
+  }
+
+  async setSelectedPhoto(index){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      if (index !== null){
+         await this.update({
+          system: {
+            selectedPhoto: index
+          }
+      });
+      } else {
+        await this.update({
+          system: {
+            selectedPhoto: ""
+          }
+        });
+      }
+    }
+  }
+
+  async setBatteryLevel(level){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          batteryLevel: level
+        }
+      });
+    }
+  }
+
+  async toggleFlashlight(){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          flashlight: this.system.flashlight == "on" ? "off" : "on"
+        }
+      });
     }
   }
 

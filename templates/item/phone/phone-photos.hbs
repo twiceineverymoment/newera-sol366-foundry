@@ -11,7 +11,6 @@
             </div>
             <div class="photo-details" id="photo-details-{{../item.id}}-{{index}}">
                 <img class="photo-full" src="{{photo.img}}" data-edit="system.photos.{{index}}.img" />
-                <input type="hidden" name="system.photos.{{index}}.roll" value="{{photo.roll}}" id="photo-roll-{{index}}" />
                 {{#if photo.roll}}
                     <a class="photo-roll">{{photo.roll}}</a>
                 {{else}}

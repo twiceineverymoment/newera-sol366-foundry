@@ -57,10 +57,10 @@ export class NewEraUtils {
         let tokens = name.split(".");
         try {
           let value = tokens.reduce((acc, token) => acc[token], document);
-          console.log(`[DEBUG] auto-value ${name} = ${value}`);
+          //console.log(`[DEBUG] auto-value ${name} = ${value}`);
           return value;
         } catch (err) {
-          console.warn(`[DEBUG] auto-value ${name} = undefined`);
+          //console.warn(`[DEBUG] auto-value ${name} = undefined`);
           return null;
         }
       }

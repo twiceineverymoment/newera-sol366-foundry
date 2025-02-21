@@ -681,7 +681,7 @@
 			"templates": ["base", "equipment"],
 			"model": "New Phone",
 			"openApp": "",
-			"callee": "",
+			"currentContact": "",
 			"selectedPhoto": "",
 			"militaryTime": false,
 			"background": "default",
