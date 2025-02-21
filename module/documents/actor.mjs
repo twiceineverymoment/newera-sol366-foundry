@@ -2119,6 +2119,51 @@ export class NewEraActor extends Actor {
     }
   }
 
+  findAmmoFor(item) {
+    if (!item.typeIs(NewEraItem.Types.RANGED_WEAPON)) {
+      return null;
+    }
+    const priority = game.settings.get("newera-sol366", "ammoPriority");
+    const compatibleAmmoIds = NEWERA.compatibleAmmoIds[item.system.ammo.type];
+    if (priority == "strongest") {
+      for (const id of compatibleAmmoIds) {
+        const ammo = this.items.contents.find(i => i.type == "Item" && i.system.casperObjectId);
+        if (ammo) {
+          return ammo;
+        }
+      }
+      return null;
+    } else if (priority == "quantity") {
+      const ammo = this.items.contents.filter(i => i.type == "Item" && compatibleAmmoIds.includes(i.system.casperObjectId));
+      if (ammo.length == 0) {
+        return null;
+      } else if (ammo.length == 1) {
+        return ammo[0];
+      } else {
+        //Select the ammo with the highest quantity
+        return ammo.sort((a, b) => b.system.quantity - a.system.quantity)[0];
+      }
+    } else if (priority == "manual") {
+      //Manual checks the worn item slots in order for a compatible ammo item - if none are found, grab the first one found in the inventory
+      for (let i=0; i<this.system.wornItemSlots; i++) {
+        const slot = `worn${i}`;
+        if (this.system.equipment[slot]) {
+          const item = this.items.get(this.system.equipment[slot]);
+          if (item && item.type == "Item" && compatibleAmmoIds.includes(item.system.casperObjectId)) {
+            return item;
+          }
+        }
+      }
+      const ammo = this.items.contents.find(i => i.type == "Item" && compatibleAmmoIds.includes(i.system.casperObjectId));
+      return ammo ||null;
+    }
+  }
+
+  hasAmmoFor(item, minimum = 1) {
+    const compatibleAmmoIds = NEWERA.compatibleAmmoIds[item.system.ammo.type];
+    return this.items.contents.some(i => i.type == "Item" && compatibleAmmoIds.includes(i.system.casperObjectId) && i.system.quantity >= minimum);
+  }
+
   /* AUTO LEVEL UP FUNCTIONS */
 
   async levelUp(clazz) {

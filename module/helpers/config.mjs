@@ -1326,7 +1326,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Small Firearm Ammunition",
+            "type": "S",
             "clipSize": 12
         },
         "firingAction": "SA",
@@ -1346,7 +1346,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Small Firearm Ammunition",
+            "type": "S",
             "clipSize": 6
         },
         "firingAction": "M",
@@ -1366,7 +1366,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 8
         },
         "firingAction": "SA",
@@ -1386,7 +1386,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 6
         },
         "firingAction": "M",
@@ -1406,7 +1406,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Small Firearm Ammunition",
+            "type": "S",
             "clipSize": 5
         },
         "firingAction": "M",
@@ -1426,7 +1426,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": true,
         "magazine": false,
         "ammo": {
-            "itemName": "Shotgun Shell",
+            "type": "P",
             "clipSize": 3
         },
         "firingAction": "M",
@@ -1446,7 +1446,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": true,
         "magazine": false,
         "ammo": {
-            "itemName": "Shotgun Shell",
+            "type": "P",
             "clipSize": 6
         },
         "firingAction": "M",
@@ -1466,7 +1466,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": true,
         "magazine": false,
         "ammo": {
-            "itemName": "Shotgun Shell",
+            "type": "P",
             "clipSize": 8
         },
         "firingAction": "SA",
@@ -1486,7 +1486,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": true,
         "magazine": false,
         "ammo": {
-            "itemName": "Shotgun Shell",
+            "type": "P",
             "clipSize": 6
         },
         "firingAction": "SA",
@@ -1506,7 +1506,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 10
         },
         "firingAction": "SA",
@@ -1526,7 +1526,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Large Firearm Ammunition",
+            "type": "L",
             "clipSize": 4
         },
         "firingAction": "M",
@@ -1546,7 +1546,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Large Firearm Ammunition",
+            "type": "L",
             "clipSize": 1
         },
         "firingAction": "M",
@@ -1566,7 +1566,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Small Firearm Ammunition",
+            "type": "S",
             "clipSize": 20
         },
         "firingAction": "FA",
@@ -1587,7 +1587,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 30
         },
         "firingAction": "FA",
@@ -1608,7 +1608,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 30
         },
         "firingAction": "FA",
@@ -1630,7 +1630,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "A",
             "clipSize": 1
         },
         "firingAction": "B",
@@ -1651,7 +1651,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "A",
             "clipSize": 1
         },
         "firingAction": "B",
@@ -1672,7 +1672,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "A",
             "clipSize": 1
         },
         "firingAction": "B",
@@ -1689,6 +1689,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
+            "type": "",
             "itemName": "Stone",
             "clipSize": 1
         },
@@ -1709,6 +1710,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
+            "type": "",
             "itemName": "Blowdart",
             "clipSize": 1
         },
@@ -1729,6 +1731,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
+            "type": "",
             "itemName": "Blowdart",
             "clipSize": 1
         },
@@ -1749,7 +1752,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "B",
             "clipSize": 1
         },
         "firingAction": "M",
@@ -1769,7 +1772,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "B",
             "clipSize": 1
         },
         "firingAction": "M",
@@ -1789,7 +1792,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 30
         },
         "firingAction": "FA",
@@ -3706,7 +3709,7 @@ NEWERA.specialtyDefaultParents = {
     "swimming": "athletics"
 }
 
-NEWERA.actionImages ={
+NEWERA.actionImages = {
     "0": `${NEWERA.images}/ac_0frame.png`,
     "1": `${NEWERA.images}/ac_1frame.png`,
     "2": `${NEWERA.images}/ac_2frame.png`,
@@ -3715,4 +3718,13 @@ NEWERA.actionImages ={
     "E": `${NEWERA.images}/ac_adventuring.png`,
     "D": `${NEWERA.images}/ac_restful.png`,
     "R": `${NEWERA.images}/ac_reaction.png`
+}
+
+NEWERA.compatibleAmmoIds = {
+    "S": ["I.104.0", "I.99.0"],
+    "M": ["I.105.0", "I.100.0"],
+    "L": ["I.106.0", "I.101.0"],
+    "P": ["I.103.0", "I.102.0"],
+    "A": ["I.204.0", "I.203.0", "I.201.0", "I.199.0", "I.202.0", "I.240.0", "I.139.0", "I.200.0"],
+    "B": ["I.140.0"]
 }

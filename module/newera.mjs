@@ -255,6 +255,20 @@ function setupGameSettings(){
     type: Boolean,
     default: false,
   });
+  game.settings.register("newera-sol366", "ammoPriority", {
+    name: "Ammo Selection Priority",
+    hint: "Choose how to prioritize the ammo item to use when reloading.",
+    scope: "client",
+    config: true,
+    requiresReload: false,
+    type: String,
+    choices: {
+      "strongest": "Strongest First",
+      "quantity": "Largest Quantity First",
+      "manual": "Worn Items First"
+    },
+    default: "manual",
+  });
   game.settings.register("newera-sol366", "autoAmplify", {
     name: "Amplify Spells by Default",
     hint: "Lower-level spells will automatically be amplified to the highest level you can cast trivially",

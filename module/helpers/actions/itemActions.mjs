@@ -102,12 +102,16 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "1",
           show: "equipped",
+          disable: () => item.isLoaded() ? false : "The chamber is empty! Reload or use a different weapon.",
+          altInstructions: system.firingAction == "SA" ? `<span class="ammo-count">
+            <img class="inline-icon" src="systems/newera-sol366/resources/machine-gun-magazine.png" />
+            ${item.system.ammo.loaded}/${item.system.ammo.clipSize}
+          </span>` : "",
           rolls: [
             {
               label: "Attack",
-              caption: `Ranged Attack (${item.name})`,
               die: "d20",
-              formula: "1d20+@skills.marksmanship.mod"
+              callback: actor => Actions.fireRangedWeapon(actor, item)
             },
             {
               label: "Damage",
@@ -134,12 +138,16 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "1",
           show: "equipped",
+          disable: () => item.isLoaded() ? false : "The clip is empty! Reload or use a different weapon.",
+          altInstructions: `<span class="ammo-count">
+            <img class="inline-icon" src="systems/newera-sol366/resources/machine-gun-magazine.png" />
+            ${item.system.ammo.loaded}/${item.system.ammo.clipSize}
+          </span>`,
           rolls: [
             {
               label: `Attack (${system.firingRate})`,
-              caption: `Ranged Attack (${item.name})`,
               die: "d20",
-              formula: "1d20+@skills.marksmanship.mod"
+              callback: actor => Actions.fireRangedWeapon(actor, item)
             },
             {
               label: "Damage",
@@ -166,7 +174,22 @@ export class ItemActions {
           difficulty: "",
           actionType: "1",
           show: "equipped",
-          rolls: []
+          disable: actor => {
+            if (item.isFullyLoaded()){
+              return "There is already a round in the chamber!";
+            } else if (!actor.hasAmmoFor(item)){
+              return "You're out of ammo!";
+            } else {
+              return false;
+            }
+          },
+          rolls: [
+            {
+              label: "Load",
+              die: "cowboy-holster",
+              callback: actor => Actions.reloadRangedWeapon(actor, item)
+            }
+          ]
         });
       }
       /* Load/reload actions */
@@ -185,7 +208,22 @@ export class ItemActions {
           difficulty: "",
           actionType: "3",
           show: "equipped",
-          rolls: []
+          disable: actor => {
+            if (item.isFullyLoaded()){
+              return "The clip is already full!";
+            } else if (!actor.hasAmmoFor(item)){
+              return "You're out of ammo!";
+            } else {
+              return false;
+            }
+          }, 
+          rolls: [
+            {
+              label: "Reload",
+              die: "machine-gun-magazine",
+              callback: actor => Actions.reloadRangedWeapon(actor, item)
+            }
+          ]
         });
       } else if (system.firingAction == "B"){
         actions.push({
@@ -219,7 +257,22 @@ export class ItemActions {
           difficulty: "",
           actionType: "1",
           show: "equipped",
-          rolls: []
+          disable: actor => {
+            if (item.isFullyLoaded()){
+              return "The magazine is full!";
+            } else if (!actor.hasAmmoFor(item)){
+              return "You're out of ammo!";
+            } else {
+              return false;
+            }
+          },
+          rolls: [
+            {
+              label: "Load",
+              die: "shotgun-rounds",
+              callback: actor => Actions.reloadRangedWeapon(actor, item)
+            }
+          ]
         });
       }
       /* Bow firing actions */
@@ -237,12 +290,12 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "1",
           show: "equipped",
+          disable: actor => actor.hasAmmoFor(item) ? false : "No arrows in the quiver!",
           rolls: [
             {
               label: "Shoot",
-              caption: `Quick Shot (${item.name})`,
               die: "d20",
-              formula: "1d20+@skills.marksmanship.mod",
+              callback: actor => Actions.fireRangedWeapon(actor, item)
             },
             {
               label: "Half Damage",
@@ -265,12 +318,12 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "2",
           show: "equipped",
+          disable: actor => actor.hasAmmoFor(item) ? false : "No arrows in the quiver!",
           rolls: [
             {
               label: "Shoot",
-              caption: `Ranged Attack (${item.name})`,
               die: "d20",
-              formula: "1d20+@skills.marksmanship.mod",
+              callback: actor => Actions.fireRangedWeapon(actor, item)
             },
             {
               label: "Damage",
@@ -294,6 +347,7 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "3",
           show: "equipped",
+          disable: actor => actor.hasAmmoFor(item) ? false : "No arrows in the quiver!",
           rolls: [
             {
               label: "Draw",
@@ -303,9 +357,8 @@ export class ItemActions {
             },
             {
               label: "Shoot",
-              caption: `Power Shot (${item.name})`,
               die: "d20",
-              formula: "1d20+@skills.marksmanship.mod",
+              callback: actor => Actions.fireRangedWeapon(actor, item)
             },
             {
               label: "Damage",

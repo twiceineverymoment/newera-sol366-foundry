@@ -933,4 +933,43 @@ export class Actions {
       });
     }
 
+    static async fireRangedWeapon(actor, item){
+      if (item.system.ammo.loaded == 0){
+        ui.notifications.warn(`The clip is empty!`);
+        return;
+      }
+      const shotsFired = await item.fire(); //SHOTS FIRED SHOTS FIRED
+        for (let i = 0; i < shotsFired; i++){
+          let counter = shotsFired > 1 ? ` (${i+1}/${shotsFired})` : "";
+          let r = new Roll(`d20 + @skills.marksmanship.mod`);
+          r.toMessage({
+            speaker: ChatMessage.getSpeaker({actor: actor}),
+            flavor: `Ranged Attack - ${item.name}${counter}`
+          });
+        }
+    }
+
+    static async reloadRangedWeapon(actor, item){
+      const ammo = actor.findAmmoFor(item);
+      if (!ammo){
+        ui.notifications.warn("Out of ammo!");
+        return;
+      }
+      const loaded = await item.reload(ammo);
+      if (!loaded){
+        ui.notifications.error("Couldn't reload with this item!");
+        return;
+      }
+      if (["SA", "FA"].includes(item.system.firingAction)){
+        if (item.system.ammo.loaded == item.system.ammo.clipSize){
+          ui.notifications.info(`Reloaded ${item.name} with ${loaded} rounds of ${ammo.name}.`);
+        } else {
+          ui.notifications.info(`Loaded ${loaded} rounds of ${ammo.name} into ${item.name}.`);
+        }
+        actor.actionMessage(actor.img, item.img, "{NAME} reloads the {0}.", item.name);
+      } else {
+        ui.notifications.info(`Loaded ${ammo.name} into ${item.name}.`);
+        actor.actionMessage(actor.img, item.img, "{NAME} loads the {0}.", item.name);
+      }
+    }
 }

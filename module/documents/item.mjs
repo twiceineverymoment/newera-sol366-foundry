@@ -433,7 +433,7 @@ _preparePotionData(system){
       system.isShotgun = weaponStats.shotgunDamage;
       system.magReload = weaponStats.magazine;
       system.ammo.clipSize = weaponStats.ammo.clipSize;
-      system.ammo.itemName = weaponStats.ammo.itemName;
+      system.ammo.type = weaponStats.ammo.type;
       system.firingAction = weaponStats.firingAction;
       system.firingRate = weaponStats.firingRate;
       system.licenseLevel = weaponStats.licenseLevel;
@@ -670,10 +670,14 @@ _preparePotionData(system){
           difficulty: null,
           actionType: action.actionType,
           show: action.show,
-          rolls: action.rolls
+          rolls: action.rolls,
+          decrement: action.decrement
         });
       }
     }
+    actions.forEach(action => {
+      action.item = this;
+    });
     return actions;
   }
 
@@ -1382,6 +1386,104 @@ _preparePotionData(system){
           flashlight: this.system.flashlight == "on" ? "off" : "on"
         }
       });
+    }
+  }
+
+  async fire() {
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      if (this.system.firingAction == "SA"){
+        await this.update({
+          system: {
+            ammo: {
+              loaded: this.system.ammo.loaded - 1
+            }
+          }
+        });
+        if (this.system.ammo.loaded == 0) {
+          ui.notifications.info("You need to reload!");
+        }
+        return 1;
+      } else if (this.system.firingAction == "M"){
+        await this.update({
+          system: {
+            ammo: {
+              loaded: 0
+            }
+          }
+        });
+        return 1;
+      } else if (this.system.firingAction == "FA"){
+        const toShoot = Math.min(this.system.firingRate, this.system.ammo.loaded);
+        if (toShoot < this.system.firingRate){
+          ui.notifications.info(`Only ${toShoot} shots left in the clip!`);
+        }
+        await this.update({
+          system: {
+            ammo: {
+              loaded: this.system.ammo.loaded - toShoot
+            }
+          }
+        });
+        if (this.system.ammo.loaded == 0) {
+          ui.notifications.warn("You need to reload!");
+        }
+        return toShoot;
+      } else if (this.system.firingAction == "B"){
+        await this.update({
+          system: {
+            ammo: {
+              loaded: 0
+            }
+          }
+        });
+        return 1;
+      }
+    }
+  }
+
+  async reload(ammo) {
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      if (!ammo || ammo.system.quantity == 0){
+        ui.notifications.warn("Out of ammo!");
+      } else {
+        const available = ammo.system.quantity;
+        const canLoad = this.system.ammo.clipSize - this.system.ammo.loaded;
+        const perAction = ["SA", "FA"].includes(this.system.firingAction) ? this.system.ammo.clipSize : 1;
+        const loaded = Math.min(available, canLoad, perAction);
+        await this.update({
+          system: {
+            ammo: {
+              loaded: this.system.ammo.loaded + loaded
+            }
+          }
+        });
+        if (ammo.system.quantity == loaded) {
+          await ammo.delete();
+        } else {
+          await ammo.update({
+            system: {
+              quantity: ammo.system.quantity - loaded
+            }
+          });
+        }
+        return loaded;
+      }
+    }
+  }
+
+  isLoaded(){
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      return this.system.ammo.loaded > 0;
+    } else {
+      return null;
+    }
+  }
+
+  isFullyLoaded(){
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      return this.system.ammo.loaded == this.system.ammo.clipSize;
+    } else {
+      return null;
     }
   }
 
