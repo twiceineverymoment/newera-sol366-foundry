@@ -1560,6 +1560,10 @@ export class NewEraActor extends Actor {
 
   async endSpell(message = true){
     const spellEffect = this.effects.find(e => e.label.includes("Casting: "));
+    if (!spellEffect){
+      ui.notifications.error("No spell effects found.");
+      return;
+    }
     const spell = this.items.get(spellEffect.origin);
     await spellEffect.delete();
     await this.update({
