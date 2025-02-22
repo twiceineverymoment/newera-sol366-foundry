@@ -1560,24 +1560,24 @@ export class NewEraActor extends Actor {
 
   async endSpell(message = true){
     const spellEffect = this.effects.find(e => e.label.includes("Casting: "));
-    if (!spellEffect){
-      ui.notifications.error("No spell effects found.");
-      return;
+    if (spellEffect){
+      const spell =  this.items.get(spellEffect.origin);
+      await spellEffect.delete();
+      if (message) {
+        this.actionMessage(this.img, null, "{NAME} cancels {0}.", spell ? spell.name : "the spell");
+      }
     }
-    const spell = this.items.get(spellEffect.origin);
-    await spellEffect.delete();
     await this.update({
       system: {
         ephemeralEffectActive: false
       }
     });
-    if (message) {
-      this.actionMessage(this.img, null, "{NAME} cancels {0}.", spell ? spell.name : "the spell");
-    }
 }
     async stopSustaining(){
         const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
-        await sustainEffect.delete();
+        if (sustainEffect){
+          await sustainEffect.delete();
+        }
         await this.update({
           system: {
             sustaining: {
