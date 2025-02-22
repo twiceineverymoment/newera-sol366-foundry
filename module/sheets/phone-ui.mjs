@@ -126,7 +126,7 @@ export class PhoneUI extends ItemSheet {
       //Merge the outgoing messages stored on this phone with the incoming messages from other phones, and sort by real time sent
       const incoming = incomingMessages[contact.number] ? Object.values(incomingMessages[contact.number]) : [];
       contact.conversation = [
-        ...(Object.values(contact.messages) || []), //Because this keeps ending up null 
+        ...Object.values(contact.messages || {}), //Because this keeps ending up null 
         ...incoming
       ].sort((a, b) => {
         if (a.timestamp < b.timestamp) return -1;
