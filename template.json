@@ -580,7 +580,7 @@
 			"ammo": {
 				"loaded": 0,
 				"clipSize": 0,
-				"itemName": "Small Firearm Ammunition"
+				"type": "S"
 			}
 		},
 		"Shield": {
@@ -635,9 +635,9 @@
 		},
 		"Potion": {
 			"templates": ["base", "equipment", "stackable"],
-			"potionType": "Potion",
+			"potionType": "P",
 			"recipeLevel": 0,
-			"stackingBehavior": "",
+			"stackingBehavior": "N",
 			"isRecipe": false
 		},
 		"Class": {
