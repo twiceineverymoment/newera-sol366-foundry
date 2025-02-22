@@ -997,6 +997,7 @@ export class NewEraActorSheet extends ActorSheet {
     //Actions tab
     html.find(".action-icon").click(async ev => {
       if ($(ev.currentTarget).data("actionCategory")){ //This check prevents the listener from triggering on click of the 'new custom action' button
+        html.find(".newera-actorsheet-scroll").scrollTop(0);
         await this.actor.update({
           system: {
             lastAction: {
@@ -1005,7 +1006,6 @@ export class NewEraActorSheet extends ActorSheet {
             }
           }
         });
-        html.find(".newera-actorsheet-scroll").scrollTop(0);
       }
     });
     html.find(".newera-roll-button").click(async ev => {
