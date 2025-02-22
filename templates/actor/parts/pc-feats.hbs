@@ -72,12 +72,17 @@
                     {{#if selection.show}}
                         <div class="feature-selection">
                             <label>{{selection.label}}</label>
-                            <select name="system.featSelections.{{../id}}.{{../tier}}.{{index2}}" class="sheet-input feat-select auto-value" data-feat-id="{{../id}}" data-tier="{{../tier}}" data-selection-key="{{index2}}" data-old-value="{{selection.currentValue}}" {{#if selection.repeated}}data-repeated="true"{{/if}}>
-                                <option value=""><i>Choose...</i></option>
-                                {{#each selection.options as |label index3|}}
-                                    <option value="{{index3}}">{{{label}}}</option>
-                                {{/each}}
-                            </select>
+                            {{#if selection.options}}
+                                <select name="system.featSelections.{{../id}}.{{../tier}}.{{index2}}" class="sheet-input feat-select" data-feat-id="{{../id}}" data-tier="{{../tier}}" data-selection-key="{{index2}}" data-old-value="{{selection.currentValue}}" {{#if selection.repeated}}data-repeated="true"{{/if}}>
+                                    <option value=""><i>Choose...</i></option>
+                                    {{#each selection.options as |label index3|}}
+                                        <option value="{{index3}}">{{{label}}}</option>
+                                    {{/each}}
+                                </select>
+                            {{/if}}
+                            {{#if selection.text}}
+                                <input type="text" name="system.featSelections.{{../id}}.{{../tier}}.{{index2}}" class="sheet-input feat-select">
+                            {{/if}}
                         </div>
                     {{/if}}
                 {{/each}}
