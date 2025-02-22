@@ -258,6 +258,100 @@ const generalFeats = {
 
 const skillFeats = {}
 
+const backgrounds = {
+    "105": { //Resourceful
+        "1": {
+            features: [
+                {
+                    onUnlock: actor => actor.setSpecialtyFeature(null, "Improvisation", "technology")
+                }
+            ]
+        }
+    },
+    "112": { //Persistent
+        "1": {
+            features: [
+                {
+                    onUnlock: actor => {
+                        actor.setSpecialtyFeature(null, "Concentration", "determination");
+                        actor.setSkillBoost(null, "determination", false);
+                    }
+                }
+            ]
+        }
+    },
+    "601": { //Magically Inclined
+        "1": {
+            features: [
+                {
+                    onUnlock: actor => {
+                        actor.update({
+                            system: {
+                                energy: {
+                                    max: actor.system.energy.max + 10
+                                }
+                            }
+                        });
+                    }
+                }
+            ]
+        }
+    }
+}
+
+const flaws = {
+    "89": { //Allergy
+        "1": {
+            features: [
+                {
+                    selections: {
+                        "allergy": {
+                            label: "Allergic to...",
+                            text: true
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "88": { //Phobia
+        "1": {
+            features: [
+                {
+                    selections: {
+                        "phobia": {
+                            label: "Fear of...",
+                            text: true
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "23": { //Inattentive
+        "1": {
+            features: [
+                {
+                    onUnlock: actor => {
+                        actor.update({
+                            system: {
+                                skills: {
+                                    perception: {
+                                        bonus: actor.system.skills.perception.bonus - 1
+                                    }
+                                },
+                                passivePerception: {
+                                    bonus: actor.system.passivePerception.bonus - 1
+                                }
+                            }
+                        });
+                    }
+                }
+            ]
+        }
+    }
+}
+
 export class ExtendedFeatData {
 
     static _featData = null;
@@ -267,6 +361,8 @@ export class ExtendedFeatData {
             ExtendedFeatData._featData = {
                 ...generalFeats,
                 ...skillFeats,
+                ...backgrounds,
+                ...flaws,
                 ...Artificer.classFeats,
                 ...Chanter.classFeats,
                 ...Delver.classFeats,
