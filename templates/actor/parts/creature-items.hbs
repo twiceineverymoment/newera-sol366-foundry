@@ -4,7 +4,7 @@
     </tr>
     {{#each inventory.items as |item id|}}
     <tr class="inventory-entry inventory-entry-backpack newera-draggable-equipment" data-item-id="{{item._id}}" draggable="true">
-        <td class="item-edit"><img class="skill-icon" src="{{item.img}}" draggable="true"/></td>
+        <td class="item-edit"><img class="skill-icon enchant-glow" src="{{item.img}}" draggable="true" data-enchanted="{{item.system.enchanted}}" data-glow-color="{{item.system.enchantmentColor}}"/></td>
         <td class="item-edit">
             {{item.system.listDisplayName}}
         </td>
