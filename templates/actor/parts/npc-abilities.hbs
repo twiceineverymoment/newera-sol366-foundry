@@ -71,7 +71,7 @@
   {{#each system.specialties as |skill key|}}
   <tr>
     <td style="width: 30%"><input type="text" class="sheet-input" name="system.specialties.{{key}}.subject" value="{{skill.subject}}" /></td>
-    <td style="width: 25%">
+    <td style="width: 30%">
       <select name="system.specialties.{{key}}.defaultParent" class="sheet-input">
         {{#each ../system.skills as |parent key2|}}
           <option value="{{key2}}" {{selected skill.defaultParent key2}}>{{parent.label}}</option>
@@ -85,8 +85,8 @@
         <option value="other" {{selected skill.defaultParent "other"}}>Other</option>
       </select>
     </td>
-    <td style="width: 15%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
-    <td style="width: 15%">
+    <td style="width: 20%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
+    <td style="width: 20%">
       <span class="rollable sheet-output-major check-macro" data-roll="d20+@specialties.{{key}}.mod" data-label="{{skill.label}} Skill Check" draggable="true" data-macro-formula="d20+@specialties.{{key}}.mod" data-macro-name="{{skill.label}} Check" data-macro-label="{{skill.label}} Skill Check">
         {{numberFormat skill.mod decimals=0 sign=true}}
         <img class="die" src="systems/newera-sol366/resources/d20-orange.png" draggable="true" />
