@@ -650,13 +650,19 @@ function registerSocketHandlers(){
   game.socket.on("system.newera-sol366", (payload) => {
     switch (payload.event){
       case "SMS_REFRESH":
-        TextMessaging.renderPhones(payload.data.number);
+        TextMessaging.renderPhones(payload.data.number, payload.data.senderName);
         break;
       case "SMS_REFRESH_ALL":
         TextMessaging.renderPhones();
         break;
       case "DARK_ENERGY_USE":
         //TODO
+      case "DARK_ENERGY_LINK":
+        //TODO
+      case "PLAYER_CONTACT_ADDED":
+        if (game.user.role < 2) {
+          ui.notifications.info(`${payload.data.name} has been added to your contacts.`);
+        }
     }
   });
 }

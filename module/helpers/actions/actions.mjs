@@ -745,9 +745,15 @@ export class Actions {
                   i.addContact(name, number);
                   count++;
                   console.log(`Added contact to ${i.name} in inventory of ${actor.name}`);
-              });
+                });
               }
               ui.notifications.info(`${name} has been added to all player character phone contacts (${count} total devices.)`);
+              game.socket.emit("system.newera-sol366", {
+                event: "PLAYER_CONTACT_ADDED",
+                data: {
+                  name: name
+                }
+              });
             }
           },
           cancel: {

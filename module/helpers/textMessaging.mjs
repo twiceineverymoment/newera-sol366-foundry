@@ -79,22 +79,28 @@ export class TextMessaging {
         TextMessaging.renderPhones();
     }
 
-    static refreshPhone(number) {
+    static refreshPhone(number, senderName = null) {
         game.socket.emit("system.newera-sol366", {
             event: "SMS_REFRESH",
             data: {
-                number: number
+                number: number,
+                senderName: senderName
             }
         });
         TextMessaging.renderPhones(number);
     }
 
-    static async renderPhones(number = null){
+    static async renderPhones(number = null, senderName = null){
         console.log(`Updating phones n=${number}`);
         for (const actor of game.actors.values()){
+          const owned = actor.ownership[game.user.id] == 3;
           for (const item of actor.items.values()){
             if (item.type == "Phone" && (number == null || item.system.phoneNumber == number)){
               console.log(`Found ${item.name} in ${actor.name}'s inventory`);
+              //If senderName is not null and item is owned by the current user, display a notification
+              if (senderName && owned){
+                ui.notifications.info(`💬 ${actor.name} has a new message from ${senderName}!`);
+              }
               if (item.sheet){
                 item.sheet.render(false);
               }
