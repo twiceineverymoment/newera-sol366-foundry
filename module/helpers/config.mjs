@@ -28,7 +28,7 @@ NEWERA.abilityScorePointCosts = [
   null, null, null, null, null, null, 0, 1, 2, 3, 4, 5, 6, 8, 9, 11
 ];
 
-NEWERA.EMPTY_POTION_BOTTLE_ID = 3;
+NEWERA.EMPTY_POTION_BOTTLE_ID = "I.3.0";
 
 NEWERA.levelThresholds = {
     "standard": [
