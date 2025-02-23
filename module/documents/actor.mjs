@@ -2168,6 +2168,27 @@ export class NewEraActor extends Actor {
     return this.items.contents.some(i => i.type == "Item" && compatibleAmmoIds.includes(i.system.casperObjectId) && i.system.quantity >= minimum);
   }
 
+  hasFreeHands(number) {
+    if (number > 2){
+      ui.notifications.error("Please contact the Curse Recovery Association at (+29) 049 003 001.");
+      return false;
+    }
+    if (game.settings.get("newera-sol366", "enforceActionConditions")){
+      if (number == 2){
+        return this.system.equipment.leftHand == "" && this.system.equipment.rightHand == "";
+      } else if (number == 1){
+        return !(
+          (this.system.equipment.leftHand && this.system.equipment.rightHand)
+          || (this.system.equipment.rightHand && this.items.get(this.system.equipment.rightHand).system.handedness == '2H')
+          || (this.system.equipment.rightHand && this.items.get(this.system.equipment.rightHand).system.handedness == '1.5H' && !this.system.forceOneHanded)
+          )
+      } else {
+        return true;
+      }
+    }
+    return true;
+  }
+
   /* AUTO LEVEL UP FUNCTIONS */
 
   async levelUp(clazz) {

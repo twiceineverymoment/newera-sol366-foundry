@@ -792,19 +792,23 @@ _preparePotionData(system){
   async addMessage(sent, index, content){
     if (this.type !== "Phone") return;
     const system = this.system;
-    const newMessageIndex = Object.keys(system.contacts[index].messages).length;
-    const contacts = structuredClone(system.contacts);
-    contacts[index].messages[newMessageIndex] = {
+    const newMessageIndex = system.contacts[index].messages ? Object.keys(system.contacts[index].messages).length : 0;
+    const update = {
+      system: {
+        contacts: {
+          [index]: {
+            messages: {}
+          }
+        }
+      }
+    };
+    update.system.contacts[index].messages[newMessageIndex] = {
       sent: sent,
       content: content,
       timestamp: this.timestamp,
       realTime: Date.now()
     };
-    await this.update({
-      system: {
-        contacts: contacts
-      }
-    });
+    await this.update(update);
     return newMessageIndex;
   }
 

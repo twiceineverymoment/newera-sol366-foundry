@@ -722,6 +722,20 @@ export class NewEraActorSheet extends ActorSheet {
           difficulty: null,
           actionType: "",
           spellLevel: spell.system.level,
+          disable: actor => {
+            if (spell.system.keywords.includes('Asomatic')){
+              return false;
+            } else if (['G', 'L', 'R'].includes(spell.system.castType)){
+              if (!actor.hasFreeHands(2)){
+                return "You need both hands free in order to cast this spell.";
+              }
+            } else {
+              if (!actor.hasFreeHands(1)){
+                return "You need a free hand in order to cast this spell.";
+              }
+            }
+            return false;
+          },
           rolls: [
             {
               label: "Cast",

@@ -164,16 +164,12 @@ export class Actions {
     static async castSpell(actor, spell, paramAmpFactor = 1, isPrepared = false){
       if (game.settings.get('newera-sol366', 'enforceActionConditions') && !spell.system.keywords.includes('Asomatic')) {
         if (['G', 'L', 'R'].includes(spell.system.castType)) {
-          if (actor.system.equipment.leftHand || actor.system.equipment.rightHand) { //For channeled and long spells, error out if either hand is occupied
+          if (!actor.hasFreeHands(2)) { //For channeled and long spells, error out if either hand is occupied
             ui.notifications.warn(`You need both hands free in order to cast ${spell.name}!`);
             return;
           }
         } else {
-          if (
-            (actor.system.equipment.leftHand && actor.system.equipment.rightHand)
-            || (actor.system.equipment.rightHand && actor.items.get(actor.system.equipment.rightHand).system.handedness == '2H')
-            || (actor.system.equipment.rightHand && actor.items.get(actor.system.equipment.rightHand).system.handedness == '1.5H' && !actor.system.forceOneHanded)
-            ) { //For all other spell types, only error if both hands are occupied
+          if (!actor.hasFreeHands(1)) { //For all other spell types, only error if both hands are occupied
             ui.notifications.warn(`You need a free hand in order to cast ${spell.name}!`);
             return;
           }

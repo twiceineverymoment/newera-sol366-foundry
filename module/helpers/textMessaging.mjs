@@ -32,7 +32,7 @@ export class TextMessaging {
             for (const contact of Object.values(phone.system.contacts)) {
                 if (contact.number == number) {
                     console.log(`[DEBUG] Found conversation on ${phone.name} (${phone.system.phoneNumber})`);
-                    const messages = structuredClone(Object.values(contact.messages));
+                    const messages = structuredClone(Object.values(contact.messages || {}));
                     //console.log(contact);
                     if (messages.length > 0){
                         conversations[phone.system.phoneNumber] = messages;
