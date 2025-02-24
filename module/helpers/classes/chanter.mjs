@@ -18,15 +18,15 @@ export class Chanter {
                 selections: {
                     "1": {
                         label: "First Choice",
-                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", "psionic-magic": "Psionic Magic"}
+                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", psionic: "Psionic Magic"}
                     },
                     "2": {
                         label: "Second Choice",
-                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", "psionic-magic": "Psionic Magic"}
+                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", psionic: "Psionic Magic"}
                     },
                     "3": {
                         label: "Third Choice",
-                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", "psionic-magic": "Psionic Magic"}
+                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", psionic: "Psionic Magic"}
                     }
                 }
             },

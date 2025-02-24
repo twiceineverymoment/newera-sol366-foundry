@@ -33,15 +33,15 @@ export class Magus {
             selections: {
                 "1": {
                     label: "First Choice",
-                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", "elemental-magic": "Elemental Magic"}
+                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", elemental: "Elemental Magic"}
                 },
                 "2": {
                     label: "Second Choice",
-                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", "elemental-magic": "Elemental Magic"}
+                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", elemental: "Elemental Magic"}
                 },
                 "3": {
                     label: "Third Choice",
-                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", "elemental-magic": "Elemental Magic"}
+                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", elemental: "Elemental Magic"}
                 }
             }
         },

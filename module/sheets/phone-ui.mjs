@@ -35,8 +35,7 @@ export class PhoneUI extends ItemSheet {
 
     // Retrieve the roll data for TinyMCE editors.
     context.rollData = {};
-    let actor = this.object?.parent ?? null;
-
+    
       const worldSetting = {
         time: {
           hour: game.settings.get("newera-sol366", "world.time.hour"),

@@ -58,7 +58,7 @@ export class Witch {
                         "insight": "Insight",
                         "instinct": "Instinct",
                         "medicine": "Medicine",
-                        "spectral-magic": "Spectral Magic"
+                        spectral: "Spectral Magic"
                     }
                 },
                 "2": {
@@ -69,7 +69,7 @@ export class Witch {
                         "insight": "Insight",
                         "instinct": "Instinct",
                         "medicine": "Medicine",
-                        "spectral-magic": "Spectral Magic"
+                        spectral: "Spectral Magic"
                     }
                 },
                 "3": {
@@ -80,7 +80,7 @@ export class Witch {
                         "insight": "Insight",
                         "instinct": "Instinct",
                         "medicine": "Medicine",
-                        "spectral-magic": "Spectral Magic"
+                        spectral: "Spectral Magic"
                     }
                 }
             }

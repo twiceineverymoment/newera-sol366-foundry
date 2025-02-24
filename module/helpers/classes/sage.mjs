@@ -51,8 +51,8 @@ export class Sage {
                         technology: "Technology",
                         deception: "Deception",
                         determination: "Determination",
-                        "divine-magic": "Divine Magic",
-                        "psionic-magic": "Psionic Magic"
+                        divine: "Divine Magic",
+                        psionic: "Psionic Magic"
                     }
                 },
                 "2": {
@@ -64,8 +64,8 @@ export class Sage {
                         technology: "Technology",
                         deception: "Deception",
                         determination: "Determination",
-                        "divine-magic": "Divine Magic",
-                        "psionic-magic": "Psionic Magic"
+                        divine: "Divine Magic",
+                        psionic: "Psionic Magic"
                     }
                 },
                 "3": {
@@ -77,8 +77,8 @@ export class Sage {
                         technology: "Technology",
                         deception: "Deception",
                         determination: "Determination",
-                        "divine-magic": "Divine Magic",
-                        "psionic-magic": "Psionic Magic"
+                        divine: "Divine Magic",
+                        psionic: "Psionic Magic"
                     }
                 }
             }

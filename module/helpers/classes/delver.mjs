@@ -28,7 +28,7 @@ export class Delver {
                     label: "First Choice",
                     type: "String",
                     options: {
-                        agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", "elemental-magic": "Elemental Magic"
+                        agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", elemental: "Elemental Magic"
                     },
                     onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
@@ -36,7 +36,7 @@ export class Delver {
                     label: "Second Choice",
                     type: "String",
                     options: {
-                        agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", "elemental-magic": "Elemental Magic"
+                        agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", elemental: "Elemental Magic"
                     },
                     onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 }
