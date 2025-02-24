@@ -55,6 +55,7 @@ export class NewEraItemSheet extends ItemSheet {
   getData() {
     // Retrieve base data structure.
     const context = super.getData();
+    context.webUrl = game.system.url;
 
     // Retrieve the roll data for TinyMCE editors.
     context.rollData = {};
