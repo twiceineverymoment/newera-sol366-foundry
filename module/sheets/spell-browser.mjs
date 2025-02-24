@@ -19,7 +19,8 @@ export class SpellBrowser extends ActorSheet {
           classes: ["newera", "sheet", "actor"],
           width: 840,
           height: 640,
-          resizable: false
+          resizable: false,
+          scrollY: [".browser-results-container"]
         });
     }
 
