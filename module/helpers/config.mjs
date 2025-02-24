@@ -2010,7 +2010,7 @@ NEWERA.shieldTypes = {
             "Nocturnum"
         ]
     }
-}
+} 
 
 NEWERA.classes = {
     "Adventurer": {
@@ -3699,6 +3699,8 @@ NEWERA.spellRarity = [
 ]
 
 NEWERA.specialtyDefaultParents = {
+    "sight": "perception",
+    "smell": "perception",
     "archery": "marksmanship",
     "crossbow": "marksmanship",
     "rifle": "marksmanship",
@@ -3706,7 +3708,48 @@ NEWERA.specialtyDefaultParents = {
     "cooking": "technology",
     "alchemy": "technology",
     "climbing": "athletics",
-    "swimming": "athletics"
+    "swimming": "athletics",
+    "blocking": "defense",
+    "protection": "defense",
+    "swords": "one-handed",
+    "axes": "two-handed",
+    "blunt": "one-handed",
+    "navigation": "instinct",
+    "tracking": "instinct",
+    "animal-handling": "instinct",
+    "time": "instinct",
+    "weather": "instinct",
+    "crossbow": "marksmanship",
+    "sense-motive": "insight",
+    "diversion": "performance",
+    "socialization": "diplomacy",
+    "investigation": "logic",
+    "long-jump": "athletics",
+    "high-jump": "athletics",
+    "disarm": "defense",
+    "counter": "defense",
+    "pull-to-safety": "reflex",
+    "knives": "one-handed",
+    "daggers": "one-handed",
+    "handguns": "marksmanship",
+    "lockpicking": "sleight-of-hand",
+    "research": "technology",
+    "hacking": "technology",
+    "straight-face": "deception",
+    "framing": "deception",
+    "wound-treatment": "medicine",
+    "first-aid": "medicine",
+    "frightening": "intimidation",
+    "impersonation": "performance",
+    "swordsOneHanded": "one-handed",
+    "swordsTwoHanded": "two-handed",
+    "rangedWeaponCrafting": "marksmanship"
+}
+
+NEWERA.alternateSpecialtyKeys = {
+    "swordsOneHanded": "swords",
+    "swordsTwoHanded": "swords",
+    "rangedWeaponCrafting": "crafting"
 }
 
 NEWERA.actionImages = {

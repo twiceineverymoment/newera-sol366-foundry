@@ -2416,12 +2416,15 @@ export class NewEraActor extends Actor {
    * @param {*} subject The new specialty to set.
    * @param {*} parentSkill The parent skill of the new specialty, if one is created.
    */
-  async setSpecialtyFeature(fromSubject, subject, parentSkill = "") {
+  async setSpecialtyFeature(fromSubject, subject, parentSkill = "", allowStacking = false) {
+    const from = NEWERA.alternateSpecialtyKeys[fromSubject] || fromSubject;
+    const to = NEWERA.alternateSpecialtyKeys[subject] || subject;
+    const defaultParent = parentSkill || NEWERA.specialtyDefaultParents[subject] || NEWERA.specialtyDefaultParents[to];
     const update = {
       specialties: {}
     };
-    if (fromSubject){
-      const fromIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == NewEraUtils.keyToTitle(fromSubject));
+    if (from){
+      const fromIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == NewEraUtils.keyToTitle(from));
       if (fromIndex !== undefined){
         if (this.system.specialties[fromIndex].level > 1){
           update.specialties[fromIndex] = {
@@ -2432,20 +2435,23 @@ export class NewEraActor extends Actor {
         }
       }
     }
-    if (subject){
-      const title = NewEraUtils.keyToTitle(subject);
+    if (to){
+      const title = NewEraUtils.keyToTitle(to);
       const toIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == title);
       if (toIndex !== undefined){
-        if (this.system.specialties[toIndex].level < 3){
-          update.specialties[toIndex] = {
-            level: this.system.specialties[toIndex].level + 1
+        if (allowStacking){
+          if (this.system.specialties[toIndex].level < 3){
+            update.specialties[toIndex] = {
+              level: this.system.specialties[toIndex].level + 1
+            }
+            ui.notifications.info(`Your ${title} specialty increased to ${update.specialties[toIndex].level}!`);
+          } else {
+            ui.notifications.warn(`Your ${title} specialty is already at max level! Specialties can't exceed level 3.`);
           }
-          ui.notifications.info(`Your ${title} specialty increased to ${update.specialties[toIndex].level}!`);
         } else {
-          ui.notifications.warn(`Your ${title} specialty is already at max level! Specialties can't exceed level 3.`);
+          ui.notifications.warn(`You already have a specialty in ${title}. You can't use this feature to increase its level.`);
         }
       } else {
-        const defaultParent = parentSkill || NEWERA.specialtyDefaultParents[subject];
         update.specialties[Object.keys(this.system.specialties).length] = {
           subject: title,
           level: 1,

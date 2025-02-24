@@ -20,7 +20,7 @@ export class Magus {
             selections: {
                 "1": {
                     label: "Specialty",
-                    options: {swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", bluntWeapons: "Blunt Weapons", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)"}
+                    options: {swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", blunt: "Blunt Weapons", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)"}
                 }
             }
         },

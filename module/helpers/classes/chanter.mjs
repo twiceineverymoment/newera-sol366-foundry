@@ -44,6 +44,11 @@ export class Chanter {
                     "2": {
                         label: "Specialty #2",
                         options: {"sense-motive": "Sense Motive (Insight)", "diversion": "Diversion (Performance)", "socialization": "Socialization (Diplomacy)", "investigation": "Investigation (Logic)", instrument: "Musical Instrument"}
+                    },
+                    "instrument": {
+                        label: "Musical Instrument",
+                        text: true,
+                        showWhen: (actor) => actor.system.classes.chanter.specialties["1"] == "instrument" || actor.system.classes.chanter.specialties["2"] == "instrument"
                     }
                 }
             },

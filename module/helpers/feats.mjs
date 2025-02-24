@@ -273,7 +273,7 @@ const backgrounds = {
             features: [
                 {
                     onUnlock: actor => {
-                        actor.setSpecialtyFeature(null, "Concentration", "determination");
+                        actor.setSpecialtyFeature(null, "Concentration", "determination", true);
                         actor.setSkillBoost(null, "determination", false);
                     }
                 }

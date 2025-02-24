@@ -13,8 +13,8 @@ export class Delver {
             key: false,
             description: "You gain 1 level in the Sight (Perception) and Climbing (Athletics) specialties.",
             onUnlock: async (actor) => { //async to avoid race condition, otherwise one specialty overwrites the other
-                await actor.setSpecialtyFeature(null, "Sight", "perception");
-                await actor.setSpecialtyFeature(null, "Climbing", "athletics");
+                await actor.setSpecialtyFeature(null, "Sight", "perception", true);
+                await actor.setSpecialtyFeature(null, "Climbing", "athletics", true);
             }
         },
         {

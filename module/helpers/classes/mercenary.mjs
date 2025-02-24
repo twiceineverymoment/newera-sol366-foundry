@@ -20,12 +20,12 @@ export class Mercenary {
             selections: {
                 "1": {
                     label: "Specialty #1",
-                    options: {blocking: "Blocking (Defense)", protection: "Protection (Defense)", swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", bluntWeapons: "Blunt Weapons"},
+                    options: {blocking: "Blocking (Defense)", protection: "Protection (Defense)", swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", blunt: "Blunt Weapons"},
                     onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 },
                 "2": {
                     label: "Specialty #2",
-                    options: {blocking: "Blocking (Defense)", protection: "Protection (Defense)", swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", bluntWeapons: "Blunt Weapons"},
+                    options: {blocking: "Blocking (Defense)", protection: "Protection (Defense)", swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", blunt: "Blunt Weapons"},
                     onChange: (actor, from, to) => actor.setSpecialtyFeature(from, to)
                 }
             }

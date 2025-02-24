@@ -19,18 +19,18 @@ export class Sage {
                     label: "Specialty #1",
                     options: {
                         "cooking": "Cooking (Technology)",
-                        "wound_treatment": "Wound Treatment (Medicine)",
-                        "first_aid": "First Aid (Medicine)",
-                        "sense_motive": "Sense Motive (Insight)"
+                        "wound-treatment": "Wound Treatment (Medicine)",
+                        "first-aid": "First Aid (Medicine)",
+                        "sense-motive": "Sense Motive (Insight)"
                     }
                 },
                 "2": {
                     label: "Specialty #2",
                     options: {
                         "cooking": "Cooking (Technology)",
-                        "wound_treatment": "Wound Treatment (Medicine)",
-                        "first_aid": "First Aid (Medicine)",
-                        "sense_motive": "Sense Motive (Insight)"
+                        "wound-treatment": "Wound Treatment (Medicine)",
+                        "first-aid": "First Aid (Medicine)",
+                        "sense-motive": "Sense Motive (Insight)"
                     }
                 }
             }

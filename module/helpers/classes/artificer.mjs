@@ -994,7 +994,7 @@ export class Artificer {
             "1": {
                 features: [
                     {
-                        onUnlock: actor => actor.setSpecialtyFeature(null, "Alchemy", "technology")
+                        onUnlock: actor => actor.setSpecialtyFeature(null, "Alchemy", "technology", true)
                     }
                 ]
             }
