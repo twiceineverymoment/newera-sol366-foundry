@@ -32,6 +32,8 @@ export class ClassSelect extends ActorSheet {
     getData() {
         const context = super.getData();
 
+        context.webUrl = game.system.url;
+
         context.alreadySelected = this.actor.items.filter(i => i.typeIs(NewEraItem.Types.CLASS)).reduce((acc, curr) => {
             acc[curr.system.selectedClass.toLowerCase()] = true;
             return acc;

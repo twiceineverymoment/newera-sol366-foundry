@@ -2503,12 +2503,20 @@ export class NewEraActor extends Actor {
   }
 
   async setAbilityScoreImprovement(from, to){
+    if (to == from) return;
     const update = {
       abilities: {}
     };
     if (from){
       update.abilities[from] = {
         score: this.system.abilities[from].score - 1
+      }
+      if (from == "constitution" && NEWERA.abilityScoreModifiers[update.abilities.constitution.score] < NEWERA.abilityScoreModifiers[this.system.abilities.constitution.score]){
+        update.hitPoints = {
+          max: this.system.hitPoints.max - 1, //This method only ever changes the score by 1
+          value: this.system.hitPoints.value - 1
+        }
+        update.hitPointTrueMax = this.system.hitPointTrueMax - 1;
       }
     }
     if (to){
@@ -2521,6 +2529,14 @@ export class NewEraActor extends Actor {
           score: this.system.abilities[to].score + 1
         }
         ui.notifications.info(`Your ${to} increased to ${update.abilities[to].score}!`);
+        //Adjust max HP if constitution modifier changed 
+        if (to == "constitution" && NEWERA.abilityScoreModifiers[update.abilities.constitution.score] > NEWERA.abilityScoreModifiers[this.system.abilities.constitution.score]){
+          update.hitPoints = {
+            max: this.system.hitPoints.max + 1, //This method only ever changes the score by 1
+            value: this.system.hitPoints.value + 1
+          }
+          update.hitPointTrueMax = this.system.hitPointTrueMax + 1;
+        }
       }
     }
     await this.update({system: update});
@@ -2533,13 +2549,13 @@ export class NewEraActor extends Actor {
       }
     }
     if (from !== ""){
-      update.knowledges[parseInt(from)] = {
+      update.system.knowledges[parseInt(from)] = {
         level: this.system.knowledges[parseInt(from)].level - 1
       }
     }
     if (to) {
       const knowledge = this.system.knowledges[parseInt(to)];
-      update.knowledges[parseInt(to)] = {
+      update.system.knowledges[parseInt(to)] = {
         level: knowledge.level + 1
       }
       ui.notifications.info(`Your ${knowledge.subject} knowledge increased to ${knowledge.level + 1}!`);
@@ -2554,13 +2570,13 @@ export class NewEraActor extends Actor {
       }
     }
     if (from !== ""){
-      update.specialties[parseInt(from)] = {
+      update.system.specialties[parseInt(from)] = {
         level: this.system.specialties[parseInt(from)].level - 1
       }
     }
     if (to) {
       const specialty = this.system.specialties[parseInt(to)];
-      update.specialties[parseInt(to)] = {
+      update.system.specialties[parseInt(to)] = {
         level: specialty.level + 1
       }
       ui.notifications.info(`Your ${specialty.subject} specialty increased to ${specialty.level + 1}!`);
