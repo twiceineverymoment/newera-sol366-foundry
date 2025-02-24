@@ -561,9 +561,13 @@ export class NewEraActor extends Actor {
   }
 
   async addKnowledge(subject = null, count = 1) {
-    const update = structuredClone(this.system);
+    const update = {
+      system: {
+        knowledges: {}
+      }
+    }
     for (let i = 0; i < count; i++){
-      update.knowledges[Object.keys(update.knowledges).length] = {
+      update.system.knowledges[Object.keys(this.system.knowledges).length + i] = {
         subject: subject || "New Knowledge",
         level: 0,
         bonus: 0,
@@ -571,41 +575,47 @@ export class NewEraActor extends Actor {
         grandmaster: false
       };
     }
-    await this.update({
-      system: update
-    });
+    await this.update(update);
   }
 
   async addSpecialty(subject = null, count = 1) {
-    const update = structuredClone(this.system);
+    const update = {
+      system: {
+        specialties: {}
+      }
+    }
     for (let i = 0; i < count; i++){
-      update.specialties[Object.keys(update.specialties).length] = {
+      update.system.specialties[Object.keys(this.system.specialties).length] = {
         subject: subject || "New Specialty",
         level: 0,
         bonus: 0,
         defaultParent: NEWERA.specialtyDefaultParents[subject] || "other"
       };
     }
-    await this.update({
-      system: update
-    });
+    await this.update(update);
   }
 
   async addSpecialModifier() {
-    const update = structuredClone(this.system);
-    update.specialModifiers[Object.keys(this.system.specialModifiers).length] = {
+    const update = {
+      system: {
+        specialModifiers: {}
+      }
+    }
+    update.system.specialModifiers[Object.keys(this.system.specialModifiers).length] = {
       subject: "New Modifier",
       bonus: 0,
       parent: ""
     };
-    await this.update({
-      system: update
-    });
+    await this.update(update);
   }
 
   async deleteKnowledge(index){
-    const update = structuredClone(this.system);
-    update.knowledges = NewEraUtils.spliceIndexedObject(this.system.knowledges, index);
+    const update = {
+      system: {
+        knowledges: {}
+      }
+    }
+    update.system.knowledges = NewEraUtils.spliceIndexedObject(this.system.knowledges, index);
     //Update learning experience selections to reflect the deleted knowledge
     if (this.system.classes){
       for (const [className, classData] of Object.entries(this.system.classes)){
@@ -613,22 +623,24 @@ export class NewEraActor extends Actor {
           for (const [level, obj] of Object.entries(classData.learningExperience)){
             const prevSelection = parseInt(obj.improvement);
             if (prevSelection == index){
-              update.classes[className].learningExperience[level].improvement = "";
+              update.system.classes[className].learningExperience[level].improvement = "";
             } else if (prevSelection > index){
-              update.classes[className].learningExperience[level].improvement = (prevSelection - 1).toString();
+              update.system.classes[className].learningExperience[level].improvement = (prevSelection - 1).toString();
             }
           }
         }
       }
     }
-    await this.update({
-      system: update
-    });
+    await this.update(update);
   }
 
   async deleteSpecialty(index){
-    const update = structuredClone(this.system);
-    update.specialties = NewEraUtils.spliceIndexedObject(this.system.specialties, index);
+    const update = {
+      system: {
+        specialties: {}
+      }
+    }
+    update.system.specialties = NewEraUtils.spliceIndexedObject(this.system.specialties, index);
     //Update specialty improvement selections to reflect the deleted specialty
     if (this.system.classes){
       for (const [className, classData] of Object.entries(this.system.classes)){
@@ -636,17 +648,15 @@ export class NewEraActor extends Actor {
           for (const [level, obj] of Object.entries(classData.specialtyImprovement)){
             const prevSelection = parseInt(obj.improvement);
             if (prevSelection == index){
-              update.classes[className].specialtyImprovement[level].improvement = "";
+              update.system.classes[className].specialtyImprovement[level].improvement = "";
             } else if (prevSelection > index){
-              update.classes[className].specialtyImprovement[level].improvement = (prevSelection - 1).toString();
+              update.system.classes[className].specialtyImprovement[level].improvement = (prevSelection - 1).toString();
             }
           }
         }
       }
     }
-    await this.update({
-      system: update
-    });
+    await this.update(update);
   }
 
   async deleteSpecialModifier(index){
@@ -688,17 +698,19 @@ export class NewEraActor extends Actor {
   }
 
   async addResource(resource = null) {
-    const update = structuredClone(this.system);
-    update.additionalResources[Object.keys(update.additionalResources).length] = resource || {
+    const update = {
+      system: {
+        additionalResources: {}
+      }
+    }
+    update.system.additionalResources[Object.keys(this.system.additionalResources).length] = resource || {
       name: "New Resource",
       value: 0,
       max: 0,
       daily: false,
       custom: true
     };
-    await this.update({
-      system: update
-    });
+    await this.update(update);
   }
 
   async updateResourceByName(name, resourceUpdate) {
@@ -2221,7 +2233,7 @@ export class NewEraActor extends Actor {
               console.log(`[ALU] Unlocked common feature ${commonFeature.name}`);
             }
           }
-          if (feature.spellStudies) {
+          if (feature.spellStudies && feature.spellStudies.some(s => typeof s.showWhen != 'function')) { //Don't trigger this notification for conditional spell studies
             ui.notifications.info(`You can learn new spells at this level! Access the Spell Study Guide from the Class tab.`);
           }
       }
@@ -2271,25 +2283,35 @@ export class NewEraActor extends Actor {
    * Improve natural skills by 1 level each.
    */
   async improveNaturalSkills(){
-    const update = structuredClone(this.system);
-    for (const [k, obj] of Object.entries(update.skills)){
-      if (obj.natural && obj.level < 10) {
-        update.skills[k].level += 1;
+    const update = {
+      system: {
+        skills: {},
+        magic: {},
+        knowledges: {}
       }
     }
-    for (const [k, obj] of Object.entries(update.magic)){
+    for (const [k, obj] of Object.entries(this.system.skills)){
       if (obj.natural && obj.level < 10) {
-        update.magic[k].level += 1;
+        update.system.skills[k] = {
+          level: obj.level + 1
+        }
       }
     }
-    for (const [k, obj] of Object.entries(update.knowledges)){
+    for (const [k, obj] of Object.entries(this.system.magic)){
       if (obj.natural && obj.level < 10) {
-        update.knowledges[k].level += 1;
+        update.system.magic[k] = {
+          level: obj.level + 1
+        }
       }
     }
-    await this.update({
-      system: update
-    });
+    for (const [k, obj] of Object.entries(this.system.knowledges)){
+      if (obj.natural && obj.level < 10) {
+        update.system.knowledges[k] = {
+          level: obj.level + 1
+        }
+      }
+    }
+    await this.update(update);
     ui.notifications.info("Your Natural Skills increased!");
   }
 
@@ -2505,25 +2527,45 @@ export class NewEraActor extends Actor {
   }
 
   async setLearningExperience(from, to){
-    const update = structuredClone(this.system);
-    if (from !== ""){
-      update.knowledges[parseInt(from)].level--;
+    const update = {
+      system: {
+        knowledges: {}
+      }
     }
-    const knowledge = update.knowledges[parseInt(to)];
-    knowledge.level++;
-    await this.update({system: update});
-    ui.notifications.info(`Your ${knowledge.subject} knowledge increased to ${knowledge.level}!`);
+    if (from !== ""){
+      update.knowledges[parseInt(from)] = {
+        level: this.system.knowledges[parseInt(from)].level - 1
+      }
+    }
+    if (to) {
+      const knowledge = this.system.knowledges[parseInt(to)];
+      update.knowledges[parseInt(to)] = {
+        level: knowledge.level + 1
+      }
+      ui.notifications.info(`Your ${knowledge.subject} knowledge increased to ${knowledge.level + 1}!`);
+    }
+    await this.update(update);
   }
 
   async setSpecialtyImprovement(from, to){
-    const update = structuredClone(this.system);
-    if (from !== ""){
-      update.specialties[parseInt(from)].level--;
+    const update = {
+      system: {
+        specialties: {}
+      }
     }
-    const specialty = update.specialties[parseInt(to)];
-    specialty.level++;
-    await this.update({system: update});
-    ui.notifications.info(`Your ${specialty.subject} specialty increased to ${specialty.level}!`);
+    if (from !== ""){
+      update.specialties[parseInt(from)] = {
+        level: this.system.specialties[parseInt(from)].level - 1
+      }
+    }
+    if (to) {
+      const specialty = this.system.specialties[parseInt(to)];
+      update.specialties[parseInt(to)] = {
+        level: specialty.level + 1
+      }
+      ui.notifications.info(`Your ${specialty.subject} specialty increased to ${specialty.level + 1}!`);
+    }
+    await this.update(update);
   }
   /**
    * Add a spell, enchantment, or potion recipe to the character by its compendium ID.
