@@ -246,7 +246,7 @@ export class Artificer {
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
                     },
-                    onChange: (actor, from, to) => Artificer.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "1", from, to)
                 },
                 "1.magicSkill": {
                     label: "Choose a Magical Skill",
@@ -426,7 +426,7 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "2": {
+                "2.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
@@ -434,9 +434,33 @@ export class Artificer {
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
                     },
-                    onChange: (actor, from, to) => Artificer.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "2", from, to)
+                },
+                "2.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["2"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["2"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 9,
@@ -548,7 +572,7 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "3": {
+                "3.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
@@ -556,9 +580,33 @@ export class Artificer {
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
                     },
-                    onChange: (actor, from, to) => Artificer.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "3", from, to)
+                },
+                "3.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["3"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["3"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 12,
@@ -655,7 +703,7 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "4": {
+                "4.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
@@ -663,9 +711,33 @@ export class Artificer {
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
                     },
-                    onChange: (actor, from, to) => Artificer.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "4", from, to)
+                },
+                "4.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["4"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["4"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 15,
@@ -793,7 +865,7 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "5": {
+                "5.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
@@ -801,9 +873,33 @@ export class Artificer {
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
                     },
-                    onChange: (actor, from, to) => Artificer.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "5", from, to)
+                },
+                "5.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["5"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["5"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 19,
@@ -905,8 +1001,31 @@ export class Artificer {
         }
     }
 
-    static async bonus(actor, from, to){
-        ui.notifications.error(`This feature is under construction! No changes have been made to ${actor.name}.`);
+    static async bonus(actor, bonusNumber, from, to){
+        const existingSkill = actor.system.classes.artificer.bonus[bonusNumber]?.magicSkill;
+        if (from == "magicSkill" && existingSkill){
+            await actor.setSkillBoost(existingSkill, "", false);
+        } else if (from == "carryWeight"){
+            await actor.update({
+                system: {
+                    carryWeight: {
+                        bonus: actor.system.carryWeight.bonus - 1
+                    }
+                }
+            });
+        }
+        if (to == "magicSkill" && existingSkill){
+            await actor.setSkillBoost("", existingSkill, false);
+        } else if (to == "carryWeight"){
+            await actor.update({
+                system: {
+                    carryWeight: {
+                        bonus: actor.system.carryWeight.bonus + 1
+                    }
+                }
+            });
+            ui.notifications.info("Your Carry Weight has been increased.");
+        }
     }
 
     /**

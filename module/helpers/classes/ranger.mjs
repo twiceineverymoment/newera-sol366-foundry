@@ -313,14 +313,42 @@ export class Ranger {
             key: false,
             description: "Choose one of the following bonuses.",
             selections: {
-                "1": {
+                "1.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         "passivePerception": "+1 Passive Perception",
                         "carryWeight": "+1 Carry Weight",
                         "increase": "Increase Natural Skill, Knowledge, or Specialty"
                     },
-                    onChange: (actor, from, to) => Ranger.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Ranger.bonus(actor, "1",from, to)
+                },
+                "1.increase": {
+                    label: "Choose a stat to increase",
+                    options: {
+                        naturalSkill: "Natural Skill",
+                        knowledge: "Knowledge",
+                        specialty: "Specialty"
+                    },
+                    onChange: (actor, from, to) => Ranger.setBonusIncrease(actor, "1", from, to),
+                    showWhen: (actor) => actor.system.classes.ranger.bonus["1"].bonus == "increase",
+                },
+                "1.naturalSkill": {
+                    label: "Choose a Skill",
+                    dynamicOptions: actor => actor.getNaturalSkillOptions(),
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false),
+                    showWhen: actor => actor.system.classes.ranger.bonus["1"].bonus == "increase" && actor.system.classes.ranger.bonus["1"].increase == "naturalSkill"
+                },
+                "1.knowledge": {
+                    label: "Choose a Knowledge",
+                    dynamicOptions: actor => actor.getLearningExperienceOptions(),
+                    onChange: (actor, from, to) => actor.setLearningExperience(from, to, false),
+                    showWhen: actor => actor.system.classes.ranger.bonus["1"].bonus == "increase" && actor.system.classes.ranger.bonus["1"].increase == "knowledge"
+                },
+                "1.specialty": {
+                    label: "Choose a Specialty",
+                    dynamicOptions: actor => actor.getSpecialtyImprovementOptions(),
+                    onChange: (actor, from, to) => actor.setSpecialtyImprovement(from, to),
+                    showWhen: actor => actor.system.classes.ranger.bonus["1"].bonus == "increase" && actor.system.classes.ranger.bonus["1"].increase == "specialty"
                 }
             }
         },
@@ -508,14 +536,42 @@ export class Ranger {
             key: false,
             description: "Choose one of the following bonuses.",
             selections: {
-                "2": {
+                "2.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         "passivePerception": "+1 Passive Perception",
                         "carryWeight": "+1 Carry Weight",
                         "increase": "Increase Natural Skill, Knowledge, or Specialty"
                     },
-                    onChange: (actor, from, to) => Ranger.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Ranger.bonus(actor, "2",from, to)
+                },
+                "2.increase": {
+                    label: "Choose a stat to increase",
+                    options: {
+                        naturalSkill: "Natural Skill",
+                        knowledge: "Knowledge",
+                        specialty: "Specialty"
+                    },
+                    onChange: (actor, from, to) => Ranger.setBonusIncrease(actor, "2", from, to),
+                    showWhen: (actor) => actor.system.classes.ranger.bonus["2"].bonus == "increase",
+                },
+                "2.naturalSkill": {
+                    label: "Choose a Skill",
+                    dynamicOptions: actor => actor.getNaturalSkillOptions(),
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false),
+                    showWhen: actor => actor.system.classes.ranger.bonus["2"].bonus == "increase" && actor.system.classes.ranger.bonus["2"].increase == "naturalSkill"
+                },
+                "2.knowledge": {
+                    label: "Choose a Knowledge",
+                    dynamicOptions: actor => actor.getLearningExperienceOptions(),
+                    onChange: (actor, from, to) => actor.setLearningExperience(from, to, false),
+                    showWhen: actor => actor.system.classes.ranger.bonus["2"].bonus == "increase" && actor.system.classes.ranger.bonus["2"].increase == "knowledge"
+                },
+                "2.specialty": {
+                    label: "Choose a Specialty",
+                    dynamicOptions: actor => actor.getSpecialtyImprovementOptions(),
+                    onChange: (actor, from, to) => actor.setSpecialtyImprovement(from, to),
+                    showWhen: actor => actor.system.classes.ranger.bonus["2"].bonus == "increase" && actor.system.classes.ranger.bonus["2"].increase == "specialty"
                 }
             }
         },
@@ -548,14 +604,42 @@ export class Ranger {
             key: false,
             description: "Choose one of the following bonuses.",
             selections: {
-                "3": {
+                "3.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         "passivePerception": "+1 Passive Perception",
                         "carryWeight": "+1 Carry Weight",
                         "increase": "Increase Natural Skill, Knowledge, or Specialty"
                     },
-                    onChange: (actor, from, to) => Ranger.bonus(actor, from, to)
+                    onChange: (actor, from, to) => Ranger.bonus(actor, "3",from, to)
+                },
+                "3.increase": {
+                    label: "Choose a stat to increase",
+                    options: {
+                        naturalSkill: "Natural Skill",
+                        knowledge: "Knowledge",
+                        specialty: "Specialty"
+                    },
+                    onChange: (actor, from, to) => Ranger.setBonusIncrease(actor, "3", from, to),
+                    showWhen: (actor) => actor.system.classes.ranger.bonus["3"].bonus == "increase",
+                },
+                "3.naturalSkill": {
+                    label: "Choose a Skill",
+                    dynamicOptions: actor => actor.getNaturalSkillOptions(),
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false),
+                    showWhen: actor => actor.system.classes.ranger.bonus["3"].bonus == "increase" && actor.system.classes.ranger.bonus["3"].increase == "naturalSkill"
+                },
+                "3.knowledge": {
+                    label: "Choose a Knowledge",
+                    dynamicOptions: actor => actor.getLearningExperienceOptions(),
+                    onChange: (actor, from, to) => actor.setLearningExperience(from, to, false),
+                    showWhen: actor => actor.system.classes.ranger.bonus["3"].bonus == "increase" && actor.system.classes.ranger.bonus["3"].increase == "knowledge"
+                },
+                "3.specialty": {
+                    label: "Choose a Specialty",
+                    dynamicOptions: actor => actor.getSpecialtyImprovementOptions(),
+                    onChange: (actor, from, to) => actor.setSpecialtyImprovement(from, to),
+                    showWhen: actor => actor.system.classes.ranger.bonus["3"].bonus == "increase" && actor.system.classes.ranger.bonus["3"].increase == "specialty"
                 }
             }
         },
@@ -626,9 +710,91 @@ export class Ranger {
         1: 1
     }
 
-    static async bonus(actor, from, to){
-        //TODO Ranger bonus has an optional/variable specialty improvement - how do we handle that?
-        ui.notifications.error(`This feature is under construction! No changes were made to ${actor.name}.`);
+    static async bonus(actor, bonusNumber, from, to){
+        if (from == "passivePerception"){
+            await actor.update({
+                system: {
+                    passivePerception: {
+                        bonus: actor.system.passivePerception.bonus - 1
+                    }
+                }
+            });
+        } else if (from == "carryWeight"){
+            await actor.update({
+                system: {
+                    carryWeight: {
+                        bonus: actor.system.carryWeight.bonus - 1
+                    }
+                }
+            });
+        } else if (from == "increase"){
+            const currIncrease = actor.system.classes.ranger.bonus[bonusNumber]?.increase;
+            if (currIncrease){
+                await Ranger.setBonusIncrease(actor, bonusNumber, currIncrease, "");
+            }
+        }
+
+        if (to == "passivePerception"){
+            await actor.update({
+                system: {
+                    passivePerception: {
+                        bonus: actor.system.passivePerception.bonus + 1
+                    }
+                }
+            });
+            ui.notifications.info("Your Passive Perception was increased.");
+        } else if (to == "carryWeight"){
+            await actor.update({
+                system: {
+                    carryWeight: {
+                        bonus: actor.system.carryWeight.bonus + 1
+                    }
+                }
+            });
+            ui.notifications.info("Your Carry Weight was increased.");
+        } else if (to == "increase"){
+            const currIncrease = actor.system.classes.ranger.bonus[bonusNumber]?.increase;
+            if (currIncrease){
+                await Ranger.setBonusIncrease(actor, bonusNumber, "", currIncrease);
+            }
+        }
+    }
+
+    //When the second dropdown in Ranger Bonus is changed, remove and re-add any already selected changes in the third dropdown.
+    static async setBonusIncrease(actor, bonusNumber, from, to){
+        if (from == "naturalSkill"){
+            const naturalSkill = actor.system.classes.ranger.bonus[bonusNumber]?.naturalSkill;
+            if (naturalSkill){
+                await actor.setSkillBoost(naturalSkill, "", true);
+            }
+        } else if (from == "knowledge"){
+            const knowledge = actor.system.classes.ranger.bonus[bonusNumber]?.knowledge;
+            if (knowledge){
+                await actor.setLearningExperience(knowledge, "");
+            }
+        } else if (from == "specialty"){
+            const specialty = actor.system.classes.ranger.bonus[bonusNumber]?.specialty;
+            if (specialty){
+                await actor.setSpecialtyImprovement(specialty, "");
+            }
+        }
+
+        if (to == "naturalSkill"){
+            const naturalSkill = actor.system.classes.ranger.bonus[bonusNumber]?.naturalSkill;
+            if (naturalSkill){
+                await actor.setSkillBoost("", naturalSkill, true);
+            }
+        } else if (to == "knowledge"){
+            const knowledge = actor.system.classes.ranger.bonus[bonusNumber]?.knowledge;
+            if (knowledge){
+                await actor.setLearningExperience("", knowledge);
+            }
+        } else if (to == "specialty"){
+            const specialty = actor.system.classes.ranger.bonus[bonusNumber]?.specialty;
+            if (specialty){
+                await actor.setSpecialtyImprovement("", specialty);
+            }
+        }
     }
 
     static async markCurrentTargetAsPrey(ranger){
