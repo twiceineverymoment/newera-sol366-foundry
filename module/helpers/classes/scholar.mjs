@@ -225,7 +225,8 @@ export class Scholar {
                     sign: false,
                     values: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
-            ]
+            ],
+            onUnlock: actor => Scholar.initializeSpellSlots(actor, false)
         },
         {
             level: 3,

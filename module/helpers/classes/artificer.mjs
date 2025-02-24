@@ -199,7 +199,8 @@ export class Artificer {
                       }
                     ]
                 }
-            ]
+            ],
+            onUnlock: actor => Artificer.initializeSpellFocus(actor, false)
         },
         {
             level: 4,
