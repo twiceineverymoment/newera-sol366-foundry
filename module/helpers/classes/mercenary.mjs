@@ -660,7 +660,7 @@ export class Mercenary {
             update.initiative.bonus = actor.system.initiative.bonus - 1;
         } else if (from == "specialty"){ //Try to clear the specialty improvement when the bonus is removed
             try {
-                const specialty = actor.system.classes.mercenary.bonus[bonusNumber].specialty;
+                const specialty = actor.system.classes.mercenary.bonus?.[bonusNumber]?.specialty;
                 if (specialty !== undefined){
                     await actor.setSpecialtyImprovement(specialty, "");
                 }
@@ -675,7 +675,7 @@ export class Mercenary {
             ui.notifications.info(`${actor.name} has gained a +1 Initiative bonus.`);
         } else if (to == "specialty"){ //Re-activate the specialty improvement if already chosen (This is a serious edge case, but it can happen)
             try {
-                const specialty = actor.system.classes.mercenary.bonus[bonusNumber].specialty;
+                const specialty = actor.system.classes.mercenary.bonus?.[bonusNumber]?.specialty;
                 if (specialty !== undefined){
                     await actor.setSpecialtyImprovement("", specialty);
                 }

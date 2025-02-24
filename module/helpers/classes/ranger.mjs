@@ -728,7 +728,7 @@ export class Ranger {
                 }
             });
         } else if (from == "increase"){
-            const currIncrease = actor.system.classes.ranger.bonus[bonusNumber]?.increase;
+            const currIncrease = actor.system.classes.ranger.bonus?.[bonusNumber]?.increase;
             if (currIncrease){
                 await Ranger.setBonusIncrease(actor, bonusNumber, currIncrease, "");
             }
@@ -753,7 +753,7 @@ export class Ranger {
             });
             ui.notifications.info("Your Carry Weight was increased.");
         } else if (to == "increase"){
-            const currIncrease = actor.system.classes.ranger.bonus[bonusNumber]?.increase;
+            const currIncrease = actor.system.classes.ranger.bonus?.[bonusNumber]?.increase;
             if (currIncrease){
                 await Ranger.setBonusIncrease(actor, bonusNumber, "", currIncrease);
             }
@@ -763,34 +763,34 @@ export class Ranger {
     //When the second dropdown in Ranger Bonus is changed, remove and re-add any already selected changes in the third dropdown.
     static async setBonusIncrease(actor, bonusNumber, from, to){
         if (from == "naturalSkill"){
-            const naturalSkill = actor.system.classes.ranger.bonus[bonusNumber]?.naturalSkill;
+            const naturalSkill = actor.system.classes.ranger.bonus?.[bonusNumber]?.naturalSkill;
             if (naturalSkill){
                 await actor.setSkillBoost(naturalSkill, "", true);
             }
         } else if (from == "knowledge"){
-            const knowledge = actor.system.classes.ranger.bonus[bonusNumber]?.knowledge;
+            const knowledge = actor.system.classes.ranger.bonus?.[bonusNumber]?.knowledge;
             if (knowledge){
                 await actor.setLearningExperience(knowledge, "");
             }
         } else if (from == "specialty"){
-            const specialty = actor.system.classes.ranger.bonus[bonusNumber]?.specialty;
+            const specialty = actor.system.classes.ranger.bonus?.[bonusNumber]?.specialty;
             if (specialty){
                 await actor.setSpecialtyImprovement(specialty, "");
             }
         }
 
         if (to == "naturalSkill"){
-            const naturalSkill = actor.system.classes.ranger.bonus[bonusNumber]?.naturalSkill;
+            const naturalSkill = actor.system.classes.ranger.bonus?.[bonusNumber]?.naturalSkill;
             if (naturalSkill){
                 await actor.setSkillBoost("", naturalSkill, true);
             }
         } else if (to == "knowledge"){
-            const knowledge = actor.system.classes.ranger.bonus[bonusNumber]?.knowledge;
+            const knowledge = actor.system.classes.ranger.bonus?.[bonusNumber]?.knowledge;
             if (knowledge){
                 await actor.setLearningExperience("", knowledge);
             }
         } else if (to == "specialty"){
-            const specialty = actor.system.classes.ranger.bonus[bonusNumber]?.specialty;
+            const specialty = actor.system.classes.ranger.bonus?.[bonusNumber]?.specialty;
             if (specialty){
                 await actor.setSpecialtyImprovement("", specialty);
             }

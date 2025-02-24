@@ -1002,7 +1002,7 @@ export class Artificer {
     }
 
     static async bonus(actor, bonusNumber, from, to){
-        const existingSkill = actor.system.classes.artificer.bonus[bonusNumber]?.magicSkill;
+        const existingSkill = actor.system.classes.artificer.bonus?.[bonusNumber]?.magicSkill;
         if (from == "magicSkill" && existingSkill){
             await actor.setSkillBoost(existingSkill, "", false);
         } else if (from == "carryWeight"){
