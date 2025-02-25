@@ -102,7 +102,15 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "1",
           show: "equipped",
-          disable: () => item.isLoaded() ? false : "The chamber is empty! Reload or use a different weapon.",
+          disable: () => {
+            if (!item.isLoaded()){
+              return "The chamber is empty! Reload or use a different weapon.";
+            } else if (!item.isReadyToFire()){
+              return "The weapon is not ready to fire!";
+            } else {
+              return false;
+            }
+          },
           altInstructions: system.firingAction == "SA" ? `<span class="ammo-count">
             <img class="inline-icon" src="systems/newera-sol366/resources/machine-gun-magazine.png" />
             ${item.system.ammo.loaded}/${item.system.ammo.clipSize}
@@ -170,24 +178,16 @@ export class ItemActions {
           ability: null,
           skill: null,
           specialties: [],
-          description: `Chamber a round into your ${item.name}, getting ready to fire a shot.`,
+          description: item.system.ammo.type == "B" ? `Pull back the string on your ${item.name}, getting ready to fire a shot.` :  `Chamber a round into your ${item.name}, getting ready to fire a shot.`,
           difficulty: "",
           actionType: "1",
           show: "equipped",
-          disable: actor => {
-            if (item.isFullyLoaded()){
-              return "There is already a round in the chamber!";
-            } else if (!actor.hasAmmoFor(item)){
-              return "You're out of ammo!";
-            } else {
-              return false;
-            }
-          },
+          disable: () => item.system.ammo.cocked ? "Weapon is already cocked!" : false,
           rolls: [
             {
-              label: "Load",
+              label: "Chk-chk!",
               die: "cowboy-holster",
-              callback: actor => Actions.reloadRangedWeapon(actor, item)
+              callback: () => item.cock()
             }
           ]
         });
@@ -240,7 +240,14 @@ export class ItemActions {
           difficulty: "",
           actionType: "1",
           show: "equipped",
-          rolls: []
+          disable: () => item.isReadyToFire() ? "Arrow ready to fire!" : false,
+          rolls: [
+            {
+              label: "Load",
+              die: "quiver",
+              callback: actor => Actions.reloadRangedWeapon(actor, item)
+            }
+          ]
         });
       } else {
         actions.push({
@@ -290,7 +297,7 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "1",
           show: "equipped",
-          disable: actor => actor.hasAmmoFor(item) ? false : "No arrows in the quiver!",
+          disable: () => item.isReadyToFire() ? false : "You must notch an arrow first!",
           rolls: [
             {
               label: "Shoot",
@@ -318,7 +325,7 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "2",
           show: "equipped",
-          disable: actor => actor.hasAmmoFor(item) ? false : "No arrows in the quiver!",
+          disable: () => item.isReadyToFire() ? false : "You must notch an arrow first!",
           rolls: [
             {
               label: "Shoot",
@@ -347,7 +354,7 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "3",
           show: "equipped",
-          disable: actor => actor.hasAmmoFor(item) ? false : "No arrows in the quiver!",
+          disable: () => item.isReadyToFire() ? false : "You must notch an arrow first!",
           rolls: [
             {
               label: "Draw",

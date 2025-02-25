@@ -936,8 +936,8 @@ export class Actions {
     }
 
     static async fireRangedWeapon(actor, item){
-      if (item.system.ammo.loaded == 0){
-        ui.notifications.warn(`The clip is empty!`);
+      if (!item.isReadyToFire()){
+        ui.notifications.warn(`The ${item.name} is not ready to fire!`);
         return;
       }
       const shotsFired = await item.fire(); //SHOTS FIRED SHOTS FIRED
@@ -971,7 +971,7 @@ export class Actions {
         actor.actionMessage(actor.img, item.img, "{NAME} reloads the {0}.", item.name);
       } else {
         ui.notifications.info(`Loaded ${ammo.name} into ${item.name}.`);
-        actor.actionMessage(actor.img, item.img, "{NAME} loads the {0}.", item.name);
       }
     }
+
 }

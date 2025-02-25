@@ -1406,7 +1406,8 @@ _preparePotionData(system){
         await this.update({
           system: {
             ammo: {
-              loaded: this.system.ammo.loaded - 1
+              loaded: this.system.ammo.loaded - 1,
+              cocked: false
             }
           }
         });
@@ -1470,9 +1471,34 @@ _preparePotionData(system){
     }
   }
 
+  //Oh
+  async cock(){
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON) && this.system.firingAction == "M"){
+      await this.update({
+        system: {
+          ammo: {
+            cocked: true
+          }
+        }
+      });
+    }
+  }
+
   isLoaded(){
     if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
       return this.system.ammo.loaded > 0;
+    } else {
+      return null;
+    }
+  }
+
+  isReadyToFire(){
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      if ([this.system.firingAction == "M"]){
+        return (this.system.ammo.loaded > 0 && this.system.ammo.cocked);
+      } else {
+        return this.isLoaded();
+      }
     } else {
       return null;
     }

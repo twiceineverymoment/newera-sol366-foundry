@@ -579,6 +579,7 @@
 			"firingRate": 1,
 			"ammo": {
 				"loaded": 0,
+				"cocked": false,
 				"clipSize": 0,
 				"type": "S"
 			}
