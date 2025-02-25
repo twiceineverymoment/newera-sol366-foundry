@@ -819,11 +819,8 @@ export class NewEraActorSheet extends ActorSheet {
     const rolls = action.rolls ? (typeof action.rolls == "Array" ? action.rolls : Object.values(action.rolls)) : [];
     for (const roll of rolls) {
       roll.isFunctionButton = (typeof roll.callback == "function");
+      roll.smol = (roll.label.length >= 10);
     }
-  }
-
-  _prepareItemActions(item){
-
   }
 
   /* -------------------------------------------- */

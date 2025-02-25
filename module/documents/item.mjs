@@ -1494,7 +1494,7 @@ _preparePotionData(system){
 
   isReadyToFire(){
     if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
-      if ([this.system.firingAction == "M"]){
+      if (this.system.firingAction == "M"){
         return (this.system.ammo.loaded > 0 && this.system.ammo.cocked);
       } else {
         return this.isLoaded();

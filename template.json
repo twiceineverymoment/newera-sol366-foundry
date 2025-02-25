@@ -581,7 +581,11 @@
 				"loaded": 0,
 				"cocked": false,
 				"clipSize": 0,
-				"type": "S"
+				"type": "S",
+				"loadedItem": {
+					"name": "",
+					"damageAdjustment": ""
+				}
 			}
 		},
 		"Shield": {

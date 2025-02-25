@@ -51,7 +51,8 @@ export class ItemActions {
               label: "Damage",
               caption: `${attack.damageType} damage (${item.name})`,
               die: attack.damageDie.slice(1),
-              formula: attack.damageRoll
+              formula: attack.damageRoll,
+              alwaysEnabled: true
             }
           ]
         });
@@ -103,15 +104,16 @@ export class ItemActions {
           actionType: "1",
           show: "equipped",
           disable: () => {
-            if (!item.isLoaded()){
-              return "The chamber is empty! Reload or use a different weapon.";
-            } else if (!item.isReadyToFire()){
-              return "The weapon is not ready to fire!";
-            } else {
-              return false;
+            switch (system.firingAction){
+              case "M":
+                return item.isReadyToFire() ? false : "The weapon is not ready to fire!";
+              case "SA":
+                return item.isLoaded() ? false : "The chamber is empty! Reload or use a different weapon.";
+              default: //huh?
+                return false;
             }
           },
-          altInstructions: system.firingAction == "SA" ? `<span class="ammo-count">
+          altInstructions: system.ammo.clipSize > 1 ? `<span class="ammo-count">
             <img class="inline-icon" src="systems/newera-sol366/resources/machine-gun-magazine.png" />
             ${item.system.ammo.loaded}/${item.system.ammo.clipSize}
           </span>` : "",
@@ -125,7 +127,8 @@ export class ItemActions {
               label: "Damage",
               caption: `Ranged Attack Damage (${item.name})`,
               die: system.damage.slice(1),
-              formula: system.damage
+              formula: system.damage,
+              alwaysEnabled: true
             }
           ]
         });
@@ -161,7 +164,8 @@ export class ItemActions {
               label: "Damage",
               caption: `Ranged Attack Damage (${item.name})`,
               die: system.damage.slice(1),
-              formula: system.damage
+              formula: system.damage,
+              alwaysEnabled: true
             }
           ]
         });
@@ -182,7 +186,15 @@ export class ItemActions {
           difficulty: "",
           actionType: "1",
           show: "equipped",
-          disable: () => item.system.ammo.cocked ? "Weapon is already cocked!" : false,
+          disable: () => {
+            if (item.system.ammo.cocked){
+              return "Weapon is already cocked!";
+            } else if (!item.isLoaded()){
+              return "Weapon must be loaded first!";
+            } else {
+              return false;
+            }
+          },
           rolls: [
             {
               label: "Chk-chk!",
@@ -240,7 +252,15 @@ export class ItemActions {
           difficulty: "",
           actionType: "1",
           show: "equipped",
-          disable: () => item.isReadyToFire() ? "Arrow ready to fire!" : false,
+          disable: actor => {
+            if (item.isLoaded()){
+              return "Already loaded!";
+            } else if (!actor.hasAmmoFor(item)) {
+              return "No arrows in inventory!";
+            } else {
+              return false;
+            }
+          },
           rolls: [
             {
               label: "Load",
@@ -305,10 +325,11 @@ export class ItemActions {
               callback: actor => Actions.fireRangedWeapon(actor, item)
             },
             {
-              label: "Half Damage",
+              label: "½ Damage",
               caption: `Quick Shot Damage (${item.name})`,
               die: system.damage.slice(1),
-              formula: `(${system.damage})/2`
+              formula: `(${system.damage})/2`,
+              alwaysEnabled: true
             }
           ]
         });
@@ -336,7 +357,8 @@ export class ItemActions {
               label: "Damage",
               caption: `Damage (${item.name})`,
               die: system.damage.slice(1),
-              formula: `${system.damage}`
+              formula: `${system.damage}`,
+              alwaysEnabled: true
             }
           ]
         });
@@ -368,10 +390,11 @@ export class ItemActions {
               callback: actor => Actions.fireRangedWeapon(actor, item)
             },
             {
-              label: "Damage",
+              label: "Damage x2",
               caption: `Power Shot Damage (${item.name})`,
               die: system.damage.slice(1),
-              formula: `(${system.damage}+@abilities.str.mod)*2`
+              formula: `(${system.damage}+@abilities.str.mod)*2`,
+              alwaysEnabled: true
             }
           ]
         });
