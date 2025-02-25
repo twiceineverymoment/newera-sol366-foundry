@@ -449,7 +449,8 @@ export class Witch {
                         }
                     ]
                 }
-            ]
+            ],
+            onUnlock: actor => Witch.initializeDarkEnergy(actor, false)
         },
         {
             level: 8,

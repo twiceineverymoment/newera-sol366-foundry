@@ -325,7 +325,8 @@ export class Magus {
                       }
                     ]
                 }
-            ]
+            ],
+            onUnlock: actor => Magus.initializeSpellstrike(actor)
         },
         {
             level: 9,
