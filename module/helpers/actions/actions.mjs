@@ -36,7 +36,7 @@ export class Actions {
       const roll = NewEraUtils.formatRollExpression(1, dieSize, conMod);
       new Dialog({
         title: `Increase Maximum HP (${clazz.system.selectedClass})`,
-        content: "Choose whether to roll for your hit point increase, or take the average.<br/><b>If you earned any ability score increases this level, select those first!</b>",
+        content: "Choose whether to roll for your hit point increase, or take the average.",
         buttons: {
           roll: {
             icon: `<i class="fa-solid fa-dice"></i>`,
