@@ -135,6 +135,9 @@ div.newera-itemsheet-property-66 {
   width: 60%;
   margin: 8px;
 }
+div.actorsheet-margin {
+  margin: 3px !important;
+}
 .newera-itemsheet-property-50 select, .newera-itemsheet-property-66 select {
   width: 100%;
 }
@@ -1280,6 +1283,14 @@ h3.chant-level {
 }
 h3.inactive {
   opacity: 0.5;
+}
+h3.balance {
+  font-family: "Cinzel", serif;
+  font-size: 1.25em;
+  color: #60acdf;
+  border-bottom: none;
+  text-align: right;
+  margin-right: 2px;
 }
 h2.chant-count {
   display: inline;

@@ -369,20 +369,10 @@
         		}
       		},
 			"money": {
-				"balance": 0,
-				"wallet": {
-					"1coins": 0,
-					"5coins": 0,
-					"10coins": 0,
-					"20coins": 0,
-					"50coins": 0,
-					"100coins": 0,
-					"100bills": 0,
-					"500bills": 0,
-					"1kbills": 0,
-					"2kbills": 0,
-					"5kbills": 0,
-					"10kbills": 0
+				"money": {
+					"digital": 0,
+					"cash": 0,
+					"total": 0
 				}
 			}
 		},

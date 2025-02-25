@@ -212,6 +212,8 @@ export class NewEraActor extends Actor {
     let weight = 0;
     let ench = 0;
     let armor = 0;
+    let money = 0;
+    let ancientMoney = 0;
     for (const item of items){
       if (item.typeIs(NewEraItem.Types.INVENTORY) && !item.system.stored && typeof item.system.weight != "undefined"){
         weight += item.system.weight * (item.system.quantity || 1);
@@ -227,10 +229,19 @@ export class NewEraActor extends Actor {
           armor += item.system.armorRating;
         }
       }
+      if (item.system.casperObjectId && NEWERA.moneyItemValues[item.system.casperObjectId]){
+        money += NEWERA.moneyItemValues[item.system.casperObjectId] * item.system.quantity;
+      }``
+      if (item.system.casperObjectId && NEWERA.ancientMoneyItemValues[item.system.casperObjectId]){
+        ancientMoney += NEWERA.ancientMoneyItemValues[item.system.casperObjectId] * item.system.quantity;
+      }
     }
     system.carryWeight.current = weight;
     system.magicTolerance.current = ench;
     system.armor.equipped = armor;
+    system.money.cash = money;
+    system.money.total = system.money.digital + system.money.cash;
+    system.money.ancient = ancientMoney;
   }
 
   async _applyConditionalStatusEffects(weight, enchantments) {

@@ -240,16 +240,12 @@
         </div> 
 </div>
 
-<div class="newera-itemsheet-properties">
-    <div class="newera-itemsheet-property-33">
-        <h4>Money</h4>
-        <input type="text" class="sheet-input" name="system.balance" value="{{system.balance}}" data-dtype="Number" style="display: inline; width: 80%"/> CR
-    </div>
-    <div class="newera-itemsheet-property-33">
-        <h4>Carry Weight Bonus</h4>
+<div class="newera-itemsheet-properties" style="margin-top: 16px">
+    <div class="newera-itemsheet-property-25 actorsheet-margin">
+        <h4>+ Carry Weight</h4>
         <input type="text" class="sheet-input" name="system.carryWeight.bonus" value="{{system.carryWeight.bonus}}" data-dtype="Number"/>
     </div>
-    <div class="newera-itemsheet-property-25">
+    <div class="newera-itemsheet-property-25 actorsheet-margin">
         <h4>Worn Item Slots</h4>
         <select name="system.wornItemSlots" class="sheet-input auto-value">
             <option value="2">2</option>
@@ -262,6 +258,14 @@
             <option value="9">9</option>
             <option value="10">10</option>
         </select>
+    </div>
+    <div class="newera-itemsheet-property-25 actorsheet-margin">
+        <h4>Currency (Digital)</h4>
+        <input type="text" class="sheet-input" name="system.money.digital" value="{{system.money.digital}}" data-dtype="Number" style="display: inline; width: 80%"/>
+    </div>
+    <div class="newera-itemsheet-property-25 actorsheet-margin">
+        <h3 class="balance" data-tooltip="Digital Currency plus Cash">{{balanceFormat system.money.total 0}} CR</h3>
+        <h3 class="balance" data-tooltip="Total Value of Ancient Coins">{{balanceFormat system.money.ancient 2}} GP</h3>
     </div>
 </div>
 

@@ -215,6 +215,16 @@ Handlebars.registerHelper('populated', function(haystack){
   }
 });
 
+Handlebars.registerHelper('balanceFormat', function(value, decimals){
+  const fixedNumber = Number(value).toFixed(decimals);
+  // Split the number into integer and decimal parts
+  const [integerPart, decimalPart] = fixedNumber.split('.');
+  // Format the integer part with thousands separators
+  const formattedIntegerPart = Number(integerPart).toLocaleString('en-US');
+  // Combine the formatted integer part with the decimal part
+  return decimalPart ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
+});
+
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
