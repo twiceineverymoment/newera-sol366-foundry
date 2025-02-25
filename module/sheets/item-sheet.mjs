@@ -168,7 +168,8 @@ export class NewEraItemSheet extends ItemSheet {
     html.find("#clearCasperMetadata").click(() => {
       new Dialog({
         title: "Are you sure?",
-        content: `<p>This will remove the CASPER metadata from this item. It will be treated as a custom item, rather than one from the compendium, and cannot be updated by future compendium changes. The item will no longer be stackable with others of the same type.</p>
+        content: `<p>This will remove the CASPER metadata from this item. It will be treated as a custom item, rather than one from the compendium, and cannot be updated by future compendium changes.</p>
+        <p>Many functions of the character sheet rely on this data. Removing it will make the item non-stackable, and it will not be recognized as currency or ammunition, among many other functions.</p>
         <p>You should only do this if you've made modifications to the item's core properties that you don't want to lose. Note that superficial changes like quantity, condition, and enchantments do not require this in order to be preserved.</p>
         <p>You cannot undo this action!</p>`,
         buttons: {
