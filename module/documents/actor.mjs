@@ -1212,7 +1212,7 @@ export class NewEraActor extends Actor {
       gained.energy = system.energy.max - system.energy.value;
       //Fully refresh any daily resources
       const resUpdate = structuredClone(system.additionalResources);
-      resUpdate.forEach(r => {
+      Object.values(resUpdate).forEach(r => {
         if (r.daily){
           r.value = r.max;
         }
@@ -1712,6 +1712,10 @@ export class NewEraActor extends Actor {
         }
       }
       return null;
+    }
+
+    hasItemInHand(item){
+      return ["rightHand", "leftHand"].includes(this.findItemLocation(item));
     }
 
   /* 
