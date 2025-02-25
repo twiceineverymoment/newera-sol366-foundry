@@ -27,8 +27,8 @@ export class NewEraActor extends Actor {
   }
 
   static EquipmentSlots = {
-    LEFT_HAND: "leftHand",
     RIGHT_HAND: "rightHand",
+    LEFT_HAND: "leftHand",
     HEAD: "head",
     NECK: "neck",
     WAIST: "waist", 
@@ -1712,7 +1712,7 @@ export class NewEraActor extends Actor {
         }
       }
       return null;
-    }  
+    }
 
   /* 
     Find an item action based on the name and some characteristics of the item it was created from.

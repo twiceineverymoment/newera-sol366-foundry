@@ -602,7 +602,9 @@ export class NewEraActorSheet extends ActorSheet {
 
     if (system.hitPoints.total > 0 || actor.type == "Creature"){ //If a PC or NPC's HP is 0, remove all actions and show only the death save
       /* Actions from inventory */
-      for (const item of this.actor.items.contents){
+      const sortedItemIds = this._generateSortedItemIdList();
+      for (const i of sortedItemIds){
+        const item = this.actor.items.get(i);
         if(item.system.stored){
           continue;
         }
@@ -822,6 +824,33 @@ export class NewEraActorSheet extends ActorSheet {
       roll.smol = (roll.label.length >= 10);
     }
   }
+
+  /**
+   * Sorts the actor's items in the order their actions should be displayed.
+   * Items equipped come first in the order defined in NewEraActor.EquipmentSlots, followed by worn items, then the rest of the inventory.
+   * @returns 
+   */
+  _generateSortedItemIdList(){
+    const system = this.actor.system;
+    const list = [];
+    for (const slot of Object.values(NewEraActor.EquipmentSlots)){
+      if (system.equipment[slot]){
+        list.push(system.equipment[slot]);
+      }
+    }
+    for (let i = 0; i < system.wornItemSlots; i++){
+      if (system.equipment[`worn${i}`]){
+        list.push(system.equipment[`worn${i}`]);
+      }
+    }
+    for (const item of this.actor.items.contents){
+      if (!list.includes(item._id)){
+        list.push(item._id);
+      }
+    }
+    return list;
+  }
+
 
   /* -------------------------------------------- */
 
