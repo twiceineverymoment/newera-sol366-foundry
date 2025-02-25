@@ -335,7 +335,7 @@ export class ItemActions {
               label: "½ Damage",
               caption: `Quick Shot Damage (${item.name})`,
               die: system.damage.slice(1),
-              formula: `(${system.damage})/2`,
+              formula: `ceil((${system.damage}+@abilities.strength.mod)/2)`,
               alwaysEnabled: true
             }
           ]
@@ -365,7 +365,7 @@ export class ItemActions {
               label: "Damage",
               caption: `Damage (${item.name})`,
               die: system.damage.slice(1),
-              formula: `${system.damage}`,
+              formula: `${system.damage}+@abilities.strength.mod`,
               alwaysEnabled: true
             }
           ]

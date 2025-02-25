@@ -1918,7 +1918,7 @@ export class NewEraActor extends Actor {
     }
     for (const [key, obj] of Object.entries(this.system.magic)){
       if (obj.natural) {
-        output[key] = NewEraUtils.keyToTitle(key);
+        output[key] = NewEraUtils.keyToTitle(key) + " Magic";
       }
     }
     return output;
