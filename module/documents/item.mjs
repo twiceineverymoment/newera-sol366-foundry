@@ -1402,11 +1402,11 @@ _preparePotionData(system){
           ui.notifications.info("You need to reload!");
         }
         return 1;
-      } else if (this.system.firingAction == "M"){
+      } else if (this.system.firingAction == "M"){ //Crossbow AND Shotgun
         await this.update({
           system: {
             ammo: {
-              loaded: 0
+              loaded: this.system.ammo.loaded - 1
             }
           }
         });
