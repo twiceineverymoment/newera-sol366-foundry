@@ -746,4 +746,47 @@ export class HotbarActions {
             ui.notifications.error("Only the GM can use this!");
         }
     }
+
+    static async fireRangedWeapon(weaponName){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        const weapon = actor.items.find(i => i.type == "Ranged Weapon" && i.name == weaponName);
+        if (!weapon){
+            ui.notifications.error(`${actor.name} doesn't have a ${weaponName}.`);
+            return;
+        }
+        Actions.fireRangedWeapon(actor, weapon);
+    }
+
+    static async reloadRangedWeapon(weaponName){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        const weapon = actor.items.find(i => i.type == "Ranged Weapon" && i.name == weaponName);
+        if (!weapon){
+            ui.notifications.error(`${actor.name} doesn't have a ${weaponName}.`);
+            return;
+        }
+        Actions.reloadRangedWeapon(actor, weapon);
+    }
+
+    static async cockRangedWeapon(weaponName){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        const weapon = actor.items.find(i => i.type == "Ranged Weapon" && i.name == weaponName);
+        if (!weapon){
+            ui.notifications.error(`${actor.name} doesn't have a ${weaponName}.`);
+            return;
+        }
+        weapon.cock();
+        ui.notifications.info("Chk-chk!");
+    }
 }

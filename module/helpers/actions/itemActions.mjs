@@ -103,6 +103,7 @@ export class ItemActions {
           difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
           actionType: "1",
           show: "equipped",
+          overrideMacroCommand: `game.newera.HotbarActions.fireRangedWeapon("${item.name}")`,
           disable: () => {
             switch (system.firingAction){
               case "M":
@@ -154,6 +155,7 @@ export class ItemActions {
             <img class="inline-icon" src="systems/newera-sol366/resources/machine-gun-magazine.png" />
             ${item.system.ammo.loaded}/${item.system.ammo.clipSize}
           </span>`,
+          overrideMacroCommand: `game.newera.HotbarActions.fireRangedWeapon("${item.name}")`,
           rolls: [
             {
               label: `Attack (${system.firingRate})`,
@@ -195,6 +197,7 @@ export class ItemActions {
               return false;
             }
           },
+          overrideMacroCommand: `game.newera.HotbarActions.cockRangedWeapon("${item.name}")`,
           rolls: [
             {
               label: "Chk-chk!",
@@ -229,6 +232,7 @@ export class ItemActions {
               return false;
             }
           }, 
+          overrideMacroCommand: `game.newera.HotbarActions.reloadRangedWeapon("${item.name}")`,
           rolls: [
             {
               label: "Reload",
@@ -261,6 +265,7 @@ export class ItemActions {
               return false;
             }
           },
+          overrideMacroCommand: `game.newera.HotbarActions.reloadRangedWeapon("${item.name}")`,
           rolls: [
             {
               label: "Load",
@@ -293,6 +298,7 @@ export class ItemActions {
               return false;
             }
           },
+          overrideMacroCommand: `game.newera.HotbarActions.reloadRangedWeapon("${item.name}")`,
           rolls: [
             {
               label: "Load",
@@ -318,6 +324,7 @@ export class ItemActions {
           actionType: "1",
           show: "equipped",
           disable: () => item.isReadyToFire() ? false : "You must notch an arrow first!",
+          overrideMacroCommand: `game.newera.HotbarActions.fireRangedWeapon("${item.name}")`,
           rolls: [
             {
               label: "Shoot",
@@ -347,6 +354,7 @@ export class ItemActions {
           actionType: "2",
           show: "equipped",
           disable: () => item.isReadyToFire() ? false : "You must notch an arrow first!",
+          overrideMacroCommand: `game.newera.HotbarActions.fireRangedWeapon("${item.name}")`,
           rolls: [
             {
               label: "Shoot",
@@ -377,6 +385,7 @@ export class ItemActions {
           actionType: "3",
           show: "equipped",
           disable: () => item.isReadyToFire() ? false : "You must notch an arrow first!",
+          overrideMacroCommand: `game.newera.HotbarActions.fireRangedWeapon("${item.name}")`,
           rolls: [
             {
               label: "Draw",
