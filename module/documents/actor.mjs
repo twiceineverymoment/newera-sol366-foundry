@@ -1909,6 +1909,21 @@ export class NewEraActor extends Actor {
     }
   }
 
+  getNaturalSkillOptions(){
+    let output = {};
+    for (const [key, obj] of Object.entries(this.system.skills)){
+      if (obj.natural) {
+        output[key] = NewEraUtils.keyToTitle(key);
+      }
+    }
+    for (const [key, obj] of Object.entries(this.system.magic)){
+      if (obj.natural) {
+        output[key] = NewEraUtils.keyToTitle(key);
+      }
+    }
+    return output;
+  }
+
   /**
    * Updates the data on all owned items that have a casperObjectId property with refreshed data from the latest compendiums.
    * Some properties are preserved from the old items if they have been modified by the user.
