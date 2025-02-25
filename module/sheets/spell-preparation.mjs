@@ -41,7 +41,7 @@ export class SpellPreparation extends ActorSheet {
                     slot.spell = {
                         name: spell.name,
                         castLevel: spell.system.level * slot.ampFactor,
-                        image: spell.img
+                        image: spell.img,
                     };
                 }
             }
@@ -82,7 +82,10 @@ export class SpellPreparation extends ActorSheet {
                 return;
             }
             const spell = this.actor.items.get(slot.spellId);
-
+            if (!this.actor.canCastSpell(spell)){
+                ui.notifications.warn(`${this.actor.name}'s hands are full!`);
+                return;
+            }
             Actions.castSpell(this.actor, spell, slot.ampFactor, true);
             Scholar.setSpellSlotAvailability(this.actor, slotLevel, slotNumber, false);
         });

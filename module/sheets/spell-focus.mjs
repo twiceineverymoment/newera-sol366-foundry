@@ -98,6 +98,10 @@ export class SpellFocus extends ActorSheet {
             const index = $(ev.currentTarget).data("storeId");
             const store = this.actor.system.focus[index];
             const spell = this.actor.items.find(s => s.id == store.id);
+            if (!this.actor.canCastSpell(spell)){
+                ui.notifications.warn(`${this.actor.name}'s hands are full!`);
+                return;
+            }
             Actions.castSpell(this.actor, spell, store.ampFactor, true);
             //Remove the stored spell
             const update = structuredClone(this.actor.system.focus);

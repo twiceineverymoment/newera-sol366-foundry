@@ -2231,6 +2231,19 @@ export class NewEraActor extends Actor {
     return true;
   }
 
+  canCastSpell(spell){
+    if (game.settings.get("newera-sol366", "enforceActionConditions")){
+      if (!spell.system.keywords.includes("Asomatic")){
+        if (["G", "L", "R"].includes(spell.system.castType)){
+          return this.hasFreeHands(2);
+        } else {
+          return this.hasFreeHands(1);
+        }
+      }
+    }
+    return true;
+  }
+
   /* AUTO LEVEL UP FUNCTIONS */
 
   async levelUp(clazz) {
