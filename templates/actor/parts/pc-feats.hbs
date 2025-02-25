@@ -81,7 +81,7 @@
                                 </select>
                             {{/if}}
                             {{#if selection.text}}
-                                <input type="text" name="system.featSelections.{{../id}}.{{../tier}}.{{index2}}" class="sheet-input feat-select" data-feat-id="{{../id}}" data-tier="{{../tier}}" data-selection-key="{{index2}}" data-old-value="{{selection.currentValue}}" {{#if selection.repeated}}data-repeated="true"{{/if}} />
+                                <input type="text" name="system.featSelections.{{../id}}.{{../tier}}.{{index2}}" value="{{selection.currentValue}}" class="sheet-input feat-select" data-feat-id="{{../id}}" data-tier="{{../tier}}" data-selection-key="{{index2}}" data-old-value="{{selection.currentValue}}" {{#if selection.repeated}}data-repeated="true"{{/if}} />
                             {{/if}}
                         </div>
                     {{/if}}

@@ -121,7 +121,7 @@
                                 </select>
                             {{/if}}
                             {{#if selection.text}}
-                                <input type="text" name="system.classes.{{../id}}.{{index2}}" class="sheet-input feature-select" data-class="{{../className}}" data-selection-id="{{../id}}" data-selection-number="{{index2}}" data-old-value="{{selection.currentValue}}" />
+                                <input type="text" name="system.classes.{{../id}}.{{index2}}" value="{{selection.currentValue}}" class="sheet-input feature-select" data-class="{{../className}}" data-selection-id="{{../id}}" data-selection-number="{{index2}}" data-old-value="{{selection.currentValue}}" />
                             {{/if}}
                         </div>
                     {{/if}}
