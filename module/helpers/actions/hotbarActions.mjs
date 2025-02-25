@@ -758,6 +758,10 @@ export class HotbarActions {
             ui.notifications.error(`${actor.name} doesn't have a ${weaponName}.`);
             return;
         }
+        if (!actor.hasItemInHand(weapon)){
+            ui.notifications.warn(`${actor.name}'s ${weaponName} isn't equipped!`);
+            return;
+        }
         Actions.fireRangedWeapon(actor, weapon);
     }
 
@@ -772,6 +776,10 @@ export class HotbarActions {
             ui.notifications.error(`${actor.name} doesn't have a ${weaponName}.`);
             return;
         }
+        if (!actor.hasItemInHand(weapon)){
+            ui.notifications.warn(`${actor.name}'s ${weaponName} isn't equipped!`);
+            return;
+        }
         Actions.reloadRangedWeapon(actor, weapon);
     }
 
@@ -784,6 +792,18 @@ export class HotbarActions {
         const weapon = actor.items.find(i => i.type == "Ranged Weapon" && i.name == weaponName);
         if (!weapon){
             ui.notifications.error(`${actor.name} doesn't have a ${weaponName}.`);
+            return;
+        }
+        if (!actor.hasItemInHand(weapon)){
+            ui.notifications.warn(`${actor.name}'s ${weaponName} isn't equipped!`);
+            return;
+        }
+        if (!weapon.isLoaded()){
+            ui.notifications.warn(`The magazine is empty!`);
+            return;
+        }
+        if (weapon.isReadyToFire()){
+            ui.notifications.warn(`${weaponName} is already cocked!`);
             return;
         }
         weapon.cock();

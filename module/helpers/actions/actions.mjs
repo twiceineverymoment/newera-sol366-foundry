@@ -952,6 +952,10 @@ export class Actions {
     }
 
     static async reloadRangedWeapon(actor, item){
+      if (item.isFullyLoaded()){
+        ui.notifications.warn(`${item.name} is already loaded!`);
+        return;
+      }
       const ammo = actor.findAmmoFor(item);
       if (!ammo){
         ui.notifications.warn("Out of ammo!");
