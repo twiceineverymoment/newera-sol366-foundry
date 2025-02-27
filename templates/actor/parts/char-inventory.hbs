@@ -18,7 +18,6 @@
     <img src="systems/newera-sol366/resources/equipment_waist.png" class="equipment-worn" />
         <!-- Standard slots -->
         <div class="equipment-box newera-equipment-dropzone" id="equipment-right-hand" data-drop-zone="rightHand">
-            <input type="hidden" name="system.equipment.rightHand" value="{{system.equipment.rightHand}}" id="newera-equipment-{{actor.id}}-rightHand-input" data-dtype="String" />
             {{#if inventory.equipped.rightHand}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.rightHand}}" draggable="true" data-tooltip="{{inventory.equipped.rightHand.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -35,7 +34,6 @@
         </div>
         {{#unless system.equipment.twoHanded}}
         <div class="equipment-box newera-equipment-dropzone" id="equipment-left-hand" data-drop-zone="leftHand">
-            <input type="hidden" name="system.equipment.leftHand" value="{{system.equipment.leftHand}}" id="newera-equipment-{{actor.id}}-leftHand-input" data-dtype="String" />
             {{#if inventory.equipped.leftHand}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.leftHand}}" draggable="true" data-tooltip="{{inventory.equipped.leftHand.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -52,7 +50,6 @@
         </div>
         {{/unless}}
         <div class="equipment-box newera-equipment-dropzone" id="equipment-head" data-drop-zone="head">
-            <input type="hidden" name="system.equipment.head" value="{{system.equipment.head}}" id="newera-equipment-{{actor.id}}-head-input" data-dtype="String" />
             {{#if inventory.equipped.head}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.head}}" draggable="true" data-tooltip="{{inventory.equipped.head.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -68,7 +65,6 @@
             {{/if}}
         </div>
         <div class="equipment-box newera-equipment-dropzone" id="equipment-feet" data-drop-zone="feet">
-            <input type="hidden" name="system.equipment.feet" value="{{system.equipment.feet}}" id="newera-equipment-{{actor.id}}-feet-input" data-dtype="String" />
             {{#if inventory.equipped.feet}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.feet}}" draggable="true" data-tooltip="{{inventory.equipped.feet.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -84,7 +80,6 @@
             {{/if}}
         </div>
         <div class="equipment-box newera-equipment-dropzone" id="equipment-hands" data-drop-zone="hands">
-            <input type="hidden" name="system.equipment.hands" value="{{system.equipment.hands}}" id="newera-equipment-{{actor.id}}-hands-input" data-dtype="String" />
             {{#if inventory.equipped.hands}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.hands}}" draggable="true" data-tooltip="{{inventory.equipped.hands.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -100,7 +95,6 @@
             {{/if}}
         </div>
         <div class="equipment-box newera-equipment-dropzone" id="equipment-neck" data-drop-zone="neck">
-            <input type="hidden" name="system.equipment.neck" value="{{system.equipment.neck}}" id="newera-equipment-{{actor.id}}-neck-input" data-dtype="String" />
             {{#if inventory.equipped.neck}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.neck}}" draggable="true" data-tooltip="{{inventory.equipped.neck.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -116,7 +110,6 @@
             {{/if}}
         </div>
         <div class="equipment-box newera-equipment-dropzone" id="equipment-body-armor" data-drop-zone="body">
-            <input type="hidden" name="system.equipment.body" value="{{system.equipment.body}}" id="newera-equipment-{{actor.id}}-body-input" data-dtype="String" />
             {{#if inventory.equipped.body}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.body}}" draggable="true" data-tooltip="{{inventory.equipped.body.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -132,7 +125,6 @@
             {{/if}}
         </div>
         <div class="equipment-box newera-equipment-dropzone" id="equipment-outfit" data-drop-zone="outfit">
-            <input type="hidden" name="system.equipment.outfit" value="{{system.equipment.outfit}}" id="newera-equipment-{{actor.id}}-outfit-input" data-dtype="String" />
             {{#if inventory.equipped.outfit}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.outfit}}" draggable="true" data-tooltip="{{inventory.equipped.outfit.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -148,7 +140,6 @@
             {{/if}}
         </div>
         <div class="equipment-box newera-equipment-dropzone" id="equipment-waist" data-drop-zone="waist">
-            <input type="hidden" name="system.equipment.waist" value="{{system.equipment.waist}}" id="newera-equipment-{{actor.id}}-waist-input" data-dtype="String" />
             {{#if inventory.equipped.waist}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.waist}}" draggable="true" data-tooltip="{{inventory.equipped.waist.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -164,7 +155,6 @@
             {{/if}}
         </div>
         <div class="equipment-box newera-equipment-dropzone" id="equipment-phone" data-drop-zone="phone">
-            <input type="hidden" name="system.equipment.phone" value="{{system.equipment.phone}}" id="newera-equipment-{{actor.id}}-phone-input" data-dtype="String" />
             {{#if inventory.equipped.phone}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{system.equipment.phone}}" draggable="true" data-tooltip="{{inventory.equipped.phone.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -183,7 +173,6 @@
         <!-- Variable Worn Slots -->
         {{#each inventory.worn as |item slot|}}
         <div class="equipment-box newera-equipment-dropzone" id="equipment-worn{{slot}}" data-drop-zone="worn{{slot}}">
-            <input type="hidden" name="system.equipment.worn{{slot}}" value="{{item._id}}" id="newera-equipment-{{../actor.id}}-worn{{slot}}-input" data-dtype="String" />
             {{#if item}}
             <div class="equipment-icon newera-draggable-equipment inventory-entry" data-item-id="{{item._id}}" draggable="true" data-tooltip="{{item.system.listDisplayName}}" data-tooltip-direction="UP">
                 <a class="item-control item-edit">
@@ -251,18 +240,14 @@
         </div> 
 </div>
 
-<div class="newera-itemsheet-properties">
-    <div class="newera-itemsheet-property-33">
-        <h4>Money</h4>
-        <input type="text" class="sheet-input" name="system.balance" value="{{system.balance}}" data-dtype="Number" style="display: inline; width: 80%"/> CR
-    </div>
-    <div class="newera-itemsheet-property-33">
-        <h4>Carry Weight Bonus</h4>
+<div class="newera-itemsheet-properties" style="margin-top: 16px">
+    <div class="newera-itemsheet-property-25 actorsheet-margin">
+        <h4>+ Carry Weight</h4>
         <input type="text" class="sheet-input" name="system.carryWeight.bonus" value="{{system.carryWeight.bonus}}" data-dtype="Number"/>
     </div>
-    <div class="newera-itemsheet-property-25">
+    <div class="newera-itemsheet-property-25 actorsheet-margin">
         <h4>Worn Item Slots</h4>
-        <select name="system.wornItemSlots" id="wornSlotSelect" class="sheet-input">
+        <select name="system.wornItemSlots" class="sheet-input auto-value">
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -273,6 +258,14 @@
             <option value="9">9</option>
             <option value="10">10</option>
         </select>
+    </div>
+    <div class="newera-itemsheet-property-25 actorsheet-margin">
+        <h4>Currency (Digital)</h4>
+        <input type="text" class="sheet-input" name="system.money.digital" value="{{system.money.digital}}" data-dtype="Number" style="display: inline; width: 80%"/>
+    </div>
+    <div class="newera-itemsheet-property-25 actorsheet-margin" style="vertical-align: middle">
+        <h3 class="balance" data-tooltip="Digital Currency plus Cash">{{balanceFormat system.money.total 0}} CR</h3>
+        <h3 class="balance" data-tooltip="Total Value of Ancient Coins">{{balanceFormat system.money.ancient 2}} GP</h3>
     </div>
 </div>
 
@@ -291,6 +284,12 @@
                 {{/if}}
             </td>
             <td style="text-align: right">
+                {{#if item.multiple}}
+                    <a class="item-split" data-tooltip="Split Stack" data-tooltip-direction="UP"><i class="fa-solid fa-layer-group"></i></a>
+                {{/if}}
+                {{#if item.showMergeStacks}}
+                    <a class="item-merge" data-tooltip="Stack Items" data-tooltip-direction="UP"><i class="fa-regular fa-layer-group"></i></a>
+                {{/if}}
                 {{#if item.system.stored}}
                     <a class="item-storage" data-tooltip="Retrieve from Storage" data-tooltip-direction="UP"><i class="fa-solid fa-box"></i></a>
                 {{else}}

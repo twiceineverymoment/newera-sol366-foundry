@@ -1,7 +1,6 @@
-import { NEWERA } from "../helpers/config.mjs";
 import { Artificer } from "../helpers/classes/artificer.mjs";
-import { Actions } from "../helpers/macros/actions.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { Actions } from "../helpers/actions/actions.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 
 export class SpellFocus extends ActorSheet {
 
@@ -56,7 +55,7 @@ export class SpellFocus extends ActorSheet {
 
         html.find(".spell-action-icons").each((i, element) => {
             const spellId = $(element).data("spell");
-            $(element).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
+            $(element).html(NewEraUtils.getSpellActionIcons(this.actor.items.get(spellId)));
         });
 
         html.find("#resetFocus").click(() => {
@@ -99,6 +98,10 @@ export class SpellFocus extends ActorSheet {
             const index = $(ev.currentTarget).data("storeId");
             const store = this.actor.system.focus[index];
             const spell = this.actor.items.find(s => s.id == store.id);
+            if (!this.actor.canCastSpell(spell)){
+                ui.notifications.warn(`${this.actor.name}'s hands are full!`);
+                return;
+            }
             Actions.castSpell(this.actor, spell, store.ampFactor, true);
             //Remove the stored spell
             const update = structuredClone(this.actor.system.focus);

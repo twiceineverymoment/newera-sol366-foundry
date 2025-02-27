@@ -1,12 +1,21 @@
 import { NEWERA } from "../config.mjs";
 export class Delver {
 
+    static hitPointIncrement = {
+        roll: `1d8`,
+        average: 5
+    }
+
     static classFeatures = [
         {
             level: 1,
             name: "Delver Specialties",
             key: false,
-            description: "You gain 1 level in the Sight (Perception) and Climbing (Athletics) specialties."
+            description: "You gain 1 level in the Sight (Perception) and Climbing (Athletics) specialties.",
+            onUnlock: async (actor) => { //async to avoid race condition, otherwise one specialty overwrites the other
+                await actor.setSpecialtyFeature(null, "Sight", "perception", true);
+                await actor.setSpecialtyFeature(null, "Climbing", "athletics", true);
+            }
         },
         {
             level: 1,
@@ -19,16 +28,17 @@ export class Delver {
                     label: "First Choice",
                     type: "String",
                     options: {
-                        agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", "elemental-magic": "Elemental Magic"
+                        agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", elemental: "Elemental Magic"
                     },
-                    onChange: (actor, from, to) => actor.updateNaturalSkill(from, to)
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "2": {
                     label: "Second Choice",
                     type: "String",
                     options: {
-                        agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", "elemental-magic": "Elemental Magic"
-                    }
+                        agility: "Agility", athletics: "Athletics", perception: "Perception", stealth: "Stealth", instinct: "Instinct", "sleight-of-hand": "Sleight of Hand", elemental: "Elemental Magic"
+                    },
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 }
             }
         },
@@ -42,7 +52,19 @@ export class Delver {
                     field: "immenseEnergy",
                     label: "Maximum Energy",
                     sign: false,
-                    values: [null, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70, 72, 92, 95, 98, 128, 135, 142, 150, 160, 190]
+                    values: [null, 24, 27, 30, 40, 41, 42, 43, 64, 67, 70, 72, 92, 95, 98, 128, 135, 142, 150, 160, 190],
+                    onUpdate: (actor, from, to) => {
+                        const diff = to - from;
+                        actor.update({
+                            system: {
+                                energy: {
+                                    value: actor.system.energy.value + diff,
+                                    max: to
+                                }
+                            }
+                        });
+                        ui.notifications.info(`Immense Energy: Your maximum energy increased to ${to}!`);
+                    }
                 }
             ]
         },
@@ -64,7 +86,10 @@ export class Delver {
                     field: "casterLevel.delver",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 6]
+                    values: [null, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 6],
+                    onUpdate: (actor, from, to) => {
+                        actor.setCasterLevel(from, to, false); //Delver doesn't auto-set max energy because it's handled in Immense Energy
+                    }
                 }
             ]
         },
@@ -115,7 +140,8 @@ export class Delver {
                         water: `Path of Water`,
                         earth: `Path of Earth`,
                         wind: `Path of Wind`,
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => actor.unlockArchetypeFeatures("delver", newValue, 3)
                 }
             }
         },
@@ -124,6 +150,7 @@ export class Delver {
             archetype: "fire",
             name: "Path of Fire",
             key: true,
+            retroactiveUnlock: true,
             description: `<p>You focus your powers on the element of fire.</p>
             <p>Add your Proficiency Bonus to Pryomancy spell checks. Your elemental channeling powers inflict Burning damage.</p>`,
             tableValues: [
@@ -140,6 +167,7 @@ export class Delver {
             archetype: "water",
             name: "Path of Water",
             key: true,
+            retroactiveUnlock: true,
             description: `<p>You focus your powers on the element of water.</p>
             <p>Add your Proficiency Bonus to Cryomancy spell checks. Your elemental channeling powers inflict Freezing damage.</p>`,
             tableValues: [
@@ -156,6 +184,7 @@ export class Delver {
             archetype: "earth",
             name: "Path of Earth",
             key: true,
+            retroactiveUnlock: true,
             description: `<p>You focus your powers on the element of earth.</p>
             <p>Add your Proficiency Bonus to Lithomancy spell checks. Your elemental channeling powers inflict Bludgeoning damage.</p>`,
             tableValues: [
@@ -172,6 +201,7 @@ export class Delver {
             archetype: "wind",
             name: "Path of Wind",
             key: true,
+            retroactiveUnlock: true,
             description: `<p>You focus your powers on the element of air.</p>
             <p>Add your Proficiency Bonus to Evocation spell checks. Your elemental channeling powers inflict Shock damage.</p>`,
             tableValues: [
@@ -304,7 +334,8 @@ export class Delver {
                         passivePerception: "Passive Perception",
                         speed: "Speed",
                         carryWeight: "Carry Weight"
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => Delver.bonus(actor, oldValue, newValue)
                 }
             }
         },
@@ -338,8 +369,7 @@ export class Delver {
                     overrideMacroCommand: "game.newera.HotbarActions.elementalChanneling(null)",
                     difficulty: null,
                     actionType: "0",
-                    allowed: (actor) => actor.system.energy.value > 0,
-                    disallowMessage: "You're out of energy!",
+                    disable: (actor) => actor.hasEnergyAvailable() ? false : "You don't have enough energy!",
                     rolls: [
                       {
                         label: "Damage",
@@ -355,6 +385,7 @@ export class Delver {
             archetype: "fire",
             name: "Invigorating Heat",
             key: false,
+            retroactiveUnlock: true,
             description: "You recover 3 energy per frame while standing within 10 feet of a naturally-fueled fire 1 foot or larger in diameter that isn't obstructed."
         },
         {
@@ -362,6 +393,7 @@ export class Delver {
             archetype: "water",
             name: "Livegiving Water",
             key: false,
+            retroactiveUnlock: true,
             description: "For every 8 ounces of water you drink, you can either recover hit points equal to your proficiency bonus, life points equal to twice your proficiency bonus, or energy equal to twice your proficiency bonus. This effect can't heal injuries.",
         },
         {
@@ -369,6 +401,7 @@ export class Delver {
             archetype: "earth",
             name: "Shake the Ground",
             key: false,
+            retroactiveUnlock: true,
             description: "Whenever you succeed on a Tumble (Agility) check to avoid falling damage, your impact sends out a shockwave that staggers enemies within 20 feet for one frame. If you fell from a height of at least 20 feet, those creatures each make a Reflex save. On a failure, they take Bludgeoning damage equal to half the falling damage you would've taken and are knocked prone."
         },
         {
@@ -376,6 +409,7 @@ export class Delver {
             archetype: "wind",
             name: "Channeling Force",
             key: false,
+            retroactiveUnlock: true,
             description: "Whenever an attack using your Elemental Channeling misses its target or is aimed at a distance, you create a shockwave that travels 30 feet and deals your Elemental Channeling damage to the first target it hits."
         },
         {
@@ -383,6 +417,7 @@ export class Delver {
             archetype: "fire",
             name: "Spell Studies (3<sup>rd</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -421,6 +456,7 @@ export class Delver {
             archetype: "water",
             name: "Spell Studies (3<sup>rd</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -459,6 +495,7 @@ export class Delver {
             archetype: "earth",
             name: "Spell Studies (3<sup>rd</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -497,6 +534,7 @@ export class Delver {
             archetype: "wind",
             name: "Spell Studies (3<sup>rd</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -547,7 +585,8 @@ export class Delver {
                         passivePerception: "Passive Perception",
                         speed: "Speed",
                         carryWeight: "Carry Weight"
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => Delver.bonus(actor, oldValue, newValue)
                 }
             }
         },
@@ -570,8 +609,7 @@ export class Delver {
                     description: "<p>You enter Rage, a state of heightened physical and reduced mental abilities.</p><p>Your Rage consumes 10 energy upon activation, and 2 energy per frame you remain in Rage. You may end Rage any time as a free action.</p>",
                     difficulty: null,
                     actionType: "1",
-                    allowed: (actor) => actor.system.energy.value >= 10,
-                    disallowMessage: "You don't have enough energy to enter Rage!",
+                    disable: actor => actor.hasEnergyAvailable(10) ? false : "You don't have enough energy to enter Rage!",
                     overrideMacroCommand: 'game.newera.HotbarActions.rage()',
                     rolls: [
                       {
@@ -592,6 +630,7 @@ export class Delver {
             archetype: "fire",
             name: "Spell Studies (4<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -627,6 +666,7 @@ export class Delver {
             archetype: "water",
             name: "Spell Studies (4<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -662,6 +702,7 @@ export class Delver {
             archetype: "earth",
             name: "Spell Studies (4<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -697,6 +738,7 @@ export class Delver {
             archetype: "wind",
             name: "Spell Studies (4<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -736,6 +778,7 @@ export class Delver {
             archetype: "fire",
             name: "Wild Fury",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
             actions: [
                 {
@@ -765,6 +808,7 @@ export class Delver {
             archetype: "water",
             name: "Wild Fury",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
             actions: [
                 {
@@ -794,6 +838,7 @@ export class Delver {
             archetype: "earth",
             name: "Wild Fury",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
             actions: [
                 {
@@ -823,6 +868,7 @@ export class Delver {
             archetype: "wind",
             name: "Wild Fury",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>Whenever you enter Rage, you feel a rush of unbridled magical power. Roll a d4 on the Path of Fire Wild Fury table to determine the result.</p>`,
             actions: [
                 {
@@ -864,7 +910,8 @@ export class Delver {
                         passivePerception: "Passive Perception",
                         speed: "Speed",
                         carryWeight: "Carry Weight"
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => Delver.bonus(actor, oldValue, newValue)
                 }
             }
         },
@@ -877,13 +924,14 @@ export class Delver {
             name: "Extreme Affinity",
             key: false,
             description: `<p>Your Proficiency Bonus acts as a bonus to your Elemental Magic skill level when casting spells on your Elemental Path.</p>
-            `
+            ` //TODO how to handle this automatically?
         },
         {
             level: 15,
             archetype: "fire",
             name: "Spell Studies (5<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -922,6 +970,7 @@ export class Delver {
             archetype: "water",
             name: "Spell Studies (5<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -960,6 +1009,7 @@ export class Delver {
             archetype: "earth",
             name: "Spell Studies (5<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -998,6 +1048,7 @@ export class Delver {
             archetype: "wind",
             name: "Spell Studies (5<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -1052,7 +1103,8 @@ export class Delver {
                         passivePerception: "Passive Perception",
                         speed: "Speed",
                         carryWeight: "Carry Weight"
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => Delver.bonus(actor, oldValue, newValue)
                 }
             }
         },
@@ -1065,6 +1117,7 @@ export class Delver {
             archetype: "fire",
             name: "Burning Passion",
             key: false,
+            retroactiveUnlock: true,
             description: `While raging, your body emits bright light in a 20-foot radius, and creatures standing within 6 feet of you take 3 points of burning damage per frame.`
         },
         {
@@ -1072,6 +1125,7 @@ export class Delver {
             archetype: "water",
             name: "Water Bender",
             key: false,
+            retroactiveUnlock: true,
             description: `<p>You can swim at your full movement speed.</p><p>Whenever you make a Hold Breath check underwater, you may spend energy equal to half the difficulty of that check. If you do, you automatically succeed.</p>`
         },
         {
@@ -1079,6 +1133,7 @@ export class Delver {
             archetype: "earth",
             name: "Seismic Sense",
             key: false,
+            retroactiveUnlock: true,
             description: "Your Perception skill allows you to sense nearby moving creatures or objects within 100 feet through vibrations in the ground. You use your sense of touch for this ability, so it isn't impeded by reduced visibility or blindness."
         },
         {
@@ -1086,6 +1141,7 @@ export class Delver {
             archetype: "wind",
             name: "Lightning Charge",
             key: false,
+            retroactiveUnlock: true,
             description: "Whenever a spell you cast would deal Shock damage to any target, you can choose to replace the damage with energy recovery for that creature. You must activate this ability before rolling.",
             actions: [
                 {
@@ -1132,7 +1188,8 @@ export class Delver {
                         passivePerception: "Passive Perception",
                         speed: "Speed",
                         carryWeight: "Carry Weight"
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => Delver.bonus(actor, oldValue, newValue)
                 }
             }
         },
@@ -1160,6 +1217,7 @@ export class Delver {
             archetype: "fire",
             name: "Spell Studies (6<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -1209,6 +1267,7 @@ export class Delver {
             archetype: "water",
             name: "Spell Studies (6<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -1258,6 +1317,7 @@ export class Delver {
             archetype: "earth",
             name: "Spell Studies (6<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -1307,6 +1367,7 @@ export class Delver {
             archetype: "wind",
             name: "Spell Studies (6<sup>th</sup> Level)",
             key: false,
+            retroactiveUnlock: false,
             description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
             <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
             <div class="magic-info">
@@ -1352,6 +1413,13 @@ export class Delver {
             ]
         }
     ]
+
+    static classFeats = {}
+
+    static archetypeSelectionLevels = {
+        1: 3,
+        2: 20
+    }
 
     static async elementalChanneling(actor, pType){
         if (actor.system.energy.value <= 0){
@@ -1419,5 +1487,37 @@ export class Delver {
             flavor: `Wild Fury (Path of ${table})`
         });
         actor.actionMessage(`${NEWERA.images}/embraced-energy.png`, null, `<b>Wild Fury: </b>{0}`, NEWERA.wildFuryTable[table][r.total - 1]);
+    }
+
+    static async bonus(actor, from, to){
+        const update = {
+            system: {
+                speed: {},
+                passivePerception: {},
+                carryWeight: {}
+            }
+        }
+        if (from == "speed"){
+            update.system.speed.bonus = actor.system.speed.bonus - 1;
+        }
+        if (to == "speed"){
+            update.system.speed.bonus = actor.system.speed.bonus + 1;
+            ui.notifications.info(`You increased your Speed!`);
+        }
+        if (from == "passivePerception"){
+            update.system.passivePerception.bonus = actor.system.passivePerception.bonus - 1;
+        }
+        if (to == "passivePerception"){
+            update.system.passivePerception.bonus = actor.system.passivePerception.bonus + 1;
+            ui.notifications.info(`You increased your Passive Perception!`);
+        }
+        if (from == "carryWeight"){
+            update.system.carryWeight.bonus = actor.system.carryWeight.bonus - 1;
+        }
+        if (to == "carryWeight"){
+            update.system.carryWeight.bonus = actor.system.carryWeight.bonus + 1;
+            ui.notifications.info(`You increased your Carry Weight!`);
+        }
+        await actor.update(update);
     }
 }

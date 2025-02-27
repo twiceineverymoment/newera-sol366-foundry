@@ -1,12 +1,12 @@
 <div class="phoneui-app-header">
-    <a class="phoneui-close-button app-open" data-app-id="messages"><i class="fa-solid fa-circle-left"></i></a>
-    <h3 id="recipient">{{conversation.name}}</h3>
-    {{#if enableReceiveMsg}}
-        <a class="phoneui-right-header-button" id="receiveMessage" data-tooltip="Receive Message (GM Only)" data-tooltip-direction="DOWN" data-convo-id="{{calleeIndex}}"><i class="fa-solid fa-inbox"></i></a>
+    <a class="phoneui-close-button app-open mark-convo-as-read" data-convo-id="{{activeContact}}" data-app="messages"><i class="fa-solid fa-circle-left"></i></a>
+    <h3 id="recipient">{{activeConversation.name}}</h3>
+    {{#if activeConversation.notInContacts}}
+        <a class="phoneui-right-header-button" id="addToContacts" data-tooltip="This number is not in your contacts. Click here to add it." data-tooltip-direction="DOWN" data-number="{{activeConversation.number}}"><i class="fa-solid fa-user-plus"></i></a>
     {{/if}}
 </div>
 <div class="phoneui-app-body" id="messageHistory">
-    {{#each conversation.messages as |message index|}}
+    {{#each activeConversation.conversation as |message index|}}
         {{#if message.sent}}
         <div class="message-container-outgoing">
             <div class="message-outgoing">
@@ -26,7 +26,7 @@
 </div>
 <div class="phoneui-app-footer" style="padding-top: 12px">
     <input type="text" id="messageContent" placeholder="Enter a message..." class="phoneui-input" style="text-align: left" />
-    <button class="phoneui-input chat-button" id="sendMessage" data-convo-id="{{calleeIndex}}">
+    <button class="phoneui-input chat-button" id="sendMessage" data-convo-id="{{activeContact}}" data-number="{{activeConversation.number}}">
         Send
     </button>
 </div>

@@ -29,14 +29,14 @@
 <div id="profile-bio">
     <h3 class="table-header">Biography</h3>
     <label for="system.alignment.ethical">Alignment</label>
-    <select name="system.alignment.ethical" id="alignment-ethical" class="sheet-input">
+    <select name="system.alignment.ethical" id="alignment-ethical" class="sheet-input auto-value">
         <option value="2">Lawful</option>
         <option value="1">Social</option>
         <option value="0">Neutral</option>
        <option value="-1">Rebel</option>
        <option value="-2">Chaotic</option>
     </select>
-    <select name="system.alignment.moral" id="alignment-moral" class="sheet-input">
+    <select name="system.alignment.moral" id="alignment-moral" class="sheet-input auto-value">
        <option value="2">Good</option>
        <option value="1">Moral</option>
        <option value="0">Neutral</option>
@@ -50,7 +50,8 @@
 </div>
 
 {{!--This section only displays when Custom Pronouns is selected from the top--}}
-<div id="profile-pronouns" style="display: none">
+{{#if useCustomPronouns}}
+<div id="profile-pronouns">
     <h3 class="table-header vertical-separator">Custom Pronouns</h3>
     <div class="profile-grid">
         <label for="system.pronouns.subjective">Subjective</label>
@@ -81,6 +82,5 @@
         <label for="system.pronouns.reflexive">Contraction</label>
         <input type="text" class="sheet-input" id="pronoun-contraction" name="system.pronouns.contraction" value="{{system.pronouns.contraction}}" />    
     </div>
-
-    <input type="hidden" id="pronoun-pluralize" name="system.pronouns.pluralize" value="{{system.pronouns.pluralize}}" data-dtype="Boolean" />
 </div>
+{{/if}}

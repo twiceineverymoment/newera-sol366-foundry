@@ -1,6 +1,12 @@
 import { NEWERA } from "../config.mjs";
 
 export class Sage {
+
+    static hitPointIncrement = {
+        roll: `1d6`,
+        average: 4
+    }
+
     static classFeatures = [
         {
             level: 1,
@@ -13,18 +19,18 @@ export class Sage {
                     label: "Specialty #1",
                     options: {
                         "cooking": "Cooking (Technology)",
-                        "wound_treatment": "Wound Treatment (Medicine)",
-                        "first_aid": "First Aid (Medicine)",
-                        "sense_motive": "Sense Motive (Insight)"
+                        "wound-treatment": "Wound Treatment (Medicine)",
+                        "first-aid": "First Aid (Medicine)",
+                        "sense-motive": "Sense Motive (Insight)"
                     }
                 },
                 "2": {
                     label: "Specialty #2",
                     options: {
                         "cooking": "Cooking (Technology)",
-                        "wound_treatment": "Wound Treatment (Medicine)",
-                        "first_aid": "First Aid (Medicine)",
-                        "sense_motive": "Sense Motive (Insight)"
+                        "wound-treatment": "Wound Treatment (Medicine)",
+                        "first-aid": "First Aid (Medicine)",
+                        "sense-motive": "Sense Motive (Insight)"
                     }
                 }
             }
@@ -45,8 +51,8 @@ export class Sage {
                         technology: "Technology",
                         deception: "Deception",
                         determination: "Determination",
-                        "divine-magic": "Divine Magic",
-                        "psionic-magic": "Psionic Magic"
+                        divine: "Divine Magic",
+                        psionic: "Psionic Magic"
                     }
                 },
                 "2": {
@@ -58,8 +64,8 @@ export class Sage {
                         technology: "Technology",
                         deception: "Deception",
                         determination: "Determination",
-                        "divine-magic": "Divine Magic",
-                        "psionic-magic": "Psionic Magic"
+                        divine: "Divine Magic",
+                        psionic: "Psionic Magic"
                     }
                 },
                 "3": {
@@ -71,8 +77,8 @@ export class Sage {
                         technology: "Technology",
                         deception: "Deception",
                         determination: "Determination",
-                        "divine-magic": "Divine Magic",
-                        "psionic-magic": "Psionic Magic"
+                        divine: "Divine Magic",
+                        psionic: "Psionic Magic"
                     }
                 }
             }
@@ -437,4 +443,6 @@ export class Sage {
             ]
         }
     ]
+
+    static classFeats = {}
 }

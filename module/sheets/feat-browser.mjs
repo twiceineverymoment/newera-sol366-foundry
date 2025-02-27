@@ -1,9 +1,8 @@
-import { Witch } from "../helpers/classes/witch.mjs";
 import { FeatSearchParams } from "../schemas/feat-search-params.mjs";
 import { NewEraActor } from "../documents/actor.mjs";
 import { NewEraItem } from "../documents/item.mjs";
 import { NEWERA } from "../helpers/config.mjs";
-
+import { ExtendedFeatData } from "../helpers/feats.mjs";
 export class FeatBrowser extends ActorSheet {
 
     static get defaultOptions() {
@@ -100,7 +99,7 @@ export class FeatBrowser extends ActorSheet {
                         feat.tooltip = "You haven't fulfilled all the requirements for this feat. (NOTE: This is experimental - if this looks to be incorrect, ask your GM to override it)";
                     } else {
                         try {
-                            const customCondition = NEWERA.customFeatPrerequisites[feat.system.casperObjectId][feat.nextTier];
+                            const customCondition = ExtendedFeatData.getCustomPrerequisiteData(feat.system.casperObjectId, feat.nextTier);
                             if (customCondition && customCondition.doubleCheck){
                                 feat.styles += " doubleCheck";
                                 feat.doubleCheck = true;

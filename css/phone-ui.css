@@ -381,9 +381,8 @@ div.photo-thumbnail img {
     outline: none;
 }
 div.photo-details {
-    display: none;
     position: absolute;
-    top: 0;
+    top: 48px;
     left: 0;
     width: 320px;
     height: 468px;

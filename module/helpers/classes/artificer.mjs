@@ -1,15 +1,24 @@
 import { NEWERA } from "../config.mjs";
-import { Actions } from "../macros/actions.mjs";
+import { Actions } from "../actions/actions.mjs";
 import { SpellFocus } from "../../sheets/spell-focus.mjs";
 
 export class Artificer {
+
+    static hitPointIncrement = {
+        roll: `1d8`,
+        average: 5
+    }
 
     static classFeatures = [
         {
             level: 1,
             key: false,
             name: "Enchanting Specialty",
-            description: "You gain Enchanting (Spellcasting) as a specialty."
+            description: "You gain Enchanting (Spellcasting) as a specialty.",
+            onUnlock: (actor) => {
+                actor.addSpecialty("Enchanting");
+                ui.notifications.info(`You've gained Enchanting as a specialty.`);
+            }
         },
         {
             level: 1,
@@ -28,7 +37,8 @@ export class Artificer {
                         "instinct": "Instinct",
                         "reflex": "Reflex",
                         "sleight-of-hand": "Sleight of Hand"
-                    }
+                    },
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 },
                 "2": {
                     label: "Second Choice",
@@ -40,7 +50,8 @@ export class Artificer {
                         "instinct": "Instinct",
                         "reflex": "Reflex",
                         "sleight-of-hand": "Sleight of Hand"
-                    }
+                    },
+                    onChange: (actor, from, to) => actor.setNaturalSkill(from, to)
                 }
             }
         },
@@ -67,7 +78,10 @@ export class Artificer {
                     field: "casterLevel.artificer",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7]
+                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7],
+                    onUpdate: (actor, from, to) => {
+                        actor.setCasterLevel(from, to, true);
+                    }
                 }
             ]
         },
@@ -132,7 +146,14 @@ export class Artificer {
             name: "Alchemist's Pouch",
             key: true,
             description: `<p>You can designate one small container as your Alchemist's Pouch.</p><p>Once per day, you may use your Alchemist's Pouch to satisfy the material costs of a common spell or enchantment you cast, at or below your skill level in that form of magic. If the enchantment is complex, your pouch supplies all necessary materials for all of its components.</p>
-            <p>If you amplify the spell, your pouch can supply the amount of materials needed to cast it at the highest level that's trivial for you.</p>`
+            <p>If you amplify the spell, your pouch can supply the amount of materials needed to cast it at the highest level that's trivial for you.</p>`,
+            onUnlock: (actor) => actor.addResource({
+                name: "Alchemist's Pouch",
+                value: 1,
+                max: 1,
+                daily: true,
+                custom: false
+            })
         },
         {
             level: 2,
@@ -178,7 +199,8 @@ export class Artificer {
                       }
                     ]
                 }
-            ]
+            ],
+            onUnlock: actor => Artificer.initializeSpellFocus(actor, false)
         },
         {
             level: 4,
@@ -217,16 +239,47 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "1": {
+                "1.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
                         enchantment: "Learn one common spell or enchantment of any level",
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
-                    }
+                    },
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "1", from, to)
+                },
+                "1.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["1"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    onOtherFeature: true
+                },
+                {
+                    onOtherFeature: true
+                },
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["1"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 5,
@@ -355,7 +408,15 @@ export class Artificer {
                     field: "spellcraft.artificer",
                     label: "Spellcraft Skill Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3]
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3],
+                    onUpdate: (actor, from, to) => {
+                        actor.update({
+                            system: {
+                                spellcraft: to
+                            }
+                        });
+                        ui.notifications.info(`Your Spellcraft skill increased to ${to}!`);
+                    }
                 }
             ]
         },
@@ -366,16 +427,41 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "2": {
+                "2.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
                         enchantment: "Learn one common spell or enchantment of any level",
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
-                    }
+                    },
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "2", from, to)
+                },
+                "2.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["2"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["2"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 9,
@@ -487,16 +573,41 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "3": {
+                "3.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
                         enchantment: "Learn one common spell or enchantment of any level",
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
-                    }
+                    },
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "3", from, to)
+                },
+                "3.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["3"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["3"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 12,
@@ -593,16 +704,41 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "4": {
+                "4.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
                         enchantment: "Learn one common spell or enchantment of any level",
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
-                    }
+                    },
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "4", from, to)
+                },
+                "4.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["4"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["4"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 15,
@@ -661,7 +797,10 @@ export class Artificer {
             name: "Advanced Enchanter",
             key: false,
             modifies: "Alchemist's Pouch",
-            description: `<p>Your Alchemist's Pouch can now supply the materials for Rare enchantments, and can be used up to three times per day.</p>`
+            description: `<p>Your Alchemist's Pouch can now supply the materials for Rare enchantments, and can be used up to three times per day.</p>`,
+            onUnlock: (actor) => actor.updateResource("Alchemist's Pouch", {
+                max: 3
+            })
         },
         {
             level: 17,
@@ -727,16 +866,41 @@ export class Artificer {
             name: "Artificer Bonus",
             description: "Choose one of the following bonuses.",
             selections: {
-                "5": {
+                "5.bonus": {
                     label: "Choose a Bonus",
                     options: {
                         magicSkill: "+1 bonus to a magical skill",
                         enchantment: "Learn one common spell or enchantment of any level",
                         alchemy: "Learn one common or uncommon potion recipe",
                         carryWeight: "+1 Carry Weight bonus",
-                    }
+                    },
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "5", from, to)
+                },
+                "5.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["5"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["5"].bonus == "enchantment"
+                }
+            ]
         },
         {
             level: 19,
@@ -826,6 +990,45 @@ export class Artificer {
         }
     ]
 
+    static classFeats = {
+        "369": { //Alchemist
+            "1": {
+                features: [
+                    {
+                        onUnlock: actor => actor.setSpecialtyFeature(null, "Alchemy", "technology", true)
+                    }
+                ]
+            }
+        }
+    }
+
+    static async bonus(actor, bonusNumber, from, to){
+        const existingSkill = actor.system.classes.artificer.bonus?.[bonusNumber]?.magicSkill;
+        if (from == "magicSkill" && existingSkill){
+            await actor.setSkillBoost(existingSkill, "", false);
+        } else if (from == "carryWeight"){
+            await actor.update({
+                system: {
+                    carryWeight: {
+                        bonus: actor.system.carryWeight.bonus - 1
+                    }
+                }
+            });
+        }
+        if (to == "magicSkill" && existingSkill){
+            await actor.setSkillBoost("", existingSkill, false);
+        } else if (to == "carryWeight"){
+            await actor.update({
+                system: {
+                    carryWeight: {
+                        bonus: actor.system.carryWeight.bonus + 1
+                    }
+                }
+            });
+            ui.notifications.info("Your Carry Weight has been increased.");
+        }
+    }
+
     /**
      * Initialize the spell focus data.
      * 
@@ -882,13 +1085,13 @@ export class Artificer {
         return total;
     }
 
-    static async castAndStoreSpell(actor, spell, ampFactor){
+    static async castAndStoreSpell(actor, spell, ampFactor, energyPool = undefined){
         const availableEnergy = actor.system.focusEnergy.max - Artificer.getTotalStoredEnergy(actor);
         if (spell.system.energyCost * ampFactor > availableEnergy){
             ui.notifications.error(`${spell.name} wasn't stored because your focus doesn't have enough capacity.`);
             return;
         }
-        if (await actor.cast(spell, ampFactor)){
+        if (await actor.cast(spell, ampFactor, false, energyPool)){
             await actor.update({
                 system: {
                     focus: actor.system.focus.concat({
@@ -944,6 +1147,9 @@ export class Artificer {
                 <div id="amplify-up">
                   <i class="fa-solid fa-chevron-right"></i>
                 </div>
+                <div id="energySelect">
+                    Energy Source: <select id="energyPools">${Actions._renderPoolOptions(actor)}</select>
+                </div>
               </div>
             </form>
             `,
@@ -966,6 +1172,10 @@ export class Artificer {
                     Actions._renderSpellDetails(html, spell, actor, amp - 1, false);
                     Artificer._renderFocusStorageError(html, spell, actor, amp - 1);
                 });
+                html.find("#energyPools").change(async () => {
+                    const amp = parseInt(html.find("#ampFactor").html());
+                    Actions._renderSpellDetails(html, spell, actor, amp, false);
+                });
             },
             buttons: {
                 cast: {
@@ -973,7 +1183,8 @@ export class Artificer {
                     label: "Cast and Store",
                     callback: html => {
                         const ampFactor = html.find("#ampFactor").html();
-                        Artificer.castAndStoreSpell(actor, spell, ampFactor);
+                        const pool = Actions._getPool(actor, html, false);
+                        Artificer.castAndStoreSpell(actor, spell, ampFactor, pool);
                     }
                 },
                 cancel: {

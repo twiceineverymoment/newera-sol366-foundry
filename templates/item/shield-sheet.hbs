@@ -4,11 +4,16 @@
       <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{system.customName}}"/>
       <div class="header-fields">
         <h1 class="charname"><input name="name" class="sheet-input" type="text" value="{{item.name}}" placeholder="Name" disabled /></h1>
-        <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="https://www.newerarpg.com/srd/contentview/_obj_detail?module=newera-sol366&key={{system.casperObjectId}}">
+        {{#if system.casperObjectId}}
+        <a style="float: right" class="srd-x-button" id="clearCasperMetadata" data-tooltip="Remove CASPER Metadata" data-tooltip-direction="LEFT">
+          <i class="fa-solid fa-x"></i>
+        </a>
+        <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="{{webUrl}}/srd/contentview/_obj_detail?module=newera-sol366&key={{system.casperObjectId}}">
           <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
         </a>
+      {{/if}}
         <div class="resource">
-          <select name="system.rarity" class="sheet-input" style="margin-left: 8px" id="rarity-{{item.id}}" data-dtype="Number" {{disabled system.standard}}>
+          <select name="system.rarity" class="sheet-input auto-value" style="margin-left: 8px" data-dtype="Number" {{disabled system.standard}}>
             <option value="1">Common</option>
             <option value="2">Uncommon</option>
             <option value="3">Rare</option>
@@ -16,7 +21,7 @@
             <option value="5">Unique</option>
             <option value="0">Rarity Unknown</option>
           </select>
-          <select name="system.shieldType" class="sheet-input" id="shield-type-{{item.id}}">
+          <select name="system.shieldType" class="sheet-input auto-value">
             <option value="">(Custom Shield Stats)</option>
             <option value="Kite Shield">Kite Shield</option>
             <option value="Cavalry Shield">Cavalry Shield</option>
@@ -69,7 +74,7 @@
           </div>
           <div class="newera-itemsheet-property-50">
             <h4>Material</h4>
-            <select name="system.material" class="sheet-input" id="material-{{item.id}}">
+            <select name="system.material" class="sheet-input auto-value">
               <option value="" {{disabled system.standard}}>Other</option>
               {{#if system.selectableMaterials.wooden}}<option value="Wooden">Wooden</option>{{/if}}
               {{#if system.selectableMaterials.leather}}<option value="Leather">Leather</option>{{/if}}
@@ -96,7 +101,7 @@
         <div class="newera-itemsheet-properties">
           <div class="newera-itemsheet-property-50">
             <h4>Condition</h4>
-            <select name="system.condition" class="sheet-input" id="condition-{{item.id}}" data-dtype="Number">
+            <select name="system.condition" class="sheet-input auto-value" data-dtype="Number">
               <option value="5">Flawless (5)</option>
               <option value="4">Pristine (4)</option>
               <option value="3">Good (3)</option>

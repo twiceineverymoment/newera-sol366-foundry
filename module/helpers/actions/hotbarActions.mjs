@@ -686,17 +686,7 @@ export class HotbarActions {
             ui.notifications.error("You can only use this action on Container and Vehicle tokens.");
             return;
         } else {
-            const ownership = (actor.ownership.default == 3) ? 0 : 3;
-            await actor.update({
-                ownership: {
-                    default: ownership
-                }
-            });
-            if (ownership == 3){
-                ui.notifications.info(`${actor.name} is now UNLOCKED. Players can open and change the token and take items.`);
-            } else {
-                ui.notifications.info(`${actor.name} is now LOCKED.`);
-            }
+            await actor.lockUnlockContainer();
         }
     }
 
@@ -707,5 +697,116 @@ export class HotbarActions {
             return;
         }
 
+    }
+
+    static async advanceGameClock(){
+        if (game.user.isGM){
+        new Dialog({
+            title: "Advance Game Clock",
+            content: `
+                <table id="advance-game-clock-table">
+                    <tr>
+                        <td>Days</td>
+                        <td>Hours</td>
+                        <td>Minutes</td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" id="days" value="0" min="0" step="1" /></td>
+                        <td><input type="number" id="hours" value="0" min="0" step="1" /></td>
+                        <td><input type="number" id="minutes" value="0" min="0" step="1" /></td>
+                    </tr>
+                </table>
+                <label for="weather-update">Alter Weather?</label>
+                <select id="weather-update">
+                    <option value="0">No Change</option>
+                    <option value="1">Slight</option>
+                    <option value="2">Random</option>
+                </select>
+            `,
+            buttons: {
+                confirm: {
+                    icon: `<i class="fa-solid fa-arrows-rotate"></i>`,
+                    label: "Confirm",
+                    callback: async (html) => {
+                        const days = parseInt(html.find("#days").val());
+                        const hours = parseInt(html.find("#hours").val());
+                        const minutes = parseInt(html.find("#minutes").val());
+                        const weather = parseInt(html.find("#weather-update").val());
+                        await Actions.advanceGameClock({
+                            days: days,
+                            hours: hours,
+                            minutes: minutes
+                        });
+                        await Actions.randomizeWeather(weather);
+                    }
+                }
+            }
+        }).render(true);
+        } else {
+            ui.notifications.error("Only the GM can use this!");
+        }
+    }
+
+    static async fireRangedWeapon(weaponName){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        const weapon = actor.items.find(i => i.type == "Ranged Weapon" && i.name == weaponName);
+        if (!weapon){
+            ui.notifications.error(`${actor.name} doesn't have a ${weaponName}.`);
+            return;
+        }
+        if (!actor.hasItemInHand(weapon)){
+            ui.notifications.warn(`${actor.name}'s ${weaponName} isn't equipped!`);
+            return;
+        }
+        Actions.fireRangedWeapon(actor, weapon);
+    }
+
+    static async reloadRangedWeapon(weaponName){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        const weapon = actor.items.find(i => i.type == "Ranged Weapon" && i.name == weaponName);
+        if (!weapon){
+            ui.notifications.error(`${actor.name} doesn't have a ${weaponName}.`);
+            return;
+        }
+        if (!actor.hasItemInHand(weapon)){
+            ui.notifications.warn(`${actor.name}'s ${weaponName} isn't equipped!`);
+            return;
+        }
+        Actions.reloadRangedWeapon(actor, weapon);
+    }
+
+    static async cockRangedWeapon(weaponName){
+        const actor = this.getSelectedActor();
+        if (!actor){
+            ui.notifications.error(this.NO_ACTOR_ERROR);
+            return;
+        }
+        const weapon = actor.items.find(i => i.type == "Ranged Weapon" && i.name == weaponName);
+        if (!weapon){
+            ui.notifications.error(`${actor.name} doesn't have a ${weaponName}.`);
+            return;
+        }
+        if (!actor.hasItemInHand(weapon)){
+            ui.notifications.warn(`${actor.name}'s ${weaponName} isn't equipped!`);
+            return;
+        }
+        if (!weapon.isLoaded()){
+            ui.notifications.warn(`The magazine is empty!`);
+            return;
+        }
+        if (weapon.isReadyToFire()){
+            ui.notifications.warn(`${weaponName} is already cocked!`);
+            return;
+        }
+        weapon.cock();
+        ui.notifications.info("Chk-chk!");
     }
 }

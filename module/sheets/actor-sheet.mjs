@@ -1,15 +1,16 @@
 import {createEffect, editEffect, deleteEffect, toggleEffect, getEffectDuration, findStandardActiveEffectByName} from "../helpers/effects.mjs";
 import { NEWERA } from "../helpers/config.mjs";
 import { ClassInfo } from "../helpers/classFeatures.mjs";
-import { Actions } from "../helpers/macros/actions.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { Actions } from "../helpers/actions/actions.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 import { FeatBrowser } from "./feat-browser.mjs";
-import { FeatActions } from "../helpers/macros/featActions.mjs";
 import { NewEraActor } from "../documents/actor.mjs";
 import { NewEraItem } from "../documents/item.mjs";
 import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
 import { SpellBrowser } from "./spell-browser.mjs";
-
+import { ClassSelect } from "./class-select.mjs";
+import { ExtendedFeatData } from "../helpers/feats.mjs";
+import { DefaultActions } from "../helpers/actions/defaultActions.mjs";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -75,7 +76,14 @@ export class NewEraActorSheet extends ActorSheet {
     }
     if (this.actor.typeIs(NewEraActor.Types.PC)) {
       this._prepareClassFeatures(context, context.inventory.classes);
+      this._prepareFeatOptions(context, context.inventory.feats);
       this._prepareInspiration(context);
+      //Split out custom resources
+      const [custom, standard] = NewEraUtils.splitIndexedObject(context.system.additionalResources, r => r.custom);
+      context.resources = {
+        standard,
+        custom
+      }
     }
     if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
       this._prepareCreatureData(context);
@@ -123,6 +131,7 @@ export class NewEraActorSheet extends ActorSheet {
     for (let [key, obj] of Object.entries(context.system.specialties)) {
       obj.label = obj.subject + " (" + game.i18n.localize("newera.skill."+obj.defaultParent+".abbr") + ")";
     }
+    context.useCustomPronouns = context.system.pronouns.index == 5;
   }
 
   _prepareCreatureData(context) {
@@ -138,52 +147,68 @@ export class NewEraActorSheet extends ActorSheet {
     const features = [];
     const keys = [];
     const system = this.actor.system;
+    const archetypes = ClassInfo.getArchetypeData(this.actor);
     for (const clazz of classes){
-      //Get selected archetype id if it exists
       const className = clazz.system.selectedClass.toLowerCase();
-      let archetypes = [];
-      try {
-        archetypes = Object.values(system.classes[className].archetype);
-      } catch (err) {
-        console.log("Caught ReferenceError when looking up archetype. Must not have one!");
-      }
       for (const feature of ClassInfo.features[className]){
-        if (feature.archetype) {
-          if (!archetypes.includes(feature.archetype)){
-            continue;
-          }
-        }
         if (feature.level <= clazz.system.level){
+          if (feature.archetype) {
+            //Determine whether to show the archetype-specific feature
+            let unlockThreshold = archetypes[feature.archetype];
+            let showFeature = (
+              //If unlockThreshold is undefined, the actor doesn't have that archetype
+              //'retroactiveUnlock' means the feature is unlocked if its respective archetype is chosen at a later level than the feature, i.e. if a character picks a second archetype and unlocks features that they would have gotten if they picked it as their first
+              unlockThreshold && (unlockThreshold <= feature.level || feature.retroactiveUnlock)
+            );
+            if (!showFeature){
+              continue;
+            }
+          }
           feature.className = feature.archetype ? NEWERA.classes[clazz.system.selectedClass].archetypes[feature.archetype] : clazz.system.selectedClass;
           feature.classImg = feature.archetype ? `${NEWERA.images}/${className == "researcher" ? "" : className+"_"}${feature.archetype}.png` : clazz.img;
           feature.clazz = clazz.system.selectedClass;
+
+          //Copy the data from common features to the feature to be rendered
           if (feature.common){
             const commonFeature = ClassInfo.features.common[feature.common];
             feature.name = commonFeature.name;
             feature.description = commonFeature.description;
             feature.selections = commonFeature.selections;
             feature.key = commonFeature.key; //Common features are never going to be key=true, but whatever, this'll probably confuse the hell out of me in 2 years if I hard code it to false
-            if (typeof commonFeature.dynamicSelections == "function"){
-              feature.selections = commonFeature.dynamicSelections(this.actor);
-            }
             if (feature.selections){
-              feature.id = `${feature.className.toLowerCase()}.${feature.common}.${feature.level}`;
+              feature.id = `${feature.className.toLowerCase()}.${feature.common}.${feature.level}`; //Give common features a unique id so their selections can persist in the data model
             }
           }
+          //Load the current value of each table value into the Handlebars context
           if (feature.tableValues){
             for (const tv of feature.tableValues){
               tv.current = tv.values[clazz.system.level];
             }
           }
+          //Load the status of Spell Studies features into the Handlebars context
           if (feature.spellStudies){
             for (let i=0; i<feature.spellStudies.length; i++){
+              //Determine whether to show the study guide butto
+              feature.spellStudies[i].show = true;
+              if (typeof feature.spellStudies[i].showWhen == "function"){
+                try {
+                  feature.spellStudies[i].show = feature.spellStudies[i].showWhen(this.actor);
+                } catch (err) {
+                  feature.spellStudies[i].show = false;
+                }
+              }
               if (feature.spellStudies[i].onOtherFeature){
                 /*
                 Spell studies blocks with this property set are used to offset their index position for that level in the rare case of a class having multiple study-guide-enabled features at the same level.
                 They are not rendered in the sheet and should be skipped here too.
+                UPDATE 2025 - This is less rare than originally thought
                 */
+                feature.spellStudies[i].show = false;
+              }
+              if (!feature.spellStudies[i].show){
                 continue;
               }
+
               //Mark the spell studies features as complete if the remaining selection counter is EXPLICITLY zero (undefined means none chosen yet)
               feature.spellStudies[i].status = feature.spellStudies.length > 1 ? `(${i+1}/${feature.spellStudies.length})` : "";
               feature.spellStudies[i].index = i;
@@ -202,6 +227,38 @@ export class NewEraActorSheet extends ActorSheet {
                 feature.spellStudies[i].remaining = feature.spellStudies[i].choose;
               }
             }
+          }
+          //Prepare the selections for rendering
+          if (feature.selections){
+            Object.entries(feature.selections).forEach(([key, selection]) => {
+              //Populate the options for dynamic selections
+              if (typeof selection.dynamicOptions == "function"){
+                selection.options = selection.dynamicOptions(this.actor);
+              }
+              //Determine whether to show the selection
+              if (typeof selection.showWhen == "function"){
+                try {
+                  selection.show = selection.showWhen(this.actor);
+                } catch (err) {
+                  selection.show = false; //Assume that if the showWhen function throws an error, it's because the data isn't there yet as the feature just got unlocked. In virtually all cases, these selections should be hidden until a prior option is chosen.
+                }
+              } else {
+                selection.show = true;
+              }
+              //Load the current value of the selection into the Handlebars context - This is so we know the previous value when a selection is changed
+              const path = `${feature.id}.${key}`;
+              const keys = path.split(".");
+              //console.log(`[DEBUG] Finding current value for ${path}`);
+              try {
+                const currentValue = keys.reduce((acc, key) => acc[key], system.classes);
+                selection.currentValue = currentValue;
+                //console.log(`[DEBUG] ${path} = ${currentValue}`);
+              } catch (err) {
+                //During level-up, the new selection values will not exist yet, which will cause a ReferenceError. This is expected behavior - set the new feature's current value to an empty string.
+                //console.log(`[DEBUG] Finding current value for ${path} returned an error - setting to empty`);
+                selection.currentValue = "";
+              }
+            });
           }
           if (feature.key){
             keys.push(feature);
@@ -238,6 +295,78 @@ export class NewEraActorSheet extends ActorSheet {
         }
       }),
     };
+  }
+
+  _prepareFeatOptions(context, feats){
+    context.features.feats = [];
+    const globalFeatData = ExtendedFeatData.getFeatData();
+    for (const feat of feats){
+      if (feat.system.casperObjectId && globalFeatData[feat.system.casperObjectId]) {
+        for (let tier = 1; tier <= feat.system.currentTier; tier++){
+          if (globalFeatData[feat.system.casperObjectId][tier] && globalFeatData[feat.system.casperObjectId][tier].features) {
+            for (const feature of globalFeatData[feat.system.casperObjectId][tier].features){
+              feature.name = feat.name;
+              feature.description = feat.system.base.description;
+              feature.featType = NEWERA.featTypeMapping[feat.system.featType];
+              feature.img = feat.img;
+              feature.id = feat.system.casperObjectId;
+              feature.tier = tier;
+              
+              if (feature.selections) {
+                //If the feat is an upgrade, create copies of the selections for each tier
+                if (feature.selections["0"] && feat.system.maximumTier == -1) {
+                  feature.selections["0"].show = false;
+                  for (let t = 1; t <= feat.system.currentTier; t++) {
+                    feature.selections[t.toString()] = {
+                      label: feature.selections["0"].label + ` #${t}`,
+                      options: feature.selections["0"].options,
+                      repeated: true //This flag tells the UI event listener to run the onChange function from the original selection, since structuredClone doesn't copy functions
+                    }
+                  }
+                }
+                Object.entries(feature.selections).forEach(([key, selection]) => {
+                  //Populate the options for dynamic selections
+                  if (typeof selection.dynamicOptions == "function"){
+                    selection.options = selection.dynamicOptions(this.actor);
+                  }
+                  //Determine whether to show the selection
+                  if (typeof selection.showWhen == "function"){
+                    try {
+                      selection.show = selection.showWhen(this.actor);
+                    } catch (err) {
+                      selection.show = false; //Assume that if the showWhen function throws an error, it's because the data isn't there yet as the feature just got unlocked. In virtually all cases, these selections should be hidden until a prior option is chosen.
+                    }
+                  } else if (selection.show !== false) {
+                    selection.show = true;
+                  }
+                  //Load the current value of the selection into the Handlebars context - This is so we know the previous value when a selection is changed
+                  const keys = [feature.id, feature.tier, key];
+                  //console.log(`[DEBUG] Finding current value for ${keys.join(".")}`);
+                  try {
+                    const currentValue = keys.reduce((acc, key) => acc[key], this.actor.system.featSelections);
+                    selection.currentValue = currentValue;
+                    //console.log(`[DEBUG] ${keys.join(".")} = ${currentValue}`);
+                  } catch (err) {
+                    //During level-up, the new selection values will not exist yet, which will cause a ReferenceError. This is expected behavior - set the new feature's current value to an empty string.
+                    //console.log(`[DEBUG] Finding current value for ${keys.join(".")} returned an error - setting to empty`);
+                    //console.error(err);
+                    selection.currentValue = "";
+                  }
+                });
+              }
+
+              if (feature.spellStudies) {
+                //TODO
+              }
+
+              if (feature.selections || feature.spellStudies) { //Features which have data defined purely for unlock triggers or prerequisites have no need to be rendered on the sheet
+                context.features.feats.push(feature);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   _prepareActiveEffects(effects){
@@ -320,6 +449,7 @@ export class NewEraActorSheet extends ActorSheet {
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
+      //console.log(i);
       i.img = i.img || DEFAULT_TOKEN;
       i.multiple = (i.system.quantity && i.system.quantity > 1);
       switch(i.type){
@@ -329,6 +459,8 @@ export class NewEraActorSheet extends ActorSheet {
             break; //Break inside the if statement so actual potions will continue into the block below (equipment)
           }
         case "Item":
+          //Show merge stacks if there is another item with the same object ID in the inventory - This runs on non-recipe potions and basic items
+          i.showMergeStacks = (i.system.casperObjectId && !i.system.enchanted && context.items.some(j => NewEraItem.canStack(i, j)));
         case "Melee Weapon":
         case "Ranged Weapon":
         case "Armor":
@@ -470,14 +602,19 @@ export class NewEraActorSheet extends ActorSheet {
 
     if (system.hitPoints.total > 0 || actor.type == "Creature"){ //If a PC or NPC's HP is 0, remove all actions and show only the death save
       /* Actions from inventory */
-      for (const item of this.actor.items.contents){
+      const sortedItemIds = this._generateSortedItemIdList();
+      for (const i of sortedItemIds){
+        const item = this.actor.items.get(i);
+        if(item.system.stored){
+          continue;
+        }
         for (const itemAction of item.getActions()){
         /*
-          Currently, creatures do not use the equipment slot system.
+          Currently, creatures and inanimate actors do not use the equipment slot system - all inventory drop zones are 'backpack'.
           Actions should never be grayed out based on equipment location for creatures.
           This may change in a future version.
         */
-        itemAction.disabled = (!this.actor.isItemActionAvailable(itemAction, item)) && (actor.type != 'Creature');
+        itemAction.itemNotEquipped = (!this.actor.isItemActionAvailable(itemAction, item)) && (actor.type != 'Creature');
         //console.log(`action ${itemAction.name} disabled=${itemAction.disabled}`);
         itemAction.itemName = item.name;
         itemAction.itemId = item.id;
@@ -543,13 +680,11 @@ export class NewEraActorSheet extends ActorSheet {
     /* Feat Actions from extended data class */
     if (actor.type == "Player Character"){
       for (const feat of this.actor.items.filter(i => i.type == "Feat")){
-        const extendedFeatData = FeatActions.find(f => f.casperObjectId == feat.system.casperObjectId);
-        if (extendedFeatData){
-          for (const a of extendedFeatData.actions){
-            this._prepareActionContextInfo(a, false);
-            a.macroClass = "action-macro-basic";
-            actions.feats.push(a);
-          }
+        const featActions = ExtendedFeatData.getFeatActions(feat);
+        for (const a of featActions){
+          this._prepareActionContextInfo(a, false);
+          a.macroClass = "action-macro-basic";
+          actions.feats.push(a);
         }
       }
     }
@@ -561,13 +696,10 @@ export class NewEraActorSheet extends ActorSheet {
 
     /* General actions from config for characters and humanoid creatures */
     if (actor.type == "Player Character" || actor.type == "Non-Player Character" || system.hasStandardActions){
-      actions.general = [...NEWERA.pcGeneralActions];
+      Object.assign(actions, DefaultActions); //Copy the default actions into the actions object
       actions.general.forEach((a) => this._prepareActionContextInfo(a, false));
-      actions.exploration = [...NEWERA.explorationActions];
       actions.exploration.forEach((a) => this._prepareActionContextInfo(a, false));
-      actions.social = [...NEWERA.generalSocialActions];
       actions.social.forEach((a) => this._prepareActionContextInfo(a, false));
-      actions.magic = [...NEWERA.generalMagicActions];
       actions.magic.forEach((a) => this._prepareActionContextInfo(a, false));
       system.customActionSection = true;
     }
@@ -587,11 +719,25 @@ export class NewEraActorSheet extends ActorSheet {
           ability: `${spell.system.form} Spell`,
           skill: null,
           specialties: [],
-          description: Formatting.amplifyAndFormatDescription(spell.system.description, 1),
+          description: NewEraUtils.amplifyAndFormatDescription(spell.system.description, 1),
           overrideMacroCommand: `game.newera.HotbarActions.castSpell(${spell.name})`,
           difficulty: null,
           actionType: "",
           spellLevel: spell.system.level,
+          disable: actor => {
+            if (spell.system.keywords.includes('Asomatic')){
+              return false;
+            } else if (['G', 'L', 'R'].includes(spell.system.castType)){
+              if (!actor.hasFreeHands(2)){
+                return "You need both hands free in order to cast this spell.";
+              }
+            } else {
+              if (!actor.hasFreeHands(1)){
+                return "You need a free hand in order to cast this spell.";
+              }
+            }
+            return false;
+          },
           rolls: [
             {
               label: "Cast",
@@ -607,35 +753,7 @@ export class NewEraActorSheet extends ActorSheet {
 
     /* Unarmed attack */
     if (((!system.equipment.leftHand || !system.equipment.rightHand) && actor.type != 'Creature') || system.hasStandardActions){
-      actions.general.push({
-        name: "Unarmed Attack",
-        images: {
-          base: `${NEWERA.images}/unarmed_attack.png`,
-          right: `${NEWERA.images}/ac_1frame.png`
-        },
-        ability: null,
-        skill: "athletics",
-        specialties: ["Brawl"],
-        description: "When you haven't got your weapons ready, attack with your fists!",
-        difficulty: "The difficulty of an attack is the target's passive agility, unless they react.",
-        type: "1",
-        rolls: [
-          {
-            label: "Attack",
-            caption: "Unarmed Attack",
-            die: "d20",
-            formula: "1d20+@skills.athletics.mod+@specialty.partial.brawl",
-            message: "{NAME} attacks with {d} fists!",
-            difficulty: null,
-          },
-          {
-            label: "Damage",
-            caption: "Damage (Unarmed Attack)",
-            die: "unarmed_attack",
-            formula: "1+@abilities.strength.mod"
-          }
-        ]
-      });
+      actions.general.push();
     }
     if (system.lastAction){
       actions.selected = actions[system.lastAction.category][system.lastAction.index] || false;
@@ -691,21 +809,48 @@ export class NewEraActorSheet extends ActorSheet {
     const skillInfo = isCustom ? "" : (action.ability ? ` - ${action.ability.charAt(0).toUpperCase()}${action.ability.slice(1)} check` : (action.skill ? ` - ${action.skill.charAt(0).toUpperCase()}${action.skill.slice(1)} check` : '')); 
     action.typeDescription = `${actionTypes[action.actionType] || "Generic Action"}${skillInfo}`;
 
-    if (typeof action.disallow == 'function') {
-      action.disallowed = action.disallow(this.actor);
+    //The 'disabled' property is false when enabled. When disabled, it should be a string explaining why it's disabled, which will be shown on the sheet.
+    if (action.itemNotEquipped) {
+      action.disabled = `Equip your ${action.itemName} to use this action.`;
+    } else if (typeof action.disable == 'function') {
+      action.disabled = action.disable(this.actor);
     } else {
-      action.disallowed = ["E", "S", "D"].includes(action.actionType) && game.combat && game.combat.active && game.combat.round > 0 ? "You can't do this during combat." : false;
+      action.disabled = ["E", "S", "D"].includes(action.actionType) && game.combat && game.combat.active && game.combat.round > 0 ? "You can't do this during combat." : false;
     }
 
     const rolls = action.rolls ? (typeof action.rolls == "Array" ? action.rolls : Object.values(action.rolls)) : [];
     for (const roll of rolls) {
       roll.isFunctionButton = (typeof roll.callback == "function");
+      roll.smol = (roll.label.length >= 10);
     }
   }
 
-  _prepareItemActions(item){
-
+  /**
+   * Sorts the actor's items in the order their actions should be displayed.
+   * Items equipped come first in the order defined in NewEraActor.EquipmentSlots, followed by worn items, then the rest of the inventory.
+   * @returns 
+   */
+  _generateSortedItemIdList(){
+    const system = this.actor.system;
+    const list = [];
+    for (const slot of Object.values(NewEraActor.EquipmentSlots)){
+      if (system.equipment[slot]){
+        list.push(system.equipment[slot]);
+      }
+    }
+    for (let i = 0; i < system.wornItemSlots; i++){
+      if (system.equipment[`worn${i}`]){
+        list.push(system.equipment[`worn${i}`]);
+      }
+    }
+    for (const item of this.actor.items.contents){
+      if (!list.includes(item._id)){
+        list.push(item._id);
+      }
+    }
+    return list;
   }
+
 
   /* -------------------------------------------- */
 
@@ -714,7 +859,15 @@ export class NewEraActorSheet extends ActorSheet {
     super.activateListeners(html);
     const system = this.actor.system;
 
-    // Render the item sheet for viewing/editing prior to the editable check.
+    //Set values of select elements 
+    html.find('select.auto-value').each((i, element) => {
+      const dataField = $(element).attr("name") || $(element).data("indirectName"); // Using data-indirect-name prevents the select from being picked up by Foundry's built-in updates, in cases where the manual listener performs an update (to avoid updating twice)
+      const value = NewEraUtils.getSelectValue(dataField, this.actor);
+      if (value !== null){
+        $(element).val(value);
+      }
+    });
+
     html.find('.item-edit').click(ev => {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       //console.log(li);
@@ -726,9 +879,18 @@ export class NewEraActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const item = this.actor.items.get(li.data("itemId"));
       await item.toggleStorage();
-      this.render(false);
     });
-
+    html.find('.item-split').click(async ev => {
+      const li = $(ev.currentTarget).parents(".inventory-entry");
+      const item = this.actor.items.get(li.data("itemId"));
+      const quantity = await Actions.getStackQuantity(item, false);
+      await this.actor.splitStack(item, quantity);
+    });
+    html.find('.item-merge').click(async ev => {
+      const li = $(ev.currentTarget).parents(".inventory-entry");
+      const item = this.actor.items.get(li.data("itemId"));
+      await this.actor.mergeStacks(item);
+    });
     html.find('.spell-cast').click(ev => {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const item = this.actor.items.get(li.data("itemId"));
@@ -817,53 +979,11 @@ export class NewEraActorSheet extends ActorSheet {
 
     //Pronoun field update
     if (system.pronouns) {
-      //console.log("[NEWERA] Stored pronoun data "+JSON.stringify(system.pronouns));
-      if (system.pronouns.index == 5) {
-        html.find('#profile-pronouns').show();
-      }
-      html.find('#pronoun-select-'+this.actor.id).val(system.pronouns.index);
-      html.find('#pronoun-select-'+this.actor.id).change(event => {
+      html.find('#pronoun-select').change(async event => {
         let selection = event.target.value;
-        let data = this.actor.system;
-        if (selection != 5) {
-          html.find('#section-pronouns').hide();
-          const selectedSet = NEWERA.pronouns[selection];
-          html.find('#pronoun-subjective').val(selectedSet.subjective);
-          html.find('#pronoun-objective').val(selectedSet.objective);
-          html.find('#pronoun-possessiveDependent').val(selectedSet.possessiveDependent);
-          html.find('#pronoun-possessiveIndependent').val(selectedSet.possessiveIndependent);
-          html.find('#pronoun-reflexive').val(selectedSet.reflexive);
-          html.find('#pronoun-contraction').val(selectedSet.contraction);
-          html.find('#pronoun-pluralize').val(selectedSet.pluralize);
-        }
-        this.submit();
+        await this.actor.setPronouns(selection, {});
       });
     }
-
-    //Bio field update
-    if (this.actor.typeIs(NewEraActor.Types.ANIMATE)){
-      html.find('#alignment-moral').val(system.alignment.moral);
-      html.find('#alignment-ethical').val(system.alignment.ethical);
-    }
-
-    //Other dropdown updates
-    if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
-      html.find('#skillmode-select').val(system.advancedSkills.toString());
-      html.find('#wornSlotSelect').val(system.wornItemSlots);
-    }
-    if (this.actor.typeIs(NewEraActor.Types.CREATURE)){
-      html.find('#creature-rarity').val(system.rarity);
-    }
-
-    //Vehicle dropdowns
-    if (this.actor.typeIs(NewEraActor.Types.VEHICLE)){
-      html.find('#fuel-type').val(system.fuelType);
-      html.find('#vehicle-type').val(system.vehicleType);
-      html.find('#color').val(system.color);
-    }
-
-    this._setClassFeatureDropdowns(html);
-    html.find(".feature-select").change(ev => this._onFeatureSelectionChange(ev));
  
     //Spellbook cast DC's
     if (this.actor.typeIs(NewEraActor.Types.CHARACTER)){
@@ -871,7 +991,7 @@ export class NewEraActorSheet extends ActorSheet {
         const id = $(val).data("itemId");
         const item = this.actor.items.get(id);
         if (item.typeIs(NewEraItem.Types.MAGIC)) {
-          html.find(`.spell-action-icons.${id}`).html(Formatting.getSpellActionIcons(item));
+          html.find(`.spell-action-icons.${id}`).html(NewEraUtils.getSpellActionIcons(item));
         }
       });
     //Monster magic stuff
@@ -881,7 +1001,7 @@ export class NewEraActorSheet extends ActorSheet {
         const ampFactor = this.actor.items.get(spellId).system.ampFactor;
         const ampLevel = this.actor.items.get(spellId).system.level * ampFactor;
         html.find(`#spell-level-${spellId}`).html(ampLevel);
-        html.find(`.spell-action-icons.${spellId}`).html(Formatting.getSpellActionIcons(this.actor.items.get(spellId)));
+        html.find(`.spell-action-icons.${spellId}`).html(NewEraUtils.getSpellActionIcons(this.actor.items.get(spellId)));
         if (ampFactor == 1){
           html.find(`#spell-level-${spellId}`).removeClass("ampText-hot");
         } else {
@@ -912,15 +1032,20 @@ export class NewEraActorSheet extends ActorSheet {
       if (system.totalWeight > system.carryWeight){
         html.find("#cw-wrapper").addClass("cw-full");
       }
-    }
+    } 
 
     //Actions tab
-    html.find(".action-icon").click(ev => {
+    html.find(".action-icon").click(async ev => {
       if ($(ev.currentTarget).data("actionCategory")){ //This check prevents the listener from triggering on click of the 'new custom action' button
-        html.find("#selectedActionCategory").val($(ev.currentTarget).data("actionCategory"));
-        html.find("#selectedActionIndex").val($(ev.currentTarget).data("actionId"));
         html.find(".newera-actorsheet-scroll").scrollTop(0);
-        this.submit();
+        await this.actor.update({
+          system: {
+            lastAction: {
+              category: $(ev.currentTarget).data("actionCategory"),
+              index: $(ev.currentTarget).data("actionId")
+            }
+          }
+        });
       }
     });
     html.find(".newera-roll-button").click(async ev => {
@@ -952,13 +1077,53 @@ export class NewEraActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".inventory-entry");
       const item = this.actor.items.get(li.data("itemId"));
       if (item.typeIs(NewEraItem.Types.CLASS)) {
-        await item.update({
-          system: {
-            level: item.system.level + 1
-          }
-        })
+        this.actor.levelUp(item);
       }
     });
+    //Auto level up functions
+    if (game.settings.get("newera-sol366", "autoLevelUp")) {
+      html.find(".feature-select").change(async ev => {
+        const element = $(ev.currentTarget);
+        const newValue = element.val();
+        const oldValue = element.data("oldValue");
+        const className = element.data("class").toLowerCase();
+        const featureSelectionId = element.data("selectionId");
+        const selectionIndex = element.data("selectionNumber");
+        console.log(`[ALU] Triggered feature selection change ${className}:${featureSelectionId}.${selectionIndex} ${oldValue} -> ${newValue}`);
+        try {
+          const feature = ClassInfo.features[className].find(feature => feature.id == featureSelectionId && feature.selections && feature.selections[selectionIndex]);
+          const selection = feature.selections[selectionIndex];
+          if (typeof selection.onChange == 'function') {
+            await selection.onChange(this.actor, oldValue, newValue);
+          } else {
+            console.log(`[ALU] No onChange function found!`);
+          }
+        } catch (err) {
+          ui.notifications.error("Error: Couldn't update data for this selection. See the log for details.");
+          console.error(`[ALU] Failed to locate selection change function! class=${className} id=${featureSelectionId} index=${selectionIndex}`);
+          console.error(err);
+        }
+      });
+      html.find(".feat-select").change(async ev => {
+        const element = $(ev.currentTarget);
+        const newValue = element.val();
+        const oldValue = element.data("oldValue");
+        const featId = element.data("featId");
+        const repeated = element.data("repeated");
+        const tier = repeated ? "1" : element.data("tier");
+        const selectionIndex = repeated ? "0" : element.data("selectionKey");
+        console.log(`[ALU] Triggered feat selection change ${featId}.${tier}.${selectionIndex} ${oldValue} -> ${newValue}`);
+        try {
+          const featData = ExtendedFeatData.getFeatures(featId, tier);
+          const selection = featData.find(f => f.selections[selectionIndex]).selections[selectionIndex];
+          if (typeof selection.onChange == 'function') {
+            await selection.onChange(this.actor, oldValue, newValue);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    }
 
     //Store All buttons
     html.find("#putAwayAll").click(() => this.actor.putAwayAll(false));
@@ -1028,63 +1193,54 @@ export class NewEraActorSheet extends ActorSheet {
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".inventory-entry");
-      const item = this.actor.items.get(li.data("itemId"));
-      const isPhysicalItem = ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"].includes(item.type);
-      if (game.settings.get("newera-sol366", "confirmDelete")){
-        new Dialog({
-          title: "Confirm Delete",
-          content: `<p>Are you sure you want to delete this?</p>${isPhysicalItem ? `<p>If you'll need it later, use the <i class="fa-solid fa-box-open"></i> Store button to mark the item as not currently in your possession without deleting it entirely.</p>` : ""}`,
-          buttons: {
-            confirm: {
-              icon: '<i class="fas fa-trash"></i>',
-              label: "Yes",
-              callback: () => {
-                if (isPhysicalItem){
-                  this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
-                }
-                item.delete();
-                this.render(false);
-              }
-            },
-            cancel: {
-              icon: `<i class="fas fa-x"></i>`,
-              label: "No",
-            }
-          },
-          default: "cancel"
-        }).render(true);
-      } else {
-        if (isPhysicalItem){
-          this.actor.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
-        }
-        item.delete();
-        this.render(false);
-      }
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => {
+        const li = $(event.currentTarget).parents(".inventory-entry");
+        actor.deleteItem(li.data("itemId"));
+      });
     });
 
     //Add Skills
-    html.find('#addKnowledgeButton').click(ev => {
+    html.find('#addKnowledgeButton').click(() => {
       this.actor.addKnowledge();
-      this.render(false);
     }); 
-    html.find('#addSpecialtyButton').click(ev => {
+    html.find('#addSpecialtyButton').click(() => {
       this.actor.addSpecialty();
-      this.render(false);
-    }); 
-    html.find('#addResourceButton').click(ev => {
-      this.actor.addResource();
-      this.render(false);
-    }); 
-    html.find(".deleteResource").click(ev => {
-      Formatting.confirm(this.actor, ev, (actor, event) => actor.deleteResource($(event.currentTarget).data("resourceIndex")));
     });
-    html.find('#addSpecialModifierButton').click(ev => {
+    html.find('#addResourceButton').click(() => {
+      this.actor.addResource();
+    });
+    html.find("#chooseClass").click(() => {
+      new ClassSelect(this.actor).render(true);
+    });
+    html.find(".deleteResource").click(ev => {
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => actor.deleteResource($(event.currentTarget).data("resourceIndex")));
+    });
+    html.find(".deleteKnowledge").click(ev => {
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => actor.deleteKnowledge($(event.currentTarget).data("knowledgeIndex")));
+    });
+    html.find(".deleteSpecialty").click(ev => {
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => actor.deleteSpecialty($(event.currentTarget).data("specialtyIndex")));
+    });
+    html.find(".deleteSpecialModifier").click(ev => {
+      NewEraUtils.confirm(this.actor, ev, (actor, event) => actor.deleteSpecialModifier($(event.currentTarget).data("specialModifierIndex")));
+    });
+    html.find('#addSpecialModifierButton').click(() => {
       this.actor.addSpecialModifier();
-      this.render(false);
     });
     html.find(`.improveSkillButton`).click(() => {
       this.showSkillImprovementDialog();
+    });
+    html.find(".toggleDailyResource").click(ev => {
+      const resourceIndex = $(ev.currentTarget).data("resourceIndex");
+      this.actor.updateResourceByIndex(resourceIndex, {
+        daily: !$(ev.currentTarget).hasClass("daily-enabled")
+      });
+    });
+
+    html.find('.item-quantity-roll').click(ev => {
+      const itemId = $(ev.currentTarget).parents(".inventory-entry").data("itemId");
+      const item = this.actor.items.get(itemId);
+      item.rollQuantity();
     });
 
     //Inventory drag-and-drop
@@ -1092,29 +1248,38 @@ export class NewEraActorSheet extends ActorSheet {
       //ev.preventDefault();
       //console.log(ev);
       const itemId = $(ev.currentTarget).data("itemId");
-      const fromZone = $(ev.currentTarget).parents(".newera-equipment-dropzone");
-      console.log(`INV DRAGSTART ${itemId}`);
-      ev.originalEvent.dataTransfer.setData("objectType", "equipment");
-      ev.originalEvent.dataTransfer.setData("itemId", itemId);
-      ev.originalEvent.dataTransfer.setData("fromZone", fromZone.data("dropZone"));
-      ev.originalEvent.dataTransfer.setData("fromActor", this.actor.uuid);
-      ev.originalEvent.dataTransfer.effectAllowed = "move";
+      const item = this.actor.items.get(itemId);
+      if (item.system.rollQuantity){
+        ui.notifications.warn("This item has a variable quantity. You must roll to determine the quantity before you can move it.");
+        ev.originalEvent.dataTransfer.effectAllowed = "none";
+      } else {
+        const fromZone = $(ev.currentTarget).parents(".newera-equipment-dropzone");
+        console.log(`INV DRAGSTART ${itemId}`);
+        ev.originalEvent.dataTransfer.setData("neweraItemTransfer", true);
+        ev.originalEvent.dataTransfer.setData("objectType", "equipment");
+        ev.originalEvent.dataTransfer.setData("itemId", itemId);
+        ev.originalEvent.dataTransfer.setData("fromZone", fromZone.data("dropZone"));
+        ev.originalEvent.dataTransfer.setData("fromActor", this.actor.uuid);
+        ev.originalEvent.dataTransfer.effectAllowed = "move";
+      }  
     });
     html.find(".newera-equipment-dropzone").on("dragover", ev => {
       ev.preventDefault();
     });
-    html.find(".newera-equipment-dropzone").on("drop", ev => {
+    html.find(".newera-equipment-dropzone").on("drop", async ev => {
+      //Prevent listener from running on drag-and-drop from other sources
+      if (!ev.originalEvent.dataTransfer.getData("neweraItemTransfer")){
+        return;
+      }
+      ev.preventDefault();
+      ev.stopPropagation(); //Prevent the drop from bubbling up to parent dropzones which causes duplicate drop events
       const itemId = ev.originalEvent.dataTransfer.getData("itemId");
       const sourceSlot = ev.originalEvent.dataTransfer.getData("fromZone");
       const targetSlot = $(ev.currentTarget).data("dropZone");
       const sourceActor = ev.originalEvent.dataTransfer.getData("fromActor");
       const targetActor = this.actor.uuid;
-      //Prevent listener from running on drops from unrelated stuff
-      if (!itemId){
-        return;
-      }
       console.log(`INV DROP ${itemId} ${sourceActor}.${sourceSlot}->${targetActor}.${targetSlot}`);
-      //Moving items between slots on the same actor (existing behavior)
+      //Moving items between slots on the same actor
       if (sourceActor == targetActor){
         const movedItem = this.actor.items.get(itemId);
         if (sourceSlot == targetSlot || !sourceSlot){
@@ -1126,16 +1291,13 @@ export class NewEraActorSheet extends ActorSheet {
           ui.notifications.error("That item is in storage. You must retrieve it before you can equip it.");
         } else {
           const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
-          if (Formatting.sendEquipmentChangeMessages()){
+          if (NewEraUtils.sendEquipmentChangeMessages()){
             this.actor.actionMessage(movedItem.img, frameImg, "{NAME} {0} {d} {1}!", this._getItemActionVerb(sourceSlot, targetSlot), (movedItem.type == "Phone" ? "phone" : movedItem.name));
           }
-          this.actor.moveItem(itemId, sourceSlot, targetSlot);
-          html.find(`#newera-equipment-${this.actor.id}-${targetSlot}-input`).val(itemId);
-          html.find(`#newera-equipment-${this.actor.id}-${sourceSlot}-input`).val("");
-          this.submit();
+          await this.actor.moveItem(itemId, sourceSlot, targetSlot);
         }
       }
-      //Moving an item to a different actor (new behavior)
+      //Moving an item to a different actor
       else {
         const origin = fromUuidSync(sourceActor);
         if (!origin){
@@ -1152,7 +1314,12 @@ export class NewEraActorSheet extends ActorSheet {
         } else if (sourceSlot == "backpack" && movedItem.system.stored == true){
           ui.notifications.error("That item is in storage. You must retrieve it before you can give it to someone else.");
         } else {
-          origin.transferItem(this.actor, movedItem, targetSlot);
+          let quantity = 1;
+          //If the item is stackable, prompt the user to specify how many to transfer
+          if (movedItem.typeIs(NewEraItem.Types.STACKABLE)){
+            quantity = await Actions.getStackQuantity(movedItem);
+          }
+          origin.transferItem(this.actor, movedItem, targetSlot, quantity);
         }
       }
     });
@@ -1235,11 +1402,8 @@ export class NewEraActorSheet extends ActorSheet {
     });
 
     //Initial HP for creatures
-    html.find("#init-hp-roll").click(async () => {
-      await this.actor.rollInitialHP();
-      html.find("#resourceValHp").val(this.actor.system.hitPoints.value);
-      html.find("#resourceMaxHp").val(this.actor.system.hitPoints.max);
-      this.submit();
+    html.find("#init-hp-roll").click(() => {
+      this.actor.rollInitialHP();
     });
 
     //Macro/action button listeners
@@ -1260,9 +1424,6 @@ export class NewEraActorSheet extends ActorSheet {
     });
     html.find("#sleepButton").click(() => {
       Actions.restForTheNight(this.actor);
-    });
-    html.find("#increaseHpButton").click(() => {
-      this.showHpIncreaseDialog();
     });
 
     //Browser drop listener
@@ -1546,47 +1707,6 @@ export class NewEraActorSheet extends ActorSheet {
 
   //isItemActionAvailable and findItemLocation moved to Actor
 
-  showHpIncreaseDialog(){
-    new Dialog({
-      title: "Increase Maximum HP",
-      content: "This will increase your maximum hit points by your hit point increment.<br/>If you earned any ability score increases this level, apply those first!",
-      buttons: {
-        roll: {
-          icon: `<i class="fa-solid fa-dice"></i>`,
-          label: "Roll",
-          callback: async () => {
-            await this.actor.increaseMaxHp(true);
-            $(this.form).find("#hp-true-max").val(this.actor.system.hitPointTrueMax);
-            $(this.form).find("#resourceValHp").val(this.actor.system.hitPoints.value);
-            $(this.form).find("#resourceMaxHp").val(this.actor.system.hitPoints.max);
-            $(this.form).find("#resourceValLp").val(this.actor.system.lifePoints.value);
-            $(this.form).find("#resourceMaxLp").val(this.actor.system.lifePoints.max);
-            this.submit();
-          }
-        },
-        average: {
-          icon: `<i class="fa-solid fa-arrow-trend-up"></i>`,
-          label: "Average",
-          callback: async () => {
-            await this.actor.increaseMaxHp(false);
-            $(this.form).find("#hp-true-max").val(this.actor.system.hitPointTrueMax);
-            $(this.form).find("#resourceValHp").val(this.actor.system.hitPoints.value);
-            $(this.form).find("#resourceMaxHp").val(this.actor.system.hitPoints.max);
-            $(this.form).find("#resourceValLp").val(this.actor.system.lifePoints.value);
-            $(this.form).find("#resourceMaxLp").val(this.actor.system.lifePoints.max);
-            //console.log($(this.form).find("#hp-true-max"));
-            this.submit();
-          }
-        },
-        cancel: {
-          icon: `<i class="fas fa-x"></i>`,
-          label: "Cancel"
-        }
-      },
-      default: "cancel"
-    }).render(true);
-  }
-
   showSkillImprovementDialog(){
     new Dialog({
       title: "Improve Skill",
@@ -1707,57 +1827,6 @@ export class NewEraActorSheet extends ActorSheet {
     }).render(true);
   }
 
-  /*
-    Set the existing values of the dropdowns in class feature selections.
-    For each selection dropdown, this has to step through the DataModel using the input field's name until it arrives at the value for each one.
-  */
-  _setClassFeatureDropdowns(html){
-    const system = this.actor.system;
-    if (this.actor.type != "Player Character") return;
-    html.find(".feature-select").val(function() {
-      const dataField = $(this).attr("name");
-      const paths = dataField.split(".");
-      //console.log(paths);
-      let retVal = system;
-      for (let i=1; i<paths.length; i++){
-        //console.log(paths[i]);
-        if (retVal === undefined){ //If we come across undefined in the data model, assume it's for a new selection that hasn't been set yet and return the default value (an empty string)
-          return "";
-        }
-        retVal = retVal[paths[i]];
-        //console.log(retVal);
-      }
-      return retVal;
-    });
-
-    //Set the "oldValue" data property to the current value so that when the selection changes, we can pull the old value that way
-    html.find(".feature-select").data("oldValue", function(){
-      return $(this).val();
-    });
-  }
-
-  _onFeatureSelectionChange(ev){
-    if (game.settings.get("newera-sol366", "autoApplyFeatures")){
-      const element = $(ev.currentTarget);
-      const dataField = element.attr("name");
-      const oldValue = element.data("oldValue") || "";
-      const newValue = element.val() || "";
-      const selection = ClassInfo.findFeatureSelectionByLabel(dataField);
-      if (!selection){
-        console.warn(`Couldn't find feature selection for ${dataField}`);
-        return;
-      }
-      if (typeof selection.onChange == "function"){
-        selection.onChange(this.actor, oldValue, newValue);
-        console.log(`Executed feature selection change ${dataField} ${oldValue}->${newValue}`);
-      } else {
-        console.warn(`Changed feature ${dataField} has no onChange function`);
-      }
-    } else {
-      console.log("Ignoring feature selection change because autoApplyFeatures is turned off");
-    }
-  }
-
   _prepareInspiration(context){
     const difficulty = game.settings.get("newera-sol366", "difficulty");
     context.inspiration = {
@@ -1825,9 +1894,11 @@ export class NewEraActorSheet extends ActorSheet {
         const compendium = await game.packs.get("newera-sol366.feats").getDocuments();
         const featFromCompendium = compendium.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
         const featFromActor = this.actor.items.find(feat => feat.system.casperObjectId == dropData.casperObjectId);
+        let tierUnlocked = null;
         if (featFromCompendium){
           if (featFromActor){ //Increase tier
             if (featFromActor.system.maximumTier == -1){
+              tierUnlocked = 1;
               await featFromActor.update({
                 system: {
                   currentTier: featFromActor.system.currentTier + 1
@@ -1841,9 +1912,10 @@ export class NewEraActorSheet extends ActorSheet {
                 ui.notifications.error(`${this.actor.name} already has the highest available tier of ${featFromCompendium.name}.`);
               } else {
                 if (featFromActor.characterMeetsFeatPrerequisites(this.actor, featFromActor.system.currentTier + 1)){
+                  tierUnlocked = featFromActor.system.currentTier + 1;
                   await featFromActor.update({
                     system: {
-                      currentTier: featFromActor.system.currentTier + 1
+                      currentTier: tierUnlocked
                     }
                   });
                   ui.notifications.info(`You upgraded ${this.actor.name}'s ${featFromCompendium.name} feat to tier ${featFromActor.system.currentTier} for ${featFromActor.system.tiers[featFromActor.system.currentTier].cost} character points.`);
@@ -1856,9 +1928,24 @@ export class NewEraActorSheet extends ActorSheet {
             if (featFromCompendium.characterMeetsFeatPrerequisites(this.actor, 1)){
               const featData = structuredClone(featFromCompendium);
               await Item.create(featData, { parent: this.actor });
+              tierUnlocked = 1;
               ui.notifications.info(`You took ${featFromCompendium.name} for ${featFromCompendium.system.base.cost} character points.`);
             } else {
               ui.notifications.warn(`${this.actor.name} doesn't meet the prerequisites for ${featFromCompendium.name}.`);
+            }
+          }
+          //Check for onUnlock function 
+          if (tierUnlocked && game.settings.get("newera-sol366", "autoLevelUp")) {
+            console.log(`[ALU] Processing unlock triggers for ${featFromCompendium.name} tier ${tierUnlocked}`);
+            try {
+              const features = ExtendedFeatData.getFeatures(dropData.casperObjectId, tierUnlocked);
+              for (const feature of features){
+                if (typeof feature.onUnlock == "function"){
+                  await feature.onUnlock(this.actor);
+                }
+              }
+            } catch (err) {
+              console.log(`[ALU] No logic found or error encountered.`);
             }
           }
         } else {

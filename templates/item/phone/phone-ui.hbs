@@ -76,12 +76,9 @@
             <div class="phoneui-app" id="app-chat">
                 {{> systems/newera-sol366/templates/item/phone/phone-chat.hbs}}
             </div>
-            <input type="hidden" name="system.batteryLevel" value="{{system.batteryLevel}}" id="batteryLevel" />
-            <input type="hidden" name="system.flashlight" value="{{system.flashlight}}" id="flashlightState" />
-            <input type="hidden" name="system.callee" value="{{system.callee}}" id="currentCallee" />
-            <input type="hidden" name="system.selectedPhoto" value="{{system.selectedPhoto}}" id="selectedPhoto" />
-            <input type="hidden" name="system.openApp" value="{{system.openApp}}" id="openAppField" />
-            <input type="hidden" name="system.stored" value="{{system.stored}}" data-dtype="Boolean" />
+            <div class="phoneui-app" id="app-photo-view">
+                {{> systems/newera-sol366/templates/item/phone/phone-photo-view.hbs}}
+            </div>
         </form>
     </div>
     {{#if system.deadBattery}}

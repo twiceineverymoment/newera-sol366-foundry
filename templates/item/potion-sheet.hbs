@@ -5,18 +5,23 @@
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{system.customName}}"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" class="sheet-input" type="text" value="{{item.name}}" placeholder="Name" /></h1>
-      <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="https://www.newerarpg.com/srd/contentview/_alchemy?module=newera-sol366&id={{system.casperObjectId}}">
-        <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
-      </a>
+      {{#if system.casperObjectId}}
+        <a style="float: right" class="srd-x-button" id="clearCasperMetadata" data-tooltip="Remove CASPER Metadata" data-tooltip-direction="LEFT">
+          <i class="fa-solid fa-x"></i>
+        </a>
+        <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="{{webUrl}}/srd/contentview/_alchemy?module=newera-sol366&id={{system.casperObjectId}}">
+          <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
+        </a>
+      {{/if}}
       <div class="resource">
-        <select name="system.rarity" class="sheet-input" style="margin-left: 8px" id="rarity-{{item.id}}">
+        <select name="system.rarity" class="sheet-input auto-value" style="margin-left: 8px">
           <option value="1">Common</option>
           <option value="2">Uncommon</option>
           <option value="3">Rare</option>
           <option value="4">Extremely Rare</option>
           <option value="0">Rarity Unknown</option>
         </select>
-        <select name="system.potionType" class="sheet-input" id="potion-type-{{item.id}}">
+        <select name="system.potionType" class="sheet-input auto-value">
           <option value="P">Potion</option>
           <option value="E">Elixir</option>
           <option value="S">Salve</option>
@@ -25,7 +30,7 @@
           <option value="B">Alchemical Bomb</option>
           <option value="R">Alchemical Reagent</option>
         </select>
-        <select name="system.recipeLevel" class="sheet-input" id="recipe-level-{{item.id}}">
+        <select name="system.recipeLevel" class="sheet-input auto-value">
           <option value="0">Custom</option>
           <option value="1">Basic</option>
           <option value="2">Apprentice</option>
@@ -54,7 +59,7 @@
       <div class="newera-itemsheet-properties">
         <div class="resource newera-itemsheet-property-33">
           <h4>Multiple Doses Effect</h4>
-          <select name="system.stackingBehavior" class="sheet-input" id="behavior-{{item.id}}">
+          <select name="system.stackingBehavior" class="sheet-input auto-value">
             <option value="N">No Effect</option>
             <option value="S">Increase Potency</option>
             <option value="D">Increase Duration</option>
@@ -62,15 +67,27 @@
           </select>
         </div>
         <div class="resource newera-itemsheet-property-33">
-          <div class="scale-control" data-tooltip="Alchemy Recipe" style="color: burlywood !important">
+          <div class="scale-control" style="color: burlywood !important">
             <i class="fa-solid fa-scroll"></i>
             <input type="checkbox" name="system.isRecipe" {{checked system.isRecipe}} data-dtype="Boolean" />
+            {{#if showRollQuantity}}
+              {{#unless system.isRecipe}}
+                <i class="fa-light fa-dice" data-tooltip="Roll Quantity"></i>
+                <input type="checkbox" name="system.rollQuantity" {{checked system.rollQuantity}} data-dtype="Boolean" />
+              {{/unless}}
+            {{/if}}
           </div>
           <h4>Quantity</h4>
           {{#if system.isRecipe}}
             <input type="text" class="sheet-input" value="(Recipe)" disabled />
           {{else}}
-            <input type="text" class="sheet-input" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+            {{#if system.rollQuantity}}
+              <input type="text" class="sheet-input" name="system.variableQuantity.dieCount" value="{{system.variableQuantity.dieCount}}" data-dtype="Number" />
+              d <input type="text" class="sheet-input" name="system.variableQuantity.dieSize" value="{{system.variableQuantity.dieSize}}" data-dtype="Number" />
+              + <input type="text" class="sheet-input" name="system.variableQuantity.modifier" value="{{system.variableQuantity.modifier}}" data-dtype="Number" />
+            {{else}}
+              <input type="text" class="sheet-input" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+            {{/if}}
           {{/if}}
         </div>
         <div class="resource newera-itemsheet-property-33">

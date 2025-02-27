@@ -98,18 +98,19 @@
          <label for="system.knowledges.{{key}}.grandMaster" title="Grand Master">GM</label>
        </div>
     </td>
-    <td style="width: 15%"><input type="text" class="sheet-input" name="system.knowledges.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
-    <td style="width: 15%">
+    <td style="width: 10%"><input type="text" class="sheet-input" name="system.knowledges.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
+    <td style="width: 20%">
       <span class="rollable sheet-output-major check-macro" data-roll="d20+@knowledges.{{key}}.mod" data-label="Knowledge: {{skill.subject}}" draggable="true" data-macro-formula="d20+@knowledges.{{key}}.mod" data-macro-name="Knowledge Check: {{skill.label}}" data-macro-label="Knowledge: {{skill.label}}">
         {{numberFormat skill.mod decimals=0 sign=true}}
         <img class="die" src="systems/newera-sol366/resources/d20-orange.png" draggable="true"/>
       </span>
+      <a class="deleteKnowledge" data-knowledge-index="{{key}}" data-tooltip="Delete Knowledge" data-tooltip-direction="UP"><i class="fas fa-trash"></i></a>
     </td>
   </tr>
   {{/each}}
   <tr>
     <td colspan="5">
-      <a title="Create Knowledge" id="addKnowledgeButton"><i class="fas fa-plus"></i> ADD</a>
+      <a data-tooltip="Add Knowledge" data-tooltip-direction="UP" id="addKnowledgeButton"><i class="fas fa-plus"></i> ADD</a>
     </td>
   </tr>
 </table>
@@ -140,19 +141,20 @@
         <option value="other" {{selected skill.defaultParent "other"}}>Other</option>
       </select>
     </td>
-    <td style="width: 15%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.level" value="{{skill.level}}" data-dtype="Number" min="0" max="3" /></td>
-    <td style="width: 15%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
-    <td style="width: 15%">
+    <td style="width: 12%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.level" value="{{skill.level}}" data-dtype="Number" min="0" max="3" /></td>
+    <td style="width: 12%"><input type="number" class="sheet-input" name="system.specialties.{{key}}.bonus" value="{{skill.bonus}}" data-dtype="Number" /></td>
+    <td style="width: 21%">
       <span class="rollable sheet-output-major check-macro" data-roll="d20+@specialties.{{key}}.mod" data-label="{{skill.label}} Skill Check" draggable="true" data-macro-formula="d20+@specialties.{{key}}.mod" data-macro-name="{{skill.label}} Check" data-macro-label="{{skill.label}} Skill Check">
         {{numberFormat skill.mod decimals=0 sign=true}}
         <img class="die" src="systems/newera-sol366/resources/d20-orange.png" draggable="true" />
       </span>
+      <a class="deleteSpecialty" data-specialty-index="{{key}}" data-tooltip="Delete Specialty" data-tooltip-direction="UP"><i class="fas fa-trash"></i></a>
     </td>
   </tr>
   {{/each}}
   <tr>
     <td colspan="6">
-      <a title="Create Specialty" id="addSpecialtyButton"><i class="fas fa-plus"></i> ADD</a>
+      <a data-tooltip="Add Specialty" data-tooltip-direction="UP" id="addSpecialtyButton"><i class="fas fa-plus"></i> ADD</a>
     </td>
   </tr>
 </table>

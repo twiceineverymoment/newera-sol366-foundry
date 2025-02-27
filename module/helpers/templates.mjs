@@ -44,6 +44,7 @@
     "systems/newera-sol366/templates/item/parts/melee-weapon-attacks.hbs",
     "systems/newera-sol366/templates/item/parts/materials.hbs",
     "systems/newera-sol366/templates/item/parts/components.hbs",
+    "systems/newera-sol366/templates/item/parts/secret.hbs",
 
     //Miscellaneous Actor templates
     "systems/newera-sol366/templates/actor/parts/vehicle-occupants.hbs",
@@ -58,6 +59,7 @@
     "systems/newera-sol366/templates/item/phone/phone-browser.hbs",
     "systems/newera-sol366/templates/item/phone/phone-photos.hbs",
     "systems/newera-sol366/templates/item/phone/phone-chat.hbs",
+    "systems/newera-sol366/templates/item/phone/phone-photo-view.hbs",
 
     //Extras templates
     "systems/newera-sol366/templates/extras/parts/feat-filters.hbs",

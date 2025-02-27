@@ -1,6 +1,12 @@
 import { NEWERA } from "../config.mjs";
+import { SpellFocus } from "../../sheets/spell-focus.mjs";
 
 export class Researcher {
+
+    static hitPointIncrement = {
+        roll: `1d6`,
+        average: 4
+    }
 
     static classFeatures = [
         {
@@ -3267,5 +3273,40 @@ export class Researcher {
         },
         /* END GENERATED SECTION L10 */
     ]
+
+    static classFeats = {
+      "493": { //Magical Focus
+        "1": {
+          unlocksCoreFeature: "magicalFocus",
+          actions: [
+            {
+                name: "Spell Storage",
+                images: {
+                    base: `${NEWERA.images}/crystal-shine.png`,
+                    left: `${NEWERA.images}/researcher.png`,
+                },
+                ability: null,
+                skill: null,
+                specialties: [],
+                description: `You utilize your Magical Focus to store spells ahead of time. You can cast your stored spells by releasing them from your focus.`,
+                difficulty: null,
+                actionType: "E",
+                overrideMacroCommand: `game.newera.HotbarActions.openSpellStorage()`,
+                rolls: [
+                  {
+                    label: "Focus",
+                    die: "crystal-shine",
+                    callback: actor => new SpellFocus(actor).render(true)
+                  }
+                ]
+            }
+          ]
+        }
+      }
+    }
+
+    static archetypeSelectionLevels = {
+      1: 2
+    }
 
 }

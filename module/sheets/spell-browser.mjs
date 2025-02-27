@@ -2,7 +2,7 @@ import { NEWERA } from "../helpers/config.mjs";
 import { Chanter } from "../helpers/classes/chanter.mjs";
 import { SpellSearchParams } from "../schemas/spell-search-params.mjs";
 import { NewEraItem } from "../documents/item.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 
 export class SpellBrowser extends ActorSheet {
 
@@ -19,7 +19,8 @@ export class SpellBrowser extends ActorSheet {
           classes: ["newera", "sheet", "actor"],
           width: 840,
           height: 640,
-          resizable: false
+          resizable: false,
+          scrollY: [".browser-results-container"]
         });
     }
 
@@ -122,13 +123,13 @@ export class SpellBrowser extends ActorSheet {
         this.compendium = documents.filter(doc => doc.typeIs(NewEraItem.Types.MAGIC)); //As of v1.3, alchemy recipes now live in the spells compendium. We only want the spell browser to deal with spells and enchantments
         for (const spell of this.compendium){
             if (criteria.showSpell(spell)){
-                const description = Formatting.amplifyAndFormatDescription(spell.system.description);
+                const description = NewEraUtils.amplifyAndFormatDescription(spell.system.description);
                 const div = document.createElement("div");
                 div.innerHTML = description;
                 const text = div.textContent;
-                spell.preview = Formatting.truncate(text, 150);
+                spell.preview = NewEraUtils.truncate(text, 150);
 
-                spell.actionIcons = Formatting.getSpellActionIcons(spell, "spell-preview-actions");
+                spell.actionIcons = NewEraUtils.getSpellActionIcons(spell, "spell-preview-actions");
                 spell.rarity = NEWERA.spellRarity[spell.system.rarity];
                 const existingSpell = this.actor.items.find(item => 
                     item.typeIs(NewEraItem.Types.MAGIC) &&

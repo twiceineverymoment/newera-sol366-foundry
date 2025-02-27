@@ -5,10 +5,10 @@ import { NewEraItem } from "./documents/item.mjs";
 import { NewEraActorSheet } from "./sheets/actor-sheet.mjs";
 import { NewEraItemSheet } from "./sheets/item-sheet.mjs";
 import { PhoneUI } from "./sheets/phone-ui.mjs";
-import { HotbarManager } from "./helpers/macros/hotbarManager.mjs";
-import { HotbarActions } from "./helpers/macros/hotbarActions.mjs";
-import { Formatting } from "./helpers/formatting.mjs";
-
+import { HotbarManager } from "./helpers/actions/hotbarManager.mjs";
+import { HotbarActions } from "./helpers/actions/hotbarActions.mjs";
+import { NewEraUtils } from "./helpers/utils.mjs";
+import { TextMessaging } from "./helpers/textMessaging.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { NEWERA } from "./helpers/config.mjs";
@@ -28,6 +28,8 @@ Hooks.once('init', async function() {
   };
 
   setupGameSettings();
+
+  registerSocketHandlers();
 
   // Add custom constants for configuration.
   CONFIG.NEWERA = NEWERA;
@@ -154,7 +156,7 @@ Handlebars.registerHelper('romanNumeral', function(num, showOne) {
 });
 
 Handlebars.registerHelper('amplify', function(value, multiplier){
-  return Formatting.amplifyValue(value, multiplier);
+  return NewEraUtils.amplifyValue(value, multiplier);
 });
 
 Handlebars.registerHelper('truncate', function(str, maxlength){
@@ -213,6 +215,16 @@ Handlebars.registerHelper('populated', function(haystack){
   }
 });
 
+Handlebars.registerHelper('balanceFormat', function(value, decimals){
+  const fixedNumber = Number(value).toFixed(decimals);
+  // Split the number into integer and decimal parts
+  const [integerPart, decimalPart] = fixedNumber.split('.');
+  // Format the integer part with thousands separators
+  const formattedIntegerPart = Number(integerPart).toLocaleString('en-US');
+  // Combine the formatted integer part with the decimal part
+  return decimalPart ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
+});
+
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
@@ -244,14 +256,28 @@ Hooks.once("ready", async function() {
 /* Game Settings */
 
 function setupGameSettings(){
-  game.settings.register("newera-sol366", "autoApplyFeatures", {
-    name: "Automatically Apply Unlocked Features (BETA)",
-    hint: "When unlocking new character or class features and making selections, certain changes will be automatically applied to your character sheet. WARNING! This feature is EXPERIMENTAL and may cause incorrect changes to your character sheet. Only enable this if you wish to test it, and take frequent backups!",
+  game.settings.register("newera-sol366", "autoLevelUp", {
+    name: "Auto Level Up (BETA)",
+    hint: "Automatically update key values on your character sheet when you level up and when selecting options on class features. This functionality is EXPERIMENTAL - not all features are supported yet, and some may not update correctly. Use at your own risk.",
     scope: "client",
     config: true,
     requiresReload: false,
     type: Boolean,
     default: false,
+  });
+  game.settings.register("newera-sol366", "ammoPriority", {
+    name: "Ammo Selection Priority",
+    hint: "Choose how to prioritize the ammo item to use when reloading.",
+    scope: "client",
+    config: true,
+    requiresReload: false,
+    type: String,
+    choices: {
+      "strongest": "Strongest First",
+      "quantity": "Largest Quantity First",
+      "manual": "Worn Items First"
+    },
+    default: "manual",
   });
   game.settings.register("newera-sol366", "autoAmplify", {
     name: "Amplify Spells by Default",
@@ -307,14 +333,14 @@ function setupGameSettings(){
     type: Boolean,
     default: true,
   });
-  game.settings.register("newera-sol366", "enforceFreeHandsForSpells", {
-    name: "Enforce Free Hand Requirements for Spells",
-    hint: "When enabled, PCs and NPCs need at least one free hand to cast most spells, or both to cast Channeled spells, unless the spell has the Asomatic keyword",
+  game.settings.register("newera-sol366", "enforceActionConditions", {
+    name: "Enforce Action Conditions",
+    hint: "When enabled, actions for items will be grayed out if they aren't equipped in the appropriate slot, and spells will be unavailable if the actor doesn't have a free hand. Disable to ignore these rules.",
     scope: "client",
     config: true,
     requiresReload: false,
     type: Boolean,
-    default: false,
+    default: true,
   });
   game.settings.register("newera-sol366", "sendEquipMsgs", {
     name: "Send Equipment Action Messages in Chat",
@@ -433,7 +459,7 @@ function setupGameSettings(){
       step: 1
     },
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.time.minute", {
     name: "Game Time - Minute",
@@ -447,7 +473,7 @@ function setupGameSettings(){
       step: 1
     },
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.time.daylight", {
     name: "Game Time - Day/Night",
@@ -462,7 +488,7 @@ function setupGameSettings(){
       "auto": "Auto"
     },
     default: "auto",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.date.day", {
     name: "Game Time - Day",
@@ -471,7 +497,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: Number,
     default: 1,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.date.month", {
     name: "Game Time - Month",
@@ -495,7 +521,7 @@ function setupGameSettings(){
       "13": "Sol"
     },
     default: "1",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.date.year", {
     name: "Game Time - Year",
@@ -504,7 +530,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: Number,
     default: 366,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.conditions", {
     name: "Game World - Current Weather",
@@ -527,7 +553,7 @@ function setupGameSettings(){
       "storm2": "Strong Thunderstorms"
     },
     default: "clear",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.temp", {
     name: "Game World - Temperature (°C)",
@@ -541,7 +567,7 @@ function setupGameSettings(){
       step: 1
     },
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.wind", {
     name: "Game World - Winds",
@@ -556,7 +582,7 @@ function setupGameSettings(){
       "3": "High Winds 3 / >150 km/h"
     },
     default: "0",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.precip", {
     name: "Game World - Chance of Rain/Snow (%)",
@@ -570,7 +596,7 @@ function setupGameSettings(){
       step: 10
     },
     default: 20,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.weather.forecast", {
     name: "Game World - Weather Forecast Message",
@@ -579,7 +605,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: String,
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.location", {
     name: "Game World - Current Location",
@@ -589,7 +615,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: String,
     default: "Highgate, KL",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.signal", {
     name: "Game World - Cellular Service",
@@ -607,7 +633,7 @@ function setupGameSettings(){
       "none": "No Service"
     },
     default: "normal",
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.alert", {
     name: "Game World - Emergency Alert Message",
@@ -616,7 +642,7 @@ function setupGameSettings(){
     requiresReload: false,
     type: String,
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
   game.settings.register("newera-sol366", "world.scrambleTime", {
     name: "Game World - Alternate Dimension Mode",
@@ -626,28 +652,27 @@ function setupGameSettings(){
     requiresReload: false,
     type: Boolean,
     default: 0,
-    onChange: () => refreshPhones()
+    onChange: () => TextMessaging.refreshPhones()
   });
 }
 
-async function refreshPhones(){
-  console.log("Pushing current condition changes to characters' phones");
-  for (const actor of game.actors.values()){
-    for (const item of actor.items.values()){
-      if (item.type == "Phone"){
-        console.log(`Found ${item.name} in ${actor.name}'s inventory`);
-        if (item.sheet){
-          item.sheet.render(false);
+function registerSocketHandlers(){
+  game.socket.on("system.newera-sol366", (payload) => {
+    switch (payload.event){
+      case "SMS_REFRESH":
+        TextMessaging.renderPhones(payload.data.number, payload.data.senderName);
+        break;
+      case "SMS_REFRESH_ALL":
+        TextMessaging.renderPhones();
+        break;
+      case "DARK_ENERGY_USE":
+        //TODO
+      case "DARK_ENERGY_LINK":
+        //TODO
+      case "PLAYER_CONTACT_ADDED":
+        if (game.user.role < 2) {
+          ui.notifications.info(`${payload.data.name} has been added to your contacts.`);
         }
-      }
     }
-  }
-  for (const item of game.items.values()){
-    if (item.type == "Phone"){
-      console.log(`Found ${item.name} in game.items`);
-      if (item.sheet){
-        item.sheet.render(false);
-      }
-    }
-  }
+  });
 }

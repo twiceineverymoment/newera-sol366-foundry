@@ -13,11 +13,16 @@
       <h1 class="charname" style="width: 90%">
         <input name="name" class="sheet-input" type="text" value="{{item.name}}" placeholder="Name" {{disabled system.standard}} />
       </h1>
-      <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="https://www.newerarpg.com/srd/contentview/_enchantment?module=newera-sol366&id={{system.casperObjectId}}">
-        <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
-      </a>
+      {{#if system.casperObjectId}}
+        <a style="float: right" class="srd-x-button" id="clearCasperMetadata" data-tooltip="Remove CASPER Metadata" data-tooltip-direction="LEFT">
+          <i class="fa-solid fa-x"></i>
+        </a>
+        <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="{{webUrl}}/srd/contentview/_obj_detail?module=newera-sol366&key={{system.casperObjectId}}">
+          <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
+        </a>
+      {{/if}}
       <div class="resource">
-        <select name="system.rarity" class="sheet-input" id="rarity-{{item.id}}" data-dtype="Number">
+        <select name="system.rarity" class="sheet-input auto-value" data-dtype="Number">
           <option value="1">Common</option>
           <option value="2">Uncommon</option>
           <option value="3">Rare</option>
@@ -28,14 +33,14 @@
           <option value="8">Innate</option>
           <option value="0">Crafted</option>
         </select>
-        <select name="system.enchantmentType" class="sheet-input" id="ench-type-{{item.id}}" {{disabled system.standard}}>
+        <select name="system.enchantmentType" class="sheet-input auto-value" {{disabled system.standard}}>
           <option value="E">Enchantment</option>
           <option value="CE">Complex Enchantment</option>
           <option value="C">Component</option>
         </select>
         {{#if system.standard}}
         {{else}}
-        <select name="system.refinementLevel" class="sheet-input" id="refinement-{{item.id}}">
+        <select name="system.refinementLevel" class="sheet-input auto-value">
           <option value="0">Hypothetical (-5)</option>
           <option value="1">Theoretical (-3)</option>
           <option value="2">Revised (-1)</option>
@@ -64,6 +69,9 @@
       {{#if thingsAreComplex}}
         <a class="item newera-section-header" data-tab="components">Components</a>
       {{/if}}
+      {{#if gm}}
+        <a class="item newera-section-header" data-tab="secrets"><i class="fa-solid fa-lock"></i>Secrets</a>
+      {{/if}}
     </nav>
   </div>
 
@@ -81,7 +89,7 @@
       </div>
       <div class="resource newera-itemsheet-property-33">
         <h4>School of Magic</h4>
-        <select name="system.school" class="sheet-input" id="school-{{item.id}}" {{disabled system.standard}}>
+        <select name="system.school" class="sheet-input auto-value" {{disabled system.standard}}>
           <option value="??">Unknown School</option>
           <option value="PY">Pyromancy</option>
           <option value="HM">Cryomancy</option>
@@ -189,6 +197,12 @@
   <div class="tab components" data-group="primary" data-tab="components">
     {{> systems/newera-sol366/templates/item/parts/components.hbs}}
   </div>
+
+  {{#if gm}}
+    <div class="tab" data-group="primary" data-tab="secrets">
+      {{> systems/newera-sol366/templates/item/parts/secret.hbs}}
+    </div>
+    {{/if}}
 
   </section>
 </form>

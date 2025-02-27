@@ -1,6 +1,12 @@
 import { NEWERA } from "../config.mjs";
 
 export class Investigator {
+
+    static hitPointIncrement = {
+        roll: `1d4`,
+        average: 3
+    }
+
     static classFeatures = [
         {
             level: 1,
@@ -320,4 +326,10 @@ export class Investigator {
             description: "You've mastered the art of casting spells subtly and silently. You can cast Stealthy spells while sneaking without suffering the circumstance penalty for stealth actions."
         }
     ]
+
+    static classFeats = {}
+
+    static archetypeSelectionLevels = {
+        1: 8
+    }
 }

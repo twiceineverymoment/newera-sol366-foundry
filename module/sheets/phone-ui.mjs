@@ -1,5 +1,6 @@
 import { NEWERA } from "../helpers/config.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
+import { TextMessaging } from "../helpers/textMessaging.mjs";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -34,8 +35,7 @@ export class PhoneUI extends ItemSheet {
 
     // Retrieve the roll data for TinyMCE editors.
     context.rollData = {};
-    let actor = this.object?.parent ?? null;
-
+    
       const worldSetting = {
         time: {
           hour: game.settings.get("newera-sol366", "world.time.hour"),
@@ -77,33 +77,32 @@ export class PhoneUI extends ItemSheet {
         worldSetting.location = NEWERA.alternateDimensionLocations[Math.floor(Math.random() * NEWERA.alternateDimensionLocations.length)];
       }
 
-      context.enableReceiveMsg = (game.user.role >= 3);
       context.standardFeatures = (system.featureLevel > 0);
       context.advancedFeatures = (system.featureLevel == 2);
 
     // Prepare conversation data for messages display
-    console.log(`reading ${Object.entries(system.contacts).length} conversations`);
-    for (const [i, convo] of Object.entries(system.contacts)){
-      console.log(`preparing conversation [${i}]`);
-      console.log(convo.messages);
-      if (!convo.messages){
-        convo.messages = {};
-      }
-      if (convo.unread){
-        context.unread = true;
-      }
-      if (Object.keys(convo.messages).length > 0){
-        convo.lastMessage = convo.messages[Object.keys(convo.messages).length - 1];
-      } else {
-        convo.lastMessage = "(no messages)";
-      }
-      if (system.openApp == "chat" && convo.name == system.callee){
-        context.conversation = convo;
-        context.calleeIndex = i;
+
+    //console.log(`reading ${Object.entries(system.contacts).length} conversations`);
+
+    if (system.openApp == "photo-view"){
+      context.photo = system.photos[system.selectedPhoto];
+    }
+
+    if (["chat", "messages"].includes(system.openApp)){
+      context.contacts = structuredClone(system.contacts);
+      this._prepareSMSMessages(context.contacts);
+    }
+
+    //Load the active conversation
+    if (["chat", "call"].includes(system.openApp)){
+      for (const [i, contact] of Object.entries(context.contacts)){
+        if (i == system.currentContact){
+          context.activeConversation = contact;
+          context.activeContact = i;
+        }
       }
     }
 
-    // Add the actor's data to context.data for easier access, as well as flags.
     context.system = system;
     context.flags = this.item.system.flags;
 
@@ -113,12 +112,55 @@ export class PhoneUI extends ItemSheet {
       context.theme = isNightTime ? 'dark' : 'light';
     }
 
+    console.log("PHONE CONTEXT DUMP");
     console.log(context);
 
     return context;
   }
 
-  /* -------------------------------------------- */
+  _prepareSMSMessages(contacts){
+    const incomingMessages = TextMessaging.getIncomingMessages(this.item.system.phoneNumber);
+    //Handle messages for contacts in this phone
+    for (const [i, contact] of Object.entries(contacts)){
+      //Merge the outgoing messages stored on this phone with the incoming messages from other phones, and sort by real time sent
+      const incoming = incomingMessages[contact.number] ? Object.values(incomingMessages[contact.number]) : [];
+      contact.conversation = [
+        ...Object.values(contact.messages || {}), //Because this keeps ending up null 
+        ...incoming
+      ].sort((a, b) => {
+        if (a.timestamp < b.timestamp) return -1;
+        else if (a.timestamp > b.timestamp) return 1;
+        else if (!a?.realTime) return -1;  // if a.realTime is null/undefined, a comes first
+        else if (!b?.realTime) return 1;   // if b.realTime is null/undefined, b comes first
+        else return a.realTime - b.realTime;
+      });
+    }
+    //Handle incoming messages from contacts not in this phone 
+    for (const [num, messages] of Object.entries(incomingMessages)){
+      if (!Object.values(this.item.system.contacts).some(c => c.number == num)){
+        console.log(`[DEBUG] Found unknown contact: ${num}`);
+        contacts[Object.keys(contacts).length] = {
+          name: num,
+          number: num,
+          notInContacts: true,
+          messages: messages,
+          conversation: Object.values(messages),
+          unread: true
+        };
+      }
+    }
+
+    //Prepare additional contact data 
+    for (const [i, contact] of Object.entries(contacts)){
+      if (contact.conversation.length > 0){
+        contact.lastMessage = contact.conversation[contact.conversation.length - 1];
+      }
+      if (contact.lastMessage && contact.lastMessage.realTime > contact.lastCheckedTime && !contact.lastMessage.sent){
+        contact.unread = true;
+      }
+    }
+  }
+
 
   /** @override */
   activateListeners(html) {
@@ -131,9 +173,15 @@ export class PhoneUI extends ItemSheet {
       html.find("#phoneui-clock-top").show();
       html.find("#phoneui-home").hide();
     }
-    if (system.openApp == "photos" && system.selectedPhoto){
-      html.find(`#photo-details-${this.item.id}-${system.selectedPhoto}`).show();
-    }
+
+    //Set values of select elements 
+    html.find('select.auto-value').each((i, element) => {
+      const dataField = $(element).attr("name") || $(element).data("indirectName"); // Using data-indirect-name prevents the select from being picked up by Foundry's built-in updates, in cases where the manual listener performs an update (to avoid updating twice)
+      const value = NewEraUtils.getSelectValue(dataField, this.item);
+      if (value !== null){
+        $(element).val(value);
+      }
+    });
 
     //Dropdown values
     html.find(`#background-${this.item.id}`).val(system.background);
@@ -147,37 +195,90 @@ export class PhoneUI extends ItemSheet {
     //App open/close listeners
     html.find(".app-open").click(ev => {
       const app = $(ev.currentTarget).data("app");
-      this.openApp(app);
+      this.item.setOpenApp(app);
     });
-    html.find(".app-close").click(() => this.closeApps());
+    html.find(".app-close").click(() => this.item.setOpenApp("home"));
 
     //Other click listeners
     html.find("#battery").click(() => this.setBatteryLevel());
     html.find("#battery-dead").click(() => this.setBatteryLevel());
     html.find("#flashlight").click(async () => {
-      const flashlight = this.item.system.flashlight;
-      const switched = flashlight == "off" ? "on" : "off"
-      html.find("#flashlightState").val(switched);
-      this.submit();
+      await this.item.toggleFlashlight();
       if (this.item.actor){
-        this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/flashlight-on.png`, null, "{NAME} turns {0} {d} phone's flashlight.", switched);
+        this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/flashlight-on.png`, null, "{NAME} turns {0} {d} phone's flashlight.", this.item.system.flashlight);
         //TODO Can we make this actually add a light to the actor's token?
       }
     });
 
     html.find("#createContact").click(() => {
       this.item.createContact();
-      this.render(false);
     });
-    html.find("a.call").click(ev => {
-      const callee = $(ev.currentTarget).data("name");
-      if (this.item.actor){
-        this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/app-contacts.png`, null, "{NAME} is calling {0}.", callee);
-      } else {
-        
+
+    html.find(".mark-convo-as-read").click(async ev => {
+      const convoId = $(ev.currentTarget).data("convoId");
+      if (this.item.system.contacts[convoId]){
+        await this.item.update({
+          system: {
+            contacts: {
+              [convoId]: {
+                lastCheckedTime: Date.now()
+              }
+            }
+          }
+        });
       }
-      $(this.form).find("#currentCallee").val(callee);
-      this.openApp("call");
+    });
+
+    html.find("#compose").click(() => {
+      new Dialog({
+        title: "Compose New Message",
+        content: `
+          <form>
+            <p>Enter phone number</p>
+            <input type="text" name="number" placeholder="Number" />
+          </form>
+        `,
+        buttons: {
+          confirm: {
+            icon: '<i class="fa-solid fa-pen-to-square"></i>',
+            label: "Compose",
+            callback: async html => {
+              const number = html.find("input[name='number']").val();
+              if (!number){
+                ui.notifications.error("You must enter a phone number.");
+                return;
+              }
+              const newIndex = await this.item.addContact(number, number);
+              await this.item.update({
+                system: {
+                  currentContact: newIndex,
+                  openApp: "chat"
+                }
+              });
+            }
+          },
+          cancel: {
+            icon: '<i class="fa-solid fa-x"></i>',
+            label: "Cancel"
+          }
+        }
+      }).render(true);
+    });
+
+    html.find("#addToContacts").click(ev => {
+      const number = $(ev.currentTarget).data("number");
+      this.item.addContact("New Contact", number);
+    });
+
+    html.find("a.call").click(ev => {
+      const id = $(ev.currentTarget).data("contactId");
+      if (this.item.actor){
+        const name = this.item.system.contacts[id].name;
+        this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/app-contacts.png`, null, "{NAME} is calling {0}.", name);
+      } else {
+
+      }
+      this.item.call(id);
     });
     html.find("#searchButton").click(async () => {
       const searchTerm = html.find("input#searchTerm").val();
@@ -193,20 +294,17 @@ export class PhoneUI extends ItemSheet {
     });
     html.find("div.photo-thumbnail").click(ev => {
       const index = $(ev.currentTarget).data("photoId");
-      html.find("#selectedPhoto").val(index);
-      this.submit();
+      this.item.openPhotoView(index);
     });
     html.find(".photo-close").click(() => {
       if (system.selectedPhoto) {
-        html.find("#selectedPhoto").val("");
-        this.submit();
+        this.item.setSelectedPhoto(null);
       } else {
-        this.closeApps();
+        this.item.setOpenApp("home");
       }
     });
     html.find("#takePhoto").click(() => {
-      html.find("#selectedPhoto").val(this.item.addPhoto());
-      this.render(false);
+      this.item.addPhoto();
     });
     html.find(".photo-roll-trigger").click(async (ev) => {
       if (this.item.actor){
@@ -218,30 +316,36 @@ export class PhoneUI extends ItemSheet {
         }
         const r = new Roll(`d20+@skills.technology.mod+@abilities.dexterity.mod+@specialty.partial.photography`, this.item.actor.getRollData());
         await r.evaluate();
-        html.find(`#photo-roll-${index}`).val(r.total);
+        await this.item.update({
+          system: {
+            photos: {
+              [index]: {
+                roll: r.total
+              }
+            }
+          }
+        });
         this.item.actor.actionMessage(`${NEWERA.images}/phone-ui/app-camera.png`, null, "{NAME} takes a picture of {0}.", photo.description);
         r.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this.item.actor}),
           flavor: "Photography (Technology) Check"
         });
-        this.submit();
+      } else {
+        ui.notifications.error("This phone isn't owned by anyone!");
       }
     });
     html.find(".open-convo").click(ev => {
-      const callee = $(ev.currentTarget).data("name");
-      const index = $(ev.currentTarget).data("index");
-      html.find("#currentCallee").val(callee);
-      html.find(`input[name="system.contacts.${index}.unread"]`).val(false);
-      this.openApp("chat");
+      const id = $(ev.currentTarget).data("contactId");
+      this.item.openChat(id);
     });
     html.find("#sendMessage").click(async ev => {
       const content = html.find("#messageContent").val();
-      const convoId = $(ev.currentTarget).data("convoId");
+      const number = $(ev.currentTarget).data("number");
       if (!content){
         ui.notifications.error("You must type a message.");
         return;
       }
-      this.item.addMessage(true, convoId, content);
+      await TextMessaging.sendMessage(this.item, number, content);
     });
     html.find("#receiveMessage").click(async ev => {
       const content = html.find("#messageContent").val();
@@ -266,19 +370,19 @@ export class PhoneUI extends ItemSheet {
 
   _formatInGameDate(settings){
     const timeDoesntWork = settings.get("newera-sol366", "world.scrambleTime");
-    const day = timeDoesntWork ? Formatting.randomInt(1, 29) : settings.get("newera-sol366", "world.date.day");
-    const month = timeDoesntWork ? Formatting.randomInt(1, 13) : settings.get("newera-sol366", "world.date.month");
-    const year = timeDoesntWork ? Formatting.randomInt(1, 999) : settings.get("newera-sol366", "world.date.year");
+    const day = timeDoesntWork ? NewEraUtils.randomInt(1, 29) : settings.get("newera-sol366", "world.date.day");
+    const month = timeDoesntWork ? NewEraUtils.randomInt(1, 13) : settings.get("newera-sol366", "world.date.month");
+    const year = timeDoesntWork ? NewEraUtils.randomInt(1, 999) : settings.get("newera-sol366", "world.date.year");
 
-    console.log(Object.entries(NEWERA.daysOfWeek));
+    //console.log(Object.entries(NEWERA.daysOfWeek));
     const weekday = Object.entries(NEWERA.daysOfWeek).find(ent => ent[1].includes(day))[0];
     return `${weekday}, ${day} ${NEWERA.months[month].name} ${year}`;
   }
 
   _formatInGameTime(settings, militaryTime){
     const timeDoesntWork = settings.get("newera-sol366", "world.scrambleTime");
-    let hour = timeDoesntWork ? Formatting.randomInt(0, 59) : settings.get("newera-sol366", "world.time.hour");
-    let minute = timeDoesntWork ? Formatting.randomInt(0, 99) : settings.get("newera-sol366", "world.time.minute");
+    let hour = timeDoesntWork ? NewEraUtils.randomInt(0, 59) : settings.get("newera-sol366", "world.time.hour");
+    let minute = timeDoesntWork ? NewEraUtils.randomInt(0, 99) : settings.get("newera-sol366", "world.time.minute");
     let suffix = "";
     if (!militaryTime){
       if (hour > 12){
@@ -317,8 +421,7 @@ export class PhoneUI extends ItemSheet {
           label: "Confirm",
           callback: html => {
             const level = html.find("#batteryLevel").val();
-            $(this.form).find("#batteryLevel").val(level);
-            this.submit();
+            this.item.setBatteryLevel(level);
           }
         },
         cancel: {
@@ -328,16 +431,6 @@ export class PhoneUI extends ItemSheet {
       },
       default: "cancel"
     }).render(true);
-  }
-
-  async openApp(appId){
-    $(this.form).find("#openAppField").val(appId);
-    this.submit();
-  }
-
-  async closeApps(){
-    $(this.form).find("#openAppField").val("");
-    this.submit();
   }
 
   _getWindInfo(level){

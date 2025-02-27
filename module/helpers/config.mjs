@@ -1,7 +1,5 @@
 export const NEWERA = {};
 
-import { Actions } from "./macros/actions.mjs";
-
 /**
  * The set of Ability Scores used within the sytem.
  * @type {Object}
@@ -20,7 +18,6 @@ NEWERA.typeIs = function(document, type){
 }
 
 NEWERA.images = "systems/newera-sol366/resources";
-NEWERA.objects = "https://www.newerarpg.com/resources/objects";
 
 NEWERA.abilityScoreModifiers = [
   null, -4, -4, -4, -4, -3, -3, -2, -2, -1, 0, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9
@@ -30,7 +27,7 @@ NEWERA.abilityScorePointCosts = [
   null, null, null, null, null, null, 0, 1, 2, 3, 4, 5, 6, 8, 9, 11
 ];
 
-NEWERA.EMPTY_POTION_BOTTLE_ID = 3;
+NEWERA.EMPTY_POTION_BOTTLE_ID = "I.3.0";
 
 NEWERA.levelThresholds = {
     "standard": [
@@ -44,6 +41,36 @@ NEWERA.levelThresholds = {
 NEWERA.romanNumerals = [
     "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"
 ];
+
+NEWERA.defaultSkillOptions = {
+    agility: "Agility",
+    athletics: "Athletics",
+    deception: "Deception",
+    defense: "Defense",
+    determination: "Determination",
+    diplomacy: "Diplomacy",
+    endurance: "Endurance",
+    insight: "Insight",
+    instinct: "Instinct",
+    intimidation: "Intimidation",
+    logic: "Logic",
+    marksmanship: "Marksmanship",
+    medicine: "Medicine",
+    "one-handed": "One-Handed",
+    perception: "Perception",
+    performance: "Performance",
+    reflex: "Reflex",
+    "sleight-of-hand": "Sleight of Hand",
+    stealth: "Stealth",
+    technology: "Technology",
+    "two-handed": "Two-Handed",
+    elemental: "Elemental Magic",
+    divine: "Divine Magic",
+    physical: "Physical Magic",
+    psionic: "Psionic Magic",
+    spectral: "Spectral Magic",
+    temporal: "Temporal Magic"
+},
 
 NEWERA.pronouns = {
   0: {
@@ -92,6 +119,10 @@ NEWERA.pronouns = {
     pluralize: false
   }
 }
+
+NEWERA.baseEnergyMaximums = [
+    0, 20, 30, 50, 70, 100, 130, 170, 220, 280, 350
+]
 
 NEWERA.schoolOfMagicNames = {
   "PY": "pyromancy",
@@ -1294,7 +1325,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Small Firearm Ammunition",
+            "type": "S",
             "clipSize": 12
         },
         "firingAction": "SA",
@@ -1314,7 +1345,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Small Firearm Ammunition",
+            "type": "S",
             "clipSize": 6
         },
         "firingAction": "M",
@@ -1334,7 +1365,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 8
         },
         "firingAction": "SA",
@@ -1354,7 +1385,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 6
         },
         "firingAction": "M",
@@ -1374,7 +1405,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Small Firearm Ammunition",
+            "type": "S",
             "clipSize": 5
         },
         "firingAction": "M",
@@ -1394,7 +1425,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": true,
         "magazine": false,
         "ammo": {
-            "itemName": "Shotgun Shell",
+            "type": "P",
             "clipSize": 3
         },
         "firingAction": "M",
@@ -1414,7 +1445,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": true,
         "magazine": false,
         "ammo": {
-            "itemName": "Shotgun Shell",
+            "type": "P",
             "clipSize": 6
         },
         "firingAction": "M",
@@ -1434,7 +1465,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": true,
         "magazine": false,
         "ammo": {
-            "itemName": "Shotgun Shell",
+            "type": "P",
             "clipSize": 8
         },
         "firingAction": "SA",
@@ -1454,7 +1485,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": true,
         "magazine": false,
         "ammo": {
-            "itemName": "Shotgun Shell",
+            "type": "P",
             "clipSize": 6
         },
         "firingAction": "SA",
@@ -1474,7 +1505,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 10
         },
         "firingAction": "SA",
@@ -1494,7 +1525,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Large Firearm Ammunition",
+            "type": "L",
             "clipSize": 4
         },
         "firingAction": "M",
@@ -1514,7 +1545,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Large Firearm Ammunition",
+            "type": "L",
             "clipSize": 1
         },
         "firingAction": "M",
@@ -1534,7 +1565,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Small Firearm Ammunition",
+            "type": "S",
             "clipSize": 20
         },
         "firingAction": "FA",
@@ -1555,7 +1586,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 30
         },
         "firingAction": "FA",
@@ -1576,7 +1607,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 30
         },
         "firingAction": "FA",
@@ -1598,7 +1629,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "A",
             "clipSize": 1
         },
         "firingAction": "B",
@@ -1619,7 +1650,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "A",
             "clipSize": 1
         },
         "firingAction": "B",
@@ -1640,7 +1671,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "A",
             "clipSize": 1
         },
         "firingAction": "B",
@@ -1657,6 +1688,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
+            "type": "",
             "itemName": "Stone",
             "clipSize": 1
         },
@@ -1677,6 +1709,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
+            "type": "",
             "itemName": "Blowdart",
             "clipSize": 1
         },
@@ -1697,6 +1730,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
+            "type": "",
             "itemName": "Blowdart",
             "clipSize": 1
         },
@@ -1717,7 +1751,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "B",
             "clipSize": 1
         },
         "firingAction": "M",
@@ -1737,7 +1771,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": false,
         "ammo": {
-            "itemName": "Arrow",
+            "type": "B",
             "clipSize": 1
         },
         "firingAction": "M",
@@ -1757,7 +1791,7 @@ NEWERA.rangedWeaponTypes = {
         "shotgunDamage": false,
         "magazine": true,
         "ammo": {
-            "itemName": "Medium Firearm Ammunition",
+            "type": "M",
             "clipSize": 30
         },
         "firingAction": "FA",
@@ -1975,11 +2009,11 @@ NEWERA.shieldTypes = {
             "Nocturnum"
         ]
     }
-}
+} 
 
 NEWERA.classes = {
     "Adventurer": {
-        "description": "",
+        "description": "<p>Want to level up, but not ready to choose a class? You can gain Classless levels in the meantime. The Adventurer is mRPG 3.0's default class with a basic table of abilities.</p><p>Any character can choose to level up in Classless at any point.</p>",
         "hitPointIncrement": {
             "roll": "1d8",
             "average": 5
@@ -2128,7 +2162,7 @@ NEWERA.classes = {
         archetypes: {pyromancy: "Pyromancer", cryomancy: "Cryomancer", lithomancy: "Lithomancer", evocation: "Evoker", restoration: "Healer", abjuration: "Abjurer", banishment: "Banisher", physiomancy: "Physiomancer", conjuration: "Conjurer", transmutation: "Transmuter", illusion: "Illusionist", hypnotism: "Hypnotist", divination: "Diviner", sangromancy: "Sangromancer", summoning: "Summoner", necromancy: "Necromancer", apparition: "Apparator", chronomancy: "Chronomancer"}
     },
     "Chanter": {
-        "description": "<p>The Chanter is a spellcaster whose magical  energy expresses itself more verbally than somatically. This somewhat uncommon ability gives the Chanter access to an aspect of magic that most mages are unable to tap into.</p><p>Chanters are able to compose and use a variety of special verbal spells called Chants. These can have effects on the minds and bodies of their teammates, and their enemies.</p>",
+        "description": "<p>The Chanter is a spellcaster whose magical energy expresses itself more verbally than somatically. This somewhat uncommon ability gives the Chanter access to an aspect of magic that most mages are unable to tap into.</p><p>Chanters are able to compose and use a variety of special verbal spells called Chants. These can have effects on the minds and bodies of their teammates, and their enemies.</p>",
         "hitPointIncrement": {
             "roll": 6,
             "average": 4
@@ -2451,620 +2485,7 @@ NEWERA.damageTypes = {
         ignoreEquipped: true,
         label: "Magical Exhaustion"
     }
-}
-
-NEWERA.pcGeneralActions = [
-    {
-        name: "Run",
-        images: {
-            base: `${NEWERA.images}/ac_movement.png`
-        },
-        ability: null,
-        skill: null,
-        specialties: [],
-        description: "You move up to your Speed.",
-        difficulty: 0,
-        actionType: "M",
-        displayCallback: (actor) => {
-            return !actor.hasStatusEffect("unconscious") && !actor.hasStatusEffect("prone");
-        },
-        rolls: []
-    },
-    {
-        name: "Sprint",
-        images: {
-            base: `${NEWERA.images}/run.png`,
-            right: `${NEWERA.images}/ac_movement.png`
-        },
-        ability: null,
-        skill: "athletics",
-        specialties: ["Sprinting"],
-        description: "Double your movement speed for one frame. You can attempt to sprint once per turn.",
-        difficulty: "The GM sets the difficulty depending on circumstances, such as the terrain and weather conditions.",
-        actionType: "movement",
-        rolls: [
-          {
-            label: "Sprint",
-            caption: "Sprint (Athletics)",
-            die: "d20",
-            formula: "1d20+@skills.athletics.mod+@specialty.partial.sprinting",
-            message: "{NAME} sprints!",
-            difficulty: null,
-          }
-        ]
-    },
-    {
-        name: "Stand Up",
-        images: {
-            base: `${NEWERA.images}/equipment-body.png`,
-            right: `${NEWERA.images}/ac_1frame.png`
-        },
-        ability: null,
-        skill: null,
-        specialties: [],
-        description: "While Prone, you stand up.",
-        difficulty: 0,
-        actionType: "1",
-        rolls: []
-    },
-    {
-        name: "Jump",
-        images: {
-            base: `${NEWERA.images}/jump1.png`,
-            right: `${NEWERA.images}/ac_1frame.png`
-        },
-        ability: null,
-        skill: "athletics",
-        specialties: ["Long Jump", "High Jump", "Jumping"],
-        description: "You jump across a large gap or a great height. You can jump up to 2 feet in height and up to your speed minus your size modifier in distance. For longer or higher jumps, a check is required.",
-        difficulty: "The GM sets the difficulty depending on the jump distance and environmental conditions.",
-        actionType: "1",
-        rolls: [
-            {
-                label: "Long",
-                caption: "Long Jump (Athletics)",
-                die: "d20",
-                formula: "1d20+@skills.athletics.mod+@specialty.partial.jumping+@specialty.partial.long_jump",
-                difficulty: null,
-            },
-            {
-                label: "High",
-                caption: "High Jump (Athletics)",
-                die: "d20",
-                formula: "1d20+@skills.athletics.mod+@specialty.partial.jumping+@specialty.partial.high_jump",
-                difficulty: 20,
-            }
-        ]
-    },
-    {
-        name: "Dodge",
-        images: {
-            base: `${NEWERA.images}/body-balance.png`,
-            right: `${NEWERA.images}/ac_reaction.png`
-        },
-        ability: null,
-        skill: "agility",
-        specialties: ["Dodging"],
-        description: "You try to avoid an incoming attack. Optionally, you may move 2 feet in any direction.",
-        difficulty: "The result of your roll replaces your Passive Agility when contesting the attacker's roll.",
-        actionType: "R",
-        rolls: [
-            {
-                label: "Dodge",
-                caption: "Dodge (Agility)",
-                die: "d20",
-                formula: "1d20+@skills.agility.mod+@specialty.partial.jumping+@specialty.partial.dodging",
-                message: "{NAME} tries to Dodge!",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Throw / Pass",
-        images: {
-            base: `${NEWERA.images}/throwing-ball.png`,
-            right: `${NEWERA.images}/ac_1frame.png`
-        },
-        ability: null,
-        skill: null,
-        specialties: [],
-        description: "Throw an item to a willing teammate, or as a projectile at an enemy.",
-        difficulty: "No check is required to pass to an ally within 6 feet. For long distances or to target enemy creatures, the GM sets the difficulty.",
-        actionType: "1",
-        rolls: [
-            {
-                label: "Distance",
-                caption: "Yeet for Distance (Athletics)",
-                die: "d20",
-                formula: "1d20+@skills.athletics.mod+@specialty.partial.throw_distance",
-                message: "{NAME} throws an item a great distance!",
-                difficulty: null,
-            },
-            {
-                label: "Accuracy",
-                caption: "Kobe for Accuracy (Marksmanship)",
-                die: "d20",
-                formula: "1d20+@skills.marksmanship.mod+@specialty.partial.throw_accuracy",
-                message: "{NAME} throws a projectile!",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Escape",
-        images: {
-            base: `${NEWERA.images}/breaking-chain.png`,
-            right: `${NEWERA.images}/ac_2frame.png`
-        },
-        ability: "strength",
-        skill: null,
-        specialties: ["Escape"],
-        description: "You attempt to escape from restraints or a creature's grasp. You may use your Strength to force your way free, or Agility to slip out.",
-        difficulty: "The difficulty is based on the condition and type of restraint. It may be different for one method of escape versus the other.",
-        actionType: "2",
-        rolls: [
-            {
-                label: "Strength",
-                caption: "Escape (Strength)",
-                die: "d20",
-                formula: "1d20+@abilities.strength.mod+@specialty.partial.escape",
-                difficulty: null,
-            },
-            {
-                label: "Agility",
-                caption: "Escape (Agility)",
-                die: "d20",
-                formula: "1d20+@skills.agility.mod+@specialty.partial.escape",
-                difficulty: null,
-            }
-        ]
-    }
-];
-
-NEWERA.generalMagicActions = [
-    {
-        name: "Cast a Spell",
-        images: {
-            base: `${NEWERA.images}/glowing-hands.png`,
-        },
-        ability: null,
-        skill: null,
-        specialties: [],
-        description: "You cast a spell or enchantment that you've memorized. The time it takes to cast the spell varies depending on the type of spell.",
-        difficulty: "The difficulty depends on your skill level in the spell's form of magic. Casting a spell at or below your current level doesn't require a check. For spells above your level, the difficulty is 10 for one level higher, plus 5 for each additional level.",
-        altInstructions: "Cast spells and enchantments from the Magic tab.",
-        actionType: "?",
-        rolls: []
-    },
-    {
-        name: "Sustain a Spell",
-        images: {
-            base: `${NEWERA.images}/fire-spell-cast.png`,
-            right: `${NEWERA.images}/ac_1frame.png`
-        },
-        ability: null,
-        skill: null,
-        specialties: [],
-        description: "You continue to concentrate on a sustained spell you're already casting. You may spend any number of frames on your turn sustaining a spell. If your turn ends without having used at least one frame to sustain a spell, the spell ends.",
-        difficulty: "0",
-        overrideMacroCommand: "game.newera.HotbarActions.sustainCurrentSpell()",
-        actionType: "1",
-        rolls: [
-            {
-                label: "Sustain",
-                die: "fire-spell-cast",
-                callback: actor => Actions.sustainCurrentSpell(actor)
-            }
-        ]
-    },
-    {
-        name: "Learn a Spell",
-        images: {
-            base: `${NEWERA.images}/scroll-unfurled.png`,
-            right: `${NEWERA.images}/ac_restful.png`
-        },
-        ability: "wisdom",
-        skill: null,
-        specialties: [],
-        description: "You attempt to commit a new spell to your subconscious memory from a spell script you can read. You must first meditate to become semi-conscious. You can attempt to learn up to three spells per successful meditation session.",
-        difficulty: 10,
-        altInstructions: "",
-        actionType: "D",
-        rolls: [
-            {
-                label: "Meditate",
-                caption: "Meditation check",
-                die: "d20",
-                formula: "1d20+@abilities.wisdom.mod",
-                difficulty: 10
-            }
-        ]
-    },
-    {
-        name: "Disenchant",
-        images: {
-            base: `${NEWERA.images}/shatter.png`,
-            right: `${NEWERA.images}/ac_adventuring.png`
-        },
-        ability: null,
-        skill: null,
-        specialties: [],
-        description: "You use your magical powers to remove an enchantment from an item. If the enchantment is complex, each component must be removed individually. Care must be taken, as removing them in the improper order might have unexpected results.",
-        difficulty: "The difficulty is as though you were casting a spell one level higher than the target enchantment.",
-        actionType: "E",
-        rolls: [
-            {
-                label: "Cast",
-                caption: "Disenchant Item",
-                die: "d20",
-                formula: "1d20+@data.casterLevel",
-                difficulty: 10
-            },
-        ]
-    },
-    {
-        name: "End Spell",
-        images: {
-            base: `${NEWERA.images}/halt-2.png`,
-            right: `${NEWERA.images}/ac_0frame.png`
-        },
-        ability: null,
-        skill: null,
-        specialties: [],
-        description: "You end the effects of any sustained or ephemeral spell you're casting.",
-        difficulty: "0",
-        overrideMacroCommand: "game.newera.HotbarActions.stopAllSpells()",
-        actionType: "0",
-        disallow: actor => (!actor.system.ephemeralEffectActive && !actor.system.sustaining.id) ? "You aren't casting any spells right now." : false,
-        rolls: [
-            {
-                label: "End Spell",
-                die: "halt-2",
-                callback: actor => actor.stopAllSpells()
-            }
-        ]
-    },
-];
-
-NEWERA.explorationActions = [
-    {
-        name: "Search the Area",
-        images: {
-            base: `${NEWERA.images}/binoculars.png`,
-            right: `${NEWERA.images}/ac_3frame.png`
-        },
-        ability: null,
-        skill: "perception",
-        specialties: ["Searching"],
-        description: "Look around the room for hard-to-find objects. This action can be performed once per player when entering a new room or area. You might suffer penalties if the room is poorly lit or if you're searching during combat.",
-        difficulty: "The GM determines the perception difficulty of objects in the room and tells each player what they find.",
-        actionType: "3",
-        rolls: [
-            {
-                label: "Search",
-                caption: "Perception check",
-                die: "d20",
-                formula: "1d20+@skills.perception.mod+@specialty.partial.searching",
-                message: "{NAME} searches the area!",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Examine",
-        images: {
-            base: `${NEWERA.images}/magnifying-glass.png`,
-            right: `${NEWERA.images}/ac_adventuring.png`
-        },
-        ability: null,
-        skill: "perception",
-        specialties: ["Searching"],
-        description: "You closely examine an object or small area to learn about its properties or hidden features. Use Perception if you're looking for things you may not have noticed, or Logic if you're trying to learn about an object based on what you can see.",
-        difficulty: "The GM determines what you learn based on the outcome of your check.",
-        actionType: "E",
-        rolls: [
-            {
-                label: "Perception",
-                caption: "Examine Object (Perception)",
-                die: "d20",
-                formula: "1d20+@skills.perception.mod+@specialty.partial.examination",
-                difficulty: null,
-            },
-            {
-                label: "Logic",
-                caption: "Examine Object (Logic)",
-                die: "d20",
-                formula: "1d20+@skills.logic.mod+@specialty.partial.examination",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Craft",
-        images: {
-            base: `${NEWERA.images}/crafting.png`,
-            right: `${NEWERA.images}/ac_adventuring.png`
-        },
-        ability: null,
-        skill: "technology",
-        specialties: ["Crafting"],
-        description: "You combine raw materials into a new item. You must have all the required materials before performing this action.",
-        difficulty: "The difficulty and time taken depends on the item being crafted.",
-        actionType: "E",
-        rolls: [
-            {
-                label: "Craft",
-                caption: "Crafting check",
-                die: "d20",
-                formula: "1d20+@skills.technology.mod+@specialty.partial.crafting",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Repair/Upgrade",
-        images: {
-            base: `${NEWERA.images}/anvil-impact.png`,
-            right: `${NEWERA.images}/ac_adventuring.png`
-        },
-        ability: null,
-        skill: "technology",
-        specialties: ["Crafting", "Repair"],
-        description: "You repair or upgrade an item in your inventory. You must have the appropriate raw materials.",
-        difficulty: "The difficulty and time taken depends on the current condition, quality, and material of the item.",
-        actionType: "E",
-        rolls: [
-            {
-                label: "Repair",
-                caption: "Crafting check - Repair",
-                die: "d20",
-                formula: "1d20+@skills.technology.mod+@specialty.partial.crafting+@specialty.partial.repair",
-                difficulty: null,
-            },
-            {
-                label: "Upgrade",
-                caption: "Crafting check - Upgrade",
-                die: "d20",
-                formula: "1d20+@skills.technology.mod+@specialty.partial.crafting+@specialty.partial.refinement",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Cook",
-        images: {
-            base: `${NEWERA.images}/cooking-pot.png`,
-            right: `${NEWERA.images}/ac_adventuring.png`
-        },
-        ability: null,
-        skill: "technology",
-        specialties: ["Cooking"],
-        description: "You prepare a meal for yourself or your party. A well-made meal before bed increases the benefits you get from resting.",
-        difficulty: null,
-        actionType: "E",
-        rolls: [
-            {
-                label: "Cook",
-                caption: "Cooking",
-                die: "d20",
-                formula: "1d20+@skills.technology.mod+@specialty.partial.cooking",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Wilderness Survival",
-        images: {
-            base: `${NEWERA.images}/forest-camp.png`,
-            right: `${NEWERA.images}/ac_adventuring.png`
-        },
-        ability: null,
-        skill: "instinct",
-        specialties: ["Navigation", "Time", "Weather"],
-        description: "You use your instincts to discern one of a number of things about your environment. You can use this skill to orient yourself in the wilderness, tell how long until the next sunrise or sunset, or predict changes in the weather.",
-        difficulty: "The GM sets the difficulty based on the conditions of your environment.",
-        actionType: "E",
-        rolls: [
-            {
-                label: "Navigate",
-                caption: "Wilderness Survival - Navigation (Instinct)",
-                die: "d20",
-                formula: "1d20+@skills.instinct.mod+@specialty.partial.navigation",
-                difficulty: null,
-            },
-            {
-                label: "Time",
-                caption: "Wilderness Survival - Time (Instinct)",
-                die: "d20",
-                formula: "1d20+@skills.instinct.mod+@specialty.partial.time",
-                difficulty: null,
-            },
-            {
-                label: "Weather",
-                caption: "Wilderness Survival - Weather (Instinct)",
-                die: "d20",
-                formula: "1d20+@skills.instinct.mod+@specialty.partial.weather",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Rest for the Night",
-        images: {
-            base: `${NEWERA.images}/bed.png`,
-            right: `${NEWERA.images}/ac_restful.png`
-        },
-        ability: null,
-        skill: null,
-        specialties: [],
-        description: "You sleep for the night, regaining energy and strength. For every hour you sleep, you regain HP equal to your hit point increment plus your level, and energy equal to your caster level.",
-        actionType: "D",
-        overrideMacroCommand: `game.newera.HotbarActions.restForTheNight()`,
-        rolls: [
-            {
-                label: "Sleep",
-                die: "bed",
-                callback: actor => Actions.restForTheNight(actor)
-            }
-        ]
-    }
-];
-
-NEWERA.generalSocialActions = [
-    {
-        name: "Socialize",
-        images: {
-            base: `${NEWERA.images}/character.png`,
-            right: `${NEWERA.images}/ac_social.png`
-        },
-        ability: null,
-        skill: "diplomacy",
-        specialties: ["Socialization"],
-        description: "With a few choice words or a flattering compliment, you attempt to gain a person's favor.",
-        difficulty: "Contested (Determination)",
-        actionType: "S",
-        rolls: [
-            {
-                label: "Socialize",
-                caption: "First Impression (Diplomacy)",
-                die: "d20",
-                formula: "1d20+@skills.diplomacy.mod+@specialty.partial.socialization",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Persuade",
-        images: {
-            base: `${NEWERA.images}/conversation.png`,
-            right: `${NEWERA.images}/ac_social.png`
-        },
-        ability: null,
-        skill: "diplomacy",
-        specialties: ["Persuasion"],
-        description: "You attempt to persuade someone to help you with a task or give you information. People with a high relationship to you are more likely to accept.",
-        difficulty: "Contested (Insight)",
-        actionType: "S",
-        rolls: [
-            {
-                label: "Persuade",
-                caption: "Persuade (Diplomacy)",
-                die: "d20",
-                formula: "1d20+@skills.diplomacy.mod+@specialty.partial.persuasion",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Trade",
-        images: {
-            base: `${NEWERA.images}/cash.png`,
-            right: `${NEWERA.images}/ac_social.png`
-        },
-        ability: null,
-        skill: "diplomacy",
-        specialties: ["Persuasion"],
-        description: "You haggle with another person to buy or sell an item at a good price. Use your Diplomacy or Deception skill to make an offer, and your Wisdom to tell if an offer or counter-offer is a good deal. Not all merchants are willing to haggle.",
-        difficulty: null,
-        actionType: "S",
-        rolls: [
-            {
-                label: "Offer",
-                caption: "Haggle - Offer (Diplomacy)",
-                die: "d20",
-                formula: "1d20+@skills.diplomacy.mod+@specialty.partial.trading",
-                difficulty: null,
-            },
-            {
-                label: "Deceive",
-                caption: "Haggle - Offer (Deception)",
-                die: "d20",
-                formula: "1d20+@skills.deception.mod+@specialty.partial.trading",
-                difficulty: null,
-            },
-            {
-                label: "Check",
-                caption: "Haggle - Check Offer (Wisdom)",
-                die: "d20",
-                formula: "1d20+@abilities.wisdom.mod+@specialty.partial.trading",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Seduce",
-        images: {
-            base: `${NEWERA.images}/charm.png`,
-            right: `${NEWERA.images}/ac_social.png`
-        },
-        ability: "charisma",
-        skill: null,
-        specialties: ["Seduction"],
-        description: "You use your charm to attract someone and attempt to form a positive relationship with them.",
-        difficulty: "Contested (Insight) - This action has no effect unless you're compatible with the target's romantic and sexual preferences.",
-        actionType: "S",
-        rolls: [
-            {
-                label: "Seduce",
-                caption: "Seduce (Charisma)",
-                die: "d20",
-                formula: "1d20+@abilities.charisma.mod+@specialty.partial.seduction",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Deceive",
-        images: {
-            base: `${NEWERA.images}/fingers-crossed.png`,
-            right: `${NEWERA.images}/ac_social.png`
-        },
-        ability: null,
-        skill: "deception",
-        specialties: [],
-        description: "You tell a convincing lie or come up with a good story.",
-        difficulty: "Contested (Insight) - Creatures with a lower relationship to you are less likely to believe you.",
-        actionType: "S",
-        rolls: [
-            {
-                label: "Lie",
-                caption: "Deception check",
-                die: "d20",
-                formula: "1d20+@skills.deception.mod",
-                difficulty: null,
-            }
-        ]
-    },
-    {
-        name: "Intimidate",
-        images: {
-            base: `${NEWERA.images}/biceps.png`,
-            right: `${NEWERA.images}/ac_social.png`
-        },
-        ability: null,
-        skill: null,
-        specialties: ["Coercion"],
-        description: "You threaten a creature to get them to do what you want. You may threaten them physically using your Strength, or through blackmail using your Charisma. Using this action automatically lowers your relationship with the target, regardless of outcome.",
-        difficulty: "Contested (Determination or Strength)",
-        actionType: "S",
-        rolls: [
-            {
-                label: "Charisma",
-                caption: "Intimidate (Charisma)",
-                die: "d20",
-                formula: "1d20+@skills.intimidation.mod+@specialty.partial.coercion",
-                difficulty: null,
-            },
-            {
-                label: "Strength",
-                caption: "Intimidate (Strength)",
-                die: "d20",
-                formula: "1d20+@skills.intimidation.mod+@specialty.partial.coercion+@abilities.strength.mod",
-                difficulty: null,
-            }
-        ]
-    }
-];
+};
 
 NEWERA.daysOfWeek = {
     "Sunday": [1, 8, 15, 22],
@@ -4185,46 +3606,24 @@ NEWERA.prerequisiteActorStatTextMatching = {
     "temporal": actor => actor.system.magic.temporal.level,
 }
 
-NEWERA.customFeatPrerequisites = {
-    "148": {
-        "1": {
-            check: "value",
-            value: actor => {
-                return Object.values(actor.system.skills).filter(skill => skill.level == 10).length + Object.values(actor.system.magic).filter(skill => skill.level == 10).length
-            },
-            required: 1,
-            doubleCheck: "You have a skill that has reached level 10. Confirm with your GM before taking this feat."
-        }
-    },
-    "85": {
-        "1": {
-            check: "value",
-            value: actor => Object.entries(actor.system.knowledges).length,
-            required: 1,
-            doubleCheck: "Confirm your foreign language knowledge with the GM."
-        } 
-    },
-    "262": {
-        "1": {
-            check: "none",
-            doubleCheck: "Confirm your choice with the GM."
-        }
-    },
-    "367": {
-        "1": {
-            check: "value",
-            value: actor => actor.items.filter(i => ["Spell", "Enchantment"].includes(i.type) && i.system.rarity == 0).length,
-            required: 3
-        }
-    },
-    "458": {
-        "1": {
-            check: "value",
-            value: actor => Object.values(actor.system.specialties).filter(spec => spec.subject && spec.subject.toLowerCase() == "Animal Handling").length,
-            required: 1
-        }  
-    }
+NEWERA.featTypeMapping = {
+    "GF": "General Feat",
+    "SF": "Skill Feat",
+    "CF": "Class Feat",
+    "AF": "Archetype Feat",
+    "CB": "Career Background",
+    "BG": "Background",
+    "FL": "Flaw",
+    "GU": "General Feat",
+    "SU": "Skill Feat",
+    "CU": "Class Feat",
+    "AU": "Archetype Feat",
 }
+
+//These types denote feats that can be taken any number of times.
+NEWERA.repeatableFeatTypes = [
+    "GU", "SU", "CU", "AU"
+];
 
 NEWERA.spellStudiesLists = {
     delver: {
@@ -4296,4 +3695,171 @@ NEWERA.spellStudiesLists = {
 
 NEWERA.spellRarity = [
     "Inscribed", "Common", "Uncommon", "Rare", "Legendary", "Restricted", "Classified", "Mystery", "Innate"
+]
+
+NEWERA.specialtyDefaultParents = {
+    "sight": "perception",
+    "smell": "perception",
+    "archery": "marksmanship",
+    "crossbow": "marksmanship",
+    "rifle": "marksmanship",
+    "crafting": "technology",
+    "cooking": "technology",
+    "alchemy": "technology",
+    "climbing": "athletics",
+    "swimming": "athletics",
+    "blocking": "defense",
+    "protection": "defense",
+    "swords": "one-handed",
+    "axes": "two-handed",
+    "blunt": "one-handed",
+    "navigation": "instinct",
+    "tracking": "instinct",
+    "animal-handling": "instinct",
+    "time": "instinct",
+    "weather": "instinct",
+    "crossbow": "marksmanship",
+    "sense-motive": "insight",
+    "diversion": "performance",
+    "socialization": "diplomacy",
+    "investigation": "logic",
+    "long-jump": "athletics",
+    "high-jump": "athletics",
+    "disarm": "defense",
+    "counter": "defense",
+    "pull-to-safety": "reflex",
+    "knives": "one-handed",
+    "daggers": "one-handed",
+    "handguns": "marksmanship",
+    "lockpicking": "sleight-of-hand",
+    "research": "technology",
+    "hacking": "technology",
+    "straight-face": "deception",
+    "framing": "deception",
+    "wound-treatment": "medicine",
+    "first-aid": "medicine",
+    "frightening": "intimidation",
+    "impersonation": "performance",
+    "swordsOneHanded": "one-handed",
+    "swordsTwoHanded": "two-handed",
+    "rangedWeaponCrafting": "marksmanship"
+}
+
+NEWERA.alternateSpecialtyKeys = {
+    "swordsOneHanded": "swords",
+    "swordsTwoHanded": "swords",
+    "rangedWeaponCrafting": "crafting"
+}
+
+NEWERA.actionImages = {
+    "0": `${NEWERA.images}/ac_0frame.png`,
+    "1": `${NEWERA.images}/ac_1frame.png`,
+    "2": `${NEWERA.images}/ac_2frame.png`,
+    "3": `${NEWERA.images}/ac_3frame.png`,
+    "S": `${NEWERA.images}/ac_social.png`,
+    "E": `${NEWERA.images}/ac_adventuring.png`,
+    "D": `${NEWERA.images}/ac_restful.png`,
+    "R": `${NEWERA.images}/ac_reaction.png`
+}
+
+NEWERA.compatibleAmmoIds = {
+    "S": ["I.104.0", "I.99.0"],
+    "M": ["I.105.0", "I.100.0"],
+    "L": ["I.106.0", "I.101.0"],
+    "P": ["I.103.0", "I.102.0"],
+    "A": ["I.204.0", "I.203.0", "I.201.0", "I.199.0", "I.202.0", "I.240.0", "I.139.0", "I.200.0"],
+    "B": ["I.140.0"]
+}
+
+NEWERA.moneyItemValues = {
+    "I.283.0": 1,
+    "I.284.0": 5,
+    "I.285.0": 10,
+    "I.286.0": 20,
+    "I.287.0": 50,
+    "I.288.0": 100,
+    "I.289.0": 100,
+    "I.290.0": 200,
+    "I.291.0": 500,
+    "I.292.0": 1000,
+    "I.293.0": 2000,
+    "I.294.0": 5000,
+    "I.295.0": 10000,
+}
+
+NEWERA.ancientMoneyItemValues = {
+    "I.264.0": 0.01,
+    "I.265.0": 0.1,
+    "I.266.0": 1,
+    "I.267.0": 10,
+    "I.268.0": 0.01,
+    "I.269.0": 0.1,
+    "I.270.0": 1,
+    "I.271.0": 10,
+}
+
+NEWERA.passiveAbilityEvents = [
+    "damageTaken",
+    "damageDealt",
+    "healingReceived",
+    "healingGiven",
+    "targeted",
+    "spellEffectReceived",
+    "statusEffectReceived", 
+    "statusEffectRemoved",
+    "meleeAttack",
+    "rangedAttack",
+    "spellCast",
+    "enchantmentCast",
+    "itemStored",
+    "itemRetrieved",
+    "itemEquipped",
+    "itemDropped",
+    "skillCheck",
+    "abilityCheck",
+    "magicCheck",
+    "knowledgeCheck",
+    "specialtyCheck",
+    "combatStart",
+    "combatEnd",
+    "turnStart",
+    "turnEnd",
+    "roundStart",
+    "roundEnd",
+    "rest",
+    "dayStart",
+    "opportunity",
+    "reaction",
+    "reactedTo",
+    "actionReadied",
+    "readiedActionResolved",
+    "longActionStart",
+    "longActionResolved",
+    "downed",
+    "death",
+    "success",
+    "failure",
+    "criticalSuccess",
+    "criticalFailure",
+    "hit",
+    "miss",
+    "criticalHit",
+    "criticalMiss",
+    "equipmentDamaged",
+    "equipmentBroken",
+    "equipmentRepaired",
+    "equipmentUpgraded",
+    "durabilityCheck",
+    "itemCraft",
+    "potionCraft",
+    "potionUsed",
+    "movement",
+    "forcedMovement",
+    "knockedProne",
+    "stunned",
+    "staggered",
+    "shieldHit",
+    "shieldPierced",
+    "armorHit",
+    "armorPierced",
 ]

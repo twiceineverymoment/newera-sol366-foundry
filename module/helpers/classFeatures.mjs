@@ -10,14 +10,14 @@ import { Researcher } from "./classes/researcher.mjs";
 import { Magus } from "./classes/magus.mjs";
 import { Investigator } from "./classes/investigator.mjs";
 import { Scholar } from "./classes/scholar.mjs";
-
+import { Adventurer } from "./classes/adventurer.mjs";
 export const ClassInfo = {};
 
 ClassInfo.findFeatureSelectionByLabel = function(label) {
     for (const [i, clazz] of Object.entries(ClassInfo.features)){
-        if (label.contains(i)){ //Skips iterating on the other classes
+        if (label.includes(i)){ //Skips iterating on the other classes
             for (const feature of clazz){
-                if (feature.id && feature.selections && label.contains(feature.id)){
+                if (feature.id && feature.selections && label.includes(feature.id)){
                     for (const [j, selection] of Object.entries(feature.selections)){
                         if (label == `system.classes.${feature.id}.${j}`){
                             return selection;
@@ -28,6 +28,50 @@ ClassInfo.findFeatureSelectionByLabel = function(label) {
         }
     }
     return null;
+}
+
+ClassInfo.getArchetypeData = function(actor) {
+    const output = {};
+    if (!actor.system.classes){
+        return output;
+    }
+    for (const [className, classData] of Object.entries(actor.system.classes)){
+        if (ClassInfo.archetypeSelectionLevels[className]){
+            const selectedArchetypes = classData.archetype;
+            if (selectedArchetypes){
+                for (const [order, selection] of Object.entries(selectedArchetypes)){
+                const levelThreshold = ClassInfo.archetypeSelectionLevels[className][order];
+                    output[selection] = levelThreshold;
+                }
+            }
+        }
+    }
+    return output;
+}
+
+// Describes the levels at which a class selects an archetype. Used to determine which features are unlocked retroactively when a new archetype is selected. Only the classes that have archetypes are included here.
+ClassInfo.archetypeSelectionLevels = {
+    delver: Delver.archetypeSelectionLevels,
+    mercenary: Mercenary.archetypeSelectionLevels,
+    ranger: Ranger.archetypeSelectionLevels,
+    researcher: Researcher.archetypeSelectionLevels,
+    investigator: Investigator.archetypeSelectionLevels
+}
+
+ClassInfo.hitPointIncrements = {
+    delver: Delver.hitPointIncrement,
+    mercenary: Mercenary.hitPointIncrement,
+    ranger: Ranger.hitPointIncrement,
+    researcher: Researcher.hitPointIncrement,
+    investigator: Investigator.hitPointIncrement,
+    scholar: Scholar.hitPointIncrement,
+    artificer: Artificer.hitPointIncrement,
+    sage: Sage.hitPointIncrement,
+    witch: Witch.hitPointIncrement,
+    adventurer: Adventurer.hitPointIncrement,
+    magus: Magus.hitPointIncrement,
+    chanter: Chanter.hitPointIncrement,
+    guardian: Guardian.hitPointIncrement
 }
 
 ClassInfo.features = {
@@ -43,29 +87,7 @@ ClassInfo.features = {
     artificer: Artificer.classFeatures,
     sage: Sage.classFeatures,
     witch: Witch.classFeatures,
-    adventurer: [
-        {
-            level: 1,
-            id: "adventurer.brainsVsBrawn1",
-            name: "Brains vs. Brawn",
-            key: false,
-            description: "<p>Choose Brains or Brawn.</p><p><b>Brains:</b> Gain a +1 class bonus to your Passive Perception, gain an additional knowledge of your choice, or increase one of your existing knowledge skills by 1 (but not higher than 5.)</p><p><b>Brawn:</b> Choose a combat-related stat and receive a +1 class bonus to it.</p>",
-            selections: {
-                mode: {
-                    label: "Choose a Bonus",
-                    options: {newKnowledge: "Brains - New Knowledge", lvlKnowledge: "Brains - Increase Existing Knowledge", perception: "Brains - Passive Perception +1", speed: "Brawn - Speed +1", initiative: "Brawn - Initiative +1", armor: "Brawn - Natural Armor +1", agility: "Brawn - Passive Agility +1"}
-                }
-            }
-        },
-        {
-            level: 2,
-            common: "naturalSkillImprovement"
-        },
-        {
-            level: 3,
-            common: "abilityScoreImprovement"
-        }
-    ],
+    adventurer: Adventurer.classFeatures,
     common: {
         abilityScoreImprovement: {
             name: "Ability Score Improvement",
@@ -81,7 +103,8 @@ ClassInfo.features = {
                         intelligence: "Intelligence",
                         wisdom: "Wisdom",
                         charisma: "Charisma"
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => actor.setAbilityScoreImprovement(oldValue, newValue)
                 },
                 second: {
                     label: "Second Choice",
@@ -92,7 +115,8 @@ ClassInfo.features = {
                         intelligence: "Intelligence",
                         wisdom: "Wisdom",
                         charisma: "Charisma"
-                    }
+                    },
+                    onChange: (actor, oldValue, newValue) => actor.setAbilityScoreImprovement(oldValue, newValue)
                 }
             }
         },
@@ -100,20 +124,33 @@ ClassInfo.features = {
             name: "Natural Skill Improvement",
             key: false,
             description: "Your Natural Skills each increase in level by 1.",
+            onUnlock: actor => actor.improveNaturalSkills()
         },
         learningExperience: {
             name: "Learning Experience",
             key: false,
             description: `Gain 1 level in one of your Knowledge skills, or a new one of your choice.
             <br /><i>(To gain a new knowledge, add it to your character sheet and then choose it here.)</i>`,
-            dynamicSelections: actor => actor.getLearningExperienceOptions()
+            selections: {
+                improvement: {
+                    label: "Make a Selection",
+                    dynamicOptions: actor => actor.getLearningExperienceOptions(),
+                    onChange: (actor, oldValue, newValue) => actor.setLearningExperience(oldValue, newValue)
+                }
+            }
         },
         specialtyImprovement: {
             name: "Specialty Improvement",
             key: false,
             description: `Choose one of your specialties and increase its level by 1. If you don't have any specialties that can be increased, you may gain a new specialty of your choice at the GM's discretion.
             <br /><i>(To gain a new specialty, add it to your character sheet and then choose it here.)</i>`,
-            dynamicSelections: actor => actor.getSpecialtyImprovementOptions()
+            selections: {
+                improvement: {
+                    label: "Choose a Specialty",
+                    dynamicOptions: actor => actor.getSpecialtyImprovementOptions(),
+                    onChange: (actor, oldValue, newValue) => actor.setSpecialtyImprovement(oldValue, newValue)
+                }
+            }
         }
     },
 }

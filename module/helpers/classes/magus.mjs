@@ -1,9 +1,15 @@
 import { SpellstrikeSheet } from "../../sheets/spellstrike.mjs";
 import { NEWERA } from "../config.mjs";
-import { Actions } from "../macros/actions.mjs";
+import { Actions } from "../actions/actions.mjs";
 
 
 export class Magus {
+
+    static hitPointIncrement = {
+        roll: `1d10`,
+        average: 6
+    }
+
     static classFeatures = [
         {
             level: 1,
@@ -14,7 +20,7 @@ export class Magus {
             selections: {
                 "1": {
                     label: "Specialty",
-                    options: {swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", bluntWeapons: "Blunt Weapons", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)"}
+                    options: {swordsOneHanded: "Swords (One-Handed)", swordsTwoHanded: "Swords (Two-Handed)", axes: "Axes", blunt: "Blunt Weapons", archery: "Archery (Marksmanship)", crossbow: "Crossbows (Marksmanship)"}
                 }
             }
         },
@@ -27,15 +33,15 @@ export class Magus {
             selections: {
                 "1": {
                     label: "First Choice",
-                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", "elemental-magic": "Elemental Magic"}
+                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", elemental: "Elemental Magic"}
                 },
                 "2": {
                     label: "Second Choice",
-                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", "elemental-magic": "Elemental Magic"}
+                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", elemental: "Elemental Magic"}
                 },
                 "3": {
                     label: "Third Choice",
-                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", "elemental-magic": "Elemental Magic"}
+                    options: {"one-handed": "One-Handed", "two-handed": "Two-Handed", insight: "Insight", intimidation: "Intimidation", technology: "Technology", defense: "Defense", reflex: "Reflex", elemental: "Elemental Magic"}
                 }
             }
         },
@@ -319,7 +325,8 @@ export class Magus {
                       }
                     ]
                 }
-            ]
+            ],
+            onUnlock: actor => Magus.initializeSpellstrike(actor)
         },
         {
             level: 9,
@@ -738,6 +745,8 @@ export class Magus {
             ]
         }
     ]
+
+    static classFeats = {}
 
     static spellstrikeSlotNames = ["spellstrike", "spellstrikes", "spellstrike slots"];
 

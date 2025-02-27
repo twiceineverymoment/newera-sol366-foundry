@@ -4,10 +4,8 @@ These actions assume the relevant Actor can perform them if they were invoked fr
 For invoking these functions via global macros, use HotBarActions.mjs for validations.
  */
 
-import { Formatting } from "../formatting.mjs";
+import { NewEraUtils } from "../utils.mjs";
 import { NEWERA } from "../config.mjs";
-import { CharacterEnergyPool } from "../../schemas/char-energy-pool.mjs";
-import { NewEraActor } from "../../documents/actor.mjs";
 import { ResourcePool } from "../../schemas/resource-pool.mjs";
 import { NewEraItem } from "../../documents/item.mjs";
 
@@ -30,6 +28,29 @@ export class Actions {
         speaker: ChatMessage.getSpeaker({actor: actor}),
         content: template
       });
+    }
+
+    static showHpIncreaseDialog(actor, clazz, increment){
+      const conMod = actor.system.abilities.constitution.mod;
+      const dieSize = increment.roll.split("d")[1];
+      const roll = NewEraUtils.formatRollExpression(1, dieSize, conMod);
+      new Dialog({
+        title: `Increase Maximum HP (${clazz.system.selectedClass})`,
+        content: "Choose whether to roll for your hit point increase, or take the average.",
+        buttons: {
+          roll: {
+            icon: `<i class="fa-solid fa-dice"></i>`,
+            label: `Roll (${roll})`,
+            callback: () => actor.increaseMaxHp(clazz, true)
+          },
+          average: {
+            icon: `<i class="fa-solid fa-arrow-trend-up"></i>`,
+            label: `Average (${Math.max(increment.average + conMod, 1)})`,
+            callback: () => actor.increaseMaxHp(clazz, false)
+          }
+        },
+        default: "average"
+      }).render(true);
     }
 
     /* Displays the dialog to rest for a number of hours. */
@@ -118,7 +139,7 @@ export class Actions {
           });
           html.find("#damage").click(async () => {
             const amp = actor.system.sustaining.ampFactor;
-            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : Formatting.amplifyValue(spell.system.damage.amount, amp);
+            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : NewEraUtils.amplifyValue(spell.system.damage.amount, amp);
             const dmgRoll = new Roll(formula);
             await dmgRoll.evaluate();
             dmgRoll.toMessage({
@@ -141,22 +162,13 @@ export class Actions {
 
     /* Displays a dialog to cast a spell, inputting the amplification factor */
     static async castSpell(actor, spell, paramAmpFactor = 1, isPrepared = false){
-      if (game.settings.get('newera-sol366', 'enforceFreeHandsForSpells') && !spell.system.keywords.includes('Asomatic')) {
-        if (['G', 'L', 'R'].includes(spell.system.castType)) {
-          if (actor.system.equipment.leftHand || actor.system.equipment.rightHand) { //For channeled and long spells, error out if either hand is occupied
-            ui.notifications.warn(`You need both hands free in order to cast ${spell.name}!`);
-            return;
-          }
+      if (!actor.canCastSpell(spell)){
+        if (["G", "L", "R"].includes(spell.system.castType)){
+          ui.notifications.warn(`${actor.name} needs both hands free to cast ${spell.name}!`);
         } else {
-          if (
-            (actor.system.equipment.leftHand && actor.system.equipment.rightHand)
-            || (actor.system.equipment.rightHand && actor.items.get(actor.system.equipment.rightHand).system.handedness == '2H')
-            || (actor.system.equipment.rightHand && actor.items.get(actor.system.equipment.rightHand).system.handedness == '1.5H' && !actor.system.forceOneHanded)
-            ) { //For all other spell types, only error if both hands are occupied
-            ui.notifications.warn(`You need a free hand in order to cast ${spell.name}!`);
-            return;
-          }
+          ui.notifications.warn(`${actor.name} needs a free hand to cast ${spell.name}!`);
         }
+        return;
       }
       let stayOpen = false;
       const energyRequired = (!isPrepared && actor.type != "Creature");
@@ -229,7 +241,7 @@ export class Actions {
             </div>
           </div>
           <div id="energySelect">
-            Energy Source: <select id="energyPools">${this._renderPoolOptions(actor)}</select>
+            Energy Source: <select id="energyPools">${Actions._renderPoolOptions(actor)}</select>
           </div>
           <p>
             <button class="spell-dialog-button" id="cast"><i class="fa-solid ${castButton.icon}"></i> ${castButton.label}</button>
@@ -279,7 +291,7 @@ export class Actions {
           });
           html.find("#damage").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
-            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : (spell.system.damage.scales ? Formatting.amplifyValue(spell.system.damage.amount, amp) : spell.system.damage.amount);
+            const formula = spell.name == "Lightning Bolt" ? NEWERA.lightningBoltDamageRolls[amp] : (spell.system.damage.scales ? NewEraUtils.amplifyValue(spell.system.damage.amount, amp) : spell.system.damage.amount);
             const dmgRoll = new Roll(formula);
             await dmgRoll.evaluate();
             dmgRoll.toMessage({
@@ -728,9 +740,15 @@ export class Actions {
                   i.addContact(name, number);
                   count++;
                   console.log(`Added contact to ${i.name} in inventory of ${actor.name}`);
-              });
+                });
               }
               ui.notifications.info(`${name} has been added to all player character phone contacts (${count} total devices.)`);
+              game.socket.emit("system.newera-sol366", {
+                event: "PLAYER_CONTACT_ADDED",
+                data: {
+                  name: name
+                }
+              });
             }
           },
           cancel: {
@@ -809,10 +827,19 @@ export class Actions {
       await game.settings.set("newera-sol366", "world.date.day", next.day);
       await game.settings.set("newera-sol366", "world.time.hour", next.hour);
       await game.settings.set("newera-sol366", "world.time.minute", next.minute);
+
+      const now = {
+        year: game.settings.get("newera-sol366", "world.date.year"),
+        month: game.settings.get("newera-sol366", "world.date.month"),
+        day: game.settings.get("newera-sol366", "world.date.day"),
+        hour: game.settings.get("newera-sol366", "world.time.hour"),
+        minute: game.settings.get("newera-sol366", "world.time.minute"),
+      }
+      ui.notifications.info(`The time is now ${now.year}-${now.month}-${now.day} ${now.hour}:${now.minute}.`);
     }
 
     static _is29DayMonth(year, month) {
-      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+      if (Actions._isLeapYear(year)) {
         return (month == 13 || month == 1);
       } else if (year % 2 == 0) {
         return (month == 7);
@@ -822,6 +849,127 @@ export class Actions {
         return (month == 10);
       } else { //bruh
         return false;
+      }
+    }
+
+    static _isLeapYear(year) {
+      return ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0);
+    }
+
+    static async randomizeWeather(weather) {
+      const currentWeather = await game.settings.get("newera-sol366", "world.weather.conditions");
+      const conditionSequence = ["clear", "pc1", "pc2", "pc3", "cloudy", "foggy", "precip1", "precip2", "precip3", "storm1", "storm2"];
+      if (weather == 0) {
+        return;
+      } else if (weather == 1) {
+        //Slight change - maximum of 2 steps away from current weather
+        const index = conditionSequence.indexOf(currentWeather);
+        const newIndex = Math.max(0, Math.min(conditionSequence.length - 1, index + (Math.random() < 0.5 ? 1 : -1)));
+        await game.settings.set("newera-sol366", "world.weather.conditions", conditionSequence[newIndex]);
+      } else if (weather == 2) {
+        //Random
+        const newWeather = conditionSequence[Math.floor(Math.random() * conditionSequence.length)];
+        await game.settings.set("newera-sol366", "world.weather.conditions", newWeather);
+      }
+    }
+
+    static async getStackQuantity(item, allowAll = true) {
+      if (!item.typeIs(NewEraItem.Types.STACKABLE) || item.system.quantity == 1){
+        return 1;
+      }
+      let quantity = 1;
+      return new Promise((resolve) => {
+        new Dialog({
+          title: item.name,
+          content: `<form class="spell-dialog">
+          <p>How many?</p>
+          <div id="amplify-info">
+              <div id="quantity-down">
+                <i class="fa-solid fa-chevron-left"></i>
+              </div>
+              <h2 id="quantity-heading"><span id="quantity">${quantity}</span></h2>
+              <div id="quantity-up">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </form>`,
+          buttons: {
+            confirm: {
+              icon: `<i class="fa-solid fa-check"></i>`,
+              label: "Confirm",
+              callback: (html) => {
+                const qty = parseInt(html.find("#quantity").text());
+                resolve(qty);
+              }
+            },
+            ...(allowAll ? {
+              all: {
+                icon: `<i class="fa-solid fa-layer-group"></i>`,
+                label: "All",
+                callback: () => resolve(item.system.quantity)
+              }
+            } : {}),
+            cancel: {
+              icon: `<i class="fa-solid fa-x"></i>`,
+              label: "Cancel",
+              callback: () => resolve(0)
+            }
+          },
+          default: "cancel",
+          render: html => {
+            html.find("#quantity-down").click(() => {
+              quantity = Math.max(1, quantity - 1);
+              html.find("#quantity").text(quantity);
+            });
+            html.find("#quantity-up").click(() => {
+              quantity = Math.min(allowAll ? item.system.quantity : item.system.quantity - 1, quantity + 1);
+              html.find("#quantity").text(quantity);
+            });
+          }
+        }).render(true);
+      });
+    }
+
+    static async fireRangedWeapon(actor, item){
+      if (!item.isReadyToFire()){
+        ui.notifications.warn(`The ${item.name} is not ready to fire!`);
+        return;
+      }
+      const shotsFired = await item.fire(); //SHOTS FIRED SHOTS FIRED
+        for (let i = 0; i < shotsFired; i++){
+          let counter = shotsFired > 1 ? ` (${i+1}/${shotsFired})` : "";
+          let r = new Roll(`d20 + @skills.marksmanship.mod`);
+          r.toMessage({
+            speaker: ChatMessage.getSpeaker({actor: actor}),
+            flavor: `Ranged Attack - ${item.name}${counter}`
+          });
+        }
+    }
+
+    static async reloadRangedWeapon(actor, item){
+      if (item.isFullyLoaded()){
+        ui.notifications.warn(`${item.name} is already loaded!`);
+        return;
+      }
+      const ammo = actor.findAmmoFor(item);
+      if (!ammo){
+        ui.notifications.warn("Out of ammo!");
+        return;
+      }
+      const loaded = await item.reload(ammo);
+      if (!loaded){
+        ui.notifications.error("Couldn't reload with this item!");
+        return;
+      }
+      if (["SA", "FA"].includes(item.system.firingAction)){
+        if (item.system.ammo.loaded == item.system.ammo.clipSize){
+          ui.notifications.info(`Reloaded ${item.name} with ${loaded} rounds of ${ammo.name}.`);
+        } else {
+          ui.notifications.info(`Loaded ${loaded} rounds of ${ammo.name} into ${item.name}.`);
+        }
+        actor.actionMessage(actor.img, item.img, "{NAME} reloads the {0}.", item.name);
+      } else {
+        ui.notifications.info(`Loaded ${ammo.name} into ${item.name}.`);
       }
     }
 

@@ -1,9 +1,10 @@
 import { NEWERA } from "../helpers/config.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
 import { Witch } from "../helpers/classes/witch.mjs";
 import { CharacterEnergyPool } from "../schemas/char-energy-pool.mjs";
 import { ClassInfo } from "../helpers/classFeatures.mjs";
 import { NewEraItem } from "./item.mjs";
+import { Actions } from "../helpers/actions/actions.mjs";
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -24,6 +25,20 @@ export class NewEraActor extends Actor {
   typeIs(types){
     return types.includes(this.type);
   }
+
+  static EquipmentSlots = {
+    RIGHT_HAND: "rightHand",
+    LEFT_HAND: "leftHand",
+    HEAD: "head",
+    NECK: "neck",
+    WAIST: "waist", 
+    BODY: "body",
+    FEET: "feet",
+    HANDS: "hands",
+    PHONE: "phone",
+    BACKPACK: "backpack"
+  };
+
 
   /** @override */
   prepareData() {
@@ -197,6 +212,8 @@ export class NewEraActor extends Actor {
     let weight = 0;
     let ench = 0;
     let armor = 0;
+    let money = 0;
+    let ancientMoney = 0;
     for (const item of items){
       if (item.typeIs(NewEraItem.Types.INVENTORY) && !item.system.stored && typeof item.system.weight != "undefined"){
         weight += item.system.weight * (item.system.quantity || 1);
@@ -212,10 +229,19 @@ export class NewEraActor extends Actor {
           armor += item.system.armorRating;
         }
       }
+      if (item.system.casperObjectId && NEWERA.moneyItemValues[item.system.casperObjectId]){
+        money += NEWERA.moneyItemValues[item.system.casperObjectId] * item.system.quantity;
+      }``
+      if (item.system.casperObjectId && NEWERA.ancientMoneyItemValues[item.system.casperObjectId]){
+        ancientMoney += NEWERA.ancientMoneyItemValues[item.system.casperObjectId] * item.system.quantity;
+      }
     }
     system.carryWeight.current = weight;
     system.magicTolerance.current = ench;
     system.armor.equipped = armor;
+    system.money.cash = money;
+    system.money.total = system.money.digital + system.money.cash;
+    system.money.ancient = ancientMoney;
   }
 
   async _applyConditionalStatusEffects(weight, enchantments) {
@@ -462,7 +488,15 @@ export class NewEraActor extends Actor {
   }
 
   findResource(name){
-    return Object.entries(this.system.additionalResources).find(r => r[1].name.toLowerCase() == name.toLowerCase());
+    return Object.values(this.system.additionalResources).find(r => r.name.toLowerCase() == name.toLowerCase());
+  }
+
+  hasResource(name, amount = 1){
+    const resource = this.findResource(name);
+    if (resource){
+      return resource.value >= amount;
+    }
+    return false;
   }
 
   getClassLevel(clazz) {
@@ -518,34 +552,140 @@ export class NewEraActor extends Actor {
     }
   }
 
-  addKnowledge() {
-    const system = this.system;
-    system.knowledges[Object.keys(system.knowledges).length] = {
-      subject: "New Knowledge",
-      level: 0,
-      bonus: 0,
-      natural: false,
-      grandmaster: false
+  async setPronouns(set, pronouns) {
+    const update = {
+      system: {}
     };
+    if (set != 5) {
+      const selectedSet = NEWERA.pronouns[set];
+      update.system.pronouns = {
+        index: set,
+        ...selectedSet
+      }
+    } else {
+      update.system.pronouns = {
+        index: 5,
+        ...pronouns
+      }
+    }
+    await this.update(update);
   }
 
-  addSpecialty() {
-    const system = this.system;
-    system.specialties[Object.keys(system.specialties).length] = {
-      subject: "New Specialty",
-      level: 0,
-      bonus: 0,
-      defaultParent: "other"
-    };
+  async addKnowledge(subject = null, count = 1) {
+    const update = {
+      system: {
+        knowledges: {}
+      }
+    }
+    for (let i = 0; i < count; i++){
+      update.system.knowledges[Object.keys(this.system.knowledges).length + i] = {
+        subject: subject || "New Knowledge",
+        level: 0,
+        bonus: 0,
+        natural: false,
+        grandmaster: false
+      };
+    }
+    await this.update(update);
   }
 
-  addSpecialModifier() {
-    const system = this.system;
-    system.specialModifiers[Object.keys(system.specialModifiers).length] = {
+  async addSpecialty(subject = null, count = 1) {
+    const update = {
+      system: {
+        specialties: {}
+      }
+    }
+    for (let i = 0; i < count; i++){
+      update.system.specialties[Object.keys(this.system.specialties).length] = {
+        subject: subject || "New Specialty",
+        level: 0,
+        bonus: 0,
+        defaultParent: NEWERA.specialtyDefaultParents[subject] || "other"
+      };
+    }
+    await this.update(update);
+  }
+
+  async addSpecialModifier() {
+    const update = {
+      system: {
+        specialModifiers: {}
+      }
+    }
+    update.system.specialModifiers[Object.keys(this.system.specialModifiers).length] = {
       subject: "New Modifier",
       bonus: 0,
       parent: ""
     };
+    await this.update(update);
+  }
+
+  async deleteKnowledge(index){
+    const update = {
+      system: {
+        knowledges: {}
+      }
+    }
+    update.system.knowledges = NewEraUtils.spliceIndexedObject(this.system.knowledges, index);
+    //Update learning experience selections to reflect the deleted knowledge
+    if (this.system.classes){
+      for (const [className, classData] of Object.entries(this.system.classes)){
+        if (classData.learningExperience){
+          for (const [level, obj] of Object.entries(classData.learningExperience)){
+            const prevSelection = parseInt(obj.improvement);
+            if (prevSelection == index){
+              update.system.classes[className].learningExperience[level].improvement = "";
+            } else if (prevSelection > index){
+              update.system.classes[className].learningExperience[level].improvement = (prevSelection - 1).toString();
+            }
+          }
+        }
+      }
+    }
+    await this.update(update);
+  }
+
+  async deleteSpecialty(index){
+    const update = {
+      system: {
+        specialties: {}
+      }
+    }
+    update.system.specialties = NewEraUtils.spliceIndexedObject(this.system.specialties, index);
+    //Update specialty improvement selections to reflect the deleted specialty
+    if (this.system.classes){
+      for (const [className, classData] of Object.entries(this.system.classes)){
+        if (classData.specialtyImprovement){
+          for (const [level, obj] of Object.entries(classData.specialtyImprovement)){
+            const prevSelection = parseInt(obj.improvement);
+            if (prevSelection == index){
+              update.system.classes[className].specialtyImprovement[level].improvement = "";
+            } else if (prevSelection > index){
+              update.system.classes[className].specialtyImprovement[level].improvement = (prevSelection - 1).toString();
+            }
+          }
+        }
+      }
+    }
+    await this.update(update);
+  }
+
+  async deleteSpecialModifier(index){
+    await this.update({
+      system: {
+        specialModifiers: NewEraUtils.spliceIndexedObject(this.system.specialModifiers, index)
+      }
+    });
+  }
+
+  async deleteItem(id){
+    const item = this.items.get(id);
+    if (item) {
+      if (item.typeIs(NewEraItem.Types.INVENTORY)) {
+        this.actionMessage(item.img, null, "{NAME} drops the {0}.", item.name);
+      }
+      await item.delete();
+    }
   }
 
   getSkillModifier(skill) {
@@ -568,21 +708,54 @@ export class NewEraActor extends Actor {
     }
   }
 
-  addResource() {
-    const system = this.system;
-    system.additionalResources[Object.keys(system.additionalResources).length] = {
+  async addResource(resource = null) {
+    const update = {
+      system: {
+        additionalResources: {}
+      }
+    }
+    update.system.additionalResources[Object.keys(this.system.additionalResources).length] = resource || {
       name: "New Resource",
       value: 0,
-      max: 0
+      max: 0,
+      daily: false,
+      custom: true
     };
+    await this.update(update);
+  }
+
+  async updateResourceByName(name, resourceUpdate) {
+    const index = Object.keys(this.system.additionalResources).find(r => this.system.additionalResources[r].name.toLowerCase() == name.toLowerCase());
+    if (index !== undefined){
+      const update = {
+        system: {
+          additionalResources: {
+            [index]: resourceUpdate
+          }
+        }
+      };
+      await this.update(update);
+    }
+  }
+
+  async updateResourceByIndex(index, resourceUpdate) {
+    const update = {
+      system: {
+        additionalResources: {
+          [index]: resourceUpdate
+        }
+      }
+    };
+    await this.update(update);
   }
 
   async deleteResource(index){
-    await this.update({
+    const update = {
       system: {
-        additionalResources: Formatting.spliceIndexedObject(this.system.additionalResources, index)
+        additionalResources: NewEraUtils.spliceIndexedObject(this.system.additionalResources, index)
       }
-    });
+    };
+    await this.update(update);
   }
 
   getNarration(template, ...args){
@@ -614,15 +787,20 @@ export class NewEraActor extends Actor {
     return output;
   }
 
-  moveItem(id, source, destination){
+  async moveItem(id, source, destination){
     console.log(`Moving item ${id} from ${source} to ${destination}`);
     const system = this.system;
+    const update = {
+      system: {
+        equipment: {}
+      }
+    };
     const item = this.items.get(id);
     if (source != "backpack"){
-      system.equipment[source] = "";
+      update.system.equipment[source] = "";
     }
     if (destination != "backpack"){
-      system.equipment[destination] = id;
+      update.system.equipment[destination] = id;
     }
     //Handle two-handed items.
     //For "2H", force the item to the right hand and clear the left.
@@ -631,10 +809,11 @@ export class NewEraActor extends Actor {
       console.log("Checking for a two-handed item...");
       if (item.system.handedness == "2H" || (item.system.handedness == "1.5H" && destination == "rightHand" && !system.forceOneHanded)){
         console.log("Moved to right hand and cleared left");
-        system.equipment.rightHand = id;
-        system.equipment.leftHand = "";
+        update.system.equipment.rightHand = id;
+        update.system.equipment.leftHand = "";
       }
     }
+    await this.update(update);
   }
 
   /**
@@ -642,12 +821,56 @@ export class NewEraActor extends Actor {
    * @param {NewEraActor} recipient The actor receiving the item
    * @param {NewEraItem} item The item being transferred
    * @param {string} targetSlot The inventory slot to place the transferred item in on the recipient
+   * @param {number} quantity The quantity of the item to transfer
    */
-  async transferItem(recipient, item, targetSlot){
-    console.log(`Entering transferItem ${this.id}->${recipient.id} item=${item.id}`);
+  async transferItem(recipient, item, targetSlot, quantity = 1){
+    console.log(`Entering transferItem ${this.id}->${recipient.id} item=${item.id} x${quantity}`);
+    if (quantity <= 0) return;
     const sourceSlot = this.findItemLocation(item);
-    const newItem = await Item.create(item, {parent: recipient});
-    if (targetSlot != "backpack"){
+    let newItem = null;
+    let stacked = false;
+    //For stackable items
+    if (item.typeIs(NewEraItem.Types.STACKABLE) && !item.system.enchanted){ //Enchanted items can differ even when they have the same object ID, so avoid stacking them
+      //Determine whether the recipient already has an item of the same type and object ID. If so, add the quantity to that item.
+      let existingItem = null;
+      if (item.system.casperObjectId){
+        if (targetSlot == NewEraActor.EquipmentSlots.BACKPACK){
+          existingItem = recipient.items.find(i => i.canStackWith(item) && recipient.findItemLocation(i) == NewEraActor.EquipmentSlots.BACKPACK);
+        } else {
+          const targetItemId = recipient.system.equipment[targetSlot];
+          if (targetItemId){
+            const targetItem = recipient.items.get(targetItemId);
+            if (targetItem && targetItem.canStackWith(item)){
+              existingItem = targetItem
+            }
+          }
+        }
+      }
+      if (existingItem){
+        console.log(`Found existing item ${existingItem.id} to stack ${quantity} of ${item.name} with.`);
+        await existingItem.update({
+          system: {
+            quantity: existingItem.system.quantity + quantity
+          }
+        });
+        newItem = existingItem;
+        stacked = true;
+      } else {
+        console.log(`No existing item found or casperObjectId is not set. Creating a new item.`);
+        newItem = await Item.create({
+          ...item,
+          system: {
+            ...item.system,
+            quantity: quantity
+          }
+        }, {parent: recipient});
+      }
+    } else {
+      console.log(`Item is not stackable or is enchanted. Creating a new item.`);
+      newItem = await Item.create(item, {parent: recipient});
+    }
+
+    if (targetSlot != "backpack" && !stacked){
       let recUpdate = {
         system: {
           equipment: {}
@@ -656,26 +879,81 @@ export class NewEraActor extends Actor {
       recUpdate.system.equipment[targetSlot] = newItem._id;
       await recipient.update(recUpdate);
     }
-    if (sourceSlot != "backpack"){
-      let srcUpdate = {
+      
+    const remainingQuantity = item.system.quantity - quantity;
+    if (remainingQuantity > 0){
+      await item.update({
         system: {
-          equipment: {}
+          quantity: remainingQuantity
         }
-      };
-      srcUpdate.system.equipment[sourceSlot] = "";
-      await this.update(srcUpdate);
+      });
+    } else {
+      //If the remaining quantity is 0, delete the item and clear it from equipment
+      if (sourceSlot != "backpack"){
+        let srcUpdate = {
+          system: {
+            equipment: {}
+          }
+        };
+        srcUpdate.system.equipment[sourceSlot] = "";
+        await this.update(srcUpdate);
+      }
+      await item.delete();
     }
-    await item.delete();
     if (recipient.typeIs(NewEraActor.Types.ANIMATE)){
       const frameImg = "systems/newera-sol366/resources/" + ((sourceSlot == "backpack" || targetSlot == "backpack") ? "ac_3frame.png" : "ac_1frame.png");
-      if (Formatting.sendEquipmentChangeMessages()){
+      if (NewEraUtils.sendEquipmentChangeMessages()){
         if (this.typeIs(NewEraActor.Types.CHARACTER) && !this.system.defeated){
-          this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
+          if (item.typeIs(NewEraItem.Types.STACKABLE)){
+            this.actionMessage(item.img, frameImg, "{NAME} gave {0} of {d} {1} to {2}.", quantity, item.name, recipient.name);
+          } else {
+            this.actionMessage(item.img, frameImg, "{NAME} gave {d} {0} to {1}.", (item.type == "Phone" ? "phone" : item.name), recipient.name);
+          }
         } else {
           recipient.actionMessage(item.img, this.img, "{NAME} takes the {0}.", item.name);
         }
       }
     }
+  }
+
+  /**
+   * Split a stackable item into two new items of equivalent total quantity.
+   * @param {NewEraItem} item The item to split
+   * @param {number} quantity The quantity of the item to split off - must be at least 1 and less than the total quantity of the item
+   */
+  async splitStack(item, quantity){
+    if (!item.typeIs(NewEraItem.Types.STACKABLE) || item.system.quantity == 1 || quantity <= 0 || quantity >= item.system.quantity) return;
+
+    const remainingQuantity = item.system.quantity - quantity;
+    await item.update({
+      system: {
+        quantity: remainingQuantity
+      }
+    });
+    await Item.create({
+      ...item,
+      system: {
+        ...item.system,
+        quantity: quantity
+      }
+    }, {parent: this});
+  }
+
+  /** Look for all items in the inventory with the same object ID and merge them into a single item. */
+  async mergeStacks(item){
+    if (!item.typeIs(NewEraItem.Types.STACKABLE) || !item.system.casperObjectId || item.system.enchanted) return;
+    const sameStacks = this.items.filter(i => i.canStackWith(item));
+    if (sameStacks.length == 0) return;
+    const totalQuantity = sameStacks.reduce((acc, i) => acc + i.system.quantity, 0) + item.system.quantity;
+    await item.update({
+      system: {
+        quantity: totalQuantity
+      }
+    });
+    for (const stack of sameStacks){
+      await stack.delete();
+    }
+    ui.notifications.info(`Stacked ${totalQuantity} total ${item.name}.`); 
   }
 
   actionMessage(baseImage, overlayImage, template, ...args){
@@ -834,8 +1112,9 @@ export class NewEraActor extends Actor {
     await this.update(update);
   }
 
-  async increaseMaxHp(roll){
+  async increaseMaxHp(clazz, roll){
     const system = this.system;
+    const className = clazz.system.classId;
     const update = {
       system: {
         lifePoints: {},
@@ -843,19 +1122,19 @@ export class NewEraActor extends Actor {
       }
     };
     if (roll){
-      const r = new Roll(`1d${system.hitPointIncrement}+@abilities.constitution.mod`, this.getRollData());
+      const r = new Roll(`${ClassInfo.hitPointIncrements[className].roll}+@abilities.constitution.mod`, this.getRollData());
       await r.evaluate();
       r.toMessage({
         speaker: ChatMessage.getSpeaker({actor: this}),
-        flavor: `Max HP Increase - Level ${system.level}`
+        flavor: `Max HP Increase - ${clazz.system.selectedClass} Level ${system.level}`
       })
-      const gained = r.total;
+      const gained = Math.max(r.total, 1); //Characters with low CON modifiers could get a negative result - guarantee at least 1 HP per level
       update.system.hitPointTrueMax = system.hitPointTrueMax + gained;
       update.system.hitPoints.max = system.hitPoints.max + gained;
       update.system.hitPoints.value = system.hitPoints.value + gained;
     } else {
-      const average = Math.round((1 + system.hitPointIncrement) / 2);
-      const gained = average + system.abilities.constitution.mod;
+      const average = ClassInfo.hitPointIncrements[className].average;
+      const gained = Math.max(average + system.abilities.constitution.mod, 1);
       update.system.hitPointTrueMax = system.hitPointTrueMax + gained;
       update.system.hitPoints.max = system.hitPoints.max + gained;
       update.system.hitPoints.value = system.hitPoints.value + gained;
@@ -928,9 +1207,19 @@ export class NewEraActor extends Actor {
       Add exhaustion reduction by 1 to this in v0.10 after active effects are completed.
     */
     if (isLongRest) {
+      //Fully restore life points and energy
       gained.lifePoints = system.lifePoints.max - system.lifePoints.value;
       gained.energy = system.energy.max - system.energy.value;
-      //TODO Reduce exhaustion by 1 and clear other status effects
+      //Fully refresh any daily resources
+      const resUpdate = structuredClone(system.additionalResources);
+      Object.values(resUpdate).forEach(r => {
+        if (r.daily){
+          r.value = r.max;
+        }
+      });
+      await this.update({
+        system: {additionalResources: resUpdate}
+      });
     } else {
       const recoverableEnergy = system.energy.max - system.energy.value;
       gained.energy = Math.min(recoverableEnergy, system.casterLevel * hours);
@@ -1223,7 +1512,7 @@ export class NewEraActor extends Actor {
           label: `Sustaining: ${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`,
           img: spell.img,
           description: `<p>You're sustaining a spell.</p>
-          ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}
+          ${NewEraUtils.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}
           <p>You can use any number of frames on your turn to sustain the spell. You can continue sustaining it as long as you spend at least one frame doing so during your turn.
           You stop sustaining the spell if your concentration is broken.</p>`,
           origin: spell._id
@@ -1239,7 +1528,7 @@ export class NewEraActor extends Actor {
           img: spell.img,
           description: `<p>You're casting an Ephemeral spell.</p>
           <p>You can end this effect at any time as a free action from the Actions tab.</p>
-          ${Formatting.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}`,
+          ${NewEraUtils.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}`,
           origin: spell._id
         }]);
       }
@@ -1294,20 +1583,24 @@ export class NewEraActor extends Actor {
 
   async endSpell(message = true){
     const spellEffect = this.effects.find(e => e.label.includes("Casting: "));
-    const spell = this.items.get(spellEffect.origin);
-    await spellEffect.delete();
+    if (spellEffect){
+      const spell =  this.items.get(spellEffect.origin);
+      await spellEffect.delete();
+      if (message) {
+        this.actionMessage(this.img, null, "{NAME} cancels {0}.", spell ? spell.name : "the spell");
+      }
+    }
     await this.update({
       system: {
         ephemeralEffectActive: false
       }
     });
-    if (message) {
-      this.actionMessage(this.img, null, "{NAME} cancels {0}.", spell ? spell.name : "the spell");
-    }
 }
     async stopSustaining(){
         const sustainEffect = this.effects.find(e => e.label.includes("Sustaining: "));
-        await sustainEffect.delete();
+        if (sustainEffect){
+          await sustainEffect.delete();
+        }
         await this.update({
           system: {
             sustaining: {
@@ -1364,12 +1657,13 @@ export class NewEraActor extends Actor {
 
     /* Determines whether an action should be shown based on the action's type and the location within the actor's equipment */
     isItemActionAvailable(action, item){
-      const showWhen = action.show;
-      const location = this.findItemLocation(item);
-      const equipment = this.system.equipment;
-      //console.log(`IIAA item=${item._id} show=${showWhen} location=${location}`);
-      //console.log(action);
-      //console.log(item);
+      if (game.settings.get("newera-sol366", "enforceActionConditions")){
+        const showWhen = action.show;
+        const location = this.findItemLocation(item);
+        const equipment = this.system.equipment;
+        //console.log(`IIAA item=${item._id} show=${showWhen} location=${location}`);
+        //console.log(action);
+        //console.log(item);
       let available = false;
       switch (showWhen){
         case "always":
@@ -1382,17 +1676,23 @@ export class NewEraActor extends Actor {
           available = (location && location!="backpack");
           break;
         case "oneHanded": //Only used for 1.5H equipment
-          available = (location == "leftHand" || (location == "rightHand" && equipment.leftHand != ""));
+          available = (location == "leftHand"
+            || (location == "rightHand" && equipment.leftHand != "")
+            || (location == "rightHand" && this.system.forceOneHanded)
+          );
           break;
         case "twoHanded": //Only used for 1.5H equipment
-          available = (location == "rightHand" && !equipment.leftHand);
+          available = (location == "rightHand" && (!equipment.leftHand || !this.system.forceOneHanded));
           break;
         default:
           available = (showWhen == location);
           break;
+        }
+        //console.log(`available=${available}`);
+        return available;
+      } else {
+        return true;
       }
-      //console.log(`available=${available}`);
-      return available;
     }  
 
     /* Returns the current equipment slot location of the specified item. Returns "backpack" if the item is not equipped anywhere, and null if not owned by the actor at all. */
@@ -1412,7 +1712,11 @@ export class NewEraActor extends Actor {
         }
       }
       return null;
-    }  
+    }
+
+    hasItemInHand(item){
+      return ["rightHand", "leftHand"].includes(this.findItemLocation(item));
+    }
 
   /* 
     Find an item action based on the name and some characteristics of the item it was created from.
@@ -1454,21 +1758,6 @@ export class NewEraActor extends Actor {
     }
   }
 
-  updateNaturalSkill(from, to){
-    if (this.type != "Player Character") return;
-    const update = structuredClone(this.system);
-    if (from){
-      if (update.skills[from]){
-        update.skills[from].natural = false;
-      } else if (update.magic[from]){
-        update.magic[from].natural = false;
-      } else {
-        const knowledge = update.knowledges.find(k => k.subject == from);
-        
-      }
-    }
-  }
-
   /**
    * Returns an object with information about all the different energy pool options (i.e. Focus Energy, Dark Energy) available to this actor when casting spells.
    */
@@ -1485,6 +1774,15 @@ export class NewEraActor extends Actor {
       return [];
     }
     
+  }
+
+  hasEnergyAvailable(amount = 1){
+    for (const pool of this.energyPools){
+      if (pool.available >= amount){
+        return true;
+      }
+    }
+    return false;
   }
 
   hasFeatOrFeature(text){
@@ -1556,33 +1854,75 @@ export class NewEraActor extends Actor {
         default: defeated ? 3 : 0
       }
     });
+    if (defeated){
+      this.items.forEach(item => {
+        if (item.typeIs(NewEraItem.Types.STACKABLE) && item.system.rollQuantity){
+          item.rollQuantity();
+        }
+      });
+    }
+  }
+
+  async lockUnlockContainer(){
+    const ownership = (this.ownership.default == 3) ? 0 : 3;
+    await this.update({
+      ownership: {
+        default: ownership
+      }
+    });
+    if (ownership == 3){
+      ui.notifications.info(`${this.name} is now UNLOCKED. Players can open and change the token and take items.`);
+      this.items.forEach(item => {
+        if (item.typeIs(NewEraItem.Types.STACKABLE) && item.system.rollQuantity){
+          item.rollQuantity();
+        }
+      });
+    } else {
+      ui.notifications.info(`${this.name} is now LOCKED.`);
+    }
   }
 
   getLearningExperienceOptions(){
-    const output = {
-      improvement: {
-        label: "Make a Selection",
-        options: {}
-      }
-    };
+    const output = {};
     for (const [k, v] of Object.entries(this.system.knowledges)){
-      if (v.level < 10){
-        output.improvement.options[k] = v.subject;
+      if (v.level == 10){
+        output[k] = v.subject + " (Max Level)";
+      } else {
+        output[k] = v.subject;
       }
     }
     return output;
   }
 
   getSpecialtyImprovementOptions(){
-    const output = {
-      improvement: {
-        label: "Choose a Specialty",
-        options: {}
-      }
-    };
+    const output = {};
     for (const [k, v] of Object.entries(this.system.specialties)){
-      if (v.level < 3){
-        output.improvement.options[k] = v.subject;
+      if (v.level == 3){
+        output[k] = v.subject + " (Max Level)";
+      } else {
+        output[k] = v.subject;
+      }
+    }
+    return output;
+  }
+
+  getSkillOptions(){
+    return {
+      ...NEWERA.defaultSkillOptions,
+      ...this.getLearningExperienceOptions()
+    }
+  }
+
+  getNaturalSkillOptions(){
+    let output = {};
+    for (const [key, obj] of Object.entries(this.system.skills)){
+      if (obj.natural) {
+        output[key] = NewEraUtils.keyToTitle(key);
+      }
+    }
+    for (const [key, obj] of Object.entries(this.system.magic)){
+      if (obj.natural) {
+        output[key] = NewEraUtils.keyToTitle(key) + " Magic";
       }
     }
     return output;
@@ -1823,5 +2163,538 @@ export class NewEraActor extends Actor {
         }
       });
     }
+  }
+
+  findAmmoFor(item) {
+    if (!item.typeIs(NewEraItem.Types.RANGED_WEAPON)) {
+      return null;
+    }
+    const priority = game.settings.get("newera-sol366", "ammoPriority");
+    const compatibleAmmoIds = NEWERA.compatibleAmmoIds[item.system.ammo.type];
+    if (priority == "strongest") {
+      for (const id of compatibleAmmoIds) {
+        const ammo = this.items.contents.find(i => i.type == "Item" && i.system.casperObjectId);
+        if (ammo) {
+          return ammo;
+        }
+      }
+      return null;
+    } else if (priority == "quantity") {
+      const ammo = this.items.contents.filter(i => i.type == "Item" && compatibleAmmoIds.includes(i.system.casperObjectId));
+      if (ammo.length == 0) {
+        return null;
+      } else if (ammo.length == 1) {
+        return ammo[0];
+      } else {
+        //Select the ammo with the highest quantity
+        return ammo.sort((a, b) => b.system.quantity - a.system.quantity)[0];
+      }
+    } else if (priority == "manual") {
+      //Manual checks the worn item slots in order for a compatible ammo item - if none are found, grab the first one found in the inventory
+      for (let i=0; i<this.system.wornItemSlots; i++) {
+        const slot = `worn${i}`;
+        if (this.system.equipment[slot]) {
+          const item = this.items.get(this.system.equipment[slot]);
+          if (item && item.type == "Item" && compatibleAmmoIds.includes(item.system.casperObjectId)) {
+            return item;
+          }
+        }
+      }
+      const ammo = this.items.contents.find(i => i.type == "Item" && compatibleAmmoIds.includes(i.system.casperObjectId));
+      return ammo ||null;
+    }
+  }
+
+  hasAmmoFor(item, minimum = 1) {
+    const compatibleAmmoIds = NEWERA.compatibleAmmoIds[item.system.ammo.type];
+    return this.items.contents.some(i => i.type == "Item" && compatibleAmmoIds.includes(i.system.casperObjectId) && i.system.quantity >= minimum);
+  }
+
+  hasFreeHands(number) {
+    if (number > 2){
+      ui.notifications.error("Please contact the Curse Recovery Association at (+29) 049 003 001.");
+      return false;
+    }
+    if (game.settings.get("newera-sol366", "enforceActionConditions")){
+      if (number == 2){
+        return this.system.equipment.leftHand == "" && this.system.equipment.rightHand == "";
+      } else if (number == 1){
+        return !(
+          (this.system.equipment.leftHand && this.system.equipment.rightHand)
+          || (this.system.equipment.rightHand && this.items.get(this.system.equipment.rightHand).system.handedness == '2H')
+          || (this.system.equipment.rightHand && this.items.get(this.system.equipment.rightHand).system.handedness == '1.5H' && !this.system.forceOneHanded)
+          )
+      } else {
+        return true;
+      }
+    }
+    return true;
+  }
+
+  canCastSpell(spell){
+    if (game.settings.get("newera-sol366", "enforceActionConditions")){
+      if (!spell.system.keywords.includes("Asomatic")){
+        if (["G", "L", "R"].includes(spell.system.castType)){
+          return this.hasFreeHands(2);
+        } else {
+          return this.hasFreeHands(1);
+        }
+      }
+    }
+    return true;
+  }
+
+  /* AUTO LEVEL UP FUNCTIONS */
+
+  async levelUp(clazz) {
+    const fromLevel = clazz.system.level;
+    const toLevel = fromLevel + 1;
+    const className = clazz.system.selectedClass.toLowerCase();
+    console.log(`[ALU] Leveling up ${this.name}:${className} to ${toLevel}`);
+    await clazz.update({
+      system: {
+        level: toLevel
+      }
+    });
+    if (game.settings.get("newera-sol366", "autoLevelUp")) {
+      console.log(`[ALU] Starting auto-level up for ${this.name}:${className} ${fromLevel} -> ${toLevel}`);
+      const archetypeData = ClassInfo.getArchetypeData(this);
+      const featuresToUnlock = ClassInfo.features[className].filter(feature => 
+        feature.level > fromLevel
+        && feature.level <= toLevel
+        && (!feature.archetype || archetypeData.hasOwnProperty(feature.archetype)) //This will not catch retroactive archetype features or those that unlock at the same time as the archetype selection, but unlockArchetypeFeatures will
+      );
+      for (const feature of featuresToUnlock){
+          if (typeof feature.onUnlock == 'function'){
+            await feature.onUnlock(this);
+            console.log(`[ALU] Unlocked ${feature.name}`);
+          }
+          if (feature.common) {
+            const commonFeature = ClassInfo.features.common[feature.common];
+            if (typeof commonFeature.onUnlock == 'function'){
+              await commonFeature.onUnlock(this);
+              console.log(`[ALU] Unlocked common feature ${commonFeature.name}`);
+            }
+          }
+          if (feature.spellStudies && feature.spellStudies.some(s => typeof s.showWhen != 'function')) { //Don't trigger this notification for conditional spell studies
+            ui.notifications.info(`You can learn new spells at this level! Access the Spell Study Guide from the Class tab.`);
+          }
+      }
+      const featuresToUpdate = ClassInfo.features[className].filter(feature => 
+        feature.level <= toLevel
+        && feature.tableValues
+        && (!feature.archetype || archetypeData.hasOwnProperty(feature.archetype)) //This will not catch retroactive archetype features or those that unlock at the same time as the archetype selection, but unlockArchetypeFeatures will
+      );
+      for (const feature of featuresToUpdate){
+        feature.tableValues.forEach(async tv => {
+          if (typeof tv.onUpdate == 'function'){
+            const fromVal = tv.values[fromLevel];
+            const toVal = tv.values[toLevel];
+            if (toVal > fromVal){
+              await tv.onUpdate(this, fromVal, toVal);
+              console.log(`[ALU] Updated Table value for ${feature.name}:${tv.label} from ${fromVal} to ${toVal}`);
+            } else {
+              console.log(`[ALU] Table value for ${feature.name}:${tv.label} is still ${fromVal}.`);
+            }
+          } else {
+            console.log(`[ALU] Table value for ${feature.name}:${tv.label} has no onUpdate function.`);
+          }
+        });
+      }
+      console.log(`[ALU] Auto-Level Up for ${this.name}:${className} ${fromLevel} -> ${toLevel} complete.`);
+    } else {
+      console.log(`[ALU] Auto-Level Up is disabled.`);
+    }
+    Actions.showHpIncreaseDialog(this, clazz, ClassInfo.hitPointIncrements[className]); //Passing the HP increment here because importing ClassInfo in Actions creates a circular dependency
+  }
+
+  async unlockArchetypeFeatures(className, archetype, level){
+    console.log(`[ALU] Unlocking archetype features for ${this.name} ${className}:${archetype} level ${level}`);
+    const archetypeFeatures = ClassInfo.features[className].filter(feature => 
+      feature.archetype == archetype
+      && feature.level <= this.getClassLevel(className)
+      && (feature.level >= level || feature.retroactiveUnlock));
+    for (const feature of archetypeFeatures){
+      if (typeof feature.onUnlock == 'function'){
+        await feature.onUnlock(this);
+        console.log(`[ALU] Unlocked archetype feature ${feature.name}`);
+      }
+    }
+  }
+
+  /**
+   * Improve natural skills by 1 level each.
+   */
+  async improveNaturalSkills(){
+    const update = {
+      system: {
+        skills: {},
+        magic: {},
+        knowledges: {}
+      }
+    }
+    for (const [k, obj] of Object.entries(this.system.skills)){
+      if (obj.natural && obj.level < 10) {
+        update.system.skills[k] = {
+          level: obj.level + 1
+        }
+      }
+    }
+    for (const [k, obj] of Object.entries(this.system.magic)){
+      if (obj.natural && obj.level < 10) {
+        update.system.magic[k] = {
+          level: obj.level + 1
+        }
+      }
+    }
+    for (const [k, obj] of Object.entries(this.system.knowledges)){
+      if (obj.natural && obj.level < 10) {
+        update.system.knowledges[k] = {
+          level: obj.level + 1
+        }
+      }
+    }
+    await this.update(update);
+    ui.notifications.info("Your Natural Skills increased!");
+  }
+
+  /**
+   * Set a skill as natural based on selections in a class Natural Skills feature.
+   * @param {*} from The old skill to remove.
+   * @param {*} to The new skill to set.
+   */
+  async setNaturalSkill(from, to){
+    if (from == to) return;
+    if (this.type != "Player Character") return;
+    const update = {
+      skills: {},
+      magic: {}
+    };
+    if (from){
+      if (this.system.skills[from]){
+        update.skills[from] = {
+          natural: false
+        }
+      } else if (this.system.magic[from]){
+        update.magic[from] = {
+          natural: false
+        }
+      } else {
+        ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+      }
+    }
+    if (to) {
+      if (this.system.skills[to]){
+        if (this.system.skills[to].natural) {
+          ui.notifications.warn(`You're already a natural in that skill!`);
+        } else {
+          update.skills[to] = {
+            natural: true
+          }
+          ui.notifications.info(`You're now a natural in ${NewEraUtils.keyToTitle(to)}!`);
+        }
+      } else if (this.system.magic[to]){
+        if (this.system.magic[to].natural) {
+          ui.notifications.warn(`You're already a natural in that skill!`);
+        } else {
+          update.magic[to] = {
+            natural: true
+          }
+          ui.notifications.info(`You're now a natural in ${NewEraUtils.keyToTitle(to)} magic!`);
+        }
+      } else {
+          ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+      }
+    }
+    await this.update({
+      system: update
+    });
+  }
+
+  /**
+   * Boost a skill through a class feature.
+   * @param {*} from The old skill to remove.
+   * @param {*} to The new skill to set.
+   * @param {boolean} levelIncrease If true, the skill's level is increased. Otherwise, the boost applies to the modifier bonus.
+   */
+  async setSkillBoost(from, to, levelIncrease = false){
+    if (this.type != "Player Character") return;
+    const field = levelIncrease ? "level" : "bonus";
+    const update = {
+      skills: {},
+      magic: {}
+    };
+    if (from){
+      if (this.system.skills[from]){
+        update.skills[from] = {
+          [field]: this.system.skills[from][field] - 1
+        }
+      } else if (this.system.magic[from]){
+        update.magic[from] = {
+          [field]: this.system.magic[from][field] - 1
+        }
+      } else { //This function and setNaturalSkill might need to support knowledges but there is no need yet.
+        ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+      }
+    }
+    if (to) {
+      if (this.system.skills[to]){
+        if (levelIncrease && this.system.skills[to].level == 10) {
+          ui.notifications.warn(`Your ${NewEraUtils.keyToTitle(to)} skill is already at max level!`);
+        } else {
+          update.skills[to] = {
+            [field]: this.system.skills[to][field] + 1
+          }
+          if (levelIncrease){
+            ui.notifications.info(`Your ${NewEraUtils.keyToTitle(to)} skill increased to ${update.skills[to][field]}!`);
+          } else {
+            ui.notifications.info(`Your ${NewEraUtils.keyToTitle(to)} skill bonus is now ${update.skills[to][field]}.`);
+          }
+        }
+      } else if (this.system.magic[to]){
+        if (levelIncrease && this.system.magic[to].level == 10) {
+          ui.notifications.warn(`Your ${NewEraUtils.keyToTitle(to)} magic skill is already at max level!`);
+        } else {
+          update.magic[to] = {
+            [field]: this.system.magic[to][field] + 1
+          }
+          if (levelIncrease){
+            ui.notifications.info(`Your ${NewEraUtils.keyToTitle(to)} magic skill increased to ${update.magic[to][field]}!`);
+          } else {
+            ui.notifications.info(`Your ${NewEraUtils.keyToTitle(to)} magic skill bonus is now ${update.magic[to][field]}.`);
+          }
+        }
+      } else {
+        ui.notifications.error(`Error: Unable to locate skill key: ${from}`);
+      }
+    }
+    await this.update({
+      system: update
+    });
+  }
+
+  /**
+   * Set a level in the specified specialty.
+   * If the actor already has a specialty in that subject, increase its level by 1 unless it's already 3.
+   * Otherwise, add a new specialty at level 1.
+   * @param {*} fromSubject An optional old specialty to remove. This specialty will be lowered by 1 level, or deleted if it's already level 1.
+   * @param {*} subject The new specialty to set.
+   * @param {*} parentSkill The parent skill of the new specialty, if one is created.
+   */
+  async setSpecialtyFeature(fromSubject, subject, parentSkill = "", allowStacking = false) {
+    const from = NEWERA.alternateSpecialtyKeys[fromSubject] || fromSubject;
+    const to = NEWERA.alternateSpecialtyKeys[subject] || subject;
+    const defaultParent = parentSkill || NEWERA.specialtyDefaultParents[subject] || NEWERA.specialtyDefaultParents[to];
+    const update = {
+      specialties: {}
+    };
+    if (from){
+      const fromIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == NewEraUtils.keyToTitle(from));
+      if (fromIndex !== undefined){
+        if (this.system.specialties[fromIndex].level > 1){
+          update.specialties[fromIndex] = {
+            level: this.system.specialties[fromIndex].level - 1
+          }
+        } else {
+          await this.deleteSpecialty(fromIndex);
+        }
+      }
+    }
+    if (to){
+      const title = NewEraUtils.keyToTitle(to);
+      const toIndex = Object.keys(this.system.specialties).find(spec => this.system.specialties[spec].subject == title);
+      if (toIndex !== undefined){
+        if (allowStacking){
+          if (this.system.specialties[toIndex].level < 3){
+            update.specialties[toIndex] = {
+              level: this.system.specialties[toIndex].level + 1
+            }
+            ui.notifications.info(`Your ${title} specialty increased to ${update.specialties[toIndex].level}!`);
+          } else {
+            ui.notifications.warn(`Your ${title} specialty is already at max level! Specialties can't exceed level 3.`);
+          }
+        } else {
+          ui.notifications.warn(`You already have a specialty in ${title}. You can't use this feature to increase its level.`);
+        }
+      } else {
+        update.specialties[Object.keys(this.system.specialties).length] = {
+          subject: title,
+          level: 1,
+          bonus: 0,
+          defaultParent: defaultParent
+        };
+        ui.notifications.info(`You've gained a specialty in ${title}!`);
+      }
+    }
+    await this.update({
+      system: update
+    });
+  }
+
+  async setCasterLevel(from, to, setMaxEnergy = true) {
+    const energyChange = setMaxEnergy ? NEWERA.baseEnergyMaximums[to] - NEWERA.baseEnergyMaximums[from || 0] : 0;
+    await this.update({
+      system: {
+        casterLevel: to,
+        energy: {
+          max: this.system.energy.max + energyChange,
+          value: this.system.energy.value + energyChange
+        }
+      }
+    });
+    ui.notifications.info(`Your caster level increased to ${to}!`);
+  }
+
+  async setAbilityScoreImprovement(from, to){
+    if (to == from) return;
+    const update = {
+      abilities: {}
+    };
+    if (from){
+      update.abilities[from] = {
+        score: this.system.abilities[from].score - 1
+      }
+      if (from == "constitution" && NEWERA.abilityScoreModifiers[update.abilities.constitution.score] < NEWERA.abilityScoreModifiers[this.system.abilities.constitution.score]){
+        update.hitPoints = {
+          max: this.system.hitPoints.max - 1, //This method only ever changes the score by 1
+          value: this.system.hitPoints.value - 1
+        }
+        update.hitPointTrueMax = this.system.hitPointTrueMax - 1;
+      }
+    }
+    if (to){
+      if (this.system.abilities[to].score >= 20 && this.system.level < 15){
+        ui.notifications.warn(`You can't increase an ability score beyond 20 until you reach level 15.`);
+      } else if (this.system.abilities[to].score >= 30){
+        ui.notifications.warn(`You can't increase an ability score beyond 30.`);
+      } else {
+        update.abilities[to] = {
+          score: this.system.abilities[to].score + 1
+        }
+        ui.notifications.info(`Your ${to} increased to ${update.abilities[to].score}!`);
+        //Adjust max HP if constitution modifier changed 
+        if (to == "constitution" && NEWERA.abilityScoreModifiers[update.abilities.constitution.score] > NEWERA.abilityScoreModifiers[this.system.abilities.constitution.score]){
+          update.hitPoints = {
+            max: this.system.hitPoints.max + 1, //This method only ever changes the score by 1
+            value: this.system.hitPoints.value + 1
+          }
+          update.hitPointTrueMax = this.system.hitPointTrueMax + 1;
+        }
+      }
+    }
+    await this.update({system: update});
+  }
+
+  async setLearningExperience(from, to){
+    const update = {
+      system: {
+        knowledges: {}
+      }
+    }
+    if (from !== ""){
+      update.system.knowledges[parseInt(from)] = {
+        level: this.system.knowledges[parseInt(from)].level - 1
+      }
+    }
+    if (to) {
+      const knowledge = this.system.knowledges[parseInt(to)];
+      update.system.knowledges[parseInt(to)] = {
+        level: knowledge.level + 1
+      }
+      ui.notifications.info(`Your ${knowledge.subject} knowledge increased to ${knowledge.level + 1}!`);
+    }
+    await this.update(update);
+  }
+
+  async setSpecialtyImprovement(from, to){
+    const update = {
+      system: {
+        specialties: {}
+      }
+    }
+    if (from !== ""){
+      update.system.specialties[parseInt(from)] = {
+        level: this.system.specialties[parseInt(from)].level - 1
+      }
+    }
+    if (to) {
+      const specialty = this.system.specialties[parseInt(to)];
+      update.system.specialties[parseInt(to)] = {
+        level: specialty.level + 1
+      }
+      ui.notifications.info(`Your ${specialty.subject} specialty increased to ${specialty.level + 1}!`);
+    }
+    await this.update(update);
+  }
+  /**
+   * Add a spell, enchantment, or potion recipe to the character by its compendium ID.
+   * @param {string} id The unique ID of the object in the Spells compendium, i.e. CASPERSP00000001
+   */
+  async addMagicById(id){
+    const entry = await game.packs.get("newera-sol366.spells").getDocument(id);
+    if (entry) {
+      await Item.create(entry, {parent: this});
+      ui.notifications.info(`You learned ${entry.name}!`);
+    } else {
+      ui.notifications.error(`Error: Unable to locate object with ID: ${id}`);
+    }
+  }
+
+  async increaseBaseTurnLength(actions = 1, reactions = 0){
+    await this.update({
+      system: {
+        turnLength: {
+          actions: {
+            base: this.system.turnLength.actions.base + actions
+          },
+          reactions: {
+            base: this.system.turnLength.reactions.base + reactions
+          }
+        }
+      }
+    });
+    ui.notifications.info(`Your Turn Length has been increased!`);
+  }
+
+  async setGrandMaster(from, to){
+    const update = {
+      system: {
+        skills: {},
+        magic: {},
+      }
+    };
+    if (from){
+      if (this.system.skills[from]){
+        update.skills[from] = {
+          grandMaster: false
+        }
+      } else if (this.system.magic[from]){
+        update.magic[from] = {
+          grandMaster: false
+        }
+      }
+    }
+    if (to){
+      if (this.system.skills[to]){
+        if (this.system.skills[to].level < 10){
+          ui.notifications.warn(`You must reach skill level 10 before you can become a grand master!`);
+        } else {
+          update.skills[to] = {
+            grandMaster: true
+          }
+          ui.notifications.info(`${this.name} is now a grand master in ${NewEraUtils.keyToTitle(to)}!`);
+        }
+      } else if (this.system.magic[to]){
+        if (this.system.magic[to].level < 10){
+          ui.notifications.warn(`You must reach magic level 10 before you can become a grand master!`);
+        } else {
+          update.magic[to] = {
+            grandMaster: true
+          }
+          ui.notifications.info(`${this.name} is now a grand master in ${NewEraUtils.keyToTitle(to)} magic!`);
+        }
+      }
+    }
+    await this.update(update);
   }
 }

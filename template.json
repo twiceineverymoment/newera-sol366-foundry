@@ -369,20 +369,10 @@
         		}
       		},
 			"money": {
-				"balance": 0,
-				"wallet": {
-					"1coins": 0,
-					"5coins": 0,
-					"10coins": 0,
-					"20coins": 0,
-					"50coins": 0,
-					"100coins": 0,
-					"100bills": 0,
-					"500bills": 0,
-					"1kbills": 0,
-					"2kbills": 0,
-					"5kbills": 0,
-					"10kbills": 0
+				"money": {
+					"digital": 0,
+					"cash": 0,
+					"total": 0
 				}
 			}
 		},
@@ -543,6 +533,11 @@
 					"basis": ""
 				},
 				"materialCosts": {}
+			},
+			"secret": {
+				"secretLevel": 0,
+				"secretName": "",
+				"hideEnchantments": false
 			}
 		},
 		"Item": {
@@ -574,8 +569,13 @@
 			"firingRate": 1,
 			"ammo": {
 				"loaded": 0,
+				"cocked": false,
 				"clipSize": 0,
-				"itemName": "Small Firearm Ammunition"
+				"type": "S",
+				"loadedItem": {
+					"name": "",
+					"damageAdjustment": ""
+				}
 			}
 		},
 		"Shield": {
@@ -591,7 +591,7 @@
 			"material": ""
 		},
 		"Spell": {
-			"templates": ["base", "magic"],
+			"templates": ["base", "magic", "secret"],
 			"castType": "S",
 			"castTime": "",
 			"damage": {
@@ -608,7 +608,7 @@
 			"materialCosts": {}
 		},
 		"Enchantment": {
-			"templates": ["base", "magic"],
+			"templates": ["base", "magic", "secret"],
 			"enchantedItemDescriptor": "",
 			"effectColor": "",
 			"validTargets": {
@@ -630,9 +630,9 @@
 		},
 		"Potion": {
 			"templates": ["base", "equipment", "stackable"],
-			"potionType": "Potion",
+			"potionType": "P",
 			"recipeLevel": 0,
-			"stackingBehavior": "",
+			"stackingBehavior": "N",
 			"isRecipe": false
 		},
 		"Class": {
@@ -676,7 +676,7 @@
 			"templates": ["base", "equipment"],
 			"model": "New Phone",
 			"openApp": "",
-			"callee": "",
+			"currentContact": "",
 			"selectedPhoto": "",
 			"militaryTime": false,
 			"background": "default",

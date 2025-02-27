@@ -1,6 +1,6 @@
 import { NEWERA } from "./config.mjs";
 
-export class Formatting {
+export class NewEraUtils {
 
     static amplifyAndFormatDescription(text, multiplier, stackingBehavior = "S"){
         let tokens = text.split(/\[|\]/g);
@@ -22,7 +22,7 @@ export class Formatting {
               highlightClass = "ampText";
               highlightClassAmplified = "ampText-hot";
             }
-            let ampVal = amplify ? Formatting.amplifyValue(token, multiplier) : token;
+            let ampVal = amplify ? NewEraUtils.amplifyValue(token, multiplier) : token;
             markup.push(`<span class="${amplify ? highlightClassAmplified : highlightClass}">`);
             markup.push(ampVal);
             markup.push("</span>");
@@ -46,6 +46,32 @@ export class Formatting {
           }
         } else {
           return Math.round(value * multiplier);
+        }
+      }
+
+      static getSelectValue(name, document) {
+        if (!name) {
+          console.warn(`You have a broken select field : auto-value with no name`);
+          return null;
+        }
+        let tokens = name.split(".");
+        try {
+          let value = tokens.reduce((acc, token) => acc[token], document);
+          //console.log(`[DEBUG] auto-value ${name} = ${value}`);
+          return value;
+        } catch (err) {
+          //console.warn(`[DEBUG] auto-value ${name} = undefined`);
+          return null;
+        }
+      }
+
+      static formatRollExpression(count, size, modifier){
+        if (modifier > 0){
+          return `${count}d${size}+${modifier}`;
+        } else if (modifier < 0){
+          return `${count}d${size}${modifier}`;
+        } else {
+          return `${count}d${size}`;
         }
       }
 
@@ -94,10 +120,9 @@ export class Formatting {
             update[id] = res;
           } else if (id > index){
             update[id-1] = res;
-          } else {
-            update[`-=${id}`] = null;
           }
         });
+        update[`-=${Object.entries(obj).length-1}`] = null;
         console.log(update);
         return update;
       }
@@ -144,6 +169,39 @@ export class Formatting {
       static spellTitle(spell, ampFactor){
         if (!ampFactor) ampFactor = spell.system.ampFactor;
         return `${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`;
+      }
+
+      static keyToTitle(key){
+        return key.replace(/-/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+      }
+
+      static titleToKey(title){
+        return title.toLowerCase().replace(/\s+/g, "-");
+      }
+
+      /**
+       * Splits an indexed object into two based on a predicate function.
+       * Returns an array with two objects, the first containing the entries for which the predicate returns true, the second containing the rest.
+       * @param {*} obj 
+       * @param {*} pred 
+       * @returns 
+       */
+      static splitIndexedObject(obj, pred){
+        const result = [{}, {}];
+        for (const [key, value] of Object.entries(obj)){
+          if (pred(value)){
+            result[0][key] = value;
+          } else {
+            result[1][key] = value;
+          }
+        }
+        return result;
+      }
+    
+      static getEstimatedValue(vBase, vMaterial, condition, quality){
+        let v1 = vBase * vMaterial * NEWERA.conditions[condition].valueMultiplier;
+        let v2 = v1 * (1.0 + (0.05 * quality));
+        return Math.ceil(v2 / 5) * 5;
       }
 
 }

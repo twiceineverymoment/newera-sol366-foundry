@@ -4,11 +4,16 @@
       <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{system.customName}}"/>
       <div class="header-fields">
         <h1 class="charname"><input name="name" class="sheet-input" type="text" value="{{item.name}}" placeholder="Name" /></h1>
-        <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="https://www.newerarpg.com/srd/contentview/_obj_detail?module=newera-sol366&key={{system.casperObjectId}}">
+        {{#if system.casperObjectId}}
+        <a style="float: right" class="srd-x-button" id="clearCasperMetadata" data-tooltip="Remove CASPER Metadata" data-tooltip-direction="LEFT">
+          <i class="fa-solid fa-x"></i>
+        </a>
+        <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="{{webUrl}}/srd/contentview/_obj_detail?module=newera-sol366&key={{system.casperObjectId}}">
           <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
         </a>
+        {{/if}}
         <div class="resource">
-          <select name="system.rarity" class="sheet-input" style="margin-left: 8px" id="rarity-{{item.id}}" data-dtype="Number" {{disabled system.standard}}>
+          <select name="system.rarity" class="sheet-input auto-value" style="margin-left: 8px" data-dtype="Number" {{disabled system.standard}}>
             <option value="1">Common</option>
             <option value="2">Uncommon</option>
             <option value="3">Rare</option>
@@ -16,7 +21,7 @@
             <option value="5">Unique</option>
             <option value="0">Rarity Unknown</option>
           </select>
-          <select name="system.weaponType" class="sheet-input" id="ranged-type-{{item.id}}">
+          <select name="system.weaponType" class="sheet-input auto-value">
             <option value="CF">Custom (Firearm)</option>
             <option value="CS">Custom (Shotgun)</option>
             <option value="CB">Custom (Bow)</option>
@@ -86,7 +91,7 @@
         <div class="newera-itemsheet-properties">
           <div class="newera-itemsheet-property-33">
             <h4>Handedness</h4>
-            <select name="system.handedness" class="sheet-input" id="handedness-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.handedness" class="sheet-input auto-value" {{disabled system.standard}}>
               <option value="1H">One-Handed</option>
               <option value="2H">Two-Handed</option>
             </select>
@@ -99,20 +104,21 @@
           </div>
           <div class="newera-itemsheet-property-33">
             <h4>Ammunition</h4>
-            <select name="system.ammo.itemName" class="sheet-input" id="ammo-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.ammo.type" class="sheet-input auto-value" {{disabled system.standard}}>
               <option value="">Other</option>
-              <option value="Small Firearm Ammunition">Small Rounds</option>
-              <option value="Medium Firearm Ammunition">Medium Rounds</option>
-              <option value="Large Firearm Ammunition">Large Rounds</option>
-              <option value="Shotgun Shell">Shotgun Shells</option>
-              <option value="Arrow">Arrows / Bolts</option>
+              <option value="S">Small Rounds</option>
+              <option value="M">Medium Rounds</option>
+              <option value="L">Large Rounds</option>
+              <option value="P">Shotgun Shells</option>
+              <option value="A">Arrows</option>
+              <option value="B">Bolts</option>
             </select>
           </div>
         </div>
         <div class="newera-itemsheet-properties">
           <div class="newera-itemsheet-property-50">
             <h4>Firing Action</h4>
-            <select name="system.firingAction" class="sheet-input" id="action-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.firingAction" class="sheet-input auto-value" {{disabled system.standard}}>
               <option value="B">Bow</option>
               <option value="M">Manual</option>
               <option value="SA">Semi-Automatic</option>
@@ -124,7 +130,7 @@
           </div>
           <div class="newera-itemsheet-property-50">
             <h4>Legality</h4>
-            <select name="system.licenseLevel" class="sheet-input" id="license-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.licenseLevel" class="sheet-input auto-value" {{disabled system.standard}}>
               <option value="0">Unrestricted</option>
               <option value="1">Class I</option>
               <option value="2">Class II</option>

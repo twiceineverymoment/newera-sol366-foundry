@@ -1,0 +1,15 @@
+<div class="phoneui-app-header">
+    <a class="phoneui-close-button app-open" data-app="photos"><i class="fa-solid fa-circle-left"></i></a>
+    <h3>{{photo.title}}</h3>
+</div>
+<div class="photo-details">
+    <img class="photo-full" src="{{photo.img}}" data-edit="system.photos.{{system.selectedPhoto}}.img" />
+    {{#if photo.roll}}
+        <a class="photo-roll">{{photo.roll}}</a>
+    {{else}}
+        <a class="photo-roll photo-roll-trigger" data-photo-id="{{system.selectedPhoto}}"><i class="fa-solid fa-dice-d20"></i></a>
+    {{/if}}
+    <input type="text" name="system.photos.{{system.selectedPhoto}}.title" value="{{photo.title}}" id="photo-input-name" />
+    <input type="text" name="system.photos.{{system.selectedPhoto}}.description" value="{{photo.description}}" id="photo-input-desc" />
+    <input type="text" name="system.photos.{{system.selectedPhoto}}.timestamp" value="{{photo.timestamp}}" id="photo-input-timestamp" disabled />
+</div>

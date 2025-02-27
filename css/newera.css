@@ -37,6 +37,14 @@ div.actor section.window-content, div.item section.window-content {
   text-align: center;
   margin: 0 auto;
 }
+.container-subtitle {
+  font-family: "Cinzel", serif;
+  color: #8DB1C9 !important;
+  font-size: 1.5em;
+  border-bottom: none;
+  text-align: center;
+  margin: 0 auto;
+}
 .spell-table-nav {
   display: flex;
   flex-direction: row;
@@ -127,6 +135,9 @@ div.newera-itemsheet-property-66 {
   width: 60%;
   margin: 8px;
 }
+div.actorsheet-margin {
+  margin: 3px !important;
+}
 .newera-itemsheet-property-50 select, .newera-itemsheet-property-66 select {
   width: 100%;
 }
@@ -205,6 +216,11 @@ div.newera-itemsheet-property-66 {
   width: 30%;
   text-align: right;
 }
+.ammo-count {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: bold;
+}
 /* Content styling */
 div.tab {
   width: 100%;
@@ -214,7 +230,7 @@ div.summary-stat-wrapper {
   width: 100%;
   text-align: center;
 }
-.summary-stat-wrapper h4 {
+.summary-stat-wrapper h4, .newera-actorsheet-resource h4 {
   font-family: "Cinzel", serif;
 }
 div.summary-stat-bonus {
@@ -320,16 +336,25 @@ input.roll-formula {
 .smol {
   font-size: 0.75em;
 }
+.smol-action {
+  font-size: 0.9em !important;
+}
 input.custom-resource-name {
   font-family: "Cinzel", serif !important;
   font-size: 14px;
   height: 16px;
   margin-top: 2px;
   margin-bottom: 2px;
-  width: 80% !important;
+  width: 70% !important;
 }
-a.deleteResource {
-  width: 15%;
+a.toggleDailyResource {
+  opacity: 0.5;
+}
+a.toggleDailyResource.daily-enabled {
+  opacity: 1 !important;
+}
+a.deleteResource, a.toggleDailyResource {
+  width: 10%;
   display: inline;
   font-size: 16px;
 }
@@ -1002,7 +1027,10 @@ div.not-right-now {
   color:rgb(240, 157, 41);
 }
 button.newera-roll-button, button.newera-action-button {
-  max-width: 30%;
+  max-width: 32%; /*The precise width at which "Damage x2" fits, without the buttons going to a second line*/
+}
+button.newera-roll-button:disabled, button.newera-action-button:disabled {
+  cursor: not-allowed;
 }
 
 /*Chat messages*/
@@ -1142,12 +1170,14 @@ tr.effect-row td h3 {
 .spell-dialog {
   text-align: center;
 }
-#amplify-up, #amplify-down, #amplify-heading {
+#amplify-up, #amplify-down, #amplify-heading, #quantity-down, #quantity-up, #quantity-heading {
   display: inline-block;
   width: 30%;
   vertical-align: middle;
+  border: none;
+  outline: none;
 }
-#amplify-up, #amplify-down {
+#amplify-up, #amplify-down, #quantity-down, #quantity-up {
   cursor: pointer;
 }
 
@@ -1253,6 +1283,14 @@ h3.chant-level {
 }
 h3.inactive {
   opacity: 0.5;
+}
+h3.balance {
+  font-family: "Cinzel", serif;
+  font-size: 1.25em;
+  color: #60acdf;
+  border-bottom: none;
+  text-align: right;
+  margin-right: 2px;
 }
 h2.chant-count {
   display: inline;
@@ -1463,4 +1501,52 @@ a.occupant-delete {
 .chat-item-details .ampText2-hot {
   color: limegreen !important;
   text-shadow: yellow 0px 0px 2px !important;
+}
+.srd-x-button {
+  font-size: 12px !important;
+  cursor: pointer;
+  margin: 2px;
+}
+.srd-x-button:hover {
+  color: red !important;
+}
+
+/* Class Select */
+.class-already-selected {
+  opacity: 0.5;
+}
+.class-icon {
+  cursor: pointer;
+  display: inline-block;
+}
+.class-icon img {
+  width: 32px;
+  height: 32px;
+  border: none;
+  outline: none;
+}
+.class-hero-img {
+  float: right;
+  width: auto;
+  max-height: 360px;
+  border: none;
+  outline: none;
+}
+.class-select-confirm {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+button.class-confirm {
+  width: 75%;
+  font-family: "Cinzel", serif !important;
+  font-size: 1.5em !important;
+}
+.class-srd-link {
+  color: #f88d28 !important;
+  text-decoration: underline;
+  font-size: 1.25em;
+  display: block;
+  margin-top: 10px;
+  text-align: center;
 }

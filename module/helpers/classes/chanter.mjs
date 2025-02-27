@@ -3,6 +3,11 @@ import { ChantSheet } from "../../sheets/chants.mjs";
 
 export class Chanter {
 
+    static hitPointIncrement = {
+        roll: `1d6`,
+        average: 4
+    }
+
     static classFeatures = [
             {
                 level: 1,
@@ -13,15 +18,15 @@ export class Chanter {
                 selections: {
                     "1": {
                         label: "First Choice",
-                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", "psionic-magic": "Psionic Magic"}
+                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", psionic: "Psionic Magic"}
                     },
                     "2": {
                         label: "Second Choice",
-                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", "psionic-magic": "Psionic Magic"}
+                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", psionic: "Psionic Magic"}
                     },
                     "3": {
                         label: "Third Choice",
-                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", "psionic-magic": "Psionic Magic"}
+                        options: {diplomacy: "Diplomacy", insight: "Insight", performance: "Performance", deception: "Deception", intimidation: "Intimidation", determination: "Determination", logic: "Logic", psionic: "Psionic Magic"}
                     }
                 }
             },
@@ -39,6 +44,11 @@ export class Chanter {
                     "2": {
                         label: "Specialty #2",
                         options: {"sense-motive": "Sense Motive (Insight)", "diversion": "Diversion (Performance)", "socialization": "Socialization (Diplomacy)", "investigation": "Investigation (Logic)", instrument: "Musical Instrument"}
+                    },
+                    "instrument": {
+                        label: "Musical Instrument",
+                        text: true,
+                        showWhen: (actor) => actor.system.classes.chanter.specialties["1"] == "instrument" || actor.system.classes.chanter.specialties["2"] == "instrument"
                     }
                 }
             },
@@ -404,6 +414,8 @@ export class Chanter {
                 description: "You gain two Advanced-level chant slots and the ability to take Advanced chant feats. You may learn any two Advanced chants without paying their character point costs."
             }
     ]
+
+    static classFeats = {}
 
     static async resetChants(actor){
         const chantSlotCount = {

@@ -2,13 +2,13 @@
   <header class="sheet-header">
     <img class="profile-img" src="{{item.img}}" title="{{system.customName}}" style="border: none" />
     <div class="header-fields">
-      <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="https://www.newerarpg.com/srd/newera-sol366/{{system.classId}}/">
+      <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="{{webUrl}}/srd/newera-sol366/{{system.classId}}/">
         <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
       </a>
       <div class="resource">
         Level 
         <input type="text" class="sheet-input" name="system.level" value="{{system.level}}" data-dtype="Number" style="display: inline; width: 20%" />&nbsp;
-        <select name="system.selectedClass" class="sheet-input" id="class-{{item.id}}">
+        <select name="system.selectedClass" class="sheet-input auto-value">
           <option value="Adventurer">Adventurer (Classless)</option>
           <option value="Delver">Delver</option>
           <option value="Mercenary">Mercenary</option>
@@ -30,7 +30,7 @@
   <section class="sheet-body">
 
     <h2 class="table-header">{{system.selectedClass}}</h2>
-    <p id="class-desc-{{item.id}}"></p>
+    <p id="class-desc"></p>
 
     <h3 class="table-header">Notes</h3>
     <div class="newera-itemsheet-editor-container">

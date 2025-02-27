@@ -1,7 +1,7 @@
 import { NEWERA } from "../helpers/config.mjs";
-import { Formatting } from "../helpers/formatting.mjs";
-import { Actions } from "../helpers/macros/actions.mjs";
-
+import { ExtendedFeatData } from "../helpers/feats.mjs";
+import { NewEraUtils } from "../helpers/utils.mjs";
+import { ItemActions } from "../helpers/actions/itemActions.mjs";
 /**
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}
@@ -27,8 +27,18 @@ export class NewEraItem extends Item {
     MAGIC: ["Spell", "Enchantment"],
     ENCHANTABLE: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield"],
     INVENTORY: ["Item", "Melee Weapon", "Ranged Weapon", "Armor", "Shield", "Potion", "Phone"],
-    NON_INVENTORY: ["Spell", "Enchantment", "Class", "Feat", "Action"]
+    NON_INVENTORY: ["Spell", "Enchantment", "Class", "Feat", "Action"],
+    STACKABLE: ["Item", "Potion"],
+    AMPLIFIABLE: ["Spell", "Enchantment", "Potion"]
   }
+
+  static ActionConditions = {
+    ALWAYS: "always", //Action is available regardless of location
+    EQUIPPED: "equipped", //Available when in left or right hand
+    WORN_OR_EQUIPPED: "worn", //Available when on any item slot other than backpack
+    EQUIPPED_ONE_HANDED: "oneHanded", //For 1.5H only, available when held one-handed
+    EQUIPPED_TWO_HANDED: "twoHanded", //For 1.5H only, available when held two-handed
+  };
 
   typeIs(types){
     return types.includes(this.type);
@@ -79,10 +89,6 @@ export class NewEraItem extends Item {
       this._serializeActionData(system);
     }
 
-    if (system.variableQuantity && !system.quantity){
-      system.rollQuantity = true;
-    }
-
     //console.log(`[DEBUG] ${this.name} actions: ${typeof itemData.actions}`);
     if (typeof system.actions == "object"){
       this._prepareItemActionAndEffectData(system);
@@ -97,9 +103,15 @@ export class NewEraItem extends Item {
     }
 
     if (system.units){
-      system.listDisplayName = `${this.name} (${system.quantity} ${system.units})`;
+      if (system.rollQuantity){ 
+        system.listDisplayName = `${this.name} (${NewEraUtils.formatRollExpression(system.variableQuantity.dieCount, system.variableQuantity.dieSize, system.variableQuantity.modifier)} ${system.units})`;
+      } else {
+        system.listDisplayName = `${this.name} (${system.quantity} ${system.units})`;
+      }
     } else {
-      if (system.quantity > 1){
+      if (system.rollQuantity){
+        system.listDisplayName = `${this.name} x${NewEraUtils.formatRollExpression(system.variableQuantity.dieCount, system.variableQuantity.dieSize, system.variableQuantity.modifier)}`;
+      } else if (system.quantity > 1){
         system.listDisplayName = `${this.name} x${system.quantity}`;
       } else {
         system.listDisplayName = this.name;
@@ -188,7 +200,7 @@ export class NewEraItem extends Item {
     if (typeof system.ampFactor == "undefined"){
       system.ampFactor = 1;
     }
-    system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
+    system.formattedDescription = NewEraUtils.amplifyAndFormatDescription(system.description, system.ampFactor, "S");
     system.amplified = (system.ampFactor > 1);
 
     if (this.type == "Spell"){
@@ -209,7 +221,7 @@ export class NewEraItem extends Item {
         system.amplifiedData = {
           level: system.level * system.ampFactor,
           energyCost: system.energyCost * system.ampFactor,
-          damage: Formatting.amplifyValue(system.damage.amount, system.ampFactor),
+          damage: NewEraUtils.amplifyValue(system.damage.amount, system.ampFactor),
           range: system.range.value * system.ampFactor,
         };
       }
@@ -232,7 +244,7 @@ _preparePotionData(system){
   if (typeof system.doses == "undefined"){
     system.doses = 1;
   }
-  system.formattedDescription = Formatting.amplifyAndFormatDescription(system.description, system.doses, system.stackingBehavior);
+  system.formattedDescription = NewEraUtils.amplifyAndFormatDescription(system.description, system.doses, system.stackingBehavior);
   system.amplified = (system.doses > 1);
   if (system.isRecipe) {
     system.listDisplayName = this.name + " Recipe";
@@ -344,7 +356,7 @@ _preparePotionData(system){
       system.rarity = Math.max(weaponStats.rarity, materialStats.rarity);
       system.weight = Math.max(weaponStats.weight + materialStats.adjustWeight, 0);
       system.durability = materialStats.durability + weaponStats.adjustDurability;
-      system.value = NewEraItem.getEstimatedValue(weaponStats.value, materialStats.valueMultiplier, system.condition, system.quality);
+      system.value = NewEraUtils.getEstimatedValue(weaponStats.value, materialStats.valueMultiplier, system.condition, system.quality);
       system.handedness = weaponStats.handedness;
 
       let oneHandedHitSkill = system.weaponType.includes("Knuckleduster") ? "athletics" : "one-handed"; 
@@ -421,7 +433,7 @@ _preparePotionData(system){
       system.isShotgun = weaponStats.shotgunDamage;
       system.magReload = weaponStats.magazine;
       system.ammo.clipSize = weaponStats.ammo.clipSize;
-      system.ammo.itemName = weaponStats.ammo.itemName;
+      system.ammo.type = weaponStats.ammo.type;
       system.firingAction = weaponStats.firingAction;
       system.firingRate = weaponStats.firingRate;
       system.licenseLevel = weaponStats.licenseLevel;
@@ -451,7 +463,7 @@ _preparePotionData(system){
       system.rarity = Math.max(armorStats.rarity, materialStats.rarity);
       system.weight = Math.max(armorStats.weight + materialStats.adjustWeight, 0);
       system.durability = materialStats.durability + armorStats.adjustDurability;
-      system.value = NewEraItem.getEstimatedValue(armorStats.value, materialStats.valueMultiplier, system.condition, system.quality);
+      system.value = NewEraUtils.getEstimatedValue(armorStats.value, materialStats.valueMultiplier, system.condition, system.quality);
       system.armorRating = armorStats.armorRating + materialStats.modifiers.armor;
 
     } else {
@@ -480,7 +492,7 @@ _preparePotionData(system){
       system.rarity = Math.max(shieldStats.rarity, materialStats.rarity);
       system.weight = Math.max(shieldStats.weight + materialStats.adjustWeight, 0);
       system.durability = materialStats.durability + shieldStats.adjustDurability;
-      system.value = NewEraItem.getEstimatedValue(shieldStats.value, materialStats.valueMultiplier, system.condition, system.quality);
+      system.value = NewEraUtils.getEstimatedValue(shieldStats.value, materialStats.valueMultiplier, system.condition, system.quality);
       system.shieldRating = shieldStats.shieldRating + materialStats.modifiers.shield;
 
     } else {
@@ -528,7 +540,7 @@ _preparePotionData(system){
     if (system.openApp == "call"){
       system.callImg = `${NEWERA.images}/phone-ui/contact-placeholder.png`;
       for (const actor of game.actors.values()){
-        if (actor.type.includes("Character") && actor.name.toLowerCase() == system.callee.toLowerCase()){
+        if (actor.type.includes("Character") && actor.name.toLowerCase() == this.system.contacts[system.currentContact].name.toLowerCase()){
           system.callImg = actor.img;
           break;
         }
@@ -565,10 +577,9 @@ _preparePotionData(system){
     if (this.system.rolls){
       const update = {
         system: {
-          rolls: {}
+          rolls: NewEraUtils.spliceIndexedObject(this.system.rolls, index)
         }
       }
-      update.system.rolls[`-=${index}`] = null;
       await this.update(update);
     }
   }
@@ -582,6 +593,8 @@ _preparePotionData(system){
     if ( !this.actor ) return null;
     const rollData = this.actor.getRollData();
     rollData.item = foundry.utils.deepClone(this.system);
+
+    rollData.durability = this.system.durability;
 
     return rollData;
   }
@@ -639,9 +652,8 @@ _preparePotionData(system){
   }
 
   getActions() {
-    this.prepareData();
     const system = this.system;
-    const actions = [];
+    const actions = ItemActions.getDefaultActionsForItem(this);
     if (typeof this.system.actions == "object") {
       for (const action of Object.values(system.actions)){
         actions.push({
@@ -649,7 +661,7 @@ _preparePotionData(system){
           images: {
             base: this.type == "Feat" ? `${NEWERA.images}/${action.icon}.png` : this.img,
             left: this.type == "Feat" ? this.img : undefined,
-            right: NewEraItem._getActionImageByType(action.actionType)
+            right: NEWERA.actionImages[action.actionType]
           },
           ability: null,
           skill: null,
@@ -658,591 +670,147 @@ _preparePotionData(system){
           difficulty: null,
           actionType: action.actionType,
           show: action.show,
-          rolls: action.rolls
+          rolls: action.rolls,
+          decrement: action.decrement
         });
       }
     }
-    if (this.type == "Potion" && !this.system.isRecipe){
-      let verb = "";
-      let action = "0";
-      let icon = "";
-      switch(this.system.potionType){
-        case "P":
-        case "E":
-          verb = "Drink",
-          action = "3";
-          icon = "ac_3frame";
-          break;
-        case "S":
-          verb = "Apply";
-          action = "E";
-          icon = "ac_adventuring";
-          break;
-        case "B":
-          verb = "Throw";
-          action = "1";
-          icon = "ac_1frame";
-          break;
-        case "R":
-          return; //Reagents don't have any actions
-      }
-      actions.push({
-        name: `${verb} ${this.name}`,
-        images: {
-          base: this.img,
-          right: `${NEWERA.images}/${icon}.png`
-        },
-        ability: null,
-        skill: null,
-        specialties: [],
-        description: this.system.description,
-        actionType: action,
-        show: "always",
-        overrideMacroCommand: `game.newera.HotbarActions.usePotion("${this.name}")`,
-        rolls: [
-          {
-            label: verb,
-            die: "bottle",
-            callback: actor => Actions.displayPotionDialog(actor, this)
-          }
-        ]
-      });
-    }
-    if (this.type == "Melee Weapon"){
-      const attacks = system.attacks || [];
-      for (const attack of attacks){
-        actions.push({
-          name: attack.name,
-          images: {
-            base: this.img,
-            left: `${NEWERA.images}/dt_${attack.damageType}.png`,
-            right: `${NEWERA.images}/ac_${attack.frames}frame.png`
-          },
-          ability: null,
-          skill: (attack.handedness == 2 ? "two-handed" : "one-handed"),
-          specialties: [],
-          description: `You ${attack.name.toLowerCase()} a creature with your ${this.name}.`,
-          difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the outcome of the reaction is used instead.",
-          actionType: attack.frames.toString(),
-          show: system.handedness == "1.5H" ? (attack.handedness == 2 ? "twoHanded" : "oneHanded") : "equipped",
-          rolls: [
-            {
-              label: "Attack",
-              caption: `${attack.name} Attack (${this.name})`,
-              die: "d20",
-              formula: attack.attackRoll
-            },
-            {
-              label: "Damage",
-              caption: `${attack.damageType} damage (${this.name})`,
-              die: attack.damageDie.slice(1),
-              formula: attack.damageRoll
-            }
-          ]
-        });
-      }
-      if (system.handedness == "2H"){
-        actions.push({
-          name: "Parry",
-          images: {
-            base: this.img,
-            left: `${NEWERA.images}/sword-clash.png`,
-            right: `${NEWERA.images}/ac_reaction.png`
-          },
-          ability: null,
-          skill: "defense",
-          specialties: [],
-          description: `You use your ${this.name} to parry an incoming attack. Your weapon suffers a durability check when used to block.`,
-          difficulty: "The result of your roll replaces your Passive Agility when contesting the attacker's roll.",
-          actionType: "R",
-          show: "equipped",
-          rolls: [
-            {
-              label: "Block",
-              caption: `Parry (${this.name})`,
-              die: "d20",
-              formula: "1d20+@skills.defense.mod+@specialty.partial.parrying"
-            }
-          ]
-        });
-      }
-    } else if (this.type == "Shield"){
-      actions.push({
-        name: "Block",
-        images: {
-          base: this.img,
-          right: `${NEWERA.images}/ac_reaction.png`
-        },
-        ability: null,
-        skill: "defense",
-        specialties: [],
-        description: `You use your ${this.name} to block an incoming attack. The shield blocks incoming damage up to its shield rating.`,
-        difficulty: "The result of your roll replaces your Passive Agility when contesting the attacker's roll.",
-        actionType: "R",
-        show: "equipped",
-        rolls: [
-          {
-            label: "Block",
-            caption: `Block (${this.name})`,
-            die: "d20",
-            formula: "1d20+@skills.defense.mod+@specialty.partial.shields"
-          }
-        ]
-      });
-    } else if (this.type == "Ranged Weapon"){
-      /* Single-shot fire action */
-      if (system.firingAction == "M" || system.firingAction == "SA"){
-        actions.push({
-          name: `Fire ${this.name}`,
-          images: {
-            base: this.img,
-            left: `${NEWERA.images}/crosshair.png`,
-            right: `${NEWERA.images}/ac_1frame.png`
-          },
-          ability: null,
-          skill: "marksmanship",
-          specialties: [`${this.name}s`],
-          description: `Fire your ${this.name} at a target in range.`,
-          difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
-          actionType: "1",
-          show: "equipped",
-          rolls: [
-            {
-              label: "Attack",
-              caption: `Ranged Attack (${this.name})`,
-              die: "d20",
-              formula: "1d20+@skills.marksmanship.mod"
-            },
-            {
-              label: "Damage",
-              caption: `Ranged Attack Damage (${this.name})`,
-              die: system.damage.slice(1),
-              formula: system.damage
-            }
-          ]
-        });
-      }
-      /* Full auto fire action */
-      if (system.firingAction == "FA"){
-        actions.push({
-          name: `Fire ${this.name}`,
-          images: {
-            base: this.img,
-            left: `${NEWERA.images}/crosshair.png`,
-            right: `${NEWERA.images}/ac_1frame.png`
-          },
-          ability: null,
-          skill: "marksmanship",
-          specialties: [`${this.name}s`],
-          description: `Fire your ${this.name} at a target in range. The fully-automatic weapon fires ${system.firingRate} rounds in one frame.`,
-          difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
-          actionType: "1",
-          show: "equipped",
-          rolls: [
-            {
-              label: `Attack (${system.firingRate})`,
-              caption: `Ranged Attack (${this.name})`,
-              die: "d20",
-              formula: "1d20+@skills.marksmanship.mod"
-            },
-            {
-              label: "Damage",
-              caption: `Ranged Attack Damage (${this.name})`,
-              die: system.damage.slice(1),
-              formula: system.damage
-            }
-          ]
-        });
-      }
-      /* Manual load/cock action */
-      if (system.firingAction == "M"){
-        actions.push({
-          name: `Cock ${this.name}`,
-          images: {
-            left: this.img,
-            base: `${NEWERA.images}/cowboy-holster.png`,
-            right: `${NEWERA.images}/ac_1frame.png`
-          },
-          ability: null,
-          skill: null,
-          specialties: [],
-          description: `Chamber a round into your ${this.name}, getting ready to fire a shot.`,
-          difficulty: "",
-          actionType: "1",
-          show: "equipped",
-          rolls: []
-        });
-      }
-      /* Load/reload actions */
-      if (system.magReload){
-        actions.push({
-          name: `Reload ${this.name}`,
-          images: {
-            base: `${NEWERA.images}/machine-gun-magazine.png`,
-            left: this.img,
-            right: `${NEWERA.images}/ac_3frame.png`
-          },
-          ability: null,
-          skill: null,
-          specialties: [],
-          description: `Reload your ${this.name} from ammunition in your inventory.`,
-          difficulty: "",
-          actionType: "3",
-          show: "equipped",
-          rolls: []
-        });
-      } else if (system.firingAction == "B"){
-        actions.push({
-          name: `Notch Arrow`,
-          images: {
-            base: `${NEWERA.images}/quiver.png`,
-            left: this.img,
-            right: `${NEWERA.images}/ac_1frame.png`
-          },
-          ability: null,
-          skill: null,
-          specialties: [],
-          description: `Notch an arrow onto your ${this.name} and prepare to fire.`,
-          difficulty: "",
-          actionType: "1",
-          show: "equipped",
-          rolls: []
-        });
-      } else {
-        actions.push({
-          name: `Load ${this.name}`,
-          images: {
-            base: `${NEWERA.images}/shotgun-rounds.png`,
-            left: this.img,
-            right: `${NEWERA.images}/ac_1frame.png`
-          },
-          ability: null,
-          skill: null,
-          specialties: [],
-          description: `Load a single shot into your ${this.name} from your inventory.`,
-          difficulty: "",
-          actionType: "1",
-          show: "equipped",
-          rolls: []
-        });
-      }
-      /* Bow firing actions */
-      if (system.firingAction == "B"){
-        actions.push({
-          name: `Quick shot`,
-          images: {
-            base: this.img,
-            right: `${NEWERA.images}/ac_1frame.png`
-          },
-          ability: null,
-          skill: "marksmanship",
-          specialties: ["Archery"],
-          description: "Quickly draw your bow and fire a weak shot. The damage and range of your bow is halved.",
-          difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
-          actionType: "1",
-          show: "equipped",
-          rolls: [
-            {
-              label: "Shoot",
-              caption: `Quick Shot (${this.name})`,
-              die: "d20",
-              formula: "1d20+@skills.marksmanship.mod",
-            },
-            {
-              label: "Half Damage",
-              caption: `Quick Shot Damage (${this.name})`,
-              die: system.damage.slice(1),
-              formula: `(${system.damage})/2`
-            }
-          ]
-        });
-        actions.push({
-          name: `Shoot Arrow`,
-          images: {
-            base: this.img,
-            right: `${NEWERA.images}/ac_2frame.png`
-          },
-          ability: null,
-          skill: "marksmanship",
-          specialties: ["Archery"],
-          description: "You draw your bow back to its normal tension and loose an arrow.",
-          difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
-          actionType: "2",
-          show: "equipped",
-          rolls: [
-            {
-              label: "Shoot",
-              caption: `Ranged Attack (${this.name})`,
-              die: "d20",
-              formula: "1d20+@skills.marksmanship.mod",
-            },
-            {
-              label: "Damage",
-              caption: `Damage (${this.name})`,
-              die: system.damage.slice(1),
-              formula: `${system.damage}`
-            }
-          ]
-        });
-        actions.push({
-          name: `Power Shot`,
-          images: {
-            base: this.img,
-            left: `${NEWERA.images}/muscle-up.png`,
-            right: `${NEWERA.images}/ac_3frame.png`
-          },
-          ability: null,
-          skill: "marksmanship",
-          specialties: ["Archery"],
-          description: "Draw your bow to its maximum tension and loose a powerful shot. The range of your shot increases by 100 feet and the damage is doubled. You must succeed on a Strength check to hold onto the drawn bow.",
-          difficulty: "The difficulty to hit is the target's Passive Agility. If the target reacts, the result of their roll becomes the difficulty.",
-          actionType: "3",
-          show: "equipped",
-          rolls: [
-            {
-              label: "Draw",
-              caption: `Draw ${this.name}`,
-              die: "d20",
-              formula: "1d20+@strength.mod"
-            },
-            {
-              label: "Shoot",
-              caption: `Power Shot (${this.name})`,
-              die: "d20",
-              formula: "1d20+@skills.marksmanship.mod",
-            },
-            {
-              label: "Damage",
-              caption: `Power Shot Damage (${this.name})`,
-              die: system.damage.slice(1),
-              formula: `(${system.damage}+@abilities.str.mod)*2`
-            }
-          ]
-        });
-      }
-    }
+    actions.forEach(action => {
+      action.item = this;
+    });
     return actions;
   }
 
-  static damageExpression(numDice, dieSize, modifier){
-    let damageStr = `${numDice}d${dieSize}`;
-    return displayModifier(damageStr, modifier);
-  }
-
-  static displayModifier(damageStr, modifier){
-    if (modifier == 0){
-      return damageStr;
-    } else if (modifier > 0){
-      return `${damageStr}+${modifier}`;
-    } else {
-      return `${damageStr}${modifier}`;
+  _prepareSecretData(system) {
+    if (this.typeIs(NewEraItem.Types.MAGIC)) {
+      switch (system.secretLevel) {
+        case 1:
+        case 2:
+          system.secretName = `Unknown Level ${system.level} ${system.specialty} ${this.type}`;
+          break;
+        case 3:
+          system.secretName = `Unknown ${system.form} ${this.type}`;
+          this.img = `$q{NEWERA.images}/${system.form.toLowerCase()}.png`;
+          break;
+        case 4:
+          system.secretName = `Unknown ${this.type}`;
+          this.img = `${NEWERA.images}/unknown.png`;
+          break;
+        case 0:
+        default: 
+          system.secretName = this.name;
+      }
+    }
+    const gm = (game.user.role >= 2);
+    /*This object is used to control rendering of secret data points in sheets.
+    {{#if system.secret.level2}} means "Hide this piece of info if the secret level is 2 or higher"
+    These are always false if the user is a GM or Assistant GM
+    */
+    system.secret = {
+      "level1": (!gm && system.secretLevel >= 1),
+      "level2": (!gm && system.secretLevel >= 2),
+      "level3": (!gm && system.secretLevel >= 3),
+      "level4": (!gm && system.secretLevel == 4)
     }
   }
 
-  static getEstimatedValue(vBase, vMaterial, condition, quality){
-    let v1 = vBase * vMaterial * NEWERA.conditions[condition].valueMultiplier;
-    let v2 = v1 * (1.0 + (0.05 * quality));
-    return Math.ceil(v2 / 5) * 5;
-  }
-
-  //Rolls the quantity for the item in variable-quantity mode in a creature's inventory using the owning actor's roll data
-  async rollQuantity(actor){
-    const system = this.system;
-    if (!system.variableQuantity) return;
-    let r = new Roll(`${system.variableQuantity.dieCount}d${system.variableQuantity.dieSize}+${system.variableQuantity.modifier}`, actor.getRollData());
-    await r.evaluate();
-    system.quantity = r.total;
-    r.toMessage({
-      speaker: ChatMessage.getSpeaker({actor: actor}),
-      flavor: `${this.name} quantity`
-    });
-  }
-
-  addRoll(){
+  async addRoll(){
     if (this.type !== "Action") return;
     const system = this.system;
-    system.rolls[Object.keys(system.rolls).length] = {
-      label: "New Roll",
-      dieCount: 1,
-      dieSize: 20,
-      modifier: 0,
-      stat: ""
-    };
-  }
-
-  createContact() {
-    if (this.type !== "Phone") return;
-    const system = this.system;
-    system.contacts[Object.keys(system.contacts).length] = {
-      name: "New Contact",
-      number: "+29 (000) 000 000",
-      unread: false,
-      messages: {}
-    };
-  }
-
-  addContact(name, number){
-    if (this.type !== "Phone") return;
-    const contacts = structuredClone(this.system.contacts);
-    contacts[Object.keys(contacts).length] = {
-      name: name,
-      number: number,
-      unread: false,
-      messages: {}
-    };
-    this.update({
+    const update = {
       system: {
-        contacts: contacts
-      }
-    });
-  }
-
-  addPhoto() {
-    if (this.type !== "Phone") return false;
-    const system = this.system;
-    const id = Object.keys(system.photos).length;
-    system.photos[id] = {
-      title: "New Photo",
-      description: "Describe what you took a photo of",
-      timestamp: this.timestamp,
-      img: `${NEWERA.images}/phone-ui/photo.png`
-    };
-    console.log(`added photo ${id}`);
-    system.selectedPhoto = id;
-    return id;
-  }
-
-  addMessage(sent, index, content){
-    if (this.type !== "Phone") return;
-    const system = this.system;
-    const newMessageIndex = Object.keys(system.contacts[index].messages).length;
-    const contacts = structuredClone(system.contacts);
-    contacts[index].messages[newMessageIndex] = {
-      sent: sent,
-      content: content,
-      timestamp: this.timestamp,
-    };
-    this.update({
-      system: {
-        contacts: contacts
-      }
-    });
-    if (!sent) {
-      system.contacts[index].unread = true;
-    }
-
-    const name1 = system.contacts[index].name;
-    const name2 = (this.actor ? this.actor.name : this.name);
-
-    const sender = sent ? name2 : name1;
-    const recipient = sent ? name1 : name2;
-
-    ChatMessage.create({
-      content: `<div class="chat-action-container"><img class="action-image-base" src="${NEWERA.images}/phone-ui/app-messages.png" /></div>
-      <div class="text-message">
-        <h4>${sender} <i class="fa-solid fa-arrow-right"></i> ${recipient}</h4>
-        <p>${content}</p>
-      </div>`
-    });
-
-    return newMessageIndex;
-  }
-
-  /*
-  async receiveTextMessage(sender, number, content){
-    if (this.type !== "Phone") return;
-    const system = this.system;
-    console.log(`${this.name} receiving message from ${sender}`);
-    let contactIndex = null;
-    for (const [i, c] of Object.entries(system.contacts)){
-      if (c.name == sender){
-        console.log(`found existing contact [${i}] ${c.name}`);
-        contactIndex = i;
-        break;
-      }
-    }
-    if (contactIndex === null){
-      contactIndex = Object.entries(system.contacts).length;
-      console.log(`creating a new contact [${contactIndex}]`);
-      system.contacts[contactIndex] = {
-        name: sender,
-        number: number,
-        unread: true,
-        messages: {}
-      };
-    }
-
-    system.contacts[contactIndex].messages[Object.keys(system.contacts[contactIndex].messages).length] = {
-      sent: false,
-      content: content,
-      timestamp: this.timestamp,
-    };
-    system.contacts[contactIndex].unread = true;
-
-    console.log(`finished receiving`);
-    console.log(system.contacts);
-
-    if (this.sheet){
-      this.sheet.render(false);
-      this.sheet.submit();
-    }
-    
-  }
-  
-  async sendTextMessage(senderConvoId, recipient, number, content){
-    if (this.type !== "Phone") return;
-    const system = this.system;
-
-    const sender = this.actor ? this.actor.name : this.name;
-
-    console.log(`sending message from ${sender} to ${recipient}`);
-
-    //Add the message to the convo on the sender side
-    system.contacts[senderConvoId].messages[Object.keys(system.contacts[senderConvoId].messages).length] = {
-      sent: true,
-      content: content,
-      timestamp: this.timestamp
-    };
-    if (this.sheet){
-      this.sheet.render(false);
-      this.sheet.submit();
-    }
-
-    let foundRecipients = 0;
-
-    //Look for a recipient actor
-    for (const actor of game.actors.values()){
-      if (actor.name == recipient){
-        for (const item of actor.items.values()){
-          if (item.type == "Phone"){
-            console.log(`found target phone ${item.id}:${actor.name}/${item.name}`);
-            foundRecipients++;
-            item.receiveTextMessage(sender, number, content);
+        rolls: {
+          [Object.keys(system.rolls).length]: {
+            label: "New Roll",
+            dieCount: 1,
+            dieSize: 20,
+            modifier: 0,
+            stat: ""
           }
         }
       }
-    }
+    };
+    await this.update(update);
+  }
 
-    //Look for recipient phones in the GM's item set
-    for (const item of game.items.values()){
-      if (item.type == "Phone" && item.name == recipient){
-        console.log(`found target phone ${item.id}:${item.name}`);
-        foundRecipients++;
-        item.receiveTextMessage(sender, number, content);
+  async createContact() {
+    if (this.type !== "Phone") return;
+    const system = this.system;
+    await this.update({
+      system: {
+        contacts: {
+          [Object.keys(system.contacts).length]: {
+            name: "New Contact",
+            number: "+29 (000) 000 000",
+            messages: {},
+            lastCheckedTime: Date.now()
+          }
+        }
       }
-    }
-
-    if (foundRecipients == 0){
-      ui.notifications.warn("Message not delivered: No actors or GM phones were found matching the recipient's name.");
-    }
-
-    ChatMessage.create({
-      content: `<div class="text-message">
-        <h4>${sender} <i class="fa-solid fa-arrow-right"></i> ${recipient}</h4>
-        <p>${content}</p>
-      </div>`
     });
-  } */
+  }
+
+  async addContact(name, number){
+    if (this.type !== "Phone") return;
+    const contacts = structuredClone(this.system.contacts);
+    const newIndex = Object.keys(contacts).length;
+    contacts[newIndex] = {
+      name: name,
+      number: number,
+      messages: {},
+      lastCheckedTime: Date.now()
+    };
+    await this.update({
+      system: {
+        contacts: contacts
+      }
+    });
+    return newIndex;
+  }
+
+  async addPhoto() {
+    if (this.type !== "Phone") return false;
+    const system = this.system;
+    const newIndex = Object.keys(system.photos).length;
+    const update = {
+      system: {
+        photos: {
+          [newIndex]: {
+            title: "New Photo",
+            description: "Describe what you took a photo of",
+            timestamp: this.timestamp,
+            img: `${NEWERA.images}/phone-ui/photo.png`
+          }
+        },
+        selectedPhoto: newIndex
+      }
+    };
+    await this.update(update);
+    return newIndex;
+  }
+
+  async addMessage(sent, index, content){
+    if (this.type !== "Phone") return;
+    const system = this.system;
+    const newMessageIndex = system.contacts[index].messages ? Object.keys(system.contacts[index].messages).length : 0;
+    const update = {
+      system: {
+        contacts: {
+          [index]: {
+            messages: {}
+          }
+        }
+      }
+    };
+    update.system.contacts[index].messages[newMessageIndex] = {
+      sent: sent,
+      content: content,
+      timestamp: this.timestamp,
+      realTime: Date.now()
+    };
+    await this.update(update);
+    return newMessageIndex;
+  }
 
   get timestamp(){
     const year = game.settings.get("newera-sol366", "world.date.year");
@@ -1268,50 +836,45 @@ _preparePotionData(system){
     }
   }
 
-  addAction() {
+  async addAction() {
     const system = this.system;
-    system.actions[Object.keys(system.actions).length] = {
-      name: "New Action",
-      icon: "unknown",
-      actionType: "E",
-      description: "Enter a description...",
-      show: "equipped",
-      decrement: false,
-      rolls: {}
-    }
+    const update = {
+      system: {
+        actions: {
+          [Object.keys(system.actions).length]: {
+            name: "New Action",
+            icon: "unknown",
+            actionType: "E",
+            description: "Enter a description...",
+            show: "equipped",
+            decrement: false,
+            rolls: {}
+          }
+        }
+      }
+    };
+    await this.update(update);
   }
 
-  addActionRoll(index) {
+  async addActionRoll(index) {
     const system = this.system;
-    const action = system.actions[index];
-    if (action.rolls == undefined){
-      action.rolls = {};
-    }
-    action.rolls[Object.keys(action.rolls).length] = {
-      die: "d20",
-      label: "New Roll",
-      formula: "1d20"
-    }
-  }
-
-  static _getActionImageByType(type){
-    switch(type){
-      case "0":
-        return `${NEWERA.images}/ac_0frame.png`;
-      case "1":
-        return `${NEWERA.images}/ac_1frame.png`;
-      case "2":
-        return `${NEWERA.images}/ac_2frame.png`;
-      case "3":
-        return `${NEWERA.images}/ac_3frame.png`;
-      case "S":
-        return `${NEWERA.images}/ac_social.png`;
-      case "E":
-        return `${NEWERA.images}/ac_adventuring.png`;
-      case "D":
-        return `${NEWERA.images}/ac_restful.png`;
-      
-    }
+    const newIndex = system.actions[index].rolls ? Object.keys(system.actions[index].rolls).length : 0;
+    const update = {
+      system: {
+        actions: {
+          [index]: {
+            rolls: {
+              [newIndex]: {
+                die: "d20",
+                label: "New Roll",
+                formula: "1d20"
+              }
+            }
+          }
+        }
+      }
+    };
+    await this.update(update);
   }
 
   async enchant(enchantment, ampFactor = 1, caster = undefined, noSkillCheck = false, energyPool = undefined){
@@ -1430,7 +993,7 @@ _preparePotionData(system){
           stored: !prevState
         }
       });
-      if (this.actor && Formatting.sendEquipmentChangeMessages()){
+      if (this.actor && NewEraUtils.sendEquipmentChangeMessages()){
         if (prevState){
           this.actor.actionMessage(this.img, `${NEWERA.images}/ac_adventuring.png`, "{NAME} retrieves {d} {0} from storage.", this.name);
         } else {
@@ -1525,7 +1088,7 @@ _preparePotionData(system){
     //console.log(`[DEBUG] TP name=${this.name} T=${tier}`);
     if (this.type == "Feat"){
       try {
-        const customCondition = NEWERA.customFeatPrerequisites[this.system.casperObjectId][tier];
+        const customCondition = ExtendedFeatData.getCustomPrerequisiteData(this.system.casperObjectId, tier);
         if (customCondition){
           return [
             [ customCondition ]
@@ -1610,8 +1173,8 @@ _preparePotionData(system){
   async printDetails(speaker, ampFactor = 1){
     let template = "";
     if (this.typeIs(NewEraItem.Types.SPELL)){
-      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
-      const title = Formatting.spellTitle(this, ampFactor);
+      const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor);
+      const title = NewEraUtils.spellTitle(this, ampFactor);
       const range = `${this.system.range.value * (this.system.range.scales ? ampFactor : 1)} ft ${this.system.range.description}`;
       const castingTime = NEWERA.spellCastingTimes[this.system.castType] || this.system.castTime;
       template = `
@@ -1625,8 +1188,8 @@ _preparePotionData(system){
         </div>
       `;
     } else if (this.typeIs(NewEraItem.Types.ENCHANTMENT)){
-      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor);
-      const title = Formatting.spellTitle(this, ampFactor);
+      const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor);
+      const title = NewEraUtils.spellTitle(this, ampFactor);
       template = `
         <div class="chat-item-details">
           <img src="${this.img}" />
@@ -1636,7 +1199,7 @@ _preparePotionData(system){
         </div>
       `;
     } else if (this.typeIs(NewEraItem.Types.POTION)){
-      const description = Formatting.amplifyAndFormatDescription(this.system.description, ampFactor, this.system.stackingBehavior);
+      const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor, this.system.stackingBehavior);
       template = `
         <div class="chat-item-details">
           <img src="${this.img}" />
@@ -1695,7 +1258,7 @@ _preparePotionData(system){
   async deleteMaterialCost(index){
     await this.update({
       system: {
-        materialCosts: Formatting.spliceIndexedObject(this.system.materialCosts, index)
+        materialCosts: NewEraUtils.spliceIndexedObject(this.system.materialCosts, index)
       }
     });
   }
@@ -1721,10 +1284,269 @@ _preparePotionData(system){
   async deleteComponent(index){
     await this.update({
       system: {
-        components: Formatting.spliceIndexedObject(this.system.components, index)
+        components: NewEraUtils.spliceIndexedObject(this.system.components, index)
       }
     });
   }
 
+  async clearCasperMetadata(){
+    await this.update({
+      system: {
+        '-=casperObjectId': null,
+      }
+    });
+  }
+
+  async rollQuantity(){
+    if (this.system.rollQuantity){
+      const roll = new Roll(`${this.system.variableQuantity.dieCount}d${this.system.variableQuantity.dieSize}+${this.system.variableQuantity.modifier}`, this.getRollData());
+      await roll.evaluate();
+      roll.toMessage({
+        speaker: ChatMessage.getSpeaker({actor: this.parent}),
+        flavor: this.name
+      });
+      if (roll.total > 0){
+        await this.update({
+          system: {
+            quantity: roll.total,
+            rollQuantity: false
+          }
+        });
+      } else {
+        await this.delete();
+      }
+    }
+  }
+
+  async setOpenApp(appId){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          openApp: appId == "home" ? "" : appId
+        }
+      });
+    }
+  }
+
+  async call(index){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          currentContact: index,
+          openApp: "call"
+        }
+      });
+    }
+  }
+
+  async openChat(index){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          currentContact: index,
+          openApp: "chat",
+          contacts: this.system.contacts[index] ? {
+            [index]: {
+              lastCheckedTime: Date.now()
+            }
+          } : {}
+        }
+      });
+    }
+  }
+
+  async openPhotoView(index){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      if (index !== null){
+         await this.update({
+          system: {
+            selectedPhoto: index,
+            openApp: "photo-view"
+          }
+      });
+      }
+    }
+  }
+
+  async setBatteryLevel(level){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          batteryLevel: level
+        }
+      });
+    }
+  }
+
+  async toggleFlashlight(){
+    if (this.typeIs(NewEraItem.Types.PHONE)){
+      await this.update({
+        system: {
+          flashlight: this.system.flashlight == "on" ? "off" : "on"
+        }
+      });
+    }
+  }
+
+  async fire() {
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      if (this.system.firingAction == "SA"){
+        await this.update({
+          system: {
+            ammo: {
+              loaded: this.system.ammo.loaded - 1
+            }
+          }
+        });
+        if (this.system.ammo.loaded == 0) {
+          ui.notifications.info("You need to reload!");
+        }
+        return 1;
+      } else if (this.system.firingAction == "M"){ //Crossbow AND Shotgun
+        await this.update({
+          system: {
+            ammo: {
+              loaded: this.system.ammo.loaded - 1,
+              cocked: false
+            }
+          }
+        });
+        return 1;
+      } else if (this.system.firingAction == "FA"){
+        const toShoot = Math.min(this.system.firingRate, this.system.ammo.loaded);
+        if (toShoot < this.system.firingRate){
+          ui.notifications.info(`Only ${toShoot} shots left in the clip!`);
+        }
+        await this.update({
+          system: {
+            ammo: {
+              loaded: this.system.ammo.loaded - toShoot
+            }
+          }
+        });
+        if (this.system.ammo.loaded == 0) {
+          ui.notifications.warn("You need to reload!");
+        }
+        return toShoot;
+      } else if (this.system.firingAction == "B"){
+        await this.update({
+          system: {
+            ammo: {
+              loaded: 0
+            }
+          }
+        });
+        return 1;
+      }
+    }
+  }
+
+  async reload(ammo) {
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      if (!ammo || ammo.system.quantity == 0){
+        ui.notifications.warn("Out of ammo!");
+      } else {
+        const available = ammo.system.quantity;
+        const canLoad = this.system.ammo.clipSize - this.system.ammo.loaded;
+        const perAction = ["SA", "FA"].includes(this.system.firingAction) ? this.system.ammo.clipSize : 1;
+        const loaded = Math.min(available, canLoad, perAction);
+        await this.update({
+          system: {
+            ammo: {
+              loaded: this.system.ammo.loaded + loaded
+            }
+          }
+        });
+        if (ammo.system.quantity == loaded) {
+          await ammo.delete();
+        } else {
+          await ammo.update({
+            system: {
+              quantity: ammo.system.quantity - loaded
+            }
+          });
+        }
+        return loaded;
+      }
+    }
+  }
+
+  //Oh
+  async cock(){
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON) && this.system.firingAction == "M"){
+      await this.update({
+        system: {
+          ammo: {
+            cocked: true
+          }
+        }
+      });
+    }
+  }
+
+  isLoaded(){
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      return this.system.ammo.loaded > 0;
+    } else {
+      return null;
+    }
+  }
+
+  isReadyToFire(){
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      if (this.system.firingAction == "M"){
+        return (this.system.ammo.loaded > 0 && this.system.ammo.cocked);
+      } else {
+        return this.isLoaded();
+      }
+    } else {
+      return null;
+    }
+  }
+
+  isFullyLoaded(){
+    if (this.typeIs(NewEraItem.Types.RANGED_WEAPON)){
+      return this.system.ammo.loaded == this.system.ammo.clipSize;
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Determines whether the specified item can be stacked with this one.
+   * In order to stack, the items must have matching types and CASPER IDs, and must not be enchanted or have a variable quantity.
+   * @param {NewEraItem} candidate The item to check for stackability.
+   * @returns {boolean} True if the item can be stacked, false otherwise.
+   */
+  canStackWith(candidate){
+    return candidate !== this
+      && candidate.typeIs(NewEraItem.Types.STACKABLE)
+      && candidate.type == this.type
+      && candidate.system.casperObjectId
+      && candidate.system.casperObjectId == this.system.casperObjectId
+      && !candidate.system.rollQuantity
+      && !this.system.rollQuantity
+      && !candidate.system.enchanted
+      && !this.system.enchanted;
+  }
+
+  /**
+   * Static version of canStackWith that works for any two items.
+   * This has to work on plain objects because context.items strips the prototype chain for some reason - hence the manual type check
+   * @param {*} a 
+   * @param {*} b 
+   * @returns 
+   */
+  static canStack(a, b){
+    return a !== b
+      && ["Item", "Potion"].includes(a.type)
+      && a.type == b.type
+      && a.system.casperObjectId
+      && a.system.casperObjectId == b.system.casperObjectId
+      && !a.system.rollQuantity
+      && !b.system.rollQuantity
+      && !a.system.enchanted
+      && !b.system.enchanted;
+  }
 }
 

@@ -1,29 +1,27 @@
 <div class="phoneui-app-header">
     <a class="phoneui-close-button app-close"><i class="fa-solid fa-circle-left"></i></a>
     <h3>Messages</h3>
-    <a class="phoneui-right-header-button" id="createContact"><i class="fa-solid fa-pen-to-square"></i></a>
+    <a class="phoneui-right-header-button" id="compose"><i class="fa-solid fa-pen-to-square"></i></a>
 </div>
 <div class="phoneui-app-body-full">
     <table class="phoneui-grid">
-        {{#each system.contacts as |contact index|}}
-            {{log contact}}
-            <tr class="open-convo" data-name="{{contact.name}}" data-index="{{index}}">
+        {{#each contacts as |contact index|}}
+            <tr class="open-convo" data-contact-id="{{index}}">
                 <td>
                     <img class="resource-icon" src="systems/newera-sol366/resources/phone-ui/app-messages.png" />
                 </td>
                 <td>
                     <h2>{{contact.name}}</h2>
-                    <p>{{#if contact.unread}}<i class="fa-solid fa-circle unread"></i> {{/if}}{{#if contact.lastMessage.sent}}You: {{/if}}{{truncate contact.lastMessage.content 25}}</p>
+                    {{#if contact.lastMessage}}
+                        <p>{{#if contact.unread}}<i class="fa-solid fa-circle unread"></i> {{/if}}{{#if contact.lastMessage.sent}}You: {{/if}}{{truncate contact.lastMessage.content 25}}</p>
+                    {{/if}}
                 </td>
                 <td>
-                    <span class="timestamp">{{contact.lastMessage.timestamp}}</span>
+                    {{#if contact.lastMessage}}
+                        <span class="timestamp">{{contact.lastMessage.timestamp}}</span>
+                    {{/if}}
                 </td>
             </tr>
-            {{#each contact.messages as |message index2|}}
-            <input type="hidden" id="sent-{{@../index}}-{{index2}}" name="system.contacts.{{@../index}}.messages.{{index2}}.sent" value="{{message.sent}}" data-dtype="Boolean" />
-            <input type="hidden" id="content-{{@../index}}-{{index2}}" name="system.contacts.{{@../index}}.messages.{{index2}}.content" value="{{message.content}}" data-dtype="String" />
-            <input type="hidden" id="timestamp-{{@../index}}-{{index2}}" name="system.contacts.{{@../index}}.messages.{{index2}}.timestamp" value="{{message.timestamp}}" data-dtype="String" />
-            {{/each}}
         {{/each}}
     </table>
 </div>

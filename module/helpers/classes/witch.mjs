@@ -1,8 +1,15 @@
 import { DarkEnergyPool } from "../../schemas/dark-energy-pool.mjs";
 import { DarkEnergySheet } from "../../sheets/dark-energy.mjs";
 import { NEWERA } from "../config.mjs";
-import { HotbarActions } from "../macros/hotbarActions.mjs";
+import { HotbarActions } from "../actions/hotbarActions.mjs";
+import { SpellFocus } from "../../sheets/spell-focus.mjs";
+
 export class Witch {
+
+    static hitPointIncrement = {
+        roll: `1d6`,
+        average: 4
+    }
 
     static classFeatures = [
         {
@@ -51,7 +58,7 @@ export class Witch {
                         "insight": "Insight",
                         "instinct": "Instinct",
                         "medicine": "Medicine",
-                        "spectral-magic": "Spectral Magic"
+                        spectral: "Spectral Magic"
                     }
                 },
                 "2": {
@@ -62,7 +69,7 @@ export class Witch {
                         "insight": "Insight",
                         "instinct": "Instinct",
                         "medicine": "Medicine",
-                        "spectral-magic": "Spectral Magic"
+                        spectral: "Spectral Magic"
                     }
                 },
                 "3": {
@@ -73,7 +80,7 @@ export class Witch {
                         "insight": "Insight",
                         "instinct": "Instinct",
                         "medicine": "Medicine",
-                        "spectral-magic": "Spectral Magic"
+                        spectral: "Spectral Magic"
                     }
                 }
             }
@@ -315,7 +322,19 @@ export class Witch {
                         "extraPotion": "Learn 1 Common potion recipe",
                     }
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    restricted: true,
+                    spellType: "SE",
+                    showWhen: (actor) => actor.system.classes.witch.bonus["1"] == "extraSpell",
+                    level: {
+                        max: 1
+                    }
+                }
+            ]
         },
         {
             level: 5,
@@ -430,7 +449,8 @@ export class Witch {
                         }
                     ]
                 }
-            ]
+            ],
+            onUnlock: actor => Witch.initializeDarkEnergy(actor, false)
         },
         {
             level: 8,
@@ -670,7 +690,19 @@ export class Witch {
                         "extraPotion": "Learn 1 Common potion recipe",
                     }
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    restricted: true,
+                    spellType: "SE",
+                    showWhen: (actor) => actor.system.classes.witch.bonus["2"] == "extraSpell",
+                    level: {
+                        max: 4
+                    }
+                }
+            ]
         },
         {
             level: 15,
@@ -737,7 +769,19 @@ export class Witch {
                         "extraPotion": "Learn 1 Common potion recipe",
                     }
                 }
-            }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    restricted: true,
+                    spellType: "SE",
+                    showWhen: (actor) => actor.system.classes.witch.bonus["3"] == "extraSpell",
+                    level: {
+                        max: 5
+                    }
+                }
+            ]
         },
         {
             level: 18,
@@ -751,9 +795,142 @@ export class Witch {
             archetype: "snake",
             key: false,
             name: "Rapid Strike",
-            description: "Your familiar can use its Strike attack twice in a "
+            description: "Your familiar can use its Strike attack twice in a single action on different targets, and the attack is exampt from the Repetition Tax."
+        },
+        {
+            level: 18,
+            archetype: "cat",
+            key: false,
+            name: "Ferocious Claws",
+            description: "Your familiar can use its Claw attack up to three times in a single action on different targets, and the attack is exampt from the Repetition Tax."
+        },
+        {
+            level: 18,
+            archetype: "hawk",
+            key: false,
+            name: "Fast Flight",
+            description: "Your familiar's base Fly Speed increases to 18 feet. While diving, its Fly speed is doubled."
+        },
+        {
+            level: 18,
+            archetype: "wolf",
+            key: false,
+            name: "Relentless Hunter",
+            description: "Your familiar gains the Mark as Prey action. You and your familiar each get a +2 bonus on attacks against its prey, and on checks to track or search for that creature."
+        },
+        {
+            level: 18,
+            archetype: "spider",
+            name: "Huntsman's Speed",
+            key: false,
+            description: "Your familiar's speed increases by 6 feet, It gains an additional reaction frame, and the Agility skill with a level of 2."
+        },
+        {
+            level: 18,
+            archetype: "owl",
+            name: "Homing",
+            key: false,
+            description: "Your familiar can be commanded to fly to a specific location it or you have previously visited, and return to you at a later time."
+        },
+        {
+            level: 18,
+            archetype: "bear",
+            name: "Elemental Familiarity",
+            key: false,
+            description: "Whenever you summon your familiar, you can choose to infuse it with one of four elemental powers: Fire, Ice, Lightning, or Psychic. Your familiar's attacks deal that type of damage instead of their normal damage types, and the familiar is immune to that type of damage."
+        },
+        {
+            level: 19,
+            common: "learningExperience"
+        },
+        {
+            level: 19,
+            common: "specialtyImprovement"
+        },
+        {
+            level: 20,
+            name: "Strengthened Bond",
+            key: false,
+            description: `<p>Your familiar takes on a more solid form. Its attacks deal +2d damage.</p><p>Spells cast through your familiar can be amplified.</p>`
+        },
+        {
+            level: 20,
+            name: "Spell Studies (6<sup>th</sup> Level)",
+            key: false,
+            description: `<p>You learn new spells from the <a href="https://www.newerarpg.com/srd/newera-sol366/spell-study-guide">Spell Study Guide</a>.</p>
+            <p>You may learn the listed number of new spells or enchantments, of equal or lower level to your current caster level, and of equal or lesser <a href="https://www.newerarpg.com/srd-newera-sol366/spell-rarity">rarity</a>.</p>
+            <div class="magic-info">
+                <h4>1 Rare Witch Spell (Level 6 or lower)</h4>
+                <h4>2 Uncommon Witch Spells (Level 6 or lower)</h4>
+                <img class="resource-icon" src="${NEWERA.images}/spectral.png" data-tooltip="All Spectral Schools" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/evocation.png" data-tooltip="Evocation" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/transmutation.png" data-tooltip="Transmutation" data-tooltip-direction="UP" />
+                <img class="resource-icon" src="${NEWERA.images}/illusion.png" data-tooltip="Illusion" data-tooltip-direction="UP" />
+                <h4>2 Uncommon spells from any school (Level 6 or lower)</h4>
+            </div>
+            `,
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 3,
+                    lists: ["witch"],
+                    restricted: true,
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    lists: ["witch"],
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                },
+                {
+                    choose: 2,
+                    rarity: 2,
+                    spellType: "SE",
+                    level: {
+                        max: 6
+                    }
+                }
+            ]
+        },
+    ]
+
+    static classFeats = {
+        "634": { //Magical Focus
+            "1": {
+                unlocksCoreFeature: "magicalFocus",
+                actions: [
+                    {
+                        name: "Spell Storage",
+                        images: {
+                            base: `${NEWERA.images}/crystal-shine.png`,
+                            left: `${NEWERA.images}/witch.png`,
+                        },
+                        ability: null,
+                        skill: null,
+                        specialties: [],
+                        description: `You utilize your Magical Focus to store spells ahead of time. You can cast your stored spells by releasing them from your focus.`,
+                        difficulty: null,
+                        actionType: "E",
+                        overrideMacroCommand: `game.newera.HotbarActions.openSpellStorage()`,
+                        rolls: [
+                          {
+                            label: "Focus",
+                            die: "crystal-shine",
+                            callback: actor => new SpellFocus(actor).render(true)
+                          }
+                        ]
+                    }
+                ]
+            }
         }
-    ];
+    }
 
     static async initializeDarkEnergy(actor, reset){
         const max = actor.system.tableValues.darkEnergy;

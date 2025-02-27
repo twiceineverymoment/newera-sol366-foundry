@@ -5,11 +5,16 @@
     <img class="profile-img" src="{{system.spellImageUrl}}" title="{{item.name}}"  style="border: none"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" class="sheet-input" type="text" value="{{item.name}}" placeholder="Name" {{disabled system.standard}} /></h1>
-      <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="https://www.newerarpg.com/srd/contentview/_spell?module=newera-sol366&id={{system.casperObjectId}}">
-        <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
-      </a>
+      {{#if system.casperObjectId}}
+        <a style="float: right" class="srd-x-button" id="clearCasperMetadata" data-tooltip="Remove CASPER Metadata" data-tooltip-direction="LEFT">
+          <i class="fa-solid fa-x"></i>
+        </a>
+        <a style="float: right" target="_blank" data-tooltip="View on SRD" data-tooltip-direction="LEFT" href="{{webUrl}}/srd/contentview/_obj_detail?module=newera-sol366&key={{system.casperObjectId}}">
+          <img src="systems/newera-sol366/resources/open-srd.png" class="skill-icon" />
+        </a>
+      {{/if}}
       <div class="resource">
-        <select name="system.castType" class="sheet-input" style="margin-left: 8px" id="cast-type-{{item.id}}" {{disabled system.standard}}>
+        <select name="system.castType" class="sheet-input auto-value" style="margin-left: 8px" {{disabled system.standard}}>
           <option value="C">Cantrip</option>
           <option value="Q">Quick</option>
           <option value="S">Standard</option>
@@ -18,7 +23,7 @@
           <option value="L">Long</option>
           <option value="R">Ritual</option>
         </select>
-        <select name="system.rarity" class="sheet-input" id="rarity-{{item.id}}" data-dtype="Number">
+        <select name="system.rarity" class="sheet-input auto-value" data-dtype="Number">
           <option value="1">Common</option>
           <option value="2">Uncommon</option>
           <option value="3">Rare</option>
@@ -29,16 +34,15 @@
           <option value="8">Innate</option>
           <option value="0">Crafted</option>
         </select>
-        {{#if system.standard}}
-        {{else}}
-        <select name="system.refinementLevel" class="sheet-input" id="refinement-{{item.id}}" data-dtype="Number">
+        {{#unless system.standard}}
+        <select name="system.refinementLevel" class="sheet-input auto-value" data-dtype="Number">
           <option value="0">Experimental (-5)</option>
           <option value="1">Alpha (-3)</option>
           <option value="2">Beta (-1)</option>
           <option value="3">Revised (0)</option>
           <option value="4">Perfected</option>
         </select>
-        {{/if}}
+        {{/unless}}
       </div>
       {{#unless system.standard}}
       <div class="resource">
@@ -59,6 +63,9 @@
         <a class="item newera-section-header" data-tab="materials">Materials</a>
       {{/if}}
       <a class="item newera-section-header" data-tab="effects">Effects</a>
+      {{#if gm}}
+        <a class="item newera-section-header" data-tab="secrets"><i class="fa-solid fa-lock"></i> Secrets</a>
+      {{/if}}
     </nav>
   </div>
 
@@ -76,7 +83,7 @@
         </div>
         <div class="resource newera-itemsheet-property-33">
           <h4>School of Magic</h4>
-          <select name="system.school" class="sheet-input" id="school-{{item.id}}" {{disabled system.standard}}>
+          <select name="system.school" class="sheet-input auto-value" {{disabled system.standard}}>
             <option value="??">Unknown School</option>
             <option value="PY">Pyromancy</option>
             <option value="HM">Cryomancy</option>
@@ -123,7 +130,7 @@
           {{else}}
             <input type="text" class="sheet-input" style="width: 25%" name="system.range.value" value="{{system.range.value}}" data-dtype="Number" {{disabled system.standard}} />
           {{/if}}
-            <select name="system.range.description" style="width: 65%" class="sheet-input" id="range-desc-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.range.description" style="width: 65%" class="sheet-input auto-value" {{disabled system.standard}}>
             <option value="">Other (see description)</option>
             <option value="Self">Self</option>
             <option value="Touch">Touch</option>
@@ -150,7 +157,7 @@
           {{else}}
             <input type="text" class="sheet-input" style="width: 30%" name="system.damage.amount" value="{{system.damage.amount}}" {{disabled system.standard}} />
           {{/if}}
-            <select name="system.damage.type" class="sheet-input" style="width: 50%" id="damage-type-{{item.id}}" {{disabled system.standard}}>
+            <select name="system.damage.type" class="sheet-input auto-value" style="width: 50%" {{disabled system.standard}}>
             <option value="">(None)</option>
             <option value="other">(Nonspecific)</option>
             <option value="bludgeoning">Bludgeoning</option>
@@ -199,6 +206,12 @@
     <div class="tab" data-group="primary" data-tab="effects">
       {{> systems/newera-sol366/templates/item/parts/item-effects.hbs}}
     </div>
+
+    {{#if gm}}
+    <div class="tab" data-group="primary" data-tab="secrets">
+      {{> systems/newera-sol366/templates/item/parts/secret.hbs}}
+    </div>
+    {{/if}}
 
   </section>
 </form>
