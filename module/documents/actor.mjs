@@ -113,17 +113,6 @@ export class NewEraActor extends Actor {
     this._prepareCalculatedStats(system);
     this._prepareSkillModifiers(system);
 
-    let highestHpIncrement = 0;
-    for (const item of this.items) {
-      if (item.type == "Class" && item.system.selectedClass != "Adventurer"){
-        //console.log(item);
-        highestHpIncrement = Math.max(highestHpIncrement, item.system.hitPointIncrement.roll);
-      }
-    }
-    system.hitPointIncrement = (highestHpIncrement == 0) ? 8 : highestHpIncrement;
-    const expectedLifePointMax = 10 + (system.level * 5);
-    system.hpIncreaseAvailable = (system.lifePoints.max < expectedLifePointMax);
-
     system.injured = (system.hitPointTrueMax > system.hitPoints.max);
 
     const difficulty = game.settings.get("newera-sol366", "difficulty");
