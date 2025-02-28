@@ -979,6 +979,7 @@ _preparePotionData(system){
           case "S":
           case "R":
           case "W":
+          case "A":
             return targetData.accessory;
         }
       default:
