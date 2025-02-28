@@ -619,7 +619,8 @@ export class NewEraActor extends Actor {
   async deleteKnowledge(index){
     const update = {
       system: {
-        knowledges: {}
+        knowledges: {},
+        classes: {}
       }
     }
     update.system.knowledges = NewEraUtils.spliceIndexedObject(this.system.knowledges, index);
@@ -627,12 +628,19 @@ export class NewEraActor extends Actor {
     if (this.system.classes){
       for (const [className, classData] of Object.entries(this.system.classes)){
         if (classData.learningExperience){
+          update.system.classes[className] = {
+            learningExperience: {}
+          };
           for (const [level, obj] of Object.entries(classData.learningExperience)){
             const prevSelection = parseInt(obj.improvement);
-            if (prevSelection == index){
-              update.system.classes[className].learningExperience[level].improvement = "";
-            } else if (prevSelection > index){
-              update.system.classes[className].learningExperience[level].improvement = (prevSelection - 1).toString();
+            if (prevSelection == index) {
+              update.system.classes[className].learningExperience[level] = {
+                improvement: ""
+              }
+            } else if (prevSelection > index) {
+              update.system.classes[className].learningExperience[level] = {
+                improvement: (prevSelection - 1).toString()
+              }
             }
           }
         }
@@ -644,7 +652,8 @@ export class NewEraActor extends Actor {
   async deleteSpecialty(index){
     const update = {
       system: {
-        specialties: {}
+        specialties: {},
+        classes: {}
       }
     }
     update.system.specialties = NewEraUtils.spliceIndexedObject(this.system.specialties, index);
@@ -652,12 +661,19 @@ export class NewEraActor extends Actor {
     if (this.system.classes){
       for (const [className, classData] of Object.entries(this.system.classes)){
         if (classData.specialtyImprovement){
+          update.system.classes[className] = {
+            specialtyImprovement: {}
+          };
           for (const [level, obj] of Object.entries(classData.specialtyImprovement)){
             const prevSelection = parseInt(obj.improvement);
             if (prevSelection == index){
-              update.system.classes[className].specialtyImprovement[level].improvement = "";
+              update.system.classes[className].specialtyImprovement[level] = {
+                improvement: ""
+              }
             } else if (prevSelection > index){
-              update.system.classes[className].specialtyImprovement[level].improvement = (prevSelection - 1).toString();
+              update.system.classes[className].specialtyImprovement[level] = {
+                improvement: (prevSelection - 1).toString()
+              }
             }
           }
         }
