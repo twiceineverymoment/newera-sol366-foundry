@@ -2623,6 +2623,8 @@ NEWERA.enchantmentAuraColors = {
     "MM": "#888888"
 };
 
+NEWERA.blendedEnchantmentColor = "#5804bf";
+
 NEWERA.skillImprovementCosts = [
     10, 15, 20, 30, 50, 75, 100, 160, 220, 300, null
 ];

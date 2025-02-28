@@ -127,6 +127,9 @@ export class NewEraActor extends Actor {
     }
   }
 
+  /** 
+   * Calculates a PC's overall level during data preparation, and sets the overLeveled and underLeveled flags for the character sheet
+   */
   _calculateLevel(){
     const system = this.system;
 
@@ -166,10 +169,14 @@ export class NewEraActor extends Actor {
     }
   }
 
-  //Returns the CPA and populates data with feat costs
+  /**
+   * Returns the character's current CPA (Character Points Available) - Total earned plus age bonus minus the cost of owned feats
+   * @param {number} cpt - The character's current CPT (Character Points Total)
+   * @param {number} age - The character's age
+   * @param {NewEraItem[]} items - The character's inventory
+   * @returns {number} The character's current CPA
+   */
   _calculateCpa(cpt, age, items){
-    const system = this.system;
-    system.featCosts = {};
     let cpa = cpt;
     if (age < 20){
       cpa += 10;
@@ -233,19 +240,6 @@ export class NewEraActor extends Actor {
     system.money.ancient = ancientMoney;
   }
 
-  async _applyConditionalStatusEffects(weight, enchantments) {
-    let updated = false;
-    if (weight > this.system.carryWeight.value && !this.token.hasStatusEffect("overencumbered")) {
-      await this.toggleStatusEffect("overencumbered", true);
-      updated = true;
-    }
-    if (enchantments > this.system.magicTolerance.max && !this.token.hasStatusEffect("spellsick")) {
-      await this.toggleStatusEffect("spellsick", true);
-      updated = true;
-    }
-    return updated;
-  }
-
   _getTotalVehicleWeight(items, occupants = []){
     let total = 0;
     for (const item of items){
@@ -259,7 +253,9 @@ export class NewEraActor extends Actor {
     return total;
   }
 
-  //Help with point buy calculations for level 0 characters' ability scores
+  /**
+   * For level 0 characters, calculates the number of ability score points available to spend.
+   */
   _doAbilityScorePoints(){
     const system = this.system;
     let pts = 0;
@@ -293,7 +289,7 @@ export class NewEraActor extends Actor {
   }
 
   /**
-   * Prepare NPC type specific system.
+   * Prepare NPC type specific data.
    */
   _prepareNpcData(system) {
     if (this.type !== 'Non-Player Character') return;
@@ -476,10 +472,21 @@ export class NewEraActor extends Actor {
 
   }
 
+  /**
+   * Finds an entry in system.additionalResources by name.
+   * @param {string} name 
+   * @returns 
+   */
   findResource(name){
     return Object.values(this.system.additionalResources).find(r => r.name.toLowerCase() == name.toLowerCase());
   }
 
+  /**
+   * Whether the character has the given amount of a named special resource.
+   * @param {string} name 
+   * @param {number} amount 
+   * @returns {boolean}
+   */
   hasResource(name, amount = 1){
     const resource = this.findResource(name);
     if (resource){

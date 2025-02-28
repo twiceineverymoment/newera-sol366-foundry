@@ -918,7 +918,7 @@ _preparePotionData(system){
         system: {
           enchanted: true,
           enchantmentDescriptor: enchantment.system.enchantedItemDescriptor,
-          enchantmentColor: enchantment.system.effectColor,
+          enchantmentColor: NEWERA.enchantmentAuraColors[enchantment.system.school],
           totalEnchantmentLevel: totalLevel,
           useCharge: enchantment.system.keywords.includes("Charged"),
           charges: {
@@ -932,15 +932,16 @@ _preparePotionData(system){
       this.update({
         system: {
           arcane: true,
-          totalEnchantmentLevel: totalLevel
+          totalEnchantmentLevel: totalLevel,
+          enchantmentColor: NEWERA.blendedEnchantmentColor
         }
       });
     }
     //Create the ActiveEffect
     await this.createEmbeddedDocuments("ActiveEffect", [{
-      label: enchantment.name,
+      label: `${enchantment.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`,
       img: enchantment.img,
-      description: enchantment.system.description,
+      description: NewEraUtils.amplifyAndFormatDescription(enchantment.system.description, ampFactor),
       owner: this.uuid,
       disabled: false,
       //transfer: enchantment.system.transfer //This function will be re-enabled when we figure out how to make ActiveEffects actually work this way
