@@ -179,7 +179,7 @@ export const DefaultActions = {
             specialties: ["Brawl"],
             description: "When you haven't got your weapons ready, attack with your fists!",
             difficulty: "The difficulty of an attack is the target's passive agility, unless they react.",
-            disable: actor => actor.type != "Creature" && actor.system.equipment.leftHand && actor.system.equipment.rightHand && game.settings.get("newera-sol366", "enforceActionConditions") ? "You must have a hand free to perform unarmed attacks." : false,
+            disable: actor => actor.type != "Creature" && !actor.hasFreeHands(1) ? "You must have a hand free to perform unarmed attacks." : false,
             type: "1",
             rolls: [
                 {

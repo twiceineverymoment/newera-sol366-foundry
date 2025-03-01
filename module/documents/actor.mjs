@@ -1669,7 +1669,7 @@ export class NewEraActor extends Actor {
 
     /* Determines whether an action should be shown based on the action's type and the location within the actor's equipment */
     isItemActionAvailable(action, item){
-      if (game.settings.get("newera-sol366", "enforceActionConditions")){
+      if (game.newera.enforceActionConditions()){
         const showWhen = action.show;
         const location = this.findItemLocation(item);
         const equipment = this.system.equipment;
@@ -2227,7 +2227,7 @@ export class NewEraActor extends Actor {
       ui.notifications.error("Please contact the Curse Recovery Association at (+29) 049 003 001.");
       return false;
     }
-    if (game.settings.get("newera-sol366", "enforceActionConditions")){
+    if (game.newera.enforceActionConditions()){
       if (number == 2){
         return this.system.equipment.leftHand == "" && this.system.equipment.rightHand == "";
       } else if (number == 1){
@@ -2244,7 +2244,7 @@ export class NewEraActor extends Actor {
   }
 
   canCastSpell(spell){
-    if (game.settings.get("newera-sol366", "enforceActionConditions")){
+    if (game.newera.enforceActionConditions()){
       if (!spell.system.keywords.includes("Asomatic")){
         if (["G", "L", "R"].includes(spell.system.castType)){
           return this.hasFreeHands(2);
