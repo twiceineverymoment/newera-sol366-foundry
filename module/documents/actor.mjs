@@ -2256,6 +2256,13 @@ export class NewEraActor extends Actor {
     return true;
   }
 
+  getEnchantableItems(enchantment){
+    return this.items.filter(item => 
+      item.typeIs(NewEraItem.Types.ENCHANTABLE) 
+      && item.isEnchantmentValid(enchantment.system.validTargets)
+    );
+  }
+
   /* AUTO LEVEL UP FUNCTIONS */
 
   async levelUp(clazz) {

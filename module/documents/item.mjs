@@ -948,7 +948,6 @@ _preparePotionData(system){
     }]);
     ui.notifications.info(`Applied enchantment ${enchantment.name} to ${this.name}`);
     console.log("Exiting enchant()");
-    console.log(system);
     return true;
   }
 
