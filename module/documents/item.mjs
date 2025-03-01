@@ -939,7 +939,7 @@ _preparePotionData(system){
     }
     //Create the ActiveEffect
     await this.createEmbeddedDocuments("ActiveEffect", [{
-      label: `${enchantment.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`,
+      label: `${NewEraUtils.formatSpellName(enchantment, ampFactor)}`,
       img: enchantment.img,
       description: NewEraUtils.amplifyAndFormatDescription(enchantment.system.description, ampFactor),
       owner: this.uuid,
@@ -947,6 +947,8 @@ _preparePotionData(system){
       //transfer: enchantment.system.transfer //This function will be re-enabled when we figure out how to make ActiveEffects actually work this way
     }]);
     ui.notifications.info(`Applied enchantment ${enchantment.name} to ${this.name}`);
+    //Send action message 
+    actor.actionMessage(caster.img, this.img, "{NAME} enchants {d} {0} with {1}.", this.name, enchantment.name);
     console.log("Exiting enchant()");
     return true;
   }
@@ -1175,7 +1177,7 @@ _preparePotionData(system){
     let template = "";
     if (this.typeIs(NewEraItem.Types.SPELL)){
       const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor);
-      const title = NewEraUtils.spellTitle(this, ampFactor);
+      const title = NewEraUtils.formatSpellName(this, ampFactor);
       const range = `${this.system.range.value * (this.system.range.scales ? ampFactor : 1)} ft ${this.system.range.description}`;
       const castingTime = NEWERA.spellCastingTimes[this.system.castType] || this.system.castTime;
       template = `
@@ -1190,7 +1192,7 @@ _preparePotionData(system){
       `;
     } else if (this.typeIs(NewEraItem.Types.ENCHANTMENT)){
       const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor);
-      const title = NewEraUtils.spellTitle(this, ampFactor);
+      const title = NewEraUtils.formatSpellName(this, ampFactor);
       template = `
         <div class="chat-item-details">
           <img src="${this.img}" />

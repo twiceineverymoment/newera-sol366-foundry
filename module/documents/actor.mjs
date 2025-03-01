@@ -1415,7 +1415,7 @@ export class NewEraActor extends Actor {
       await energyPool.use(energyCost, new CharacterEnergyPool(this));
     }
 
-    this.actionMessage(this.img, spell.img, `{NAME} sustains {0}.`, spell.name+(ampFactor>1 ? " "+NEWERA.romanNumerals[ampFactor] : ""));
+    this.actionMessage(this.img, spell.img, `{NAME} sustains {0}.`, NewEraUtils.formatSpellName(spell, ampFactor));
   }
 
   async cast(spell, ampFactor = 1, noSkillCheck = false, energyPool = undefined){
@@ -1488,11 +1488,10 @@ export class NewEraActor extends Actor {
         await castRoll.evaluate();
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
-          flavor: `Cast ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""}`
+          flavor: `Cast ${NewEraUtils.formatSpellName(spell, ampFactor)}`
         });
         successful = true;
       } else if (!alwaysRoll && difficulty == 0){
-        //this.actionMessage(this.img, `${NEWERA.images}/${spell.system.specialty}.png`, "{NAME} casts {0}!", `${spell.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`);
         successful = true;
       } else {
         const castRoll = new Roll(`d20 + ${spellSkill == "genericCast" ? `@casterLevel` : `@magic.${spellSkill}.mod`} + @specialty.partial.${spell.system.specialty} + ${attackMod} + ${spell.spellcraftModifier}`, this.getRollData());
@@ -1500,7 +1499,7 @@ export class NewEraActor extends Actor {
         successful = (castRoll.total >= difficulty);
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
-          flavor: `${rollPrefix} ${spell.name} ${ampFactor > 1 ? NEWERA.romanNumerals[ampFactor] : ""}${rollSuffix}${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
+          flavor: `${rollPrefix} ${NewEraUtils.formatSpellName(spell, ampFactor)}${rollSuffix}${difficulty > 0 ? `(Difficulty ${difficulty})` : ""}`
         });
       } 
 
@@ -1521,7 +1520,7 @@ export class NewEraActor extends Actor {
           }
         });
         await this.createEmbeddedDocuments("ActiveEffect", [{
-          label: `Sustaining: ${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`,
+          label: `Sustaining: ${NewEraUtils.formatSpellName(spell, ampFactor)}`,
           img: spell.img,
           description: `<p>You're sustaining a spell.</p>
           ${NewEraUtils.amplifyAndFormatDescription(spell.system.description, ampFactor, "S")}
@@ -1536,7 +1535,7 @@ export class NewEraActor extends Actor {
           }
         });
         await this.createEmbeddedDocuments("ActiveEffect", [{
-          label: `Casting: ${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`,
+          label: `Casting: ${NewEraUtils.formatSpellName(spell, ampFactor)}`,
           img: spell.img,
           description: `<p>You're casting an Ephemeral spell.</p>
           <p>You can end this effect at any time as a free action from the Actions tab.</p>

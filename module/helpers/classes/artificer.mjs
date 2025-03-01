@@ -1100,7 +1100,7 @@ export class Artificer {
                     })
                 }
             });
-            ui.notifications.info(`${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""} has been stored in your focus.`);
+            ui.notifications.info(`${NewEraUtils.formatSpellName(spell, ampFactor)} has been stored in your focus.`);
         } else {
             ui.notifications.warn(`Your attempt to store the spell was unsuccessful!`);
         }

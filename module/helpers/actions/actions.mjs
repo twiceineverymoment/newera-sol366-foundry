@@ -97,7 +97,7 @@ export class Actions {
         ui.notifications.error(`${actor.name} isn't sustaining a spell.`);
         return;
       }
-      const spellTitle = `${spell.name}${actor.system.sustaining.ampFactor > 1 ? " "+NEWERA.romanNumerals[actor.system.sustaining.ampFactor] : ""}`;
+      const spellTitle = NewEraUtils.formatSpellName(spell, actor.system.sustaining.ampFactor);
       let dialog = new Dialog({
         title: `Sustain ${spellTitle} [${actor.name}]`,
         content: `<form class="spell-dialog">
@@ -144,7 +144,7 @@ export class Actions {
             await dmgRoll.evaluate();
             dmgRoll.toMessage({
               speaker: ChatMessage.getSpeaker({actor: actor}),
-              flavor: `Damage - ${spell.name}${amp>1 ? " "+NEWERA.romanNumerals[amp] : ""}`
+              flavor: `Damage - ${NewEraUtils.formatSpellName(spell, ampFactor)}`
             });
             game.newera.setLastDamageAmount(dmgRoll.total);
           });
@@ -302,7 +302,7 @@ export class Actions {
             await dmgRoll.evaluate();
             dmgRoll.toMessage({
               speaker: ChatMessage.getSpeaker({actor: actor}),
-              flavor: `Damage - ${spell.name}${amp>1 ? " "+NEWERA.romanNumerals[amp] : ""}`
+              flavor: `Damage - ${NewEraUtils.formatSpellName(spell, amp)}`
             });
             game.newera.setLastDamageAmount(dmgRoll.total);
           });
