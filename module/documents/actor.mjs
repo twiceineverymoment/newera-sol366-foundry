@@ -1492,7 +1492,7 @@ export class NewEraActor extends Actor {
         });
         successful = true;
       } else if (!alwaysRoll && difficulty == 0){
-        this.actionMessage(this.img, `${NEWERA.images}/${spell.system.specialty}.png`, "{NAME} casts {0}!", `${spell.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`);
+        //this.actionMessage(this.img, `${NEWERA.images}/${spell.system.specialty}.png`, "{NAME} casts {0}!", `${spell.name}${ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : ""}`);
         successful = true;
       } else {
         const castRoll = new Roll(`d20 + ${spellSkill == "genericCast" ? `@casterLevel` : `@magic.${spellSkill}.mod`} + @specialty.partial.${spell.system.specialty} + ${attackMod} + ${spell.spellcraftModifier}`, this.getRollData());

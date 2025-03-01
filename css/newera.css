@@ -1550,3 +1550,12 @@ button.class-confirm {
   margin-top: 10px;
   text-align: center;
 }
+table#itemList {
+  max-height: 480px;
+  overflow-y: scroll;
+  border: 1px solid black;
+}
+.item-list-entry.active {
+  background-color: #1D4159;
+  color: white;
+}
