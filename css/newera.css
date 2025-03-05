@@ -8,14 +8,16 @@ div.actor section.window-content, div.item section.window-content {
   min-width: 715px;
   background-color: rgb(41,84,112);
   color: white;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
+  font-weight: 300;
   overflow-y: hidden;
 }
 .newera-itemsheet-body {
   min-width: 320px;
   background-color: rgb(41,84,112);
   color: white;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
+  font-weight: 300;
   overflow-y: hidden;
 }
 .newera-itemsheet-body section.sheet-body {
@@ -306,15 +308,17 @@ input.sheet-input, select.sheet-input, button.sheet-input, textarea.sheet-input 
   display: inline-block;
   color: white;
   background-color: #1D4159;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
   font-size: 20px;
+  font-weight: 300;
   border: none;
   outline: none;
 }
 select.sheet-input option { /* This style doesn't do anything on Mac but should on Windows */
   color: white !important;
   background-color: #1D4159 !important;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
+  font-weight: 300;
 }
 button.sheet-input:disabled {
   opacity: 0.5;
@@ -374,13 +378,13 @@ div.newera-itemsheet-property-33 select.sheet-input {
 }
 .sheet-output-minor {
   color: #408cbf;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
   border: none;
   font-size: 20px;
 }
 .sheet-output-major {
   color: #60acdf;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
   border: none;
   font-size: 20px;
 }
@@ -431,7 +435,7 @@ img.class-icon {
   margin: 1px;
 }
 span.class-name {
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
   font-size: 1.5em;
 }
 .spell-dc {
@@ -551,7 +555,7 @@ img.resource-icon {
 }
 input.resource-input {
   color: gray;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
   border: none;
   outline: none;
   display: inline;
@@ -561,7 +565,7 @@ input.resource-input {
 }
 input.resource-input-small {
   color: gray;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
   border: none;
   outline: none;
   display: inline;
@@ -1011,13 +1015,14 @@ div.action-data {
   opacity: 0.5;
 }
 h1.action-name {
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
   font-size: 2em;
   color: white;
   border-bottom: none;
 }
 h2.action-type {
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
+  font-weight: 300;
   font-size: 1.25em;
   color: #8DB1C9;
   border-bottom: none;
@@ -1071,7 +1076,7 @@ div.action-spell-level-overlay {
   width: 33%;
   height: 33%;
   border: none;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -1141,7 +1146,7 @@ div.magic-info {
   text-align: center;
 }
 div.magic-info h4 {
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
   color: white;
   font-size: 1.25em;
 }
@@ -1215,7 +1220,8 @@ div#inspiration-cp {
   min-width: 480px;
   background-color: rgb(41,84,112);
   color: white;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
+  font-weight: 300;
   text-align: center;
 }
 .newera-spellprepsheet-body hr {
@@ -1309,7 +1315,8 @@ div#energySelect select {
   min-width: 320px;
   background-color: black;
   color: white;
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Noto Serif", serif;
+  font-weight: 300;
   overflow-y: hidden;
   overflow-x: hidden;
   text-align: center;
