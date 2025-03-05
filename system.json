@@ -149,7 +149,7 @@
   "primaryTokenAttribute": "hitPoints",
   "secondaryTokenAttribute": "energy",
   "socket": true,
-  "url": "https://www.newerarpg.com",
+  "url": "http://test.newerarpg.com",
   "bugs": "https://github.com/twiceineverymoment/newera-sol366-foundry/issues",
   "changelog": "https://www.newerarpg.com/srd/newera-sol366/changelog/",
   "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366.json",

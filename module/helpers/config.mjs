@@ -3800,6 +3800,23 @@ NEWERA.ancientMoneyItemValues = {
     "I.271.0": 10,
 }
 
+NEWERA.coreFeatureInitData = {
+    alchemistsPouch: {
+        label: "Alchemist's Pouch",
+        description: `<p>You can designate a small container as an Alchemist's Pouch, which you can use to carry a nonspecific reserve of alchemical materials.</p>`,
+        configuration: {
+            maxRarity: "1"
+        }
+    },
+    enchantmentBlending: {
+        label: "Enchantment Blending",
+        description: `<p>You can put multiple simple enchantments on one item.</p>`,
+        configuration: {
+            maxEnchantments: 2
+        }
+    }
+}
+
 NEWERA.passiveAbilityEvents = [
     "damageTaken",
     "damageDealt",

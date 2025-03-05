@@ -1559,3 +1559,7 @@ table#itemList {
   background-color: #1D4159;
   color: white;
 }
+.item-list-entry.disabled {
+  color: #555;
+  font-style: italic;
+}

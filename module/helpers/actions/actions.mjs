@@ -230,6 +230,10 @@ export class Actions {
               <td>Energy Cost</td>
               <td><strong id="cost"></strong></td>
             </tr>
+            <tr>
+              <td>Material Costs</td>
+              <td><span id="materialStatus"></strong></td>
+            </tr>
           </table>
           <div id="complex-stuff"></div>
           <div id="amplify-info">
@@ -245,6 +249,7 @@ export class Actions {
           <div id="energySelect">
             Energy Source: <select id="energyPools">${Actions._renderPoolOptions(actor)}</select>
           </div>
+          <div id="materialCosts"></div>
           <p>
             <button class="spell-dialog-button" id="cast"><i class="fa-solid ${castButton.icon}"></i> ${castButton.label}</button>
             <button class="spell-dialog-button" id="damage"${(spell.system.damage && spell.system.damage.type) ? "" : `disabled data-tooltip="This spell doesn't deal damage."`}><i class="fa-solid fa-heart-crack"></i> Damage</button>
@@ -288,6 +293,12 @@ export class Actions {
           html.find("#cast").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
             const pool = Actions._getPool(actor, html, isPrepared);
+            if (isEnchantment || spell.system.keywords.includes("Material")) {
+              const materialMode = html.find("#materialSource").val();
+              if (materialMode != 2) {
+                await actor.consumeMaterials(spell, amp, (materialMode == 1));
+              }
+            }
             if (isEnchantment) {
               await Actions.enchantItem(actor, spell, amp, isPrepared, pool);
             } else {
@@ -415,6 +426,29 @@ export class Actions {
 
       if (spell.system.keywords.includes("Static") || actor.type == "Creature" || prepared){
         html.find("#amplify-info").hide();
+      }
+
+      if (spell.system.keywords.includes("Material") || spell.type == "Enchantment") {
+        const hasMaterials = actor.hasMaterialsFor(spell, ampFactor);
+        const hasAlchemistsPouch = !!actor.system.coreFeatures.alchemistsPouch;
+        const canUseAlchemistsPouch = hasAlchemistsPouch && actor.system.coreFeatures.alchemistsPouch.configuration.maxRarity >= spell.system.rarity && actor.hasResource("Alchemist's Pouch", 1);
+        if (hasMaterials) {
+          html.find("#materialStatus").html(`<strong style="color: green">In Inventory</strong>`);
+        } else if (hasAlchemistsPouch && canUseAlchemistsPouch) {
+          html.find("#materialStatus").html(`<strong>In Alchemist's Pouch</strong>`);
+        } else {
+          html.find("#materialStatus").html(`<strong style="color: red">Missing Materials</strong>`);
+        }
+        html.find("#materialCosts").html(`
+          <p>This spell requires materials. Choose where to source your materials for casting.</p>
+            <select id="materialSource">
+              ${hasMaterials ? `<option value="0">Inventory</option>` : `<option disabled>Inventory</option>`}
+              ${hasAlchemistsPouch ? (canUseAlchemistsPouch ? `<option value="1">Alchemist's Pouch</option>` : `<option disabled>Alchemist's Pouch</option>`) : ""}
+              <option value="2">Other (Manually remove materials)</option>
+            </select>
+        `);
+      } else {
+        html.find("#materialStatus").html(`<i>None required</i>`);
       }
     }
 

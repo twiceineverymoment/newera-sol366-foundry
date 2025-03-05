@@ -388,12 +388,7 @@
 			"hitPointIncrement": 8,
 			"hitPointTrueMax": 10,
 			"inspiration": 0,
-			"alchemistsPouch": {
-				"type": "none",
-				"min": 0,
-				"current": 0,
-				"max": 0
-			}
+			"coreFeatures": {}
 		},
 		"Non-Player Character": {
 			"templates": ["base", "skills", "biography", "magic", "money"],

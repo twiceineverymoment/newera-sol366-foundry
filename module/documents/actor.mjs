@@ -1418,7 +1418,16 @@ export class NewEraActor extends Actor {
     this.actionMessage(this.img, spell.img, `{NAME} sustains {0}.`, NewEraUtils.formatSpellName(spell, ampFactor));
   }
 
-  async cast(spell, ampFactor = 1, noSkillCheck = false, energyPool = undefined){
+  /**
+   * Cast a known spell. Rolls to cast if necessary, and consumes necessary energy and materials.
+   * @param {*} spell The spell or enchantment to cast
+   * @param {*} ampFactor The amplification factor (1 or greater)
+   * @param {*} noSkillCheck If true, skips rolling to cast and always succeeds. Used for prepared and stored spells.
+   * @param {*} energyPool The energy pool to draw from. Will use the character's main energy if not specified.
+   * @param {*} circumstanceModifier An additional modifier provided at casting time
+   * @returns 
+   */
+  async cast(spell, ampFactor = 1, noSkillCheck = false, energyPool = undefined, circumstanceModifier = 0){
       if (energyPool === undefined){
         if (this.type == "Player Character" || this.type == "Non-Player Character"){
           energyPool = new CharacterEnergyPool(this);
@@ -1450,6 +1459,9 @@ export class NewEraActor extends Actor {
           totalEnergyCost += stepResults.energyUsed;
         }
       }
+
+      //Consume materials or use alchemist's pouch
+
       
       switch (spell.spellRollMode) {
         case "ranged": //The projectile keyword takes precedence over all other roll conditions
@@ -1482,9 +1494,13 @@ export class NewEraActor extends Actor {
           break;
       }
 
+      if (circumstanceModifier < 0) {
+        alwaysRoll = true;
+      }
+
       if (this.type == 'Creature') {
         const spellAttr = NEWERA.schoolAttributes[spell.system.form];
-        const castRoll = new Roll(`d20 + @abilities.${spellAttr}.mod + @special.${spell.system.specialty} + @special.spellcasting`, this.getRollData());
+        const castRoll = new Roll(`d20 + @abilities.${spellAttr}.mod + @special.${spell.system.specialty} + @special.spellcasting + ${circumstanceModifier}`, this.getRollData());
         await castRoll.evaluate();
         castRoll.toMessage({
           speaker: ChatMessage.getSpeaker({actor: this}),
@@ -1494,7 +1510,7 @@ export class NewEraActor extends Actor {
       } else if (!alwaysRoll && difficulty == 0){
         successful = true;
       } else {
-        const castRoll = new Roll(`d20 + ${spellSkill == "genericCast" ? `@casterLevel` : `@magic.${spellSkill}.mod`} + @specialty.partial.${spell.system.specialty} + ${attackMod} + ${spell.spellcraftModifier}`, this.getRollData());
+        const castRoll = new Roll(`d20 + ${spellSkill == "genericCast" ? `@casterLevel` : `@magic.${spellSkill}.mod`} + @specialty.partial.${spell.system.specialty} + ${attackMod} + ${spell.spellcraftModifier} + ${circumstanceModifier}`, this.getRollData());
         await castRoll.evaluate();
         successful = (castRoll.total >= difficulty);
         castRoll.toMessage({
@@ -1622,6 +1638,79 @@ export class NewEraActor extends Actor {
         })
     }
 
+    hasConsumable(name, qty) {
+      const totalQty = this.items.filter(i => i.name == name && i.type == "Item" && i.system.equipSlot == "C")
+      .reduce((acc, cur) => {
+        acc + cur.system.quantity, 0
+      });
+      return (qty <= totalQty);
+    }
+
+    async useConsumable(name, qty){
+      let qtyUsed = 0;
+      while (qtyUsed < qty) {
+        const item = this.items.find(i => i.name == name && i.type == "Item" && i.system.equipSlot == "C");
+        if (item) {
+          qtyUsed += Math.min(qty, item.system.quantity);
+          if (qtyUsed == item.system.quantity) {
+            await item.delete();
+          } else {
+            await item.update({
+              system: {
+                quantity: item.system.quantity - qtyUsed
+              }
+            });
+          }
+        } else {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    hasMaterialsFor(enchantment, ampFactor) {
+      if (enchantment.system.keywords.includes("Material")) {
+        for (const material of enchantment.system.materialCosts) {
+          const qtyNeeded = material.quantity * (material.scales ? ampFactor : 1);
+          if (!this.hasConsumable(material.name, qtyNeeded)) {
+            return false;
+          }
+        }
+        return true;
+      } else {
+        return true;
+      }
+    }
+
+    async consumeMaterials(enchantment, ampFactor, useAlchemistsPouch) {
+      if (useAlchemistsPouch) {
+        if (!this.hasResource("Alchemist's Pouch", 1)) {
+          ui.notifications.warm("You've used up your Alchemist's Pouch for the day.");
+          return false;
+        } else {
+          await this.useResource("Alchemist's Pouch", 1);
+        }
+      }
+      for (const material of enchantment.system.materialCosts) {
+        if (useAlchemistsPouch && !material.unique) {
+          console.log(`${material.name} supplied by alchemist's pouch`);
+          continue;
+        }
+        const qtyOfMaterial = material.quantity * (material.scales ? ampFactor : 1);
+        const used = await this.useConsumable(material.name, qtyOfMaterial);
+        if (!used) {
+          if (material.unique) { //This exception case handles specific materials i.e. 'A piece of someone's DNA' that will not be found by name in inventory
+            ui.notifications.warn(`This spell requires ${material.name}. Make sure you supply the right materials!`);
+          } else {
+            ui.notifications.error(`Couldn't find all materials!`);
+            console.error(`Failed to locate enough of ${material.name} - was hasMaterialsFor checked before casting?`);
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
     async usePotion(potion, qty){
       const qtyAvailable = potion.system.quantity;
       const qtyUsed = Math.min(qty, qtyAvailable);
@@ -1729,43 +1818,26 @@ export class NewEraActor extends Actor {
       return ["rightHand", "leftHand"].includes(this.findItemLocation(item));
     }
 
-  /* 
-    Find an item action based on the name and some characteristics of the item it was created from.
-    This is more of a 'close enough' comparison. If there are two items with the same or very similar properties, the one that's equipped should take priority.
-  */
-  findItemAction(name, compareData){
-    for (const item of this.items){
-      if (item.type == "Melee Weapon"){
-
-      } else if (item.type == "Ranged Weapon"){
-
-      } else if (item.type == "Shield"){
-
-      } else if (item.type == "Feat"){
-
-      }
-    }
-  }
-
-  getSpecialResource(name){
-    const resource = this.system.additionalResources.find(r => r.name == name);
-    if (!resource) {
-      return null;
-    } else {
-      return resource.value;
-    }
-  }
-
-  useSpecialResource(name){
-    const resource = this.system.additionalResources.find(r => r.name == name);
+  async useResource(name, amount){
+    const resource = Object.entries(actor.system.additionalResources).find(r => r[1].name == name);
     if (resource) {
-      this.update({
-        system: {
-          additionalResources: {
-            
+      if (resource.value >= amount) {
+        this.update({
+          system: {
+            additionalResources: {
+              [resource[0]]: {
+                value: resource.value - 1
+              }
+            }
           }
-        }
-      })
+        })
+      } else {
+        console.warn(`Insufficient resource: ${name}`);
+        return false;
+      }
+    } else {
+      console.error(`Resource ${name} not found on ${this.name}`);
+      return false;
     }
   }
 
@@ -2283,6 +2355,22 @@ export class NewEraActor extends Actor {
         && (!feature.archetype || archetypeData.hasOwnProperty(feature.archetype)) //This will not catch retroactive archetype features or those that unlock at the same time as the archetype selection, but unlockArchetypeFeatures will
       );
       for (const feature of featuresToUnlock){
+        if (feature.unlocksCoreFeature) { //Run this BEFORE the onUnlock handlers, as they may depend on data set by the core feature template!
+          if (this.system.coreFeatures[feature.unlocksCoreFeature]) {
+            console.log(`[ALU] Skipped core feature ${feature.unlocksCoreFeature} because it already has data!`);
+            } else {
+              const coreFeatureData = NEWERA.coreFeatureInitData[feature.unlocksCoreFeature];
+              await this.update({
+                system: {
+                  coreFeatures: {
+                    [feature.unlocksCoreFeature]: coreFeatureData
+                  }
+                }
+              });
+              console.log(`[ALU] Activated core feature ${feature.unlocksCoreFeature}`);
+              ui.notifications.info(`You gained the ${coreFeatureData.label} feature!`);
+            }
+          }
           if (typeof feature.onUnlock == 'function'){
             await feature.onUnlock(this);
             console.log(`[ALU] Unlocked ${feature.name}`);

@@ -878,19 +878,25 @@ _preparePotionData(system){
   }
 
   async enchant(enchantment, ampFactor = 1, caster = undefined, noSkillCheck = false, energyPool = undefined){
-    console.log(`Entering enchant()`);
-
+    if (!this.typeIs(NewEraItem.Types.ENCHANTABLE)) {
+      ui.notifications.error("This item is not enchantable.");
+      return;
+    };
     //Check that the enchantment can be applied to this item
     if (!this.isEnchantmentValid(enchantment.system.validTargets)) {
       ui.notifications.error(`${enchantment.name} can't be applied to this item.`);
       return;
     }
 
+    console.log(`Entering enchant()`);
+
     if (caster) {
-      const success = await caster.cast(enchantment, ampFactor, noSkillCheck, energyPool);
+      const success = await caster.cast(enchantment, ampFactor, noSkillCheck, energyPool, this.system.enchantabilityModifier);
       if (!success) {
         return false;
       }
+    } else {
+      console.log("Skipped enchantment cast roll because caster is undefined");
     }
 
     //Copy the actions from the enchantment to the item
@@ -946,7 +952,7 @@ _preparePotionData(system){
       disabled: false,
       //transfer: enchantment.system.transfer //This function will be re-enabled when we figure out how to make ActiveEffects actually work this way
     }]);
-    ui.notifications.info(`Applied enchantment ${enchantment.name} to ${this.name}`);
+    ui.notifications.info(`Enchanted ${this.name} with ${NewEraUtils.formatSpellName(enchantment, ampFactor)}.`);
     //Send action message 
     actor.actionMessage(caster.img, this.img, "{NAME} enchants {d} {0} with {1}.", this.name, enchantment.name);
     console.log("Exiting enchant()");
