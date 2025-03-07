@@ -2,7 +2,7 @@
   "id": "newera-sol366",
   "title": "New Era Sol 366 Edition",
   "description": "The official Foundry VTT system for New Era: Sol 366 Edition, the modern fantasy TTRPG powered by mRPG 3.0",
-  "version": "0.16.24",
+  "version": "0.16.26",
   "compatibility": {
     "minimum": 12,
     "verified": "12.331"
@@ -149,10 +149,10 @@
   "primaryTokenAttribute": "hitPoints",
   "secondaryTokenAttribute": "energy",
   "socket": true,
-  "url": "http://test.newerarpg.com",
+  "url": "https://www.newerarpg.com/",
   "bugs": "https://github.com/twiceineverymoment/newera-sol366-foundry/issues",
   "changelog": "https://www.newerarpg.com/srd/newera-sol366/changelog/",
-  "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366.json",
-  "download": "https://www.valleyandridgegames.com/files/foundryvtt/beta/newera-sol366-0.16.24.zip",
+  "manifest": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366.json",
+  "download": "https://www.valleyandridgegames.com/files/foundryvtt/stable/newera-sol366-0.16.26.zip",
   "license": "LICENSE.txt"
 }

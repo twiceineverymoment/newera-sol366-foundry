@@ -1640,9 +1640,7 @@ export class NewEraActor extends Actor {
 
     hasConsumable(name, qty) {
       const totalQty = this.items.filter(i => i.name == name && i.type == "Item" && i.system.equipSlot == "C")
-      .reduce((acc, cur) => {
-        acc + cur.system.quantity, 0
-      });
+      .reduce((acc, cur) => acc + cur.system.quantity, 0);
       return (qty <= totalQty);
     }
 
@@ -1668,9 +1666,9 @@ export class NewEraActor extends Actor {
       return true;
     }
 
-    hasMaterialsFor(enchantment, ampFactor) {
-      if (enchantment.system.keywords.includes("Material")) {
-        for (const material of enchantment.system.materialCosts) {
+    hasMaterialsFor(spell, ampFactor) {
+      if (spell.system.keywords.includes("Material") || spell.type == "Enchantment") {
+        for (const material of Object.values(spell.system.materialCosts)) {
           const qtyNeeded = material.quantity * (material.scales ? ampFactor : 1);
           if (!this.hasConsumable(material.name, qtyNeeded)) {
             return false;
@@ -1691,7 +1689,7 @@ export class NewEraActor extends Actor {
           await this.useResource("Alchemist's Pouch", 1);
         }
       }
-      for (const material of enchantment.system.materialCosts) {
+      for (const material of Object.values(enchantment.system.materialCosts)) {
         if (useAlchemistsPouch && !material.unique) {
           console.log(`${material.name} supplied by alchemist's pouch`);
           continue;
