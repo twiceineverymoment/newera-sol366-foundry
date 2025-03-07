@@ -53,7 +53,7 @@ export function deleteEffect(event, owner){
 export function toggleEffect(event, owner){
   const element = event.currentTarget;
   const effect = owner.effects.get(element.dataset.effectId);
-  return effect.update({disabled: !effect.data.disabled});
+  return effect.update({disabled: !effect.disabled});
 }
 
 export function getEffectDuration(effect){
