@@ -977,7 +977,7 @@ _preparePotionData(system){
           case "I":
             return targetData.object;
           case "C":
-            return targetData.object || targetData.ranged;
+            return targetData.object || (targetData.ranged && this.isAmmunition());
           case "O":
           case "B":
             return targetData.clothing;
@@ -991,6 +991,14 @@ _preparePotionData(system){
         }
       default:
         return false;
+    }
+  }
+
+  isAmmunition(){
+    if (this.type != "Item" || this.system.equipSlot != "C") {
+      return false;
+    } else {
+      return !!Object.values(NEWERA.compatibleAmmoIds).find(list => list.includes(this.system.casperObjectId));
     }
   }
 
