@@ -194,9 +194,11 @@
     {{> systems/newera-sol366/templates/item/parts/item-actions.hbs}}
   </div>
 
-  <div class="tab components" data-group="primary" data-tab="components">
-    {{> systems/newera-sol366/templates/item/parts/components.hbs}}
-  </div>
+  {{#if thingsAreComplex}}
+    <div class="tab components" data-group="primary" data-tab="components">
+      {{> systems/newera-sol366/templates/item/parts/components.hbs}}
+    </div>
+  {{/if}}
 
   {{#if gm}}
     <div class="tab" data-group="primary" data-tab="secrets">
