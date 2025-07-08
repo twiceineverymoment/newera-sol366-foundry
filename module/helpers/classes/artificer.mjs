@@ -78,7 +78,7 @@ export class Artificer {
                     field: "casterLevel.artificer",
                     label: "Caster Level",
                     sign: false,
-                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7],
+                    values: [null, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10],
                     onUpdate: (actor, from, to) => {
                         actor.setCasterLevel(from, to, true);
                     }
@@ -174,7 +174,7 @@ export class Artificer {
                     field: "focusEnergy",
                     label: "Focus Energy",
                     sign: false,
-                    values: [null, 0, 0, 20, 24, 30, 36, 42, 50, 56, 64, 72, 84, 96, 110, 120, 136, 148, 164, 184, 200]
+                    values: [null, 0, 0, 20, 24, 30, 36, 42, 50, 56, 64, 72, 84, 96, 110, 120, 136, 148, 164, 184, 200, 220, 240, 260, 280, 300, 350, 400, 450, 500, 600]
                 }
             ],
             actions: [
@@ -408,7 +408,7 @@ export class Artificer {
                     field: "spellcraft.artificer",
                     label: "Spellcraft Skill Level",
                     sign: false,
-                    values: [null, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3],
+                    values: [null, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 7, 7, 7, 7],
                     onUpdate: (actor, from, to) => {
                         actor.update({
                             system: {
@@ -987,7 +987,56 @@ export class Artificer {
                     }
                 }
             ]
-        }
+        },
+        {
+            Level: 21,
+            common: "abilityScoreImprovement"
+            
+        },
+        {
+            level: 21,
+            id: "artificer.bonus",
+            key: false,
+            name: "Artificer Bonus",
+            description: "Choose one of the following bonuses.",
+            selections: {
+                "6.bonus": {
+                    label: "Choose a Bonus",
+                    options: {
+                        magicSkill: "+1 bonus to a magical skill",
+                        enchantment: "Learn one common spell or enchantment of any level",
+                        alchemy: "Learn one common or uncommon potion recipe",
+                        carryWeight: "+1 Carry Weight bonus",
+                    },
+                    onChange: (actor, from, to) => Artificer.bonus(actor, "6", from, to)
+                },
+                "6.magicSkill": {
+                    label: "Choose a Magical Skill",
+                    options: {
+                        elemental: "Elemental",
+                        divine: "Divine",
+                        physical: "Physical",
+                        psionic: "Psionic",
+                        spectral: "Spectral",
+                        temporal: "Temporal"
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["6"].bonus == "magicSkill",
+                    onChange: (actor, from, to) => actor.setSkillBoost(from, to, false)
+                }
+            },
+            spellStudies: [
+                {
+                    choose: 1,
+                    rarity: 1,
+                    spellType: "SE",
+                    level: {
+                        max: 10
+                    },
+                    showWhen: (actor) => actor.system.classes.artificer.bonus["6"].bonus == "enchantment"
+                }
+            ]
+        },
+
     ]
 
     static classFeats = {
