@@ -1940,6 +1940,22 @@ export class NewEraActorSheet extends ActorSheet {
             try {
               const features = ExtendedFeatData.getFeatures(dropData.casperObjectId, tierUnlocked);
               for (const feature of features){
+                if (feature.unlocksCoreFeature) { //Run this BEFORE the onUnlock handlers, as they may depend on data set by the core feature template!
+                  if (this.system.coreFeatures[feature.unlocksCoreFeature]) {
+                    console.log(`[ALU] Skipped core feature ${feature.unlocksCoreFeature} because it already has data!`);
+                    } else {
+                      const coreFeatureData = NEWERA.coreFeatureInitData[feature.unlocksCoreFeature];
+                      await this.update({
+                        system: {
+                          coreFeatures: {
+                            [feature.unlocksCoreFeature]: coreFeatureData
+                          }
+                        }
+                      });
+                      console.log(`[ALU] Activated core feature ${feature.unlocksCoreFeature} from feat ${featFromCompendium.name}`);
+                      ui.notifications.info(`You gained the ${coreFeatureData.label} feature!`);
+                    }
+                  }
                 if (typeof feature.onUnlock == "function"){
                   await feature.onUnlock(this.actor);
                 }

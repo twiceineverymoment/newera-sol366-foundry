@@ -878,19 +878,25 @@ _preparePotionData(system){
   }
 
   async enchant(enchantment, ampFactor = 1, caster = undefined, noSkillCheck = false, energyPool = undefined){
-    console.log(`Entering enchant()`);
-
+    if (!this.typeIs(NewEraItem.Types.ENCHANTABLE)) {
+      ui.notifications.error("This item is not enchantable.");
+      return;
+    };
     //Check that the enchantment can be applied to this item
     if (!this.isEnchantmentValid(enchantment.system.validTargets)) {
       ui.notifications.error(`${enchantment.name} can't be applied to this item.`);
       return;
     }
 
+    console.log(`Entering enchant()`);
+
     if (caster) {
-      const success = await caster.cast(enchantment, ampFactor, noSkillCheck, energyPool);
+      const success = await caster.cast(enchantment, ampFactor, noSkillCheck, energyPool, this.system.enchantabilityModifier);
       if (!success) {
         return false;
       }
+    } else {
+      console.log("Skipped enchantment cast roll because caster is undefined");
     }
 
     //Copy the actions from the enchantment to the item
@@ -918,7 +924,7 @@ _preparePotionData(system){
         system: {
           enchanted: true,
           enchantmentDescriptor: enchantment.system.enchantedItemDescriptor,
-          enchantmentColor: enchantment.system.effectColor,
+          enchantmentColor: NEWERA.enchantmentAuraColors[enchantment.system.school],
           totalEnchantmentLevel: totalLevel,
           useCharge: enchantment.system.keywords.includes("Charged"),
           charges: {
@@ -932,22 +938,24 @@ _preparePotionData(system){
       this.update({
         system: {
           arcane: true,
-          totalEnchantmentLevel: totalLevel
+          totalEnchantmentLevel: totalLevel,
+          enchantmentColor: NEWERA.blendedEnchantmentColor
         }
       });
     }
     //Create the ActiveEffect
     await this.createEmbeddedDocuments("ActiveEffect", [{
-      label: enchantment.name,
+      label: `${NewEraUtils.formatSpellName(enchantment, ampFactor)}`,
       img: enchantment.img,
-      description: enchantment.system.description,
+      description: NewEraUtils.amplifyAndFormatDescription(enchantment.system.description, ampFactor),
       owner: this.uuid,
       disabled: false,
       //transfer: enchantment.system.transfer //This function will be re-enabled when we figure out how to make ActiveEffects actually work this way
     }]);
-    ui.notifications.info(`Applied enchantment ${enchantment.name} to ${this.name}`);
+    ui.notifications.info(`Enchanted ${this.name} with ${NewEraUtils.formatSpellName(enchantment, ampFactor)}.`);
+    //Send action message 
+    actor.actionMessage(caster.img, this.img, "{NAME} enchants {d} {0} with {1}.", this.name, enchantment.name);
     console.log("Exiting enchant()");
-    console.log(system);
     return true;
   }
 
@@ -969,7 +977,7 @@ _preparePotionData(system){
           case "I":
             return targetData.object;
           case "C":
-            return targetData.object || targetData.ranged;
+            return targetData.object || (targetData.ranged && this.isAmmunition());
           case "O":
           case "B":
             return targetData.clothing;
@@ -978,10 +986,19 @@ _preparePotionData(system){
           case "S":
           case "R":
           case "W":
+          case "A":
             return targetData.accessory;
         }
       default:
         return false;
+    }
+  }
+
+  isAmmunition(){
+    if (this.type != "Item" || this.system.equipSlot != "C") {
+      return false;
+    } else {
+      return !!Object.values(NEWERA.compatibleAmmoIds).find(list => list.includes(this.system.casperObjectId));
     }
   }
 
@@ -1174,7 +1191,7 @@ _preparePotionData(system){
     let template = "";
     if (this.typeIs(NewEraItem.Types.SPELL)){
       const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor);
-      const title = NewEraUtils.spellTitle(this, ampFactor);
+      const title = NewEraUtils.formatSpellName(this, ampFactor);
       const range = `${this.system.range.value * (this.system.range.scales ? ampFactor : 1)} ft ${this.system.range.description}`;
       const castingTime = NEWERA.spellCastingTimes[this.system.castType] || this.system.castTime;
       template = `
@@ -1189,7 +1206,7 @@ _preparePotionData(system){
       `;
     } else if (this.typeIs(NewEraItem.Types.ENCHANTMENT)){
       const description = NewEraUtils.amplifyAndFormatDescription(this.system.description, ampFactor);
-      const title = NewEraUtils.spellTitle(this, ampFactor);
+      const title = NewEraUtils.formatSpellName(this, ampFactor);
       template = `
         <div class="chat-item-details">
           <img src="${this.img}" />

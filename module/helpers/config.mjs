@@ -2623,6 +2623,8 @@ NEWERA.enchantmentAuraColors = {
     "MM": "#888888"
 };
 
+NEWERA.blendedEnchantmentColor = "#5804bf";
+
 NEWERA.skillImprovementCosts = [
     10, 15, 20, 30, 50, 75, 100, 160, 220, 300, null
 ];
@@ -3796,6 +3798,23 @@ NEWERA.ancientMoneyItemValues = {
     "I.269.0": 0.1,
     "I.270.0": 1,
     "I.271.0": 10,
+}
+
+NEWERA.coreFeatureInitData = {
+    alchemistsPouch: {
+        label: "Alchemist's Pouch",
+        description: `<p>You can designate a small container as an Alchemist's Pouch, which you can use to carry a nonspecific reserve of alchemical materials.</p>`,
+        configuration: {
+            maxRarity: "1"
+        }
+    },
+    enchantmentBlending: {
+        label: "Enchantment Blending",
+        description: `<p>You can put multiple simple enchantments on one item.</p>`,
+        configuration: {
+            maxEnchantments: 2
+        }
+    }
 }
 
 NEWERA.passiveAbilityEvents = [

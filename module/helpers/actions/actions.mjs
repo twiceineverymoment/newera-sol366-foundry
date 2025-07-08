@@ -97,7 +97,7 @@ export class Actions {
         ui.notifications.error(`${actor.name} isn't sustaining a spell.`);
         return;
       }
-      const spellTitle = `${spell.name}${actor.system.sustaining.ampFactor > 1 ? " "+NEWERA.romanNumerals[actor.system.sustaining.ampFactor] : ""}`;
+      const spellTitle = NewEraUtils.formatSpellName(spell, actor.system.sustaining.ampFactor);
       let dialog = new Dialog({
         title: `Sustain ${spellTitle} [${actor.name}]`,
         content: `<form class="spell-dialog">
@@ -144,7 +144,7 @@ export class Actions {
             await dmgRoll.evaluate();
             dmgRoll.toMessage({
               speaker: ChatMessage.getSpeaker({actor: actor}),
-              flavor: `Damage - ${spell.name}${amp>1 ? " "+NEWERA.romanNumerals[amp] : ""}`
+              flavor: `Damage - ${NewEraUtils.formatSpellName(spell, ampFactor)}`
             });
             game.newera.setLastDamageAmount(dmgRoll.total);
           });
@@ -184,6 +184,7 @@ export class Actions {
         }
       }
       let castButton;
+      let isEnchantment = false;
       switch(spell.spellRollMode) {
         case "ranged":
           castButton = {
@@ -205,6 +206,7 @@ export class Actions {
           };
           if (spell.typeIs(NewEraItem.Types.ENCHANTMENT)) {
             castButton.label = 'Enchant';
+            isEnchantment = true;
           }
           break;
       }
@@ -228,6 +230,10 @@ export class Actions {
               <td>Energy Cost</td>
               <td><strong id="cost"></strong></td>
             </tr>
+            <tr>
+              <td>Material Costs</td>
+              <td><span id="materialStatus"></strong></td>
+            </tr>
           </table>
           <div id="complex-stuff"></div>
           <div id="amplify-info">
@@ -243,6 +249,7 @@ export class Actions {
           <div id="energySelect">
             Energy Source: <select id="energyPools">${Actions._renderPoolOptions(actor)}</select>
           </div>
+          <div id="materialCosts"></div>
           <p>
             <button class="spell-dialog-button" id="cast"><i class="fa-solid ${castButton.icon}"></i> ${castButton.label}</button>
             <button class="spell-dialog-button" id="damage"${(spell.system.damage && spell.system.damage.type) ? "" : `disabled data-tooltip="This spell doesn't deal damage."`}><i class="fa-solid fa-heart-crack"></i> Damage</button>
@@ -286,7 +293,17 @@ export class Actions {
           html.find("#cast").click(async () => {
             const amp = actor.type == "Creature" ? spell.system.ampFactor : html.find("#ampFactor").html();
             const pool = Actions._getPool(actor, html, isPrepared);
-            await actor.cast(spell, amp, isPrepared, pool);
+            if (isEnchantment || spell.system.keywords.includes("Material")) {
+              const materialMode = html.find("#materialSource").val();
+              if (materialMode != 2) {
+                await actor.consumeMaterials(spell, amp, (materialMode == 1));
+              }
+            }
+            if (isEnchantment) {
+              await Actions.enchantItem(actor, spell, amp, isPrepared, pool);
+            } else {
+              await actor.cast(spell, amp, isPrepared, pool);
+            }
             Actions._renderSpellDetails(html, spell, actor, amp, isPrepared);
           });
           html.find("#damage").click(async () => {
@@ -296,7 +313,7 @@ export class Actions {
             await dmgRoll.evaluate();
             dmgRoll.toMessage({
               speaker: ChatMessage.getSpeaker({actor: actor}),
-              flavor: `Damage - ${spell.name}${amp>1 ? " "+NEWERA.romanNumerals[amp] : ""}`
+              flavor: `Damage - ${NewEraUtils.formatSpellName(spell, amp)}`
             });
             game.newera.setLastDamageAmount(dmgRoll.total);
           });
@@ -410,6 +427,29 @@ export class Actions {
       if (spell.system.keywords.includes("Static") || actor.type == "Creature" || prepared){
         html.find("#amplify-info").hide();
       }
+
+      if (spell.system.keywords.includes("Material") || spell.type == "Enchantment") {
+        const hasMaterials = actor.hasMaterialsFor(spell, ampFactor);
+        const hasAlchemistsPouch = !!actor.system.coreFeatures.alchemistsPouch;
+        const canUseAlchemistsPouch = hasAlchemistsPouch && actor.system.coreFeatures.alchemistsPouch.configuration.maxRarity >= spell.system.rarity && actor.hasResource("Alchemist's Pouch", 1);
+        if (hasMaterials) {
+          html.find("#materialStatus").html(`<strong style="color: green">In Inventory</strong>`);
+        } else if (hasAlchemistsPouch && canUseAlchemistsPouch) {
+          html.find("#materialStatus").html(`<strong>In Alchemist's Pouch</strong>`);
+        } else {
+          html.find("#materialStatus").html(`<strong style="color: red">Missing Materials</strong>`);
+        }
+        html.find("#materialCosts").html(`
+          <p>This spell requires materials. Choose where to source your materials for casting.</p>
+            <select id="materialSource">
+              ${hasMaterials ? `<option value="0">Inventory</option>` : `<option disabled>Inventory</option>`}
+              ${hasAlchemistsPouch ? (canUseAlchemistsPouch ? `<option value="1">Alchemist's Pouch</option>` : `<option disabled>Alchemist's Pouch</option>`) : ""}
+              <option value="2">Other (Manually remove materials)</option>
+            </select>
+        `);
+      } else {
+        html.find("#materialStatus").html(`<i>None required</i>`);
+      }
     }
 
     static _getComplexPercentage(enchantment, actor, ampFactor) {
@@ -425,6 +465,81 @@ export class Actions {
         console.log(`[DEBUG] component form=${form} level=${level} skill=${spellSkillLevel} diff=${difficulty} passive=${passiveSpellSkill} prob=${stepProb} cumulative=${prob}`);
       }
       return Math.round(prob * 100);
+    }
+
+    static enchantItem(actor, enchantment, ampFactor, isPrepared, pool) {
+      //For Hexes and Curses (where "creature" is the only valid target type), just cast
+      if (Object.keys(enchantment.system.validTargets).filter(t => enchantment.system.validTargets[t]) == ["creature"]) {
+        actor.cast(enchantment, ampFactor, isPrepared, pool);
+        return;
+      }
+      const items = actor.getEnchantableItems(enchantment);
+      if (items.length == 0) {
+        new Dialog({
+          title: `Enchant Item`,
+          content: `<p>You don't have any items ${enchantment.name} can be cast on.</p>
+          <p>Would you like to cast it anyway?</p>`,
+          buttons: {
+            confirm: {
+              icon: `<i class="fa-solid fa-hand-sparkles"></i>`,
+              label: "Cast",
+              callback: () => actor.cast(enchantment, ampFactor, isPrepared, pool)
+            },
+            cancel: {
+              icon : `<i class="fas fa-x"></i>`,
+              label: "Cancel"
+            }
+          },
+          default: "cancel"
+        }).render(true);
+        return;
+      }
+      new Dialog({
+        title: `Enchant Item`,
+        content: `<form class="spell-dialog">
+          <p>Choose an item to enchant with ${enchantment.name}.</p>
+          <table id="itemList"></table>
+        </form>`,
+        buttons: {
+          confirm: {
+            icon: `<i class="fa-solid fa-hand-sparkles"></i>`,
+            label: "Cast",
+            callback: (html) => {
+              const itemId = html.find(".item-list-entry.active").data("itemId");
+              if (itemId) {
+                const item = actor.items.get(itemId);
+                item.enchant(enchantment, ampFactor, actor, isPrepared, pool);
+              } else {
+                actor.cast(enchantment, ampFactor, isPrepared, pool)
+              }
+            }
+          },
+          cancel: {
+            icon : `<i class="fas fa-x"></i>`,
+            label: "Cancel"
+          }
+        },
+        default: "cancel",
+        render: (html) => {
+          let rows = "";
+          for (const item of items) {
+            rows += `<tr class="item-list-entry" data-item-id="${item.id}">
+              <td><img class="skill-icon" src="${item.img}"</td>
+              <td>${item.system.listDisplayName || item.name}</td>
+            </tr>`;
+          }
+          rows += `<tr class="item-list-entry" data-item-id="">
+              <td>&nbsp;</td>
+              <td><i>No Target</i></td>
+            </tr>`;
+          html.find("#itemList").html(rows);
+
+          html.find(".item-list-entry").click(ev => {
+            html.find(".item-list-entry").removeClass("active");
+            $(ev.currentTarget).addClass("active");
+          });
+        }
+      }).render(true);
     }
 
     static displayPotionDialog(actor, potion){

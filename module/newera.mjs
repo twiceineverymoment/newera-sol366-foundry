@@ -31,31 +31,10 @@ Hooks.once('init', async function() {
 
   registerSocketHandlers();
 
+  setupGlobalHelpers();
+
   // Add custom constants for configuration.
   CONFIG.NEWERA = NEWERA;
-
-  //Last Damage Tracking
-  game.newera.getLastDamageAmount = function(){
-    const damageRolls = game.messages.filter(m => m.flavor && m.flavor.toLowerCase().includes("damage"));
-    if (!damageRolls || damageRolls.length == 0){
-      return null;
-    }
-    const lastDamageMessage = damageRolls[damageRolls.length - 1];
-    if (lastDamageMessage.rolls){
-      let damage = 0;
-      lastDamageMessage.rolls.forEach(r => damage += r.total);
-      return damage;
-    } else {
-      return 0;
-    }
-
-  }
-  game.newera.setLastDamageAmount = async function(n){
-    
-  }
-  game.newera.clearLastDamage = async function(){
-    
-  }
 
   /**
    * Set an initiative formula for the system
@@ -336,11 +315,16 @@ function setupGameSettings(){
   game.settings.register("newera-sol366", "enforceActionConditions", {
     name: "Enforce Action Conditions",
     hint: "When enabled, actions for items will be grayed out if they aren't equipped in the appropriate slot, and spells will be unavailable if the actor doesn't have a free hand. Disable to ignore these rules.",
-    scope: "client",
+    scope: "world",
     config: true,
     requiresReload: false,
-    type: Boolean,
-    default: true,
+    type: String,
+    choices: {
+      "2": "Always",
+      "1": "While In Combat",
+      "0": "Never"
+    },
+    default: "1"
   });
   game.settings.register("newera-sol366", "sendEquipMsgs", {
     name: "Send Equipment Action Messages in Chat",
@@ -675,4 +659,36 @@ function registerSocketHandlers(){
         }
     }
   });
+
+
+}
+
+function setupGlobalHelpers(){
+  //Last Damage Tracking
+  game.newera.getLastDamageAmount = function(){
+    const damageRolls = game.messages.filter(m => m.flavor && m.flavor.toLowerCase().includes("damage"));
+    if (!damageRolls || damageRolls.length == 0){
+      return null;
+    }
+    const lastDamageMessage = damageRolls[damageRolls.length - 1];
+    if (lastDamageMessage.rolls){
+      let damage = 0;
+      lastDamageMessage.rolls.forEach(r => damage += r.total);
+      return damage;
+    } else {
+      return 0;
+    }
+
+  }
+
+  game.newera.enforceActionConditions = function() {
+    const actionConditions = game.settings.get("newera-sol366", "enforceActionConditions");
+    if (actionConditions == "2"){
+      return true;
+    } else if (actionConditions == "1"){
+      return game.combat && game.combat.active && game.combat.round > 0;
+    } else {
+      return false;
+    }
+  }
 }

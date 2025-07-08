@@ -75,6 +75,11 @@ export class NewEraUtils {
         }
       }
 
+      static formatSpellName(spell, ampFactor){
+        if (!ampFactor) ampFactor = spell.system.ampFactor;
+        return spell.name + (ampFactor > 1 ? ` ${NEWERA.romanNumerals[ampFactor]}` : "");
+      }
+
       static getSpellActionIcons(spell, cssClass = "skill-icon"){
         //console.log(spell);
           if (spell.type == "Enchantment"){
@@ -164,11 +169,6 @@ export class NewEraUtils {
         } else {
           return text.substring(0, length-3)+"...";
         }
-      }
-
-      static spellTitle(spell, ampFactor){
-        if (!ampFactor) ampFactor = spell.system.ampFactor;
-        return `${spell.name}${ampFactor > 1 ? " "+NEWERA.romanNumerals[ampFactor] : ""}`;
       }
 
       static keyToTitle(key){
