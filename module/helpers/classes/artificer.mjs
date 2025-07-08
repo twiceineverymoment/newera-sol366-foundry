@@ -989,7 +989,7 @@ export class Artificer {
             ]
         },
         {
-            Level: 21,
+            level: 21,
             common: "abilityScoreImprovement"
             
         },
